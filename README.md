@@ -1,2 +1,2 @@
-# PROJECT_NAME
-PROJECT_NAME mirror repository
+# Zappy
+Zappy mirror repository

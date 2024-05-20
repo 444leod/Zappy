@@ -10,18 +10,7 @@ __GREEN=\033[0;32m
 __BOLD=\033[1m
 __NC=\033[0m # No Color
 
-__NAME = EXECUTABLE_NAME
-
-__SRC = ./src/main.c
-
-%.o: %.c
-	@$(__CC) -c -o $@ $< $(__CFLAGS)
-
-__OBJ = $(__SRC:.c=.o)
-
-__CC = gcc
-
-__CFLAGS = -Wall -Wextra -Werror -Wpedantic
+__NAME = zappy
 
 all: $(__NAME)
 
@@ -36,17 +25,29 @@ check_init: .init_done
 		touch .init_done; \
 	fi
 
-$(__NAME): .init_done $(__OBJ)
-	@$(__CC) -o $(__NAME) $(__OBJ) $(__CFLAGS)
+$(__NAME): .init_done
+	@make -s -C server
+	@make -s -C gui
+	@make -s -C ai
+	@mv server/zappy_server .
+	@mv gui/zappy_gui .
+	@mv ai/zappy_ai .
 	@echo -ne "${__GREEN}$(__BOLD)Compilation$(__NC)"
 	@echo -e "${__GREEN}completed successfully.${__NC}"
 clean:
-	@rm -f $(__OBJ)
+	@make clean -s -C server
+	@make clean -s -C gui
+	@make clean -s -C ai
+	@rm -f zappy_server
+	@rm -f zappy_gui
+	@rm -f zappy_ai
 	@echo -ne "${__GREEN}$(__BOLD)Clean$(__NC)"
 	@echo -e "${__GREEN}completed successfully.${__NC}"
 
 fclean: clean
-	@rm -f $(__NAME)
+	@make fclean -s -C server
+	@make fclean -s -C gui
+	@make fclean -s -C ai
 	@echo -ne "${__GREEN}$(__BOLD)Fclean$(__NC)"
 	@echo -e "${__GREEN}completed successfully.${__NC}"
 
