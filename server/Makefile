@@ -1,49 +1,70 @@
 ##
 ## EPITECH PROJECT, 2024
-## PROJECT_NAME
+## myTeams
 ## File description:
 ## Makefile
 ##
 
-__RED=\033[0;31m
-__GREEN=\033[0;32m
-__BOLD=\033[1m
-__NC=\033[0m # No Color
+GREEN=\033[0;32m
+NC=\033[0m
 
-__NAME = zappy_server
+INFO = ${GREEN}[INFO]${NC}
 
-__SRC = ./src/main.c
+all:
+	make -C ./common -s
+	make -C ./server -s
+	@mv ./server/myteams_server ./myteams_server
+	make -C ./client -s
+	@mv ./client/myteams_cli ./myteams_cli
+	@echo -ne "\n${INFO} Server and client compiled successfully.${NC}\n"
 
-%.o: %.c
-	@$(__CC) -c -o $@ $< $(__CFLAGS)
-
-__OBJ = $(__SRC:.c=.o)
-
-__CC = gcc
-
-__CFLAGS = -Wall -Wextra -Werror -Wpedantic
-
-all: $(__NAME)
-
-$(__NAME): $(__OBJ)
-	@$(__CC) -o $(__NAME) $(__OBJ) $(__CFLAGS)
-	@echo -ne "${__GREEN}$(__BOLD)Compilation of $(__NAME)$(__NC)"
-	@echo -e "${__GREEN}completed successfully.${__NC}"
 clean:
-	@rm -f $(__OBJ)
-	@echo -ne "${__GREEN}$(__BOLD)Clean of $(__NAME)$(__NC)"
-	@echo -e "${__GREEN}completed successfully.${__NC}"
+	make clean -C ./common -s
+	make clean -C ./server -s
+	make clean -C ./client -s
+	@echo -ne "\n${INFO} Server and client cleaned.${NC}\n"
 
 fclean: clean
-	@rm -f $(__NAME)
-	@echo -ne "${__GREEN}$(__BOLD)Fclean of $(__NAME)$(__NC)"
-	@echo -e "${__GREEN}completed successfully.${__NC}"
+	make fclean -C ./common -s
+	make fclean -C ./server -s
+	make fclean -C ./client -s
+	rm -f myteams_server
+	rm -f myteams_cli
+	@echo -ne "\n${INFO} Server and client cleaned.${NC}\n"
 
 re: fclean all
 
-tests_run: all
+tests_run:
+	make tests_run -C ./server -s
+	make tests_run -C ./client -s
+	@echo -ne "\n${INFO} Tests run.${NC}\n"
 
-run: all
+debug:
+	make debug -C ./common -s
+	make debug -C ./server -s
+	@mv ./server/myteams_server ./myteams_server
+	make debug -C ./client -s
+	@mv ./client/myteams_cli ./myteams_cli
+	@echo -ne "\n${INFO} Debug mode compiled successfully.${NC}\n"
+
+dev:
+	make dev -C ./common -s
+	make dev -C ./server -s
+	@mv ./server/myteams_server ./myteams_server
+	make dev -C ./client -s
+	@mv ./client/myteams_cli ./myteams_cli
+	@echo -ne "\n${INFO} Dev mode compiled successfully.${NC}\n"
+
+init: install-hooks install-mango
+
+install-hooks:
+	@cp .githooks/commit-msg .git/hooks/commit-msg
+	@chmod +x .git/hooks/commit-msg
+	@echo "Hooks installed."
+
+install-mango:
+	@chmod +x ./init/install-mango.sh
+	@./init/install-mango.sh
 
 .PHONY: all clean fclean re
 .SILENT: run
