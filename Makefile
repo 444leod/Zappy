@@ -17,12 +17,17 @@ all: $(__NAME)
 check_init: .init_done
 
 .init_done:
-	@if [ $(check_init) = "false" ]; then \
-		echo -ne "${__RED}Repository is not initialized. "; \
-		echo -e "Please run $(__BOLD)'make init'${__NC}$(__RED).${__NC}"; \
-		exit 1; \
+	@echo "Debug: $(__BOLD)${__GREEN}${FORCE_MAKE}"
+	@if [ -z "${FORCE_MAKE}" ]; then \
+		if [ $(check_init) = "false" ]; then \
+			echo -ne "${__RED}Repository is not initialized. "; \
+			echo -e "Please run $(__BOLD)'make init'${__NC}$(__RED).${__NC}"; \
+			exit 1; \
+		else \
+			touch .init_done; \
+		fi \
 	else \
-		touch .init_done; \
+		echo "${__GREEN}Forced Makefile rule."; \
 	fi
 
 $(__NAME): .init_done

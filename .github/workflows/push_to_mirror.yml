@@ -4,6 +4,7 @@ on: [push, pull_request]
 
 env:
   MIRROR_URL: "git@github.com:EpitechPromo2027/B-YEP-400-LIL-4-1-zappy-leo.dumont.git"
+  FORCE_MAKE: "forced"
 
 jobs:
   build:
