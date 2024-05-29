@@ -9,22 +9,27 @@ class CommandHandler():
         self.port = port
         self.sock = socket.socket()
         self.sock.connect((self.hostname, self.port))
-        response = self.sock.recv(1024)
-        print("res: " + response.decode(), end="")
     
-    def send_command(self, command: str) -> str:
+    def send_command(self, command: str) -> None:
         self.sock.send(command.encode())
-        response = self.sock.recv(1024)
-        print(response)
-        print("res: " + response.decode())
 
-        return response.decode()
+    def receive_response(self) -> str:
+        buff = ""
+        while not buff.endswith("\n"):
+            buff += self.sock.recv(1).decode()
+        return buff
 
 def main():
     handler = CommandHandler(
         port=5055
     )
     handler.send_command("test\n")
+    res0 = handler.receive_response()
+    res1 = handler.receive_response()
+    res2 = handler.receive_response()
+    print("res0: '" + res0 + "'")
+    print("res1: '" + res1 + "'")
+    print("res2: '" + res2 + "'")
 
 
 
