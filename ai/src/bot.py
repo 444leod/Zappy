@@ -36,9 +36,9 @@ class CommandHandler():
     def __init__(self, hostname: str = "localhost", port: int = 5555):
         self.hostname = hostname
         self.port = port
-        self.sock = socket.socket()
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((self.hostname, self.port))
-    
+
     def send_command(self, command: str) -> None:
         self.sock.send((command + "\n").encode())
 
