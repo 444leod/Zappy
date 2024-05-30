@@ -2,6 +2,7 @@
 
 import socket
 import sys
+from typing import List
 
 USAGE = "USAGE: ./zappy_ai -p port -n name -h machine"
 
@@ -48,23 +49,73 @@ class CommandHandler():
             buff += self.sock.recv(1).decode()
         return buff
 
+class Bot():
+    def __init__(self, verbose=False, traced=False):
+        self.conf: Config = Config()
+        try:
+            self.com_handler: CommandHandler = CommandHandler(
+                port=self.conf.port,
+                hostname=self.conf.machine
+            )
+        except Exception as e:
+            print("Failed to connect to server: " + str(e))
+            sys.exit(84)
+        self.verbose: bool = verbose
+        self.traced: bool = traced
+        self.results: List[str] = []
+        self.results.append(self.com_handler.receive_response())
+        if (self.results[-1] != "WELCOME\n"):
+            print("Failed to connect to server: " + self.results[-1])
+            sys.exit(84)
+        self.com_handler.send_command(self.conf.name)
+        self.results.append(self.com_handler.receive_response())
+        self.results.append(self.com_handler.receive_response())
+        #tmp bc I'll have a class for relevant data later on
+        tmpNbEggs: int = int(self.results[-2])
+        tmpX, tmpY = map(int, self.results[-1].split())
+        self.log(f"{tmpNbEggs=}")
+        self.log(f"{tmpX=} {tmpY=}")
+        self.messages_received: List[tuple[int, str]] = [] # [(playerID, message), ..]
+        self.messages_sent: List[str] = []
+        self.base_funcs = {
+            "dead\n" : self.die,
+            "message": self.receive_message  
+        }
+
+    def log(self, *args, **kargs):
+        res = str(*args, **kargs)
+        if (self.verbose):
+            print(res)
+        if (self.traced):
+            with open(".trace", "a") as f:
+                print(res, file=f)
+
+    def die(self):
+        self.log("Bot died. Exiting.")
+        sys.exit(0)
+
+    def receive_message(self):
+        tab = self.results[-1].split(" ")
+        if (len(tab) != 3) or not (tab[1][:-1].isdigit()):
+            return
+        self.messages_received.append((int(tab[1][:-1]), tab[2]))
+
+    def run(self):
+        while True:
+            self.results.append(self.com_handler.receive_response())
+            self.log(self.results[-1])
+            # Handle death or receiving a message by Broadcast
+            key: str = self.results[-1].split(" ")[0]
+            if (key in self.base_funcs):
+                self.base_funcs[key]()
+            # rest of logic here
+
 def main():
-    conf = Config()
-    try:
-        handler = CommandHandler(
-            port=conf.port,
-            hostname=conf.machine
-        )
-    except Exception as e:
-        print("Failed to connect to server: " + str(e))
-        sys.exit(84)
-    handler.send_command(conf.name)
-    res0 = handler.receive_response()
-    res1 = handler.receive_response()
-    res2 = handler.receive_response()
-    print("res0: '" + res0 + "'")
-    print("res1: '" + res1 + "'")
-    print("res2: '" + res2 + "'")
+    bot = Bot(
+        verbose = True,
+        traced = True
+    )
+    bot.run()
 
 if __name__ == "__main__":
     main()
