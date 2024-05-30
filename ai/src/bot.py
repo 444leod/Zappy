@@ -78,7 +78,8 @@ class Bot():
         self.messages_received: List[tuple[int, str]] = [] # [(playerID, message), ..]
         self.messages_sent: List[str] = []
         self.base_funcs = {
-            "dead\n" : self.die,   
+            "dead\n" : self.die,
+            "message": self.receive_message  
         }
 
     def log(self, *args, **kargs):
@@ -93,14 +94,19 @@ class Bot():
         self.log("Bot died. Exiting.")
         sys.exit(0)
 
-    # def receive_message(self):
+    def receive_message(self):
+        tab = self.results[-1].split(" ")
+        if (len(tab) != 3) or not (tab[1][:-1].isdigit()):
+            return
+        self.messages_received.append((int(tab[1][:-1]), tab[2]))
 
     def run(self):
         while True:
             self.results.append(self.handler.receive_response())
             self.log(self.results[-1])
-            if (self.results[-1] in self.base_funcs):
-                self.base_funcs[self.results[-1]]()
+            key: str = self.results[-1].split(" ")[0]
+            if (key in self.base_funcs):
+                self.base_funcs[key]()
 
 def main():
     bot = Bot(
