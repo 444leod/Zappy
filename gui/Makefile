@@ -12,21 +12,21 @@ __NC=\033[0m # No Color
 
 __NAME = zappy_gui
 
-__SRC = ./src/main.c
+__SRC = src/main.cpp \
 
-%.o: %.c
-	@$(__CC) -c -o $@ $< $(__CFLAGS)
+%.o: %.cpp
+	@$(__CC) -c -o $@ $< $(__CXXFLAGS)
 
-__OBJ = $(__SRC:.c=.o)
+__OBJ = $(__SRC:.cpp=.o)
 
-__CC = gcc
+__CC = g++
 
-__CFLAGS = -Wall -Wextra -Werror -Wpedantic
+__CXXFLAGS = -Wall -Wextra -Werror -Wpedantic -I./include
 
 all: $(__NAME)
 
 $(__NAME): $(__OBJ)
-	@$(__CC) -o $(__NAME) $(__OBJ) $(__CFLAGS)
+	@$(__CC) -o $(__NAME) $(__OBJ) $(__CXXFLAGS)
 	@echo -ne "${__GREEN}$(__BOLD)Compilation of $(__NAME)$(__NC)"
 	@echo -e "${__GREEN}completed successfully.${__NC}"
 clean:
