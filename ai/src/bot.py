@@ -53,7 +53,7 @@ class Bot():
     def __init__(self, verbose=False, traced=False):
         self.conf: Config = Config()
         try:
-            self.handler: CommandHandler = CommandHandler(
+            self.com_handler: CommandHandler = CommandHandler(
                 port=self.conf.port,
                 hostname=self.conf.machine
             )
@@ -63,13 +63,13 @@ class Bot():
         self.verbose: bool = verbose
         self.traced: bool = traced
         self.results: List[str] = []
-        self.results.append(self.handler.receive_response())
+        self.results.append(self.com_handler.receive_response())
         if (self.results[-1] != "WELCOME\n"):
             print("Failed to connect to server: " + self.results[-1])
             sys.exit(84)
-        self.handler.send_command(self.conf.name)
-        self.results.append(self.handler.receive_response())
-        self.results.append(self.handler.receive_response())
+        self.com_handler.send_command(self.conf.name)
+        self.results.append(self.com_handler.receive_response())
+        self.results.append(self.com_handler.receive_response())
         #tmp bc I'll have a class for relevant data later on
         tmpNbEggs: int = int(self.results[-2])
         tmpX, tmpY = map(int, self.results[-1].split())
@@ -102,11 +102,13 @@ class Bot():
 
     def run(self):
         while True:
-            self.results.append(self.handler.receive_response())
+            self.results.append(self.com_handler.receive_response())
             self.log(self.results[-1])
+            # Handle death or receiving a message by Broadcast
             key: str = self.results[-1].split(" ")[0]
             if (key in self.base_funcs):
                 self.base_funcs[key]()
+            # rest of logic here
 
 def main():
     bot = Bot(
