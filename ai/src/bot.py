@@ -48,23 +48,42 @@ class CommandHandler():
             buff += self.sock.recv(1).decode()
         return buff
 
+class Bot():
+    def __init__(self):
+        self.conf = Config()
+        try:
+            self.handler = CommandHandler(
+                port=self.conf.port,
+                hostname=self.conf.machine
+            )
+        except Exception as e:
+            print("Failed to connect to server: " + str(e))
+            sys.exit(84)
+        self.results = []
+        self.results.append(self.handler.receive_response())
+        if (self.results[-1] != "WELCOME\n"):
+            print("Failed to connect to server: " + self.results[-1])
+            sys.exit(84)
+        self.handler.send_command(self.conf.name)
+        self.results.append(self.handler.receive_response())
+        self.results.append(self.handler.receive_response())
+        #tmp bc I'll have a class for relevant data later on
+        tmpNbEggs = int(self.results[-2])
+        tmpX, tmpY = map(int, self.results[-1].split())
+        print(f"{tmpNbEggs=}")
+        print(f"{tmpX=} {tmpY=}")
+    
+    def run(self):
+        while True:
+            self.results.append(self.handler.receive_response())
+            print(self.results[-1])
+            if (self.results[-1] == "dead\n"):
+                print("Adieu Monde Cruel...")
+                sys.exit(0)
+
 def main():
-    conf = Config()
-    try:
-        handler = CommandHandler(
-            port=conf.port,
-            hostname=conf.machine
-        )
-    except Exception as e:
-        print("Failed to connect to server: " + str(e))
-        sys.exit(84)
-    handler.send_command(conf.name)
-    res0 = handler.receive_response()
-    res1 = handler.receive_response()
-    res2 = handler.receive_response()
-    print("res0: '" + res0 + "'")
-    print("res1: '" + res1 + "'")
-    print("res2: '" + res2 + "'")
+    bot = Bot()
+    bot.run()
 
 if __name__ == "__main__":
     main()
