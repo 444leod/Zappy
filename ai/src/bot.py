@@ -2,6 +2,7 @@
 
 import socket
 import sys
+from typing import List
 
 USAGE = "USAGE: ./zappy_ai -p port -n name -h machine"
 
@@ -50,16 +51,16 @@ class CommandHandler():
 
 class Bot():
     def __init__(self):
-        self.conf = Config()
+        self.conf: Config = Config()
         try:
-            self.handler = CommandHandler(
+            self.handler: CommandHandler = CommandHandler(
                 port=self.conf.port,
                 hostname=self.conf.machine
             )
         except Exception as e:
             print("Failed to connect to server: " + str(e))
             sys.exit(84)
-        self.results = []
+        self.results: List[str] = []
         self.results.append(self.handler.receive_response())
         if (self.results[-1] != "WELCOME\n"):
             print("Failed to connect to server: " + self.results[-1])
@@ -68,10 +69,11 @@ class Bot():
         self.results.append(self.handler.receive_response())
         self.results.append(self.handler.receive_response())
         #tmp bc I'll have a class for relevant data later on
-        tmpNbEggs = int(self.results[-2])
+        tmpNbEggs: int = int(self.results[-2])
         tmpX, tmpY = map(int, self.results[-1].split())
         print(f"{tmpNbEggs=}")
         print(f"{tmpX=} {tmpY=}")
+        self.messages_received: List[tuple[int, str]] = [] # [(playerID, message), ..]
     
     def run(self):
         while True:
