@@ -50,7 +50,7 @@ class CommandHandler():
         return buff
 
 class Bot():
-    def __init__(self):
+    def __init__(self, verbose=False, traced=False):
         self.conf: Config = Config()
         try:
             self.handler: CommandHandler = CommandHandler(
@@ -60,6 +60,8 @@ class Bot():
         except Exception as e:
             print("Failed to connect to server: " + str(e))
             sys.exit(84)
+        self.verbose: bool = verbose
+        self.traced: bool = traced
         self.results: List[str] = []
         self.results.append(self.handler.receive_response())
         if (self.results[-1] != "WELCOME\n"):
@@ -71,20 +73,40 @@ class Bot():
         #tmp bc I'll have a class for relevant data later on
         tmpNbEggs: int = int(self.results[-2])
         tmpX, tmpY = map(int, self.results[-1].split())
-        print(f"{tmpNbEggs=}")
-        print(f"{tmpX=} {tmpY=}")
+        self.log(f"{tmpNbEggs=}")
+        self.log(f"{tmpX=} {tmpY=}")
         self.messages_received: List[tuple[int, str]] = [] # [(playerID, message), ..]
-    
+        self.messages_sent: List[str] = []
+        self.base_funcs = {
+            "dead\n" : self.die,   
+        }
+
+    def log(self, *args, **kargs):
+        res = str(*args, **kargs)
+        if (self.verbose):
+            print(res)
+        if (self.traced):
+            with open(".trace", "a") as f:
+                print(res, file=f)
+
+    def die(self):
+        self.log("Bot died. Exiting.")
+        sys.exit(0)
+
+    # def receive_message(self):
+
     def run(self):
         while True:
             self.results.append(self.handler.receive_response())
-            print(self.results[-1])
-            if (self.results[-1] == "dead\n"):
-                print("Adieu Monde Cruel...")
-                sys.exit(0)
+            self.log(self.results[-1])
+            if (self.results[-1] in self.base_funcs):
+                self.base_funcs[self.results[-1]]()
 
 def main():
-    bot = Bot()
+    bot = Bot(
+        verbose = True,
+        traced = True
+    )
     bot.run()
 
 if __name__ == "__main__":
