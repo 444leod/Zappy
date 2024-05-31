@@ -67,9 +67,9 @@ class Bot():
             if (key in self.base_funcs):
                 self.base_funcs[key]()
             # rest of logic here
-            cmd_to_send = cmd.Forward()
-            self.cmd_sent.append(cmd_to_send.dump())
-            self.com_handler.send_command(cmd_to_send.dump())
+            # cmd_to_send = cmd.Forward()
+            # self.cmd_sent.append(cmd_to_send.dump())
+            # self.com_handler.send_command(cmd_to_send.dump())
 
 def main() -> None:
     bot = Bot(
