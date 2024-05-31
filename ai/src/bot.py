@@ -3,11 +3,12 @@
 import socket
 import sys
 from typing import List
+import commands
 
 USAGE = "USAGE: ./zappy_ai -p port -n name -h machine"
 
 class Config:
-    def __init__(self):
+    def __init__(self) -> None:
         argv = sys.argv
         if (len(argv) == 1):
             print(USAGE)
@@ -34,7 +35,7 @@ class Config:
             sys.exit(84)
 
 class CommandHandler():
-    def __init__(self, hostname: str = "localhost", port: int = 5555):
+    def __init__(self, hostname: str = "localhost", port: int = 5555) -> None:
         self.hostname = hostname
         self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -50,7 +51,7 @@ class CommandHandler():
         return buff
 
 class Bot():
-    def __init__(self, verbose=False, traced=False):
+    def __init__(self, verbose=False, traced=False) -> None:
         self.conf: Config = Config()
         try:
             self.com_handler: CommandHandler = CommandHandler(
@@ -82,25 +83,25 @@ class Bot():
             "message": self.receive_message  
         }
 
-    def log(self, *args, **kargs):
-        res = str(*args, **kargs)
+    def log(self, *args, **kargs) -> None:
+        res: str = str(*args, **kargs)
         if (self.verbose):
             print(res)
         if (self.traced):
             with open(".trace", "a") as f:
                 print(res, file=f)
 
-    def die(self):
+    def die(self) -> None:
         self.log("Bot died. Exiting.")
         sys.exit(0)
 
-    def receive_message(self):
-        tab = self.results[-1].split(" ")
+    def receive_message(self) -> None:
+        tab: List[str] = self.results[-1].split(" ")
         if (len(tab) != 3) or not (tab[1][:-1].isdigit()):
             return
         self.messages_received.append((int(tab[1][:-1]), tab[2]))
 
-    def run(self):
+    def run(self) -> None:
         while True:
             self.results.append(self.com_handler.receive_response())
             self.log(self.results[-1])
@@ -110,7 +111,7 @@ class Bot():
                 self.base_funcs[key]()
             # rest of logic here
 
-def main():
+def main() -> None:
     bot = Bot(
         verbose = True,
         traced = True
