@@ -2,7 +2,7 @@ class ACommand:
     def __init__(self, name: str) -> None:
         self.name = name
     
-    def __str__(self) -> str:
+    def dump(self) -> str:
         return self.name
 
 class Forward(ACommand):

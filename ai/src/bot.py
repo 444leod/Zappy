@@ -1,60 +1,16 @@
 #!/usr/bin/env python3
 
-import socket
 import sys
 from typing import List
-import commands
-
-USAGE = "USAGE: ./zappy_ai -p port -n name -h machine"
-
-class Config:
-    def __init__(self) -> None:
-        argv = sys.argv
-        if (len(argv) == 1):
-            print(USAGE)
-            sys.exit(84)
-        if (argv[1] == "--help"):
-            print(USAGE)
-            sys.exit(0)
-        try:
-            self.port: int = int(argv[argv.index("-p") + 1])
-            self.name: str = argv[argv.index("-n") + 1]
-        except Exception as _:
-            print(USAGE)
-            sys.exit(84)
-        try:
-            self.machine: str = argv[argv.index("-h") + 1]
-        except ValueError:
-            self.machine = "localhost"
-        except IndexError:
-            print(USAGE)
-            sys.exit(84)
-        if (self.name == "GRAPHIC"):
-            print("Name can't be 'GRAPHIC' as it's reserved for the GUI.")
-            print(USAGE)
-            sys.exit(84)
-
-class CommandHandler():
-    def __init__(self, hostname: str = "localhost", port: int = 5555) -> None:
-        self.hostname = hostname
-        self.port = port
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.connect((self.hostname, self.port))
-
-    def send_command(self, command: str) -> None:
-        self.sock.send((command + "\n").encode())
-
-    def receive_response(self) -> str:
-        buff = ""
-        while not buff.endswith("\n"):
-            buff += self.sock.recv(1).decode()
-        return buff
+from connection_handler import ConnectionHandler
+from config import Config
+import commands as cmd
 
 class Bot():
     def __init__(self, verbose=False, traced=False) -> None:
         self.conf: Config = Config()
         try:
-            self.com_handler: CommandHandler = CommandHandler(
+            self.com_handler: ConnectionHandler = ConnectionHandler(
                 port=self.conf.port,
                 hostname=self.conf.machine
             )
@@ -78,18 +34,19 @@ class Bot():
         self.log(f"{tmpX=} {tmpY=}")
         self.messages_received: List[tuple[int, str]] = [] # [(playerID, message), ..]
         self.messages_sent: List[str] = []
+        self.cmd_sent: List[str] = []
         self.base_funcs = {
             "dead\n" : self.die,
             "message": self.receive_message  
         }
 
     def log(self, *args, **kargs) -> None:
-        res: str = str(*args, **kargs)
+        # res: str = str(*args, **kargs)
         if (self.verbose):
-            print(res)
+            print(*args, **kargs)
         if (self.traced):
             with open(".trace", "a") as f:
-                print(res, file=f)
+                print(*args, file=f)
 
     def die(self) -> None:
         self.log("Bot died. Exiting.")
@@ -104,12 +61,15 @@ class Bot():
     def run(self) -> None:
         while True:
             self.results.append(self.com_handler.receive_response())
-            self.log(self.results[-1])
+            self.log(self.results[-1], end="")
             # Handle death or receiving a message by Broadcast
             key: str = self.results[-1].split(" ")[0]
             if (key in self.base_funcs):
                 self.base_funcs[key]()
             # rest of logic here
+            cmd_to_send = cmd.Forward()
+            self.cmd_sent.append(cmd_to_send.dump())
+            self.com_handler.send_command(cmd_to_send.dump())
 
 def main() -> None:
     bot = Bot(
