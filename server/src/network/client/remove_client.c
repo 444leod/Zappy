@@ -5,10 +5,10 @@
 ** remove_client
 */
 
-#include "clientllist.h"
+#include "clients.h"
 #include "garbage_collector.h"
 
-#include "server_teams.h"
+#include "zappy.h"
 #include "lib.h"
 #include "packet.h"
 #include <unistd.h>

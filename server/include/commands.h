@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "server_teams.h"
+#include "zappy.h"
 #include <sys/select.h>
 #include <stdbool.h>
 

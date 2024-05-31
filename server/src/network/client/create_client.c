@@ -5,8 +5,8 @@
 ** create_client
 */
 
-#include "clientllist.h"
-#include "server_teams.h"
+#include "clients.h"
+#include "zappy.h"
 
 /**
  * @brief Create a client
@@ -24,7 +24,6 @@ client_t create_client(int fd)
     client->next = NULL;
     client->data_status = READING;
     client->command = NULL;
-    client->data_len = 0;
     client->type = NONE;
     client->next_commands = NULL;
     client->team = NULL;

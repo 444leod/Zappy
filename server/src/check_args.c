@@ -5,7 +5,7 @@
 ** check_args
 */
 
-#include "server_teams.h"
+#include "zappy.h"
 
 /**
  * @brief Check the number of arguments

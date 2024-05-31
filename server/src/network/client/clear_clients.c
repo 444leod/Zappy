@@ -5,7 +5,7 @@
 ** clear_clients
 */
 
-#include "clientllist.h"
+#include "clients.h"
 #include "garbage_collector.h"
 #include <stdlib.h>
 #include <unistd.h>

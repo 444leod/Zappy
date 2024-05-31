@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** Zappy
 ** File description:
-** clientllist
+** clients
 */
 
 #pragma once
@@ -19,6 +19,11 @@ enum CLIENT_TYPE {
     ADMIN
 };
 
+enum DATA_STATUS {
+    READING,
+    PROCESSING,
+};
+
 typedef struct client_s {
     int fd;
     char *team;
@@ -27,11 +32,7 @@ typedef struct client_s {
     enum CLIENT_TYPE type;
     char *command;
     char *next_commands;
-    unsigned int data_len;
-    enum {
-        READING,
-        PROCESSING,
-    } data_status;
+    enum DATA_STATUS data_status;
     struct client_s *next;
 } *client_t;
 

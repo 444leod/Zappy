@@ -9,8 +9,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
-#include "clientllist.h"
+#include "clients.h"
 #include "packet.h"
+#include "lib.h"
 
 /**
  * @brief Send all packets queued of a client to the client
@@ -23,5 +24,7 @@ void send_packets(client_t client)
     packet_t *packet = pop_packet_from_queue(&client->packet_queue);
     int socketFd = client->fd;
 
+    if (packet->buffer[strlen(packet->buffer) - 1] != '\n')
+        packet->buffer = supercat(2, packet->buffer, "\n");
     send_packet(socketFd, packet);
 }

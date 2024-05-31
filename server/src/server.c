@@ -5,8 +5,8 @@
 ** teams
 */
 
-#include "server_teams.h"
-#include "clientllist.h"
+#include "zappy.h"
+#include "clients.h"
 #include "lib.h"
 #include <sys/socket.h>
 #include <netinet/in.h>

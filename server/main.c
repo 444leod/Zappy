@@ -5,7 +5,7 @@
 ** main
 */
 
-#include "server_teams.h"
+#include "zappy.h"
 
 int main(int argc, char *argv[])
 {

@@ -6,7 +6,7 @@
 */
 
 #include "packet.h"
-#include "clientllist.h"
+#include "clients.h"
 #include "garbage_collector.h"
 #include <string.h>
 

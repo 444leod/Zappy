@@ -10,7 +10,7 @@
 #include "debug.h"
 #include "macros.h"
 #include "lib.h"
-#include "clientllist.h"
+#include "clients.h"
 #include "garbage_collector.h"
 
 /**

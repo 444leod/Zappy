@@ -9,7 +9,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "server_teams.h"
+#include "zappy.h"
 
 /**
  * @brief Clean exit

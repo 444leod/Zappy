@@ -5,10 +5,10 @@
 ** handle_clients
 */
 
-#include "clientllist.h"
+#include "clients.h"
 #include <sys/select.h>
 #include "lib.h"
-#include "server_teams.h"
+#include "zappy.h"
 #include "commands.h"
 #include <unistd.h>
 #include <stdio.h>

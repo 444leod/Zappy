@@ -17,7 +17,7 @@
 #include <sys/select.h>
 #include <arpa/inet.h>
 #include "lib.h"
-#include "clientllist.h"
+#include "clients.h"
 #include "debug.h"
 #include "garbage_collector.h"
 #include "macros.h"
