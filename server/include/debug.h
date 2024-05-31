@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2024
-** myTeams
+** Zappy
 ** File description:
 ** debug
 */

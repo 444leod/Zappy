@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2024
-** myTeams
+** Zappy
 ** File description:
 ** lib
 */
@@ -24,8 +24,4 @@ char *my_strndup(char const *src, int n);
 char *get_current_dir(void);
 char *my_snprintf(const char *format, ...);
 char *replace_char(char *str, char find, char replace);
-char *get_uuid_as_string(uuid_t uuid);
 void my_exit(int status);
-char **quote_split(char *str);
-void get_uuid_from_string(char *str, uuid_t uuid);
-bool is_uuid_valid(char *str);

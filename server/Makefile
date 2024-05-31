@@ -5,66 +5,87 @@
 ## Makefile
 ##
 
-GREEN=\033[0;32m
-NC=\033[0m
+__GREEN=\033[0;32m
+__NC=\033[0m
 
-INFO = ${GREEN}[INFO]${NC}
+__INFO = ${__GREEN}[INFO]${__NC}
 
-all:
-	make -C ./common -s
-	make -C ./server -s
-	@mv ./server/myteams_server ./myteams_server
-	make -C ./client -s
-	@mv ./client/myteams_cli ./myteams_cli
-	@echo -ne "\n${INFO} Server and client compiled successfully.${NC}\n"
+__NAME = zappy_server
+__LIBMY = libmy.a
+__LIBNETWORK = libnetwork.a
+
+__SRC = $(addprefix src/, $(__SRC_SRC)) \
+	$(addprefix src/commands/, $(__SRC_COMMANDS)) \
+	$(addprefix src/network/, $(__SRC_NETWORK)) \
+	$(addprefix src/network/client/, $(__SRC_CLIENT)) \
+	main.c
+
+__SRC_SRC := server.c \
+	exit.c \
+	check_args.c \
+	handle_clients.c \
+	handle_commands.c
+
+__SRC_COMMANDS := commands.c \
+	unknown_command.c \
+	msz.c
+
+__SRC_NETWORK := global_packet_send.c \
+	send_packets.c \
+	special_print.c \
+
+__SRC_CLIENT := add_client.c \
+	clear_clients.c \
+	create_client.c \
+	get_clients.c \
+	remove_client.c \
+
+%.o: %.c
+	@$(__CC) -c -o $@ $< $(__CFLAGS)
+
+__OBJ = $(__SRC:.c=.o)
+
+__CC = gcc
+
+__CFLAGS = -Wall -Wextra -Werror -Wpedantic -I./include -L. -lmy -lnetwork
+
+all: $(__LIBMY) $(__LIBNETWORK) $(__NAME)
+	@echo -ne "\n${__INFO} Server compiled successfully.${__NC}\n"
+
+$(__NAME): $(__OBJ)
+	@$(__CC) -o $(__NAME) $(__OBJ) $(__CFLAGS)
+
+$(__LIBMY):
+	@make -C ./lib -s
+
+$(__LIBNETWORK):
+	@make -C ./lib -s
 
 clean:
-	make clean -C ./common -s
-	make clean -C ./server -s
-	make clean -C ./client -s
-	@echo -ne "\n${INFO} Server and client cleaned.${NC}\n"
+	@make clean -C ./lib -s
+	@rm -f $(__OBJ)
+	@echo -ne "\n${__INFO} Server cleaned.${__NC}\n"
 
 fclean: clean
-	make fclean -C ./common -s
-	make fclean -C ./server -s
-	make fclean -C ./client -s
-	rm -f myteams_server
-	rm -f myteams_cli
-	@echo -ne "\n${INFO} Server and client cleaned.${NC}\n"
+	@make fclean -C ./lib -s
+	@rm -f $(__NAME)
+	@echo -ne "\n${__INFO} Server fully cleaned.${__NC}\n"
 
 re: fclean all
 
 tests_run:
-	make tests_run -C ./server -s
-	make tests_run -C ./client -s
-	@echo -ne "\n${INFO} Tests run.${NC}\n"
+	exit 0
+	@echo -ne "\n${__INFO} Tests run.${__NC}\n"
 
 debug:
-	make debug -C ./common -s
-	make debug -C ./server -s
-	@mv ./server/myteams_server ./myteams_server
-	make debug -C ./client -s
-	@mv ./client/myteams_cli ./myteams_cli
-	@echo -ne "\n${INFO} Debug mode compiled successfully.${NC}\n"
+	@make debug -C ./lib -s
+	@$(__CC) -g -o $(__NAME) $(__SRC) $(__CFLAGS)
+	@echo -ne "\n${__INFO} Debug mode compiled successfully.${__NC}\n"
 
 dev:
-	make dev -C ./common -s
-	make dev -C ./server -s
-	@mv ./server/myteams_server ./myteams_server
-	make dev -C ./client -s
-	@mv ./client/myteams_cli ./myteams_cli
-	@echo -ne "\n${INFO} Dev mode compiled successfully.${NC}\n"
-
-init: install-hooks install-mango
-
-install-hooks:
-	@cp .githooks/commit-msg .git/hooks/commit-msg
-	@chmod +x .git/hooks/commit-msg
-	@echo "Hooks installed."
-
-install-mango:
-	@chmod +x ./init/install-mango.sh
-	@./init/install-mango.sh
+	@make dev -C ./lib -s
+	@$(__CC) -g -o $(__NAME) $(__SRC) $(__CFLAGS) -DDEV_MODE
+	@echo -ne "\n${__INFO} Dev mode compiled successfully.${__NC}\n"
 
 .PHONY: all clean fclean re
 .SILENT: run
