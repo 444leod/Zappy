@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include <uuid/uuid.h>
-#include <time.h>
+#include <stdint.h>
 
 typedef struct node_s {
     struct node_s *next;
@@ -17,4 +16,5 @@ typedef struct node_s {
 
 void add_to_list(void *new_data, node_t *list);
 void remove_from_list(void *data, node_t *list);
-void *get_data_by_index(int index, node_t list);
+node_t get_data_by_index(int index, node_t list);
+uint32_t get_list_size(node_t list);
