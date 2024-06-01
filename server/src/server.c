@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** Zappy
 ** File description:
-** teams
+** zappy
 */
 
 #include "zappy.h"
@@ -117,8 +117,8 @@ static void select_wrapper(int max_sd, fd_set *readfds,
 }
 
 /**
- * @brief Main Teams loop
- * @details the main loop of the Teams server, it accepts new clients and
+ * @brief Main Zappy loop
+ * @details the main loop of the Zappy server, it accepts new clients and
  *  updates the clients status, also it calls the loop_clients function
  *  to handle the clients commands
  *
@@ -148,7 +148,7 @@ void zappy_loop(int socketFd)
 }
 
 /**
- * @brief Main Teams function
+ * @brief Main Zappy function
  * @details the main function of the Zappy server,
  *  it initializes the server_info struct and the socket,
  *  then it calls the zappy_loop function
@@ -165,7 +165,7 @@ int server(int argc, char *argv[])
     server_info_t server_info;
 
     errno = 0;
-    DEBUG_PRINT("Teams server started\n");
+    DEBUG_PRINT("Zappy server started\n");
     signal(2, handle_sigint);
     check_args(argc, argv);
     server_info = init_server_info(argv);
