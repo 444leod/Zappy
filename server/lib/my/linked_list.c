@@ -60,7 +60,7 @@ void remove_from_list(void *data, node_t *list)
  *
  * @return node_t the data
 */
-node_t get_data_by_index(int index, node_t list)
+node_t get_node_by_index(int index, node_t list)
 {
     node_t tmp = list;
     int i = 0;
