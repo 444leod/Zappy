@@ -50,3 +50,26 @@ void remove_from_list(void *data, node_t *list)
     prev->next = tmp->next;
     my_free(tmp);
 }
+
+/**
+ * @brief Get the data from a list based on the index
+ * @details Get the data from a list based on the index
+ *
+ * @param index the index of the data to get
+ * @param list the list
+ *
+ * @return void* the data
+*/
+void *get_data_by_index(int index, node_t list)
+{
+    node_t tmp = list;
+    int i = 0;
+
+    while (tmp && i < index) {
+        tmp = tmp->next;
+        i++;
+    }
+    if (i != index)
+        return (NULL);
+    return (tmp->data);
+}

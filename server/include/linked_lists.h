@@ -17,3 +17,4 @@ typedef struct node_s {
 
 void add_to_list(void *new_data, node_t *list);
 void remove_from_list(void *data, node_t *list);
+void *get_data_by_index(int index, node_t list);

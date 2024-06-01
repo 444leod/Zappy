@@ -1,6 +1,6 @@
 ##
 ## EPITECH PROJECT, 2024
-## myTeams
+## Zappy
 ## File description:
 ## Makefile
 ##
@@ -21,6 +21,7 @@ SRC_MY_LIB = 	./my/debug_print.c \
 	./my/supercat.c \
 	./my/tablen.c \
 	./my/linked_list.c \
+	./my/is_number.c \
 
 SRC_NETWORK_LIB = 	./network/accept_socket.c \
 	./network/bind_socket.c \
