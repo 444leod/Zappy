@@ -15,6 +15,7 @@ __LIBMY = libmy.a
 __LIBNETWORK = libnetwork.a
 
 __SRC = $(addprefix src/, $(__SRC_SRC)) \
+	$(addprefix src/args/, $(__SRC_ARGS)) \
 	$(addprefix src/commands/, $(__SRC_COMMANDS)) \
 	$(addprefix src/network/, $(__SRC_NETWORK)) \
 	$(addprefix src/network/client/, $(__SRC_CLIENT)) \
@@ -22,13 +23,17 @@ __SRC = $(addprefix src/, $(__SRC_SRC)) \
 
 __SRC_SRC := server.c \
 	exit.c \
-	check_args.c \
 	handle_clients.c \
 	handle_commands.c
 
 __SRC_COMMANDS := commands.c \
 	unknown_command.c \
 	msz.c
+
+__SRC_ARGS := params.c \
+	check_args.c \
+	init_server_info.c \
+	display_help.c \
 
 __SRC_NETWORK := global_packet_send.c \
 	send_packets.c \
