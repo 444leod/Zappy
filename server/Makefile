@@ -14,6 +14,8 @@ __NAME = zappy_server
 __LIBMY = libmy.a
 __LIBNETWORK = libnetwork.a
 
+__TESTER_NAME = tester
+
 __SRC = $(addprefix src/, $(__SRC_SRC)) \
 	$(addprefix src/args/, $(__SRC_ARGS)) \
 	$(addprefix src/commands/, $(__SRC_COMMANDS)) \
@@ -45,10 +47,18 @@ __SRC_CLIENT := add_client.c \
 	get_clients.c \
 	remove_client.c \
 
+__SRC_TEST := tests/tester.cpp \
+	tests/Test.cpp
+
 %.o: %.c
 	@$(__CC) -c -o $@ $< $(__CFLAGS)
 
+%.o: %.cpp
+	@g++ -c -o $@ $< -std=c++20
+
 __OBJ = $(__SRC:.c=.o)
+
+__TEST_OBJ = $(__SRC_TEST:.cpp=.o)
 
 __CC = gcc
 
@@ -78,9 +88,11 @@ fclean: clean
 
 re: fclean all
 
-tests_run:
-	exit 0
-	@echo -ne "\n${__INFO} Tests run.${__NC}\n"
+$(__TESTER_NAME): $(__TEST_OBJ)
+	@g++ -o $(__TESTER_NAME) $(__TEST_OBJ) -std=c++20
+
+tests_run: $(__TESTER_NAME) all
+	@./$(__TESTER_NAME)
 
 debug:
 	@make debug -C ./lib -s
