@@ -59,8 +59,8 @@ UNUSED static void dev_print_fd_set(fd_set *readfds, fd_set *writefds)
     int wfds[FD_SETSIZE] = {0};
     int rcount = 0;
     int wcount = 0;
-    UNUSED char *buffer;
-    UNUSED static int print = 0;
+    char *buffer;
+    UNUSED static TIMER print_timer = -1;
 
     for (int i = 0; i < FD_SETSIZE; ++i) {
         if (FD_ISSET(i, readfds)) {
@@ -73,7 +73,7 @@ UNUSED static void dev_print_fd_set(fd_set *readfds, fd_set *writefds)
         }
     }
     buffer = dev_get_full_buffer(rfds, rcount, wfds, wcount);
-    SOMETIMES_DEBUG(&print, 10000, "%s", buffer);
+    TIMED_DEBUG_PRINT(&print_timer, 2, "%s", buffer);
     my_free(buffer);
 }
 
@@ -85,8 +85,7 @@ UNUSED static void dev_print_fd_set(fd_set *readfds, fd_set *writefds)
 */
 void special_print(UNUSED fd_set *readfds, UNUSED fd_set *writefds)
 {
-    #ifndef DEV_MODE
-    #else
+    if (!DEBUG)
+        return;
     dev_print_fd_set(readfds, writefds);
-    #endif
 }
