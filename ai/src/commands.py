@@ -16,21 +16,26 @@ class ACommand:
 class Forward(ACommand):
     def __init__(self) -> None:
         super().__init__("Forward")
+    
+    #TODO: interpret_result to change player pos
 
 class Right(ACommand):
     def __init__(self) -> None:
         super().__init__("Right")
 
+    #TODO: interpret_result to change player orientation
+
 class Left(ACommand):
     def __init__(self) -> None:
         super().__init__("Left")
+    
+    #TODO: interpret_result to change player orientation
 
 class Look(ACommand):
     def __init__(self) -> None:
         super().__init__("Look")
     
-    def interpret_result(self, res: str) -> dict:
-        super().interpret_result(res)
+    #TODO: interpret_result to fill tilemap content
 
 class Inventory(ACommand):
     def __init__(self) -> None:
@@ -48,10 +53,14 @@ class Broadcast(ACommand):
 class ConnectNbr(ACommand):
     def __init__(self) -> None:
         super().__init__("Connect_nbr")
+    
+    #TODO: interpret_result to change nb_eggs
 
 class Fork(ACommand):
     def __init__(self) -> None:
         super().__init("Fork")
+    
+    #TODO: interpret_result to change nb_eggs
 
 class Eject(ACommand):
     def __init__(self) -> None:
@@ -60,11 +69,17 @@ class Eject(ACommand):
 class Take(ACommand):
     def __init__(self, obj) -> None:
         super().__init(f"Take {obj}")
+    
+    #TODO: interpret_result to change player inv and tilecontent
 
 class Set(ACommand):
     def __init__(self, obj) -> None:
         super().__init(f"Set {obj}")
+    
+    #TODO: interpret_result to change player inv and tilecontent
 
 class Incantation(ACommand):
     def __init__(self) -> None:
         super().__init("Incantation")
+    
+    #TODO: interpret_result to change player level

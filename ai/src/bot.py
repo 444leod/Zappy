@@ -3,7 +3,7 @@
 import sys
 from typing import List
 from connection_handler import ConnectionHandler
-from config import Config
+from config import Config, HelpException, ArgError
 from enum import Enum
 import commands as cmd
 from dataclasses import dataclass, field
@@ -38,12 +38,18 @@ class GeneralInfo():
 
 class Bot():
     def __init__(self, verbose=False, traced=False) -> None:
-        self.conf: Config = Config()
         try:
+            self.conf: Config = Config()
             self.com_handler: ConnectionHandler = ConnectionHandler(
                 port=self.conf.port,
                 hostname=self.conf.machine
             )
+        except HelpException as e:
+            print(str(e))
+            sys.exit(0)
+        except ArgError as e:
+            print(str(e))
+            sys.exit(84)
         except Exception as e:
             print("Failed to connect to server: " + str(e))
             sys.exit(84)
@@ -55,6 +61,9 @@ class Bot():
 
         self.com_handler.send_command(self.conf.name)
         self.results.append(self.com_handler.receive_response())
+        if (self.results[-1] == "ko\n"):
+            print("Unkowned team name")
+            sys.exit(84)
         self.results.append(self.com_handler.receive_response())
 
         self.verbose: bool = verbose
@@ -94,7 +103,7 @@ class Bot():
     def run(self) -> None:
         while True:
             # Behavior logic here
-            cmd_to_send = cmd.Inventory()
+            cmd_to_send: cmd.ACommand = cmd.Inventory()
             self.cmd_sent.append(cmd_to_send.dump())
             self.com_handler.send_command(cmd_to_send.dump())
 
