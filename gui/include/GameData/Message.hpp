@@ -10,12 +10,13 @@
 #include <vector>
 #include <iostream>
 #include <cstdint>
+#include <ctime>
 
 namespace gui {
     struct Message {
         std::uint32_t id;
         std::string message;
         std::string teamName;
-        std::uint32_t time;
+        std::time_t time;
     };
 }
