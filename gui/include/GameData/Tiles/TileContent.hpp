@@ -32,34 +32,34 @@ namespace gui {
              * @brief Get the food of the tile
              * @return std::uint32_t The food of the tile
             */
-            std::uint32_t food() const { return _food; }
+            std::uint32_t food() const { return this->_food; }
 
             /**
              * @brief Set the food of the tile
              * @param food The food of the tile
             */
-            void setFood(std::uint32_t food) { _food = food; }
+            void setFood(std::uint32_t food) { this->_food = food; }
 
             /**
              * @brief Get the entities of the tile
              * @return std::vector<AEntity&> The entities of the tile
             */
-            std::vector<AEntity&> entity() const { return _entities; }
+            std::vector<AEntity&> entity() const { return this->_entities; }
 
             /**
              * @brief Add an entity to the tile
              * @param entity The entity to add
             */
-            void addEntity(AEntity& entity) { _entities.push_back(entity); }
+            void addEntity(AEntity& entity) { this->_entities.push_back(entity); }
 
             /**
              * @brief Remove an entity from the tile
              * @param id The id of the entity to remove
             */
             void removeEntity(std::uint32_t id) {
-                for (auto it = _entities.begin(); it != _entities.end(); it++) {
+                for (auto it = this->_entities.begin(); it != this->_entities.end(); it++) {
                     if ((*it).entityId() == id) {
-                        _entities.erase(it);
+                        this->_entities.erase(it);
                         return;
                     }
                 }
@@ -69,13 +69,13 @@ namespace gui {
              * @brief Get the rocks of the tile
              * @return Rocks The rocks of the tile
             */
-            Rocks rocks() const { return _rocks; }
+            Rocks rocks() const { return this->_rocks; }
 
             /**
              * @brief Set the rocks of the tile
              * @param rocks The rocks of the tile
             */
-            void setRocks(Rocks rocks) { _rocks = rocks; }
+            void setRocks(Rocks rocks) { this->_rocks = rocks; }
 
         private:
             std::uint32_t _food = 0;

@@ -32,38 +32,38 @@ namespace gui {
              * @brief Set the entity Id
              * @param id Id of the entity
             */
-            virtual void setEntityId(std::uint32_t id) { _id = id; };
+            virtual void setEntityId(std::uint32_t id) { this->_id = id; };
 
             /**
              * @brief Get the entity Id
              * @return std::uint32_t Id of the entity
             */
-            virtual std::uint32_t entityId() const { return _id; };
+            virtual std::uint32_t entityId() const { return this->_id; };
 
             /**
              * @brief Set the orientation of the entity
              * @param orientation Orientation of the entity
              * @note The orientation can be NORTH, EAST, SOUTH, WEST
             */
-            virtual void setOrientation(Orientation orientation) { _orientation = orientation; };
+            virtual void setOrientation(Orientation orientation) { this->_orientation = orientation; };
 
             /**
              * @brief Get the orientation of the entity
              * @return Orientation Orientation of the entity
             */
-            virtual Orientation orientation() const { return _orientation; };
+            virtual Orientation orientation() const { return this->_orientation; };
 
             /**
              * @brief Set the position of the entity
              * @param position Position of the entity
             */
-            virtual void setEntityPosition(Vector2i position) { _position = position; };
+            virtual void setEntityPosition(Vector2i position) { this->_position = position; };
 
             /**
              * @brief Get the position of the entity
              * @return Vector2i Position of the entity
             */
-            virtual Vector2i entityPosition() const { return _position; };
+            virtual Vector2i entityPosition() const { return this->_position; };
 
         protected:
             Vector2i _position = {0, 0};

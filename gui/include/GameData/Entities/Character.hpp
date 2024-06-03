@@ -35,37 +35,37 @@ namespace gui {
              * @brief Get the food of the character
              * @return std::uint32_t The food of the character
             */
-            std::uint32_t food() const { return _food; }
+            std::uint32_t food() const { return this->_food; }
 
             /**
              * @brief Set the food of the character
              * @param food The food of the character
             */
-            void setFood(std::uint32_t food) { _food = food; }
+            void setFood(std::uint32_t food) { this->_food = food; }
 
             /**
              * @brief Get the rocks of the character
              * @return Rocks The rocks of the character
             */
-            Rocks rocks() const { return _rocks; }
+            Rocks rocks() const { return this->_rocks; }
 
             /**
              * @brief Set the rocks of the character
              * @param rocks The rocks of the character
             */
-            void setRocks(Rocks rocks) { _rocks = rocks; }
+            void setRocks(Rocks rocks) { this->_rocks = rocks; }
 
             /**
              * @brief Get the player level
              * @return Vector2u The player level
             */
-            std::uint32_t playerLevel() const { return _level; }
+            std::uint32_t playerLevel() const { return this->_level; }
 
             /**
-             * @brief Set the player level
+             * @brief Add 1 to the player level
              * @param playerLevel The player level
             */
-            void setPlayerLevel(std::uint32_t playerLevel) { _level = playerLevel; }
+            void increasePlayerLevel(std::uint32_t playerLevel) { this->_level += playerLevel; }
 
         private:
             std::uint32_t _food = 0;

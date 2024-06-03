@@ -37,13 +37,13 @@ namespace gui {
              * @brief Get the map size
              * @return Vector2u The map size
             */
-            Vector2u mapSize() const { return _mapSize; }
+            Vector2u mapSize() const { return this->_mapSize; }
 
             /**
              * @brief Set the map size
              * @param mapSize The map size
             */
-            void setMapSize(Vector2u mapSize) { _mapSize = mapSize; }
+            void setMapSize(Vector2u mapSize) { this->_mapSize = mapSize; }
 
             /**
              * @brief Get the tile content at specific coordinates
@@ -53,8 +53,8 @@ namespace gui {
             */
             TileContent tileContent(Vector2u coordinates) const
             {
-                auto it = _mapContent.find(coordinates);
-                if (it != _mapContent.end())
+                auto it = this->_mapContent.find(coordinates);
+                if (it != this->_mapContent.end())
                     return it->second;
                 else
                     throw std::out_of_range("Coordinates out of range");
@@ -67,20 +67,21 @@ namespace gui {
             */
             bool isValidCoordinates(Vector2u coordinates) const
             {
-                return (coordinates.x() < _mapSize.x() && coordinates.y() < _mapSize.y());
+                return (coordinates.x() < this->_mapSize.x() && coordinates.y() < this->_mapSize.y());
             }
 
             /**
              * @brief Set the tile content at specific coordinates
              * @param coordinates The coordinates of the tile
              * @param tileContent The new tile content
+             * @throw std::out_of_range If the coordinates are out of range
             */
             void setTileContent(Vector2u coordinates, TileContent tileContent)
             {
                 if (!isValidCoordinates(coordinates))
                     throw std::out_of_range("Coordinates out of range");
 
-                _mapContent[coordinates] = tileContent;
+                this->_mapContent[coordinates] = tileContent;
             }
 
             /**
@@ -89,7 +90,7 @@ namespace gui {
             */
             std::map<Vector2u, TileContent> mapContent() const
             {
-                return _mapContent;
+                return this->_mapContent;
             }
 
             /**
@@ -99,7 +100,7 @@ namespace gui {
             void setMapContent(std::map<Vector2u, TileContent> mapContent)
             {
                 for (auto &tile : mapContent) {
-                    _mapContent[tile.first] = tile.second;
+                    this->_mapContent[tile.first] = tile.second;
                 }
             }
 
@@ -107,31 +108,31 @@ namespace gui {
              * @brief Get the team names
              * @return std::vector<std::string> The team names
             */
-            std::vector<std::string> teamNames() const { return _teamNames; }
+            std::vector<std::string> teamNames() const { return this->_teamNames; }
 
             /**
              * @brief Add a team name
              * @param teamName The team name
             */
-            void addTeamName(std::string teamName) { _teamNames.push_back(teamName); }
+            void addTeamName(std::string teamName) { this->_teamNames.push_back(teamName); }
 
             /**
              * @brief Get the tile number
              * @return int The tile number
             */
-            std::uint32_t tileNbr() const { return (_mapSize.x() * _mapSize.y()); }
+            std::uint32_t tileNbr() const { return (this->_mapSize.x() * this->_mapSize.y()); }
 
             /**
              * @brief Get the player
              * @return Character The player
             */
-            std::vector<Character> player() const { return _players; }
+            std::vector<Character> player() const { return this->_players; }
 
             /**
              * @brief Add a player
              * @param player The player
             */
-            void addPlayer(Character player) { _players.push_back(player); }
+            void addPlayer(Character player) { this->_players.push_back(player); }
 
             /**
              * @brief Remove a player
@@ -139,9 +140,9 @@ namespace gui {
             */
             void removePlayer(std::uint32_t playerId)
             {
-                for (auto it = _players.begin(); it != _players.end(); it++) {
+                for (auto it = this->_players.begin(); it != this->_players.end(); it++) {
                     if (it->entityId() == playerId) {
-                        _players.erase(it);
+                        this->_players.erase(it);
                         return;
                     }
                 }
@@ -151,13 +152,13 @@ namespace gui {
              * @brief Get the eggs
              * @return std::vector<Egg> The eggs
             */
-            std::vector<Egg> eggs() const { return _eggs; }
+            std::vector<Egg> eggs() const { return this->_eggs; }
 
             /**
              * @brief Add an egg
              * @param egg The egg
             */
-            void addEgg(Egg egg) { _eggs.push_back(egg); }
+            void addEgg(Egg egg) { this->_eggs.push_back(egg); }
 
             /**
              * @brief Remove an egg
@@ -165,9 +166,9 @@ namespace gui {
             */
             void removeEgg(std::uint32_t eggId)
             {
-                for (auto it = _eggs.begin(); it != _eggs.end(); it++) {
+                for (auto it = this->_eggs.begin(); it != this->_eggs.end(); it++) {
                     if (it->entityId() == eggId) {
-                        _eggs.erase(it);
+                        this->_eggs.erase(it);
                         return;
                     }
                 }
@@ -177,13 +178,13 @@ namespace gui {
              * @brief Get the messages
              * @return std::vector<Message> The messages
             */
-            std::vector<Message> messages() const { return _messages; }
+            std::vector<Message> messages() const { return this->_messages; }
 
             /**
              * @brief Add a message
              * @param message The message
             */
-            void addMessage(Message message) { _messages.push_back(message); }
+            void addMessage(Message message) { this->_messages.push_back(message); }
 
         private:
             Vector2u _mapSize = {0, 0};
