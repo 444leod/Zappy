@@ -8,6 +8,7 @@
 #include "commands.h"
 #include "packet.h"
 
-void msz(UNUSED client_t client, UNUSED char **command)
+void msz(UNUSED char **args, UNUSED client_t client,
+    UNUSED server_info_t server_info)
 {
 }
