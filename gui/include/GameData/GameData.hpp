@@ -153,6 +153,6 @@ namespace gui {
             std::vector<std::string> _teamNames = {};
             std::vector<Character> _players = {};
             std::vector<Egg> _eggs = {};
-            std::map<std::string, Message> _message = {};
+            std::vector<Message> _message = {};
     };
 }
