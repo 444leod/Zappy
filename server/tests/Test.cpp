@@ -167,7 +167,9 @@ void Tester::test()
             std::cout << std::endl << std::endl;
         } else {
             succedded++;
+            #ifdef SILENT
             std::cout << "[\033[32mPASSED\033[0m] " << test.first << std::endl;
+            #endif
         }
     }
     std::printf("\nNombre de tests réussis: ");

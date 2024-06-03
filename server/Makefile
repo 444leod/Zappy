@@ -99,20 +99,21 @@ fclean: clean
 re: fclean all
 
 $(__TESTER_NAME): all $(__TESTER_OBJ)
-	@echo -e "Compiling Tester"
-	@g++ -o $(__TESTER_NAME) $(__TESTER_OBJ) -std=c++20
+	@g++ -o $(__TESTER_NAME) $(__TESTER_OBJ) -std=c++20 -DSILENT
 
 tests_run: $(__TESTER_NAME) $(__LIBMY) $(__LIBNETWORK)
 	@./$(__TESTER_NAME)
 	@gcc -o $(__TEST) $(__TEST_SRC) $(__TEST_FLAGS)
 	@./$(__TEST)
 
-tests_clean: fclean
-	@rm -f $(__TESTER_OBJ)
+tests_clean:
+	@make fclean -i -C ./lib -s
+	@rm -f $(__NAME)
+	@rm -f $(__OBJ)
 	@rm -f $(__TESTER_NAME)
-	@make fclean -C ./lib -s
-	@rm -f $(__TEST_OBJ)
+	@rm -f $(__TESTER_OBJ)
 	@rm -f $(__TEST)
+	@rm -f $(__TEST_OBJ)
 	@find . -name "*.gcda" -delete
 	@find . -name "*.gcno" -delete
 
