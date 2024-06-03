@@ -11,18 +11,9 @@
 #include <uuid/uuid.h>
 #include "packet.h"
 #include "linked_lists.h"
-
-enum CLIENT_TYPE {
-    NONE,
-    GRAPHICAL,
-    AI,
-    ADMIN
-};
-
-enum DATA_STATUS {
-    READING,
-    PROCESSING,
-};
+#include "commands.h"
+#include "commands_list.h"
+#include "client_types.h"
 
 typedef struct client_s {
     int fd;
@@ -30,9 +21,8 @@ typedef struct client_s {
     int client_num;
     packet_queue_t packet_queue;
     enum CLIENT_TYPE type;
-    char *command;
-    char *next_commands;
-    enum DATA_STATUS data_status;
+    client_commands_t commands;
+    char *buffer;
     struct client_s *next;
 } *client_t;
 
