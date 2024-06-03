@@ -33,15 +33,15 @@ namespace gui {
 
             /**
              * @brief Get the food of the character
-             * @return int The food of the character
+             * @return std::uint32_t The food of the character
             */
-            int food() const { return _food; }
+            std::uint32_t food() const { return _food; }
 
             /**
              * @brief Set the food of the character
              * @param food The food of the character
             */
-            void setFood(int food) { _food = food; }
+            void setFood(std::uint32_t food) { _food = food; }
 
             /**
              * @brief Get the rocks of the character
@@ -68,7 +68,7 @@ namespace gui {
             void setPlayerLevel(std::uint32_t playerLevel) { _level = playerLevel; }
 
         private:
-            int _food = 0;
+            std::uint32_t _food = 0;
             std::uint32_t _level = 0;
             Rocks _rocks;
     };
