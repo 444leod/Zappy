@@ -12,6 +12,7 @@ __INFO = ${__GREEN}[INFO]${__NC}
 
 __NAME = zappy_server
 __TEST = server_suite
+__TESTER_NAME = tester
 __LIBMY = libmy.a
 __LIBNETWORK = libnetwork.a
 
@@ -19,22 +20,24 @@ __ASRC = $(__SRC) \
 	main.c
 
 __SRC	=	$(addprefix src/, $(__SRC_SRC)) \
+	$(addprefix src/args/, $(__SRC_ARGS)) \
 	$(addprefix src/commands/, $(__SRC_COMMANDS)) \
 	$(addprefix src/network/, $(__SRC_NETWORK)) \
 	$(addprefix src/network/client/, $(__SRC_CLIENT)) \
 
-__TEST_SRC	=	$(__SRC) \
-	$(addprefix ../tests/server/, $(__SRC_ROOT_TEST))
-
 __SRC_SRC := server.c \
 	exit.c \
-	check_args.c \
 	handle_clients.c \
 	handle_commands.c
 
 __SRC_COMMANDS := commands.c \
 	unknown_command.c \
 	msz.c
+
+__SRC_ARGS := params.c \
+	check_args.c \
+	init_server_info.c \
+	display_help.c \
 
 __SRC_NETWORK := global_packet_send.c \
 	send_packets.c \
@@ -46,20 +49,30 @@ __SRC_CLIENT := add_client.c \
 	get_clients.c \
 	remove_client.c \
 
-# Add server tests sources here.
+# UNIT TESTS
+__TEST_SRC	=	$(__SRC) \
+	$(addprefix ../tests/server/, $(__SRC_ROOT_TEST))
+
 __SRC_ROOT_TEST := sample.c \
 	client.c
+
+# FUNCTIONAL TESTER
+__TESTER_SRC := tests/tester.cpp \
+	tests/Test.cpp
+
+__CC = gcc
+__CFLAGS += -Wall -Wextra -Werror -Wpedantic -I./include -L. -lmy -lnetwork
+__TEST_FLAGS = $(__CFLAGS) --coverage -lcriterion
 
 %.o: %.c
 	@$(__CC) -c -o $@ $< $(__CFLAGS)
 
 __OBJ = $(__ASRC:.c=.o)
-
 __TEST_OBJ = $(__TEST_SRC:.c=.o)
+__TESTER_OBJ = $(__TESTER_SRC:.cpp=.o)
 
-__CC = gcc
-__CFLAGS += -Wall -Wextra -Werror -Wpedantic -I./include -L. -lmy -lnetwork
-__TEST_FLAGS = $(__CFLAGS) --coverage -lcriterion
+%.o: %.cpp
+	@g++ -c -o $@ $< -std=c++20
 
 all: $(__LIBMY) $(__LIBNETWORK) $(__NAME)
 	@echo -ne "\n${__INFO} Server compiled successfully.${__NC}\n"
@@ -85,12 +98,18 @@ fclean: clean
 
 re: fclean all
 
-tests_run: $(__LIBMY) $(__LIBNETWORK)
+$(__TESTER_NAME): all $(__TESTER_OBJ)
+	@echo -e "Compiling Tester"
+	@g++ -o $(__TESTER_NAME) $(__TESTER_OBJ) -std=c++20
+
+tests_run: $(__TESTER_NAME) $(__LIBMY) $(__LIBNETWORK)
+	@./$(__TESTER_NAME)
 	@gcc -o $(__TEST) $(__TEST_SRC) $(__TEST_FLAGS)
-	@
 	@./$(__TEST)
 
-tests_clean:
+tests_clean: fclean
+	@rm -f $(__TESTER_OBJ)
+	@rm -f $(__TESTER_NAME)
 	@make fclean -C ./lib -s
 	@rm -f $(__TEST_OBJ)
 	@rm -f $(__TEST)
