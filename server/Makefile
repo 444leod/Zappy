@@ -18,7 +18,6 @@ __LIBNETWORK = libnetwork.a
 __ASRC = $(__SRC) \
 	main.c
 
-
 __SRC	=	$(addprefix src/, $(__SRC_SRC)) \
 	$(addprefix src/commands/, $(__SRC_COMMANDS)) \
 	$(addprefix src/network/, $(__SRC_NETWORK)) \
@@ -47,7 +46,7 @@ __SRC_CLIENT := add_client.c \
 	get_clients.c \
 	remove_client.c \
 
-__SRC_ROOT_TEST := test.c
+__SRC_ROOT_TEST := sample.c
 
 %.o: %.c
 	$(__CC) -c -o $@ $< $(__CFLAGS)

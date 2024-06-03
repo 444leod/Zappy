@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** Zappy
 ** File description:
-** test
+** sample
 */
 
 #include <criterion/criterion.h>
