@@ -14,9 +14,11 @@
  * @note SOUTH = 3
  * @note WEST = 4
 */
-enum class Orientation {
-    NORTH = 1,
-    EAST,
-    SOUTH,
-    WEST
-};
+namespace gui {
+    enum class Orientation {
+        NORTH = 1,
+        EAST,
+        SOUTH,
+        WEST
+    };
+}

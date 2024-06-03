@@ -14,7 +14,9 @@
  * @note Mendiane is a resource that can be found on the map
  * @note Herited from ARock class
 */
-class Mendiane : public gui::ARock {
-    public:
-        Mendiane(std::uint32_t rockQuantity = 0 ) : gui::ARock( rockQuantity ) {};
-};
+namespace gui {
+    class Mendiane : public ARock {
+        public:
+            Mendiane(std::uint32_t rockQuantity = 0 ) : ARock( rockQuantity ) {};
+    };
+}

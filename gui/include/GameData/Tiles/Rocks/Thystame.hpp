@@ -14,7 +14,9 @@
  * @note Thystame is a resource that can be found on the map
  * @note Herited from ARock class
 */
-class Thystame : public gui::ARock {
-    public:
-        Thystame(std::uint32_t rockQuantity = 0 ) : gui::ARock( rockQuantity ) {};
-};
+namespace gui {
+    class Thystame : public ARock {
+        public:
+            Thystame(std::uint32_t rockQuantity = 0 ) : ARock( rockQuantity ) {};
+    };
+}

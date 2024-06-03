@@ -14,7 +14,9 @@
  * @note Phiras is a resource that can be found on the map
  * @note Herited from ARock class
 */
-class Phiras : public gui::ARock {
-    public:
-        Phiras(std::uint32_t rockQuantity = 0 ) : gui::ARock( rockQuantity ) {};
-};
+namespace gui {
+    class Phiras : public ARock {
+        public:
+            Phiras(std::uint32_t rockQuantity = 0 ) : ARock( rockQuantity ) {};
+    };
+}

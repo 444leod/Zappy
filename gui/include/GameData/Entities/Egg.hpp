@@ -9,8 +9,10 @@
 
 #include "AEntity.hpp"
 
-class Egg : public AEntity {
-    public:
-        Egg() = default;
-        ~Egg() = default;
-};
+namespace gui {
+    class Egg : public AEntity {
+        public:
+            Egg() = default;
+            ~Egg() = default;
+    };
+}
