@@ -5,8 +5,7 @@
 ** AEntities
 */
 
-#ifndef AENTITIES_HPP_
-#define AENTITIES_HPP_
+#pragma once
 
 #include <cstdint>
 #include "Orientation.hpp"
@@ -71,5 +70,3 @@ class AEntities {
         Orientation _orientation = Orientation::NORTH;
         std::uint32_t _id = 0;
 };
-
-#endif /* !AENTITIES_HPP_ */

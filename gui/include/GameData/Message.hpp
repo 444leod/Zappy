@@ -5,8 +5,7 @@
 ** Message
 */
 
-#ifndef MESSAGE_HPP_
-#define MESSAGE_HPP_
+#pragma once
 
 #include <vector>
 #include <iostream>
@@ -53,5 +52,3 @@ class Message {
     private:
         std::vector<std::pair<std::uint32_t, std::string>> _messages;
 };
-
-#endif /* !MESSAGE_HPP_ */

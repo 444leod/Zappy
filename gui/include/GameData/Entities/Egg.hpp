@@ -5,8 +5,7 @@
 ** Egg
 */
 
-#ifndef EGG_HPP_
-#define EGG_HPP_
+#pragma once
 
 #include "AEntities.hpp"
 
@@ -15,5 +14,3 @@ class Egg : public AEntities {
         Egg() = default;
         ~Egg() = default;
 };
-
-#endif /* !EGG_HPP_ */
