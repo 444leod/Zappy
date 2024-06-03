@@ -67,6 +67,11 @@ tests_clean:
 
 tests: tests_run tests_clean
 
+coverage:
+	@make tests_run -s -C server
+	@gcovr server
+	@make tests_clean -s -C server
+
 run: all
 
 init: install-dependancies install-hooks install-mango __update-repo-config

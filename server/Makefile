@@ -50,7 +50,7 @@ __SRC_CLIENT := add_client.c \
 __SRC_ROOT_TEST := sample.c
 
 %.o: %.c
-	$(__CC) -c -o $@ $< $(__CFLAGS)
+	@$(__CC) -c -o $@ $< $(__CFLAGS)
 
 __OBJ = $(__ASRC:.c=.o)
 
@@ -58,7 +58,7 @@ __TEST_OBJ = $(__TEST_SRC:.c=.o)
 
 __CC = gcc
 __CFLAGS += -Wall -Wextra -Werror -Wpedantic -I./include -L. -lmy -lnetwork
-__TEST_FLAGS = $(__CFLAGS) -lcriterion
+__TEST_FLAGS = $(__CFLAGS) --coverage -lcriterion
 
 all: $(__LIBMY) $(__LIBNETWORK) $(__NAME)
 	@echo -ne "\n${__INFO} Server compiled successfully.${__NC}\n"
@@ -84,14 +84,17 @@ fclean: clean
 
 re: fclean all
 
-tests_run: $(__LIBMY) $(__LIBNETWORK) $(__TEST_OBJ)
-	gcc -o $(__TEST) $(__TEST_OBJ) $(__TEST_FLAGS)
+tests_run: $(__LIBMY) $(__LIBNETWORK)
+	@gcc -o $(__TEST) $(__TEST_SRC) $(__TEST_FLAGS)
+	@
 	@./$(__TEST)
 
 tests_clean:
 	@make fclean -C ./lib -s
 	@rm -f $(__TEST_OBJ)
 	@rm -f $(__TEST)
+	@find . -name "*.gcda" -delete
+	@find . -name "*.gcno" -delete
 
 debug:
 	@make debug -C ./lib -s
