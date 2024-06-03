@@ -22,16 +22,26 @@
 #include "garbage_collector.h"
 #include "macros.h"
 
+typedef struct team_name_s {
+    struct team_name_s *next;
+    char *name;
+} *team_name_t;
+
 typedef struct server_info_s {
     int port;
-    char *path;
-    char *ip;
+    uint32_t clientsNb;
+    uint32_t freq;
+    uint32_t width;
+    uint32_t height;
+    team_name_t team_names;
 } *server_info_t;
+
+
 
 int server(int argc, char *argv[]);
 void check_args(int argc, char *argv[]);
 int get_socket(void);
-void bind_socket(int socketFd, int port, char **ip);
+void bind_socket(int socketFd, int port);
 void listen_socket(int socketFd, int maxClients);
 void accept_socket(int socketFd, void (*func)(int));
 void send_packets(client_t client);
@@ -41,3 +51,6 @@ void loop_clients(client_t *clients, fd_set *readfds,
 void handle_command(client_t client);
 void get_port(int fd, int *port);
 void queue_packet_to_client_type(enum CLIENT_TYPE type, packet_t *packet);
+void check_args(int argc, char *argv[]);
+server_info_t init_server_info(char *argv[]);
+void display_help(char *str);

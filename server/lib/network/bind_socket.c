@@ -10,13 +10,12 @@
 
 /**
  * @brief Bind a socket
- * @details Bind a socket to a given port and update the ip
+ * @details Bind a socket to a given port
  *
  * @param socketFd the socket to bind
  * @param port the port to bind to
- * @param ip the ip to update
 */
-void bind_socket(int socketFd, int port, char **ip)
+void bind_socket(int socketFd, int port)
 {
     struct sockaddr_in serverAddress;
     int bindRes = 0;
@@ -28,6 +27,4 @@ void bind_socket(int socketFd, int port, char **ip)
         sizeof(serverAddress));
     if (bindRes == -1)
         my_error(supercat(2, "bind failed: ", strerror(errno)));
-    inet_ntop(AF_INET, &(serverAddress.sin_addr),
-        *ip, INET_ADDRSTRLEN);
 }

@@ -26,3 +26,4 @@ char *my_snprintf(const char *format, ...);
 char *replace_char(char *str, char find, char replace);
 void my_exit(int status);
 bool is_number(char *str);
+bool is_alphanum(char *str);
