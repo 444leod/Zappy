@@ -35,33 +35,33 @@ class TestResult {
         std::string _output = "";
         std::string _error = "";
         uint8_t _return = 0;
-        std::chrono::milliseconds _runned_time = std::chrono::milliseconds(0);
+        std::chrono::milliseconds _runnedTime = std::chrono::milliseconds(0);
         bool _failed = false;
 };
 
 class Test {
     public:
-        Test(std::string title, std::vector<std::string> params, std::string expected_output, std::string expected_error, int expected_return, std::optional<std::chrono::seconds> timeout);
+        Test(std::string title, std::vector<std::string> params, std::string expectedOutput, std::string expectedError, int expectedReturn, std::optional<std::chrono::seconds> timeout);
         ~Test() = default;
-        TestResult run(std::string binary_path);
+        TestResult run(std::string binaryPath);
         std::string _title;
         std::vector<std::string> _params;
-        std::string _expected_output;
-        std::string _expected_error;
-        int _expected_return;
+        std::string _expectedOutput;
+        std::string _expectedError;
+        int _expectedReturn;
     private:
         std::optional<std::chrono::seconds> _timeout;
 };
 
 class Tester {
     public:
-        Tester(const std::string& binary_path);
+        Tester(const std::string& binaryPath);
         ~Tester() = default;
         void test();
-        void addTest(std::string title, std::vector<std::string> params, std::string expected_output, std::string expected_error, int expected_return, std::optional<std::chrono::seconds> timeout);
+        void addTest(std::string title, std::vector<std::string> params, std::string expectedOutput, std::string expectedError, int expectedReturn, std::optional<std::chrono::seconds> timeout);
         void addTest(Test test);
     private:
-        std::string _binary_path;
+        std::string _binaryPath;
         std::map<std::string, std::shared_ptr<Test>> _tests;
         std::optional<std::chrono::seconds> _timeout;
 };
