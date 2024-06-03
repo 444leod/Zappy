@@ -8,6 +8,9 @@
 #include "zappy.h"
 #include "clients.h"
 #include "lib.h"
+#include "macros.h"
+#include "garbage_collector.h"
+#include "debug.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -22,25 +25,6 @@
 static void handle_sigint(UNUSED int sig)
 {
     my_exit(0);
-}
-
-/**
- * @brief Initialize the server_info struct
- * @details correctly initialize the server_info struct with the port and the
- *    path of the server
- *
- * @param argv the arguments of the program
- *
- * @return the server_info struct
-*/
-static server_info_t init_server_info(char *argv[])
-{
-    server_info_t server_info = my_malloc(sizeof(struct server_info_s));
-
-    server_info->port = atoi(argv[1]);
-    server_info->ip = my_malloc(sizeof(char) * INET_ADDRSTRLEN + 1);
-    server_info->ip[INET_ADDRSTRLEN] = '\0';
-    return server_info;
 }
 
 /**
@@ -64,8 +48,7 @@ static void add_clients_to_set(
     while (tmp) {
         if (tmp->packet_queue)
             FD_SET(tmp->fd, writefds);
-        else
-            FD_SET(tmp->fd, readfds);
+        FD_SET(tmp->fd, readfds);
         if (tmp->fd > *max_sd)
             *max_sd = tmp->fd;
         tmp = tmp->next;
@@ -125,7 +108,7 @@ static void select_wrapper(int max_sd, fd_set *readfds,
  * @param socketFd the socket file descriptor
  * @param server_info the server_info struct
 */
-void zappy_loop(int socketFd)
+void zappy_loop(int socketFd, server_info_t server_info)
 {
     fd_set readfds;
     fd_set writefds;
@@ -143,8 +126,37 @@ void zappy_loop(int socketFd)
         select_wrapper(max_sd + 1, &readfds, &writefds, clients);
         if (FD_ISSET(socketFd, &readfds))
             add_new_client(socketFd);
-        loop_clients(clients, &readfds, &writefds);
+        loop_clients(clients, &readfds, &writefds, server_info);
     }
+}
+
+/**
+ * @brief Print the server info
+ * @details print the server info to the standard output in debug mode
+ *
+ * @param server_info the server_info struct
+*/
+static void print_server_info(server_info_t server_info)
+{
+    team_name_t tmp = server_info->team_names;
+
+    DEBUG_PRINT("\nServer info:\n");
+    DEBUG_PRINT("\tRunning on port %d\n", server_info->port);
+    DEBUG_PRINT("\t%d ", server_info->clientsNb);
+    if (server_info->clientsNb == 1)
+        DEBUG_PRINT("client per team\n");
+    else {
+        DEBUG_PRINT("clients per team\n");
+    }
+    DEBUG_PRINT("\tMap size: %d * %d\n",
+        server_info->width, server_info->height);
+    DEBUG_PRINT("\tFrequency: %d\n", server_info->freq);
+    DEBUG_PRINT("\tTeam names:\n");
+    while (tmp) {
+        DEBUG_PRINT("\t  - %s\n", tmp->name);
+        tmp = tmp->next;
+    }
+    DEBUG_PRINT("\n");
 }
 
 /**
@@ -171,10 +183,10 @@ int server(int argc, char *argv[])
     server_info = init_server_info(argv);
     socketFd = get_socket();
     prepare_exit(socketFd);
-    bind_socket(socketFd, server_info->port, &(server_info->ip));
-    DEBUG_PRINT("Server info: %s:%d\n", server_info->ip, server_info->port);
+    bind_socket(socketFd, server_info->port);
+    print_server_info(server_info);
     listen_socket(socketFd, 1024);
-    zappy_loop(socketFd);
+    zappy_loop(socketFd, server_info);
     close(socketFd);
     return 0;
 }
