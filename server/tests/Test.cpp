@@ -170,13 +170,13 @@ void Tester::test()
             std::cout << "[\033[32mPASSED\033[0m] " << test.first << std::endl;
         }
     }
-    std::printf("\nNombre de tests réussis : ");
+    std::printf("\nNombre de tests réussis: ");
     if (failed != 0 ) {
         printf("\033[1;32m%d\033[0m\033[31;2m/%d\033[0m\n", succedded, total);
         std::printf("\033[31;2m%d tests ont échoué, dont %d ont crash ou timeout.\033[0m\n", failed, crashed);
     } else {
         std::printf("\033[1;32m%d/%d\033[0m\n", succedded, total);
-        std::printf("\033[32mTous les tests ont réussi !\033[0m");
+        std::printf("\033[32mTous les tests ont réussi !\033[0m\n");
     }
     exit(failed != 0);
 }
