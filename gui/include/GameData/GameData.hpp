@@ -147,6 +147,44 @@ namespace gui {
                 }
             }
 
+            /**
+             * @brief Get the eggs
+             * @return std::vector<Egg> The eggs
+            */
+            std::vector<Egg> eggs() const { return _eggs; }
+
+            /**
+             * @brief Add an egg
+             * @param egg The egg
+            */
+            void addEgg(Egg egg) { _eggs.push_back(egg); }
+
+            /**
+             * @brief Remove an egg
+             * @param eggId The egg id
+            */
+            void removeEgg(std::uint32_t eggId)
+            {
+                for (auto it = _eggs.begin(); it != _eggs.end(); it++) {
+                    if (it->entityId() == eggId) {
+                        _eggs.erase(it);
+                        return;
+                    }
+                }
+            }
+
+            /**
+             * @brief Get the messages
+             * @return std::vector<Message> The messages
+            */
+            std::vector<Message> messages() const { return _messages; }
+
+            /**
+             * @brief Add a message
+             * @param message The message
+            */
+            void addMessage(Message message) { _messages.push_back(message); }
+
         private:
             Vector2u _mapSize = {0, 0};
             std::map<Vector2u, TileContent> _mapContent = {};
