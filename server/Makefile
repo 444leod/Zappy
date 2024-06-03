@@ -46,6 +46,7 @@ __SRC_CLIENT := add_client.c \
 	get_clients.c \
 	remove_client.c \
 
+# Add server tests sources here.
 __SRC_ROOT_TEST := sample.c
 
 %.o: %.c
