@@ -10,6 +10,7 @@
 #include "commands.h"
 #include "lib.h"
 #include "zappy.h"
+#include "debug.h"
 #include <unistd.h>
 #include <stdio.h>
 
@@ -17,25 +18,46 @@
  * @brief Execute the command
  * @details Execute the command of the client using the commands array
  *
- * @param command the command to execute with its arguments
+ * @param command the command to execute;
  * @param client the client to execute the command for
 */
-static void execute_command(char **command, client_t client)
+static void execute_command(client_command_t command, client_t client,
+    server_info_t server_info)
+{
+    command->command_handler.func(command->args, client, server_info);
+    remove_from_list((void *)command, (node_t *)&client->commands);
+}
+
+static bool should_be_handled(client_command_t command, client_t client)
+{
+    clock_t now;
+    double time_elapsed;
+
+    if (client->type == GRAPHICAL)
+        return true;
+    now = clock();
+    time_elapsed = (double)(now - command->handled_at) / CLOCKS_PER_SEC * 10;
+    return time_elapsed >= command->seconds_to_wait;
+}
+
+static void initialize_command(client_command_t command, client_t client,
+    server_info_t server_info)
 {
     size_t i = 0;
 
-    DEBUG_PRINT("Executing command: %s\n", command[0]);
-    if (command == NULL || command[0] == NULL) {
-        unknown_command(client, command);
-        return;
-    }
+    command->initialized = true;
+    command->args = str_to_word_array(command->command, " ");
     for (; commands[i].command; i++) {
-        if (strcmp(commands[i].command, command[0]) == 0) {
-            commands[i].func(client, command);
+        if (strcmp(commands[i].command, command->args[0]) == 0 &&
+            commands[i].client_type == client->type) {
+            command->command_handler = commands[i];
+            command->seconds_to_wait = commands[i].wait_units == 0 ? 0 :
+                commands[i].wait_units / server_info->freq;
             return;
         }
     }
-    commands[i].func(client, command);
+    command->command_handler = commands[i];
+    command->seconds_to_wait = 0;
 }
 
 /**
@@ -45,13 +67,15 @@ static void execute_command(char **command, client_t client)
  *
  * @param client the client to handle the command of
 */
-void handle_command(client_t client)
+void handle_command(client_t client, server_info_t server_info)
 {
-    char *command = my_strdup(client->command);
-    char **args = str_to_word_array(command, " \t");
+    client_commands_t command_node = client->commands;
 
-    DEBUG_PRINT("Handling command: %s\n", get_escaped_string(client->command));
-    for (size_t i = 0; args && args[i]; i++)
-        DEBUG_PRINT("Arg %ld: %s\n", i, get_escaped_string(args[i]));
-    execute_command(args, client);
+    if (command_node->command->initialized == false) {
+        initialize_command(command_node->command, client, server_info);
+    } else if (should_be_handled(command_node->command, client)) {
+        execute_command(command_node->command, client, server_info);
+    } else {
+        DEBUG_PRINT("Command not ready to be handled\n");
+    }
 }
