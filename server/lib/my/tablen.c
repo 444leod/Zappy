@@ -13,7 +13,7 @@
  *
  * @return the length of the table
 */
-int tablen(void **tab)
+int tablen(const void **tab)
 {
     int i = 0;
 

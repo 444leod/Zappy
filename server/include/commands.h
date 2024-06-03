@@ -17,18 +17,19 @@ typedef struct client_s *client_t;
 
 typedef struct command_s {
     char *command;
-    void (*func)(char **args, client_t clients,
-        server_info_t server_info);
+    void (*func)(char **args, const client_t clients,
+        const server_info_t server_info);
     uint32_t wait_units;
     enum CLIENT_TYPE client_type;
 } command_t;
 
-void msz(char **args, client_t client, server_info_t server_info);
+void msz(char **args, const client_t client,
+    const server_info_t server_info);
 
-void forward(char **args, client_t client,
-    server_info_t server_info);
+void forward(char **args, const client_t client,
+    const server_info_t server_info);
 
-void unknown_command(char **args, client_t client,
-    server_info_t server_info);
+void unknown_command(char **args, const client_t client,
+    const server_info_t server_info);
 
-extern const command_t commands[];
+extern const command_t COMMANDS[];

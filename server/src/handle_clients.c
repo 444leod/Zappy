@@ -38,7 +38,8 @@ static void send_buffer(client_t client)
  *
  * @return true if the last message sent is a special case, false otherwise
  * */
-static bool is_read_special_case(client_t client, int valread)
+static bool is_read_special_case(const client_t client,
+    const int valread)
 {
     if (valread == -1) {
         remove_client(client->fd);
@@ -62,11 +63,11 @@ static bool is_read_special_case(client_t client, int valread)
  *
  * @return the created command
 */
-static client_command_t create_command(char *command, clock_t time)
+static client_command_t create_command(const char *command, const clock_t time)
 {
     client_command_t new_command = my_malloc(sizeof(struct client_command_s));
 
-    new_command->command = command;
+    new_command->command = my_strdup(command);
     new_command->handled_at = time;
     new_command->initialized = false;
     return new_command;
@@ -80,11 +81,11 @@ static client_command_t create_command(char *command, clock_t time)
  *
  * @param client the client to queue the command of
 */
-static void queue_command(client_t client)
+static void queue_command(const client_t client)
 {
     char *after_line_break = NULL;
     int i = 0;
-    clock_t now = clock();
+    const clock_t now = clock();
 
     if (client->type == AI && get_list_size((node_t)client->commands) == 10) {
         my_free(client->buffer);
@@ -109,7 +110,7 @@ static void queue_command(client_t client)
  *
  * @param client the client to read the buffer of
 */
-static void read_buffer(client_t client)
+static void read_buffer(const client_t client)
 {
     char buffer[1025] = {0};
     int valread = 0;
@@ -139,8 +140,8 @@ static void read_buffer(client_t client)
  * @param writefds the writefds to check
  * @param server_info the server_info
 */
-static void trigger_action(client_t client, fd_set *readfds,
-    fd_set *writefds, server_info_t server_info)
+static void trigger_action(const client_t client, const fd_set *readfds,
+    const fd_set *writefds, const server_info_t server_info)
 {
     if (client->fd == -1)
         return;
@@ -161,8 +162,8 @@ static void trigger_action(client_t client, fd_set *readfds,
  * @param writefds the writefds to check
  * @param server_info the server_info
 */
-void loop_clients(client_t *clients, fd_set *readfds,
-    fd_set *writefds, server_info_t server_info)
+void loop_clients(const client_t *clients, const fd_set *readfds,
+    const fd_set *writefds, const server_info_t server_info)
 {
     client_t tmp = *clients;
     int tempFd = 0;

@@ -14,7 +14,7 @@
  *
  * @param sockFd the socket to accept
 */
-void accept_socket(int sockFd, void (*func)(int))
+void accept_socket(const int sockFd, void (*func)(int))
 {
     int clientFd = 0;
     struct sockaddr_in clientAddress;

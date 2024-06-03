@@ -17,7 +17,7 @@
  * @param fd the file descriptor
  * @param packet the packet
  */
-void send_packet(int fd, packet_t *packet)
+void send_packet(const int fd, const packet_t *packet)
 {
     if (fd == -1)
         return;

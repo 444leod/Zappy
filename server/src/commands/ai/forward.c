@@ -21,7 +21,7 @@
 void forward(UNUSED char **args, client_t client,
     UNUSED server_info_t server_info)
 {
-    char *msg = "ok\n";
+    const char *msg = "ok\n";
     packet_t *packet = build_packet(msg);
 
     add_packet_to_queue(&client->packet_queue, packet);

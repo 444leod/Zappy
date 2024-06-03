@@ -20,7 +20,7 @@
  * @param status the status to exit with
  * @param fd the fd to close (if status == -1)
 */
-static void my_clean_exit(int status, int fd)
+static void my_clean_exit(const int status, const int fd)
 {
     static int actualFd = -1;
 
@@ -41,7 +41,7 @@ static void my_clean_exit(int status, int fd)
  *
  * @param status the status to exit with
 */
-void my_exit(int status)
+void my_exit(const int status)
 {
     my_clean_exit(status, 0);
 }
@@ -50,7 +50,7 @@ void my_exit(int status)
  * @brief Prepare the exit
  * @details Prepare the exit by sending the socketFd to a store function.
 */
-void prepare_exit(int socketFd)
+void prepare_exit(const int socketFd)
 {
     my_clean_exit(-1, socketFd);
 }

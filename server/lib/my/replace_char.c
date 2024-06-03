@@ -15,7 +15,7 @@
  *
  * @return the modified string
 */
-char *replace_char(char *str, char find, char replace)
+char *replace_char(char *str, const char find, const char replace)
 {
     for (int i = 0; str[i] != '\0'; i++) {
         if (str[i] == find) {

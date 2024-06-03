@@ -31,14 +31,14 @@ struct special_char_s special_chars[] = {
  * @brief Get the special character
  * @details Get the special character
  *
- * @param str the character to get
+ * @param character the character to get
  *
  * @return the special character
 */
-UNUSED static char *get_special_char(char str)
+static const char *get_special_char(const char character)
 {
     for (int i = 0; special_chars[i].str; i++) {
-        if (special_chars[i].str == str)
+        if (special_chars[i].str == character)
             return special_chars[i].escaped;
     }
     return NULL;
@@ -51,7 +51,7 @@ UNUSED static char *get_special_char(char str)
 */
 void print_escaped(const char *str)
 {
-    char *escaped = get_escaped_string(str);
+    const char *escaped = get_escaped_string(str);
 
     printf("%s\n", escaped);
 }

@@ -171,7 +171,7 @@ static void print_server_info(server_info_t server_info)
  *
  * @return 0 if the program exited correctly
 */
-int server(int argc, char *argv[])
+int server(const int argc, const char *argv[])
 {
     int socketFd = -1;
     server_info_t server_info;

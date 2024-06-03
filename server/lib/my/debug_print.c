@@ -45,10 +45,11 @@ static void debug_print_va(const char *fmt, va_list args)
  * @param fmt the message (printf format)
  * @param ... the arguments (printf)
 */
-void debug_print_timer(TIMER *timer, double elapsed, const char *fmt, ...)
+void debug_print_timer(TIMER *timer, const double elapsed,
+    const char *fmt, ...)
 {
     va_list args;
-    TIMER now = clock();
+    const TIMER now = clock();
     double cpu_time;
 
     if (*timer == -1) {

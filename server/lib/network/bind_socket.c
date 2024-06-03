@@ -15,7 +15,7 @@
  * @param socketFd the socket to bind
  * @param port the port to bind to
 */
-void bind_socket(int socketFd, int port)
+void bind_socket(const int socketFd, const uint16_t port)
 {
     struct sockaddr_in serverAddress;
     int bindRes = 0;

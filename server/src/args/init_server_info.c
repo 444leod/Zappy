@@ -137,7 +137,7 @@ static void init_teams(param_t params, server_info_t server_info)
  *
  * @return the server_info struct
 */
-server_info_t init_server_info(char *argv[])
+server_info_t init_server_info(const char *argv[])
 {
     server_info_t server_info = my_malloc(sizeof(struct server_info_s));
     param_t params = NULL;
@@ -145,7 +145,7 @@ server_info_t init_server_info(char *argv[])
 
     for (uint16_t i = 1; argv[i]; i++) {
         param = my_malloc(sizeof(struct param_informations_s));
-        param->content = argv[i];
+        param->content = my_strdup(argv[i]);
         param->handled = false;
         add_to_list((void *)param, (node_t *)&params);
     }
