@@ -96,6 +96,9 @@ tests_clean:
 	@find . -name "*.gcda" -delete
 	@find . -name "*.gcno" -delete
 
+coverage: tests_run
+	@gcovr .
+
 debug:
 	@make debug -C ./lib -s
 	@$(__CC) -g -o $(__NAME) $(__ASRC) $(__CFLAGS)

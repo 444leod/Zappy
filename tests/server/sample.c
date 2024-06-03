@@ -14,16 +14,12 @@ void init(void) {
     cr_redirect_stderr();
 }
 
-int sample(void) {
-    return 0;
-}
-
 /**
  * A boolean assertion example.
  * You can simply check equalities this way.
 */
 Test(example_suite, assert_example_one) {
-    cr_assert(sample() == 0);
+    cr_assert(0 == 0);
 }
 
 /**
