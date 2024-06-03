@@ -52,15 +52,15 @@ void remove_from_list(void *data, node_t *list)
 }
 
 /**
- * @brief Get the data from a list based on the index
- * @details Get the data from a list based on the index
+ * @brief Get the node at the given index
+ * @details Get the node at the given index
  *
  * @param index the index of the data to get
  * @param list the list
  *
- * @return void* the data
+ * @return node_t the data
 */
-void *get_data_by_index(int index, node_t list)
+node_t get_node_by_index(int index, node_t list)
 {
     node_t tmp = list;
     int i = 0;
@@ -71,5 +71,25 @@ void *get_data_by_index(int index, node_t list)
     }
     if (i != index)
         return (NULL);
-    return (tmp->data);
+    return (tmp);
+}
+
+/**
+ * @brief Get the size of a linked list
+ * @details Get the size of a linked list
+ *
+ * @param list the list
+ *
+ * @return uint32_t the size of the list
+*/
+uint32_t get_list_size(node_t list)
+{
+    node_t tmp = list;
+    uint32_t i = 0;
+
+    while (tmp) {
+        tmp = tmp->next;
+        i++;
+    }
+    return (i);
 }

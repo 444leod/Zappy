@@ -9,7 +9,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "zappy.h"
+#include "garbage_collector.h"
+#include "clients.h"
 
 /**
  * @brief Clean exit
