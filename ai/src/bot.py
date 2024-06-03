@@ -15,7 +15,7 @@ class Orientation(Enum):
     WEST = 4
 
 @dataclass
-class Inventory():
+class InventoryInfo():
     food: int = 10
     linemate: int = 0
     deraumere: int = 0
@@ -27,7 +27,7 @@ class Inventory():
 @dataclass
 class PlayerInfo():
     level: int = 1
-    inv: Inventory = field(default_factory=Inventory)
+    inv: InventoryInfo = field(default_factory=InventoryInfo)
     pos: tuple[int, int] = (0, 0)
     orientation: Orientation = Orientation.NORTH
 
@@ -102,11 +102,17 @@ class Bot():
 
     def run(self) -> None:
         while True:
-            # Behavior logic here
+            # Behavior logic here, send one command at a time!!
             cmd_to_send: cmd.ACommand = cmd.Inventory()
             self.cmd_sent.append(cmd_to_send.dump())
             self.com_handler.send_command(cmd_to_send.dump())
 
+            self.base_funcs_loop()
+
+            self.handle_commands_sent()
+    
+    def base_funcs_loop(self) -> None:
+        while True:
             # Wait for the response
             self.results.append(self.com_handler.receive_response())
             self.log(self.results[-1], end="")
@@ -116,11 +122,15 @@ class Bot():
             if (key in self.base_funcs):
                 self.base_funcs[key]()
                 continue
+            # Returning to the main loop if the response is not a message or a death
+            return
 
-            # Handle the command sent
-            if (self.cmd_sent[-1] == cmd.Inventory().dump()):
-                self.player_info.inv = Inventory(**(cmd_to_send.interpret_result(self.results[-1])))
-                self.log(self.player_info.inv)
+    def handle_commands_sent(self) -> None:
+        # Handle the command sent
+        if (self.cmd_sent[-1] == cmd.Inventory().dump()):
+            self.player_info.inv = InventoryInfo(**(cmd.Inventory().interpret_result(self.results[-1])))
+        
+        #TODO: Handle other commands
 
 def main() -> None:
     bot = Bot(
