@@ -11,14 +11,21 @@ __NC=\033[0m
 __INFO = ${__GREEN}[INFO]${__NC}
 
 __NAME = zappy_server
+__TEST = server_suite
 __LIBMY = libmy.a
 __LIBNETWORK = libnetwork.a
 
-__SRC = $(addprefix src/, $(__SRC_SRC)) \
+__ASRC = $(__SRC) \
+	main.c
+
+
+__SRC	=	$(addprefix src/, $(__SRC_SRC)) \
 	$(addprefix src/commands/, $(__SRC_COMMANDS)) \
 	$(addprefix src/network/, $(__SRC_NETWORK)) \
 	$(addprefix src/network/client/, $(__SRC_CLIENT)) \
-	main.c
+
+__TEST_SRC	=	$(__SRC) \
+	$(addprefix ../tests/server/, $(__SRC_ROOT_TEST))
 
 __SRC_SRC := server.c \
 	exit.c \
@@ -40,14 +47,18 @@ __SRC_CLIENT := add_client.c \
 	get_clients.c \
 	remove_client.c \
 
-%.o: %.c
-	@$(__CC) -c -o $@ $< $(__CFLAGS)
+__SRC_ROOT_TEST := test.c
 
-__OBJ = $(__SRC:.c=.o)
+%.o: %.c
+	$(__CC) -c -o $@ $< $(__CFLAGS)
+
+__OBJ = $(__ASRC:.c=.o)
+
+__TEST_OBJ = $(__TEST_SRC:.c=.o)
 
 __CC = gcc
-
-__CFLAGS = -Wall -Wextra -Werror -Wpedantic -I./include -L. -lmy -lnetwork
+__CFLAGS += -Wall -Wextra -Werror -Wpedantic -I./include -L. -lmy -lnetwork
+__TEST_FLAGS = $(__CFLAGS) -lcriterion
 
 all: $(__LIBMY) $(__LIBNETWORK) $(__NAME)
 	@echo -ne "\n${__INFO} Server compiled successfully.${__NC}\n"
@@ -73,18 +84,24 @@ fclean: clean
 
 re: fclean all
 
-tests_run:
-	exit 0
+tests_run: $(__LIBMY) $(__LIBNETWORK) $(__TEST_OBJ)
+	gcc -o $(__TEST) $(__TEST_OBJ) $(__TEST_FLAGS)
+	@./$(__TEST)
 	@echo -ne "\n${__INFO} Tests run.${__NC}\n"
+
+tests_clean:
+	@make fclean -C ./lib -s
+	@rm -f $(__TEST_OBJ)
+	@rm -f $(__TEST)
 
 debug:
 	@make debug -C ./lib -s
-	@$(__CC) -g -o $(__NAME) $(__SRC) $(__CFLAGS)
+	@$(__CC) -g -o $(__NAME) $(__ASRC) $(__CFLAGS)
 	@echo -ne "\n${__INFO} Debug mode compiled successfully.${__NC}\n"
 
 dev:
 	@make dev -C ./lib -s
-	@$(__CC) -g -o $(__NAME) $(__SRC) $(__CFLAGS) -DDEV_MODE
+	@$(__CC) -g -o $(__NAME) $(__ASRC) $(__CFLAGS) -DDEV_MODE
 	@echo -ne "\n${__INFO} Dev mode compiled successfully.${__NC}\n"
 
 .PHONY: all clean fclean re
