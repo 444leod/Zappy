@@ -53,8 +53,8 @@ namespace gui {
             */
             TileContent tileContent(Vector2u coordinates) const
             {
-                auto it = _tileContent.find(coordinates);
-                if (it != _tileContent.end())
+                auto it = _mapContent.find(coordinates);
+                if (it != _mapContent.end())
                     return it->second;
                 else
                     throw std::out_of_range("Coordinates out of range");
@@ -80,7 +80,7 @@ namespace gui {
                 if (!isValidCoordinates(coordinates))
                     throw std::out_of_range("Coordinates out of range");
 
-                _tileContent[coordinates] = tileContent;
+                _mapContent[coordinates] = tileContent;
             }
 
             /**
@@ -89,11 +89,7 @@ namespace gui {
             */
             std::map<Vector2u, TileContent> mapContent() const
             {
-                std::map<Vector2u, TileContent> mapContent;
-                for (auto &tile : _tileContent) {
-                    mapContent[tile.first] = tile.second;
-                }
-                return mapContent;
+                return _mapContent;
             }
 
             /**
@@ -103,7 +99,7 @@ namespace gui {
             void setMapContent(std::map<Vector2u, TileContent> mapContent)
             {
                 for (auto &tile : mapContent) {
-                    _tileContent[tile.first] = tile.second;
+                    _mapContent[tile.first] = tile.second;
                 }
             }
 
@@ -144,7 +140,7 @@ namespace gui {
             void removePlayer(std::uint32_t playerId)
             {
                 for (auto it = _players.begin(); it != _players.end(); it++) {
-                    if (it->entitieId() == playerId) {
+                    if (it->entityId() == playerId) {
                         _players.erase(it);
                         return;
                     }
@@ -153,9 +149,10 @@ namespace gui {
 
         private:
             Vector2u _mapSize = {0, 0};
-            std::map<Vector2u, TileContent> _tileContent = {};
+            std::map<Vector2u, TileContent> _mapContent = {};
             std::vector<std::string> _teamNames = {};
             std::vector<Character> _players = {};
+            std::vector<Egg> _eggs = {};
             std::map<std::string, Message> _message = {};
     };
 }
