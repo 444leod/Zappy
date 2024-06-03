@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "AEntities.hpp"
+#include "AEntitie.hpp"
 
-class Egg : public AEntities {
+class Egg : public AEntitie {
     public:
         Egg() = default;
         ~Egg() = default;

@@ -143,7 +143,7 @@ namespace gui {
             void removePlayer(std::uint32_t playerId)
             {
                 for (auto it = _players.begin(); it != _players.end(); it++) {
-                    if (it->entitiesId() == playerId) {
+                    if (it->entitieId() == playerId) {
                         _players.erase(it);
                         return;
                     }
