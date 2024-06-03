@@ -42,6 +42,11 @@ __SRC_ARGS := params.c \
 	init_server_info.c \
 	display_help.c \
 
+__SRC_ARGS := params.c \
+	check_args.c \
+	init_server_info.c \
+	display_help.c \
+
 __SRC_NETWORK := global_packet_send.c \
 	send_packets.c \
 	special_print.c \

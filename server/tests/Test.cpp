@@ -25,7 +25,7 @@ void TestResult::setReturn(uint8_t ret)
 
 void TestResult::setRunnedTime(std::chrono::milliseconds runned_time)
 {
-    _runned_time = runned_time;
+    _runnedTime = runned_time;
 }
 
 std::string TestResult::getOutput()
@@ -45,7 +45,7 @@ uint8_t TestResult::getReturn()
 
 std::chrono::milliseconds TestResult::getRunnedTime()
 {
-    return _runned_time;
+    return _runnedTime;
 }
 
 void TestResult::setFailed(bool failed)
@@ -58,15 +58,15 @@ bool TestResult::getFailed()
     return _failed;
 }
 
-Test::Test(std::string title, std::vector<std::string> params, std::string expected_output, std::string expected_error, int expected_return, std::optional<std::chrono::seconds> timeout = std::nullopt) : _title(title), _params(params), _expected_output(expected_output), _expected_error(expected_error), _expected_return(expected_return), _timeout(timeout)
+Test::Test(std::string title, std::vector<std::string> params, std::string expectedOutput, std::string expectedError, int expectedReturn, std::optional<std::chrono::seconds> timeout = std::nullopt) : _title(title), _params(params), _expectedOutput(expectedOutput), _expectedError(expectedError), _expectedReturn(expectedReturn), _timeout(timeout)
 {
 }
 
-TestResult Test::run(std::string binary_path)
+TestResult Test::run(std::string binaryPath)
 {
     TestResult result;
 
-    std::string command = binary_path + " ";
+    std::string command = binaryPath + " ";
 
     if (_timeout.has_value()) {
         command = "timeout " + std::to_string(_timeout.value().count()) + " " + command;
@@ -94,31 +94,31 @@ TestResult Test::run(std::string binary_path)
     result.setReturn(ret_val);
     result.setRunnedTime(runned_time);
 
-    if (ret_val != _expected_return) {
-        if (ret_val != 124 && _expected_return == 0) {
+    if (ret_val != _expectedReturn) {
+        if (ret_val != 124 && _expectedReturn == 0) {
             result.setFailed(true);
         }
     }
-    if (!output.starts_with(_expected_output)) {
+    if (!output.starts_with(_expectedOutput)) {
         result.setFailed(true);
     }
-    if (!error.starts_with(_expected_error)) {
+    if (!error.starts_with(_expectedError)) {
         result.setFailed(true);
     }
     return result;
 }
 
-Tester::Tester(const std::string &binary_path) : _binary_path(binary_path)
+Tester::Tester(const std::string &binaryPath) : _binaryPath(binaryPath)
 {
-    if (binary_path.empty()) {
+    if (binaryPath.empty()) {
         std::cerr << "Binary path is empty" << std::endl;
         exit(1);
     }
-    if (access(binary_path.c_str(), F_OK) == -1) {
+    if (access(binaryPath.c_str(), F_OK) == -1) {
         std::cerr << "Binary path does not exist" << std::endl;
         exit(1);
     }
-    if (access(binary_path.c_str(), X_OK) == -1) {
+    if (access(binaryPath.c_str(), X_OK) == -1) {
         std::cerr << "Binary path is not executable" << std::endl;
         exit(1);
     }
@@ -151,17 +151,17 @@ void Tester::test()
     uint32_t crashed = 0;
 
     for (auto &test : _tests) {
-        TestResult result = test.second->run(_binary_path);
+        TestResult result = test.second->run(_binaryPath);
         if (result.getFailed()) {
             failed++;
             if (result.getReturn() == 137 || result.getReturn() == 124 || result.getReturn() == 139 || result.getReturn() == 136)
                 crashed++;
             std::cout << "[\033[31;2mFAILED\033[0m] " << test.first << std::endl;
-            std::cout << "Expected output: \"" << getEscapedString(test.second->_expected_output) << "\"\n";
+            std::cout << "Expected output: \"" << getEscapedString(test.second->_expectedOutput) << "\"\n";
             std::cout << "Output: \"" << getEscapedString(result.getOutput()) << "\"\n";
-            std::cout << "Expected error: \"" << getEscapedString(test.second->_expected_error) << "\"\n";
+            std::cout << "Expected error: \"" << getEscapedString(test.second->_expectedError) << "\"\n";
             std::cout << "Error: \"" << getEscapedString(result.getError()) << "\"\n";
-            std::cout << "Expected return: " << (int)test.second->_expected_return << std::endl;
+            std::cout << "Expected return: " << (int)test.second->_expectedReturn << std::endl;
             std::cout << "Return: " << (int)result.getReturn() << std::endl;
             std::cout << "Runned time: " << result.getRunnedTime().count() << "ms" << std::endl;
             std::cout << std::endl << std::endl;
@@ -181,13 +181,13 @@ void Tester::test()
     exit(failed != 0);
 }
 
-void Tester::addTest(std::string title, std::vector<std::string> params, std::string expected_output, std::string expected_error, int expected_return, std::optional<std::chrono::seconds> timeout = std::nullopt)
+void Tester::addTest(std::string title, std::vector<std::string> params, std::string expectedOutput, std::string expectedError, int expectedReturn, std::optional<std::chrono::seconds> timeout = std::nullopt)
 {
     if (_tests.find(title) != _tests.end()) {
         std::cerr << "Test with title " << title << " already exists" << std::endl;
         return;
     }
-    std::shared_ptr<Test> test = std::make_shared<Test>(title, params, expected_output, expected_error, expected_return, timeout);
+    std::shared_ptr<Test> test = std::make_shared<Test>(title, params, expectedOutput, expectedError, expectedReturn, timeout);
     _tests[title] = test;
 }
 
