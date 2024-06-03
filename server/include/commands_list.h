@@ -19,7 +19,7 @@ typedef struct client_command_s {
     command_t command_handler;
 } *client_command_t;
 
-typedef struct client_commands_s {
+typedef struct client_command_list_s {
     struct client_commands_s *next;
     client_command_t command;
-} *client_commands_t;
+} *client_command_list_t;

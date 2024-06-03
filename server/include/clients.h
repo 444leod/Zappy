@@ -18,10 +18,10 @@
 typedef struct client_s {
     int fd;
     char *team;
-    int client_num;
+    uint16_t client_num;
     packet_queue_t packet_queue;
     enum CLIENT_TYPE type;
-    client_commands_t commands;
+    client_command_list_t commands;
     char *buffer;
     struct client_s *next;
 } *client_t;
