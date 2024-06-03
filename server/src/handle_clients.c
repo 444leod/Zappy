@@ -10,6 +10,8 @@
 #include "lib.h"
 #include "zappy.h"
 #include "commands.h"
+#include "linked_lists.h"
+#include "garbage_collector.h"
 #include <unistd.h>
 #include <stdio.h>
 
@@ -23,17 +25,8 @@
 */
 static void send_buffer(client_t client)
 {
-    if (client->packet_queue) {
+    if (client->packet_queue)
         send_packets(client);
-        if (client->next_commands == NULL) {
-            client->data_status = READING;
-            return;
-        }
-        if (strstr(client->next_commands, "\n") == NULL)
-            client->data_status = READING;
-        else
-            client->data_status = PROCESSING;
-    }
 }
 
 /**
@@ -58,6 +51,57 @@ static bool is_read_special_case(client_t client, int valread)
 }
 
 /**
+ * @brief Create a command
+ * @details Create a command with the given command string and time
+ *
+ * @param command the command to create
+ * @param time the time to create the command at
+ *
+ * @return the created command
+*/
+static client_command_t create_command(char *command, clock_t time)
+{
+    client_command_t new_command = my_malloc(sizeof(struct client_command_s));
+
+    new_command->command = command;
+    new_command->handled_at = time;
+    new_command->initialized = false;
+    return new_command;
+}
+
+/**
+ * @brief Queue the next command of a client
+ * @details Queue the next command of a client
+ * if the client has a next command, queue it
+ * if the client sent multiple commands, queue them into the next_commands
+ *
+ * @param client the client to queue the command of
+*/
+static void queue_command(client_t client)
+{
+    char *after_line_break = NULL;
+    int i = 0;
+    clock_t now = clock();
+
+    if (client->type == AI && get_list_size((node_t)client->commands) == 10) {
+        my_free(client->buffer);
+        return;
+    }
+    while (client->buffer && strlen(client->buffer) > 0) {
+        after_line_break = strstr(client->buffer, "\n");
+        if (!after_line_break)
+            break;
+        i = after_line_break - client->buffer;
+        add_to_list((void *)create_command(my_strndup(client->buffer, i), now),
+            (void *)&client->commands);
+        client->buffer = client->buffer + i + 1;
+    }
+    while (client->type == AI && get_list_size((node_t)client->commands) > 10)
+        remove_from_list(get_node_by_index(11, (node_t)client->commands)->data,
+            (node_t *)&client->commands);
+}
+
+/**
  * @brief Read the buffer of a client
  *
  * @param client the client to read the buffer of
@@ -72,36 +116,11 @@ static void read_buffer(client_t client)
         return;
     buffer[valread] = '\0';
     if (valread > 0) {
-        if (client->next_commands)
-            client->next_commands = supercat(2, client->next_commands, buffer);
+        if (client->buffer && strlen(client->buffer) > 0)
+            client->buffer = supercat(2, client->buffer, buffer);
         else
-            client->next_commands = my_strdup(buffer);
-        client->data_status = PROCESSING;
-    }
-}
-
-/**
- * @brief Queue the next command of a client
- * @details Queue the next command of a client
- * if the client has a next command, queue it
- * if the client sent multiple commands, queue them into the next_commands
- *
- * @param client the client to queue the command of
-*/
-static void queue_command(client_t client)
-{
-    char *after_crlf = NULL;
-    int i = 0;
-
-    if (client->next_commands) {
-        DEBUG_PRINT("Next commands: %s\n",
-            get_escaped_string(client->next_commands));
-        after_crlf = strstr(client->next_commands, "\n");
-        if (after_crlf) {
-            i = after_crlf - client->next_commands;
-            client->command = my_strndup(client->next_commands, i);
-            client->next_commands = my_strdup(client->next_commands + i + 2);
-        }
+            client->buffer = my_strdup(buffer);
+        queue_command(client);
     }
 }
 
@@ -118,20 +137,14 @@ static void queue_command(client_t client)
  * @param writefds the writefds to check
 */
 static void trigger_action(client_t client, fd_set *readfds,
-    fd_set *writefds)
+    fd_set *writefds, server_info_t server_info)
 {
     if (client->fd == -1)
         return;
     if (FD_ISSET(client->fd, readfds))
         read_buffer(client);
-    if (client->data_status == PROCESSING) {
-        queue_command(client);
-        if (client->command) {
-            handle_command(client);
-        } else
-            client->data_status = READING;
-        client->command = NULL;
-    }
+    if (client->commands)
+        handle_command(client, server_info);
     if (FD_ISSET(client->fd, writefds))
         send_buffer(client);
 }
@@ -146,7 +159,7 @@ static void trigger_action(client_t client, fd_set *readfds,
  * @param server_info the server_info
 */
 void loop_clients(client_t *clients, fd_set *readfds,
-    fd_set *writefds)
+    fd_set *writefds, server_info_t server_info)
 {
     client_t tmp = *clients;
     int tempFd = 0;
@@ -157,7 +170,7 @@ void loop_clients(client_t *clients, fd_set *readfds,
             tmp = tmp->next;
             continue;
         }
-        trigger_action(tmp, readfds, writefds);
+        trigger_action(tmp, readfds, writefds, server_info);
         if (tmp && tmp->fd == tempFd)
             tmp = tmp->next;
     }
