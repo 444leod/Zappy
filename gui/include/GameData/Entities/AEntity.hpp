@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** zappy
 ** File description:
-** AEntitie
+** AEntity
 */
 
 #pragma once
@@ -14,19 +14,18 @@
 /**
  * @brief Class representing entitie in the simulation
  * @note Entitie are the characters and the eggs in the simulation
- * @note Herited from AEntitie class
 */
-class AEntitie {
+class AEntity {
     public:
         /**
-         * @brief Construct a new AEntitie object
+         * @brief Construct a new AEntity object
         */
-        AEntitie() = default;
+        AEntity() = default;
 
         /**
-         * @brief Destroy the AEntitie object
+         * @brief Destroy the AEntity object
         */
-        ~AEntitie() = default;
+        ~AEntity() = default;
 
         /**
          * @brief Set the entitie Id

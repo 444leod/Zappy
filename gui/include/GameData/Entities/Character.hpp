@@ -8,7 +8,7 @@
 #pragma once
 
 #include "Rocks.hpp"
-#include "AEntitie.hpp"
+#include "AEntity.hpp"
 #include <map>
 #include <vector>
 
@@ -19,7 +19,7 @@ namespace gui {
      * @note The character can move in 4 directions: NORTH, EAST, SOUTH, WEST
      * @note The character can have a food, a level, a position, an orientation and an inventory
     */
-    class Character : public AEntitie {
+    class Character : public AEntity {
         public:
             /**
              * @brief default constructor of Character
