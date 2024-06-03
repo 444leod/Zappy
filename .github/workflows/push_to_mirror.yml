@@ -1,6 +1,6 @@
 name: Zappy
 
-on: [push, pull_request]
+on: [push]
 
 env:
   MIRROR_URL: "git@github.com:EpitechPromo2027/B-YEP-400-LIL-4-1-zappy-leo.dumont.git"
@@ -11,7 +11,6 @@ jobs:
     name: Test compilations
     runs-on: self-hosted
     container: epitechcontent/epitest-docker:latest
-    if: github.event_name == 'push' || github.event_name == 'pull_request'
 
     steps:
       - name: Checkout repository
@@ -29,7 +28,6 @@ jobs:
     name: Run tests
     runs-on: self-hosted
     container: epitechcontent/epitest-docker:latest
-    if: github.event_name == 'push' || github.event_name == 'pull_request'
 
     steps:
       - name: Checkout repository
@@ -44,7 +42,6 @@ jobs:
     name: Check coding style
     runs-on: self-hosted
     container: ghcr.io/epitech/coding-style-checker:latest
-    if: github.event_name == 'push' || github.event_name == 'pull_request'
 
     steps:
       - name: Checkout repository
