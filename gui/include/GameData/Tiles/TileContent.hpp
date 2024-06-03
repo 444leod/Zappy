@@ -41,28 +41,29 @@ namespace gui {
             void setFood(std::uint32_t food) { _food = food; }
 
             /**
-             * @brief Get the player of the tile
-             * @return Character The player of the tile
+             * @brief Get the entities of the tile
+             * @return std::vector<AEntity&> The entities of the tile
             */
-            Character player() const { return _player; }
+            std::vector<AEntity&> entity() const { return _entities; }
 
             /**
-             * @brief Set the player of the tile
-             * @param player The player of the tile
+             * @brief Add an entity to the tile
+             * @param entity The entity to add
             */
-            void setPlayer(Character player) { _player = player; }
+            void addEntity(AEntity& entity) { _entities.push_back(entity); }
 
             /**
-             * @brief Get the egg of the tile
-             * @return Egg The egg of the tile
+             * @brief Remove an entity from the tile
+             * @param id The id of the entity to remove
             */
-            Egg egg() const { return _egg; }
-
-            /**
-             * @brief Set the egg of the tile
-             * @param egg The egg of the tile
-            */
-            void setEgg(Egg egg) { _egg = egg; }
+            void removeEntity(std::uint32_t id) {
+                for (auto it = _entities.begin(); it != _entities.end(); it++) {
+                    if ((*it).entityId() == id) {
+                        _entities.erase(it);
+                        return;
+                    }
+                }
+            }
 
             /**
              * @brief Get the rocks of the tile
@@ -78,8 +79,7 @@ namespace gui {
 
         private:
             std::uint32_t _food = 0;
-            Character _player;
-            Egg _egg;
+            std::vector<AEntity&> _entities;
             Rocks _rocks;
     };
 }
