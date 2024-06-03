@@ -15,11 +15,12 @@
 #include <stdio.h>
 
 /**
- * @brief Execute the command
- * @details Execute the command of the client using the commands array
+ * @brief Execute the given command
+ * @details Execute the given command
  *
  * @param command the command to execute;
  * @param client the client to execute the command for
+ * @param server_info the server info
 */
 static void execute_command(client_command_t command, client_t client,
     server_info_t server_info)
@@ -28,6 +29,18 @@ static void execute_command(client_command_t command, client_t client,
     remove_from_list((void *)command, (node_t *)&client->commands);
 }
 
+/**
+ * @brief Check if the command should be handled
+ * @details Check if the command should be handled
+ *      by checking if the time elapsed since the last time the command was
+ *      handled is greater than the time to wait or if the client is graphical
+ *      (no time to wait for graphical clients)
+ *
+ * @param command the command to check
+ * @param client the client to check the command for
+ *
+ * @return true if the command should be handled, false otherwise
+*/
 static bool should_be_handled(client_command_t command, client_t client)
 {
     clock_t now;
@@ -40,6 +53,15 @@ static bool should_be_handled(client_command_t command, client_t client)
     return time_elapsed >= command->seconds_to_wait;
 }
 
+/**
+ * @brief Initialize the command
+ * @details Initialize the command by parsing it and setting the
+ *  command_handler and seconds_to_wait
+ *
+ * @param command the command to initialize
+ * @param client the client to initialize the command for
+ * @param server_info the server info
+*/
 static void initialize_command(client_command_t command, client_t client,
     server_info_t server_info)
 {
@@ -66,6 +88,7 @@ static void initialize_command(client_command_t command, client_t client,
  * by parsing it and executing it
  *
  * @param client the client to handle the command of
+ * @param server_info the server info
 */
 void handle_command(client_t client, server_info_t server_info)
 {

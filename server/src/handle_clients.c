@@ -30,11 +30,14 @@ static void send_buffer(client_t client)
 }
 
 /**
- * @brief Remove a client from the client list
- * @details Remove a client from the client list
+ * @brief Verify if the last message sent is a special case (EOF, error)
+ * @details Verify if the last message sent is a special case (EOF, error)
  *
- * @param fd the fd of the client to remove
-*/
+ * @param client the client to verify the special case of
+ * @param valread the value read
+ *
+ * @return true if the last message sent is a special case, false otherwise
+ * */
 static bool is_read_special_case(client_t client, int valread)
 {
     if (valread == -1) {
@@ -128,13 +131,13 @@ static void read_buffer(client_t client)
  * @brief Trigger the action of a client based on its status
  * @details Trigger the action of a client based on its status
  * if the client is ready to read, read the buffer
- * if the client is ready to process, queue the command
- * if the client has a command, handle the command
+ * if the client is has command queued, handle the command
  * if the client is ready to write, send the buffer
  *
  * @param client the client to trigger the action of
  * @param readfds the readfds to check
  * @param writefds the writefds to check
+ * @param server_info the server_info
 */
 static void trigger_action(client_t client, fd_set *readfds,
     fd_set *writefds, server_info_t server_info)
