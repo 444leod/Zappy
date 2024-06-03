@@ -49,6 +49,7 @@ namespace gui {
              * @brief Get the tile content at specific coordinates
              * @param coordinates The coordinates of the tile
              * @return TileContent The tile content
+             * @throw std::out_of_range If the coordinates are out of range
             */
             TileContent tileContent(Vector2u coordinates) const
             {
