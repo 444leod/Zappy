@@ -17,7 +17,7 @@ namespace gui {
      * @brief Class representing the character in the simulation
      * @note The character is the player that can move on the map thanks to the IA
      * @note The character can move in 4 directions: NORTH, EAST, SOUTH, WEST
-     * @note The character can have a food, a level, a position, an orientation and an inventory
+     * @note The character can have a food, a level, a position, an orientation and rocks
     */
     class Character : public AEntity {
         public:
