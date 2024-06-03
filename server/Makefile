@@ -87,7 +87,6 @@ re: fclean all
 tests_run: $(__LIBMY) $(__LIBNETWORK) $(__TEST_OBJ)
 	gcc -o $(__TEST) $(__TEST_OBJ) $(__TEST_FLAGS)
 	@./$(__TEST)
-	@echo -ne "\n${__INFO} Tests run.${__NC}\n"
 
 tests_clean:
 	@make fclean -C ./lib -s

@@ -19,7 +19,7 @@ void init(void) {
  * You can simply check equalities this way.
 */
 Test(example_suite, assert_example_one) {
-    cr_assert(0 == 0);
+    cr_assert(0 == 1);
 }
 
 /**
