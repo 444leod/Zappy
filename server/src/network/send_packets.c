@@ -22,7 +22,7 @@
 void send_packets(client_t client)
 {
     packet_t *packet = pop_packet_from_queue(&client->packet_queue);
-    int socketFd = client->fd;
+    const int socketFd = client->fd;
 
     if (packet->buffer[strlen(packet->buffer) - 1] != '\n')
         packet->buffer = supercat(2, packet->buffer, "\n");

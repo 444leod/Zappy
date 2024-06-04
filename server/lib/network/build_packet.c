@@ -19,7 +19,7 @@
  *
  * @return the created packet
  */
-packet_t *build_packet(char *buffer)
+packet_t *build_packet(const char *buffer)
 {
     packet_t *packet = my_malloc(PACKET_SIZE);
 

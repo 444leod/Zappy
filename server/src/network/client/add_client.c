@@ -13,7 +13,7 @@
  *
  * @param new_client the client to add
 */
-void add_client(client_t new_client)
+void add_client(const client_t new_client)
 {
     client_t *clients = get_clients();
     client_t tmp = *clients;

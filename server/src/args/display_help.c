@@ -14,7 +14,7 @@
  *
  * @param str the string to display before (optional)
  */
-void display_help(char *str)
+void display_help(const char *str)
 {
     if (str)
         dprintf(2, "%s\n", str);

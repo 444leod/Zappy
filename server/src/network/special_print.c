@@ -24,10 +24,10 @@
  * @return the buffer
 */
 UNUSED static char *dev_get_full_buffer(
-    int *rfds,
-    int rcount,
-    int *wfds,
-    int wcount)
+    const int *rfds,
+    const int rcount,
+    const int *wfds,
+    const int wcount)
 {
     int offset = 0;
     char buffer[1024];
@@ -53,7 +53,8 @@ UNUSED static char *dev_get_full_buffer(
  *
  * @param set the fd_set to print
 */
-UNUSED static void dev_print_fd_set(fd_set *readfds, fd_set *writefds)
+UNUSED static void dev_print_fd_set(const fd_set *readfds,
+    const fd_set *writefds)
 {
     int rfds[FD_SETSIZE] = {0};
     int wfds[FD_SETSIZE] = {0};
@@ -83,7 +84,7 @@ UNUSED static void dev_print_fd_set(fd_set *readfds, fd_set *writefds)
  *
  * @param set the fd_set to print
 */
-void special_print(UNUSED fd_set *readfds, UNUSED fd_set *writefds)
+void special_print(UNUSED const fd_set *readfds, UNUSED const fd_set *writefds)
 {
     if (!DEBUG)
         return;

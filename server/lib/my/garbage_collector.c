@@ -18,7 +18,7 @@
  *
  * @return void* the pointer to the allocated memory
 */
-void *my_malloc(size_t size)
+void *my_malloc(const size_t size)
 {
     void *variable = malloc(size);
     g_llist_t *llist = get_llist();
@@ -79,7 +79,7 @@ void my_free_all(void)
  *
  * @return void* the pointer to the allocated memory
 */
-void *force_malloc(size_t size)
+void *force_malloc(const size_t size)
 {
     void *variable = malloc(size);
 
@@ -99,7 +99,7 @@ void *force_malloc(size_t size)
  *
  * @return void* the pointer to the allocated memory
 */
-void *my_realloc(void *ptr, size_t size, size_t old_size)
+void *my_realloc(void *ptr, const size_t size, const size_t old_size)
 {
     void *variable = my_malloc(size);
 

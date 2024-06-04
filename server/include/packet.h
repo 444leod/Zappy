@@ -25,5 +25,5 @@ void add_packet_to_queue(packet_queue_t *queue, packet_t *packet);
 packet_t *pop_packet_from_queue(packet_queue_t *queue);
 void free_packet_queue(packet_queue_t *queue);
 
-void send_packet(int fd, packet_t *packet);
-packet_t *build_packet(char *buffer);
+void send_packet(const int fd, const packet_t *packet);
+packet_t *build_packet(const char *buffer);

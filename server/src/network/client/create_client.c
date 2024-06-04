@@ -6,7 +6,7 @@
 */
 
 #include "clients.h"
-#include "zappy.h"
+#include "garbage_collector.h"
 
 /**
  * @brief Create a client
@@ -16,16 +16,15 @@
  *
  * @return the created client
 */
-client_t create_client(int fd)
+client_t create_client(const int fd)
 {
     client_t client = my_malloc(sizeof(struct client_s));
 
     client->fd = fd;
     client->next = NULL;
-    client->data_status = READING;
-    client->command = NULL;
+    client->commands = NULL;
+    client->buffer = NULL;
     client->type = NONE;
-    client->next_commands = NULL;
     client->team = NULL;
     client->client_num = 0;
     client->packet_queue = NULL;

@@ -19,6 +19,8 @@ __TESTER_NAME = tester
 __SRC = $(addprefix src/, $(__SRC_SRC)) \
 	$(addprefix src/args/, $(__SRC_ARGS)) \
 	$(addprefix src/commands/, $(__SRC_COMMANDS)) \
+	$(addprefix src/commands/ai/, $(__SRC_AI)) \
+	$(addprefix src/commands/graphical/, $(__SRC_GRAPHICAL)) \
 	$(addprefix src/network/, $(__SRC_NETWORK)) \
 	$(addprefix src/network/client/, $(__SRC_CLIENT)) \
 	main.c
@@ -30,7 +32,15 @@ __SRC_SRC := server.c \
 
 __SRC_COMMANDS := commands.c \
 	unknown_command.c \
-	msz.c
+
+__SRC_AI := forward.c \
+
+__SRC_GRAPHICAL := msz.c \
+
+__SRC_ARGS := params.c \
+	check_args.c \
+	init_server_info.c \
+	display_help.c \
 
 __SRC_ARGS := params.c \
 	check_args.c \

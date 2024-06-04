@@ -8,6 +8,9 @@
 #include "zappy.h"
 #include "clients.h"
 #include "lib.h"
+#include "macros.h"
+#include "garbage_collector.h"
+#include "debug.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -45,8 +48,7 @@ static void add_clients_to_set(
     while (tmp) {
         if (tmp->packet_queue)
             FD_SET(tmp->fd, writefds);
-        else
-            FD_SET(tmp->fd, readfds);
+        FD_SET(tmp->fd, readfds);
         if (tmp->fd > *max_sd)
             *max_sd = tmp->fd;
         tmp = tmp->next;
@@ -106,7 +108,7 @@ static void select_wrapper(int max_sd, fd_set *readfds,
  * @param socketFd the socket file descriptor
  * @param server_info the server_info struct
 */
-void zappy_loop(int socketFd)
+void zappy_loop(int socketFd, server_info_t server_info)
 {
     fd_set readfds;
     fd_set writefds;
@@ -124,7 +126,7 @@ void zappy_loop(int socketFd)
         select_wrapper(max_sd + 1, &readfds, &writefds, clients);
         if (FD_ISSET(socketFd, &readfds))
             add_new_client(socketFd);
-        loop_clients(clients, &readfds, &writefds);
+        loop_clients(clients, &readfds, &writefds, server_info);
     }
 }
 
@@ -169,7 +171,7 @@ static void print_server_info(server_info_t server_info)
  *
  * @return 0 if the program exited correctly
 */
-int server(int argc, char *argv[])
+int server(const int argc, const char *argv[])
 {
     int socketFd = -1;
     server_info_t server_info;
@@ -184,7 +186,7 @@ int server(int argc, char *argv[])
     bind_socket(socketFd, server_info->port);
     print_server_info(server_info);
     listen_socket(socketFd, 1024);
-    zappy_loop(socketFd);
+    zappy_loop(socketFd, server_info);
     close(socketFd);
     return 0;
 }

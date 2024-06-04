@@ -16,7 +16,7 @@
  *
  * @return true if the string is a number, false otherwise
  */
-bool is_number(char *str)
+bool is_number(const char *str)
 {
     int i = 0;
 

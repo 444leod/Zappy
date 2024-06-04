@@ -16,7 +16,7 @@
  *
  * @return true if the string is alphanumeric, false otherwise
  */
-bool is_alphanum(char *str)
+bool is_alphanum(const char *str)
 {
     int i = 0;
 

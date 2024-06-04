@@ -17,7 +17,8 @@
  * @param type the type of the client
  * @param packet the packet to send
  */
-void queue_packet_to_client_type(enum CLIENT_TYPE type, packet_t *packet)
+void queue_packet_to_client_type(const enum CLIENT_TYPE type,
+    packet_t *packet)
 {
     clients_t clients = get_clients_by_type(type);
     clients_t tmp = clients;

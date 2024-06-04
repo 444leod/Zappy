@@ -19,7 +19,7 @@
  *
  * @return the next parameters list node after the given flag
  */
-param_t get_param(char *flag, param_t params)
+param_t get_param(const char *flag, param_t params)
 {
     param_t tmp = params;
     param_t flag_node;
