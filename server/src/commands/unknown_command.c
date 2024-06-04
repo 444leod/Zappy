@@ -5,9 +5,10 @@
 ** unknown_command
 */
 
-#include "commands.h"
 #include "packet.h"
 #include "clients.h"
+#include "lib.h"
+#include <stdio.h>
 
 /**
  * @brief Unknown command
@@ -20,8 +21,10 @@
 void unknown_command(UNUSED char **args, client_t client,
     UNUSED server_info_t serverInfo)
 {
-    const char *msg = "ko\n";
+    char *msg = "ko";
     packet_t *packet = build_packet(msg);
 
+    printf("Client %d: Unknown command (%s)\n", client->fd,
+        get_escaped_string(args[0]));
     add_packet_to_queue(&client->packetQueue, packet);
 }
