@@ -21,7 +21,7 @@ __OBJ = $(__SRC:.cpp=.o)
 
 __CC = g++
 
-__CXXFLAGS = -Wall -Wextra -Werror -Wpedantic -I./include
+__CXXFLAGS = -Wall -Wextra -Werror -Wpedantic -I./include -I./include/GameData
 
 all: $(__NAME)
 

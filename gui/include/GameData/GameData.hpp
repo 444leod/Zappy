@@ -10,10 +10,13 @@
 #include <vector>
 #include <iostream>
 #include <map>
-#include "TileContent.hpp"
+#include <memory>
+#include "Tiles/TileContent.hpp"
 #include "Entities/Character.hpp"
+#include "Entities/Egg.hpp"
 #include "Vector.hpp"
 #include "Message.hpp"
+#include "Tiles/Map.hpp"
 
 namespace gui {
     /**
@@ -49,13 +52,16 @@ namespace gui {
              * @brief Get the player
              * @return Character The player
             */
-            std::vector<Character> player() const { return this->_players; }
+            std::vector<std::shared_ptr<Character>> player() const { return this->_players; }
 
             /**
              * @brief Add a player
              * @param player The player
             */
-            void addPlayer(Character player) { this->_players.push_back(player); }
+            void addPlayer(std::shared_ptr<Character> player) {
+                this->_players.push_back(player);
+                this->_map.tileContent(player->position()).addEntity(player);
+            }
 
             /**
              * @brief Remove a player
@@ -64,7 +70,8 @@ namespace gui {
             void removePlayer(std::uint32_t playerId)
             {
                 for (auto it = this->_players.begin(); it != this->_players.end(); it++) {
-                    if (it->entityId() == playerId) {
+                    if ((*it)->entityId() == playerId) {
+                        this->_map.removeEntityFromTile((*it)->position(), playerId);
                         this->_players.erase(it);
                         return;
                     }
@@ -75,13 +82,16 @@ namespace gui {
              * @brief Get the eggs
              * @return std::vector<Egg> The eggs
             */
-            std::vector<Egg> eggs() const { return this->_eggs; }
+            std::vector<std::shared_ptr<Egg>> eggs() const { return this->_eggs; }
 
             /**
              * @brief Add an egg
              * @param egg The egg
             */
-            void addEgg(Egg egg) { this->_eggs.push_back(egg); }
+            void addEgg(std::shared_ptr<Egg> egg) {
+                this->_eggs.push_back(egg);
+                this->_map.tileContent(egg->position()).addEntity(egg);
+            }
 
             /**
              * @brief Remove an egg
@@ -90,7 +100,8 @@ namespace gui {
             void removeEgg(std::uint32_t eggId)
             {
                 for (auto it = this->_eggs.begin(); it != this->_eggs.end(); it++) {
-                    if (it->entityId() == eggId) {
+                    if ((*it)->entityId() == eggId) {
+                        this->_map.removeEntityFromTile((*it)->position(), eggId);
                         this->_eggs.erase(it);
                         return;
                     }
@@ -109,10 +120,17 @@ namespace gui {
             */
             void addMessage(Message message) { this->_messages.push_back(message); }
 
+            /**
+             * @brief Get the REFERENCE of the map
+             * @return Map& The reference of the map
+            */
+            Map& mapRef() { return this->_map; }
+
         private:
             std::vector<std::string> _teamNames = {};
-            std::vector<Character> _players = {};
-            std::vector<Egg> _eggs = {};
+            Map _map;
+            std::vector<std::shared_ptr<Character>> _players = {};
+            std::vector<std::shared_ptr<Egg>> _eggs = {};
             std::vector<Message> _messages = {};
     };
 }

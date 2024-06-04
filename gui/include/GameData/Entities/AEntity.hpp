@@ -65,9 +65,22 @@ namespace gui {
             */
             virtual Vector2i entityPosition() const { return this->_position; };
 
+            /**
+             * @brief Set the entity team name
+             * @param teamName Team name of the entity
+            */
+            virtual void setTeamName(std::string teamName) { this->_teamName = teamName; };
+
+            /**
+             * @brief Get the entity team name
+             * @return std::string Team name of the entity
+            */
+            virtual std::string teamName() const { return this->_teamName; };
+
         protected:
             Vector2i _position = {0, 0};
             Orientation _orientation = Orientation::NORTH;
             std::uint32_t _id = 0;
+            std::string _teamName = "";
     };
 }

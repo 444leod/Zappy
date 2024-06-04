@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "Rocks.hpp"
-#include "Egg.hpp"
-#include "Character.hpp"
+#include "Tiles/Rocks/Rocks.hpp"
+#include "Entities/Egg.hpp"
+#include "Entities/Character.hpp"
 
 namespace gui {
     /**
@@ -42,15 +42,15 @@ namespace gui {
 
             /**
              * @brief Get the entities of the tile
-             * @return std::vector<AEntity&> The entities of the tile
+             * @return std::vector<std::shared_ptr<AEntity>> The entities of the tile
             */
-            std::vector<AEntity&> entity() const { return this->_entities; }
+            std::vector<std::shared_ptr<AEntity>> entity() const { return this->_entities; }
 
             /**
              * @brief Add an entity to the tile
              * @param entity The entity to add
             */
-            void addEntity(AEntity& entity) { this->_entities.push_back(entity); }
+            void addEntity(std::shared_ptr<AEntity> entity) { this->_entities.push_back(entity); }
 
             /**
              * @brief Remove an entity from the tile
@@ -58,7 +58,8 @@ namespace gui {
             */
             void removeEntity(std::uint32_t id) {
                 for (auto it = this->_entities.begin(); it != this->_entities.end(); it++) {
-                    if ((*it).entityId() == id) {
+                    if ((*it)->entityId() == id) {
+                        
                         this->_entities.erase(it);
                         return;
                     }
@@ -79,7 +80,7 @@ namespace gui {
 
         private:
             std::uint32_t _food = 0;
-            std::vector<AEntity&> _entities;
+            std::vector<std::shared_ptr<AEntity>> _entities;
             Rocks _rocks;
     };
 }
