@@ -154,8 +154,7 @@ namespace gui {
                 std::vector<std::string> _requests = {};
                 std::string _buffer;
 
-                bool _connected;
+                bool _connected = false;
         };
     }
 }
-

@@ -6,13 +6,12 @@
 */
 
 #include "Client.hpp"
+#include "macros.h"
 #include <iostream>
 #include <thread>
 
-int main(int argc, char const *argv[])
+int main(UNUSED int argc, UNUSED char const *argv[])
 {
-    (void)argc;
-    (void)argv;
     try {
         gui::ntw::Client Client(4242);
 
@@ -31,6 +30,12 @@ int main(int argc, char const *argv[])
 
         Client.disconnect();
 
+    } catch (const gui::ntw::Client::ClientTimeoutException& e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
+    } catch (const gui::ntw::Client::ClientNotConnectedException& e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
     } catch (const gui::ntw::Client::ClientException& e) {
         std::cerr << e.what() << std::endl;
         return 84;
