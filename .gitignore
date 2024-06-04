@@ -41,3 +41,5 @@ zappy_gui
 zappy_ref-2-0-2/**
 **/.trace
 tester
+**/__pycache__
+
