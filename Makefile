@@ -58,7 +58,18 @@ fclean: clean
 
 re: fclean all
 
-tests_run: all
+
+tests_run:	.init_done
+	@make tests_run -s -C server
+
+tests_clean:
+	@make tests_clean -s -C server
+
+tests: tests_run tests_clean
+
+coverage:
+	@make coverage -s -C server
+	@make tests_clean -s -C server
 
 run: all
 
