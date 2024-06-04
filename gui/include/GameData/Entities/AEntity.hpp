@@ -32,13 +32,13 @@ namespace gui {
              * @brief Set the entity Id
              * @param id Id of the entity
             */
-            virtual void setEntityId(std::uint32_t id) { this->_id = id; };
+            virtual void setId(std::uint32_t id) { this->_id = id; };
 
             /**
              * @brief Get the entity Id
              * @return std::uint32_t Id of the entity
             */
-            virtual std::uint32_t entityId() const { return this->_id; };
+            virtual std::uint32_t id() const { return this->_id; };
 
             /**
              * @brief Set the orientation of the entity
@@ -57,13 +57,13 @@ namespace gui {
              * @brief Set the position of the entity
              * @param position Position of the entity
             */
-            virtual void setEntityPosition(Vector2i position) { this->_position = position; };
+            virtual void setPosition(Vector2u position) { this->_position = position; };
 
             /**
              * @brief Get the position of the entity
-             * @return Vector2i Position of the entity
+             * @return Vector2u Position of the entity
             */
-            virtual Vector2i entityPosition() const { return this->_position; };
+            virtual Vector2u position() const { return this->_position; };
 
             /**
              * @brief Set the entity team name
@@ -78,7 +78,7 @@ namespace gui {
             virtual std::string teamName() const { return this->_teamName; };
 
         protected:
-            Vector2i _position = {0, 0};
+            Vector2u _position = {0, 0};
             Orientation _orientation = Orientation::NORTH;
             std::uint32_t _id = 0;
             std::string _teamName = "";

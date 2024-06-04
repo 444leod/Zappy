@@ -70,7 +70,7 @@ namespace gui {
             void removePlayer(std::uint32_t playerId)
             {
                 for (auto it = this->_players.begin(); it != this->_players.end(); it++) {
-                    if ((*it)->entityId() == playerId) {
+                    if ((*it)->id() == playerId) {
                         this->_map.removeEntityFromTile((*it)->position(), playerId);
                         this->_players.erase(it);
                         return;
@@ -100,7 +100,7 @@ namespace gui {
             void removeEgg(std::uint32_t eggId)
             {
                 for (auto it = this->_eggs.begin(); it != this->_eggs.end(); it++) {
-                    if ((*it)->entityId() == eggId) {
+                    if ((*it)->id() == eggId) {
                         this->_map.removeEntityFromTile((*it)->position(), eggId);
                         this->_eggs.erase(it);
                         return;

@@ -58,8 +58,7 @@ namespace gui {
             */
             void removeEntity(std::uint32_t id) {
                 for (auto it = this->_entities.begin(); it != this->_entities.end(); it++) {
-                    if ((*it)->entityId() == id) {
-                        
+                    if ((*it)->id() == id) {
                         this->_entities.erase(it);
                         return;
                     }
