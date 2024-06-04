@@ -18,8 +18,8 @@
 typedef struct client_s {
     int fd;
     char *team;
-    uint16_t client_num;
-    packet_queue_t packet_queue;
+    uint16_t clientNumber;
+    packet_queue_t packetQueue;
     enum CLIENT_TYPE type;
     client_command_list_t commands;
     char *buffer;
@@ -31,7 +31,7 @@ typedef struct clients_s {
     client_t client;
 } *clients_t;
 
-void add_client(client_t new_client);
+void add_client(client_t client);
 void remove_client(int fd);
 client_t create_client(int fd);
 client_t *get_clients(void);

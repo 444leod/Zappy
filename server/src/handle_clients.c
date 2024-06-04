@@ -25,7 +25,7 @@
 */
 static void send_buffer(client_t client)
 {
-    if (client->packet_queue)
+    if (client->packetQueue)
         send_packets(client);
 }
 
@@ -65,12 +65,12 @@ static bool is_read_special_case(const client_t client,
 */
 static client_command_t create_command(const char *command, const clock_t time)
 {
-    client_command_t new_command = my_malloc(sizeof(struct client_command_s));
+    client_command_t newCommand = my_malloc(sizeof(struct client_command_s));
 
-    new_command->command = my_strdup(command);
-    new_command->handled_at = time;
-    new_command->initialized = false;
-    return new_command;
+    newCommand->command = my_strdup(command);
+    newCommand->handledTime = time;
+    newCommand->initialized = false;
+    return newCommand;
 }
 
 /**
@@ -83,7 +83,7 @@ static client_command_t create_command(const char *command, const clock_t time)
 */
 static void queue_command(const client_t client)
 {
-    char *after_line_break = NULL;
+    char *afterLineBreak = NULL;
     int i = 0;
     const clock_t now = clock();
 
@@ -92,10 +92,10 @@ static void queue_command(const client_t client)
         return;
     }
     while (client->buffer && strlen(client->buffer) > 0) {
-        after_line_break = strstr(client->buffer, "\n");
-        if (!after_line_break)
+        afterLineBreak = strstr(client->buffer, "\n");
+        if (!afterLineBreak)
             break;
-        i = after_line_break - client->buffer;
+        i = afterLineBreak - client->buffer;
         add_to_list((void *)create_command(my_strndup(client->buffer, i), now),
             (void *)&client->commands);
         client->buffer = client->buffer + i + 1;
@@ -138,17 +138,17 @@ static void read_buffer(const client_t client)
  * @param client the client to trigger the action of
  * @param readfds the readfds to check
  * @param writefds the writefds to check
- * @param server_info the server_info
+ * @param serverInfo the serverInfo
 */
 static void trigger_action(const client_t client, const fd_set *readfds,
-    const fd_set *writefds, const server_info_t server_info)
+    const fd_set *writefds, const server_info_t serverInfo)
 {
     if (client->fd == -1)
         return;
     if (FD_ISSET(client->fd, readfds))
         read_buffer(client);
     if (client->commands)
-        handle_command(client, server_info);
+        handle_command(client, serverInfo);
     if (FD_ISSET(client->fd, writefds))
         send_buffer(client);
 }
@@ -160,10 +160,10 @@ static void trigger_action(const client_t client, const fd_set *readfds,
  * @param clients the clients to loop through
  * @param readfds the readfds to check
  * @param writefds the writefds to check
- * @param server_info the server_info
+ * @param serverInfo the serverInfo
 */
 void loop_clients(const client_t *clients, const fd_set *readfds,
-    const fd_set *writefds, const server_info_t server_info)
+    const fd_set *writefds, const server_info_t serverInfo)
 {
     client_t tmp = *clients;
     int tempFd = 0;
@@ -174,7 +174,7 @@ void loop_clients(const client_t *clients, const fd_set *readfds,
             tmp = tmp->next;
             continue;
         }
-        trigger_action(tmp, readfds, writefds, server_info);
+        trigger_action(tmp, readfds, writefds, serverInfo);
         if (tmp && tmp->fd == tempFd)
             tmp = tmp->next;
     }

@@ -20,5 +20,5 @@ typedef struct server_info_s {
     uint32_t freq;
     uint32_t width;
     uint32_t height;
-    team_name_t team_names;
+    team_name_t teamNames;
 } *server_info_t;

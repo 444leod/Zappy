@@ -15,13 +15,13 @@
  *
  * @param args the arguments of the command
  * @param client the client that executed the command
- * @param server_info the server info
+ * @param serverInfo the server informations
  */
 void unknown_command(UNUSED char **args, client_t client,
-    UNUSED server_info_t server_info)
+    UNUSED server_info_t serverInfo)
 {
     const char *msg = "ko\n";
     packet_t *packet = build_packet(msg);
 
-    add_packet_to_queue(&client->packet_queue, packet);
+    add_packet_to_queue(&client->packetQueue, packet);
 }

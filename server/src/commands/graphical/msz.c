@@ -14,9 +14,9 @@
  *
  * @param args the arguments of the command
  * @param client the client that executed the command
- * @param server_info the server info
+ * @param serverInfo the server info
  */
 void msz(UNUSED char **args, UNUSED client_t client,
-    UNUSED server_info_t server_info)
+    UNUSED server_info_t serverInfo)
 {
 }

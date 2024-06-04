@@ -21,7 +21,7 @@
  */
 void send_packets(client_t client)
 {
-    packet_t *packet = pop_packet_from_queue(&client->packet_queue);
+    packet_t *packet = pop_packet_from_queue(&client->packetQueue);
     const int socketFd = client->fd;
 
     if (packet->buffer[strlen(packet->buffer) - 1] != '\n')

@@ -29,8 +29,8 @@ void accept_socket(const int socketFd, void (*func)(int));
 void send_packets(client_t client);
 void special_print(const fd_set *readfds, const fd_set *writefds);
 void loop_clients(const client_t *clients, const fd_set *readfds,
-    const fd_set *writefds, const server_info_t server_info);
-void handle_command(const client_t client, const server_info_t server_info);
+    const fd_set *writefds, const server_info_t serverInfo);
+void handle_command(const client_t client, const server_info_t serverInfo);
 void get_port(const int fd, const int *port);
 void queue_packet_to_client_type(const enum CLIENT_TYPE type,
     packet_t *packet);

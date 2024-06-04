@@ -95,15 +95,15 @@ void *force_malloc(const size_t size)
  *
  * @param ptr the pointer to realloc
  * @param size the size of the memory to allocate
- * @param old_size the old size of the memory
+ * @param oldSize the old size of the memory
  *
  * @return void* the pointer to the allocated memory
 */
-void *my_realloc(void *ptr, const size_t size, const size_t old_size)
+void *my_realloc(void *ptr, const size_t size, const size_t oldSize)
 {
     void *variable = my_malloc(size);
 
-    memcpy(variable, ptr, old_size);
+    memcpy(variable, ptr, oldSize);
     my_free(ptr);
     return variable;
 }

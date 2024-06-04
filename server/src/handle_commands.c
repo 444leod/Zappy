@@ -20,12 +20,12 @@
  *
  * @param command the command to execute;
  * @param client the client to execute the command for
- * @param server_info the server info
+ * @param serverInfo the server info
 */
 static void execute_command(const client_command_t command,
-    const client_t client, const server_info_t server_info)
+    const client_t client, const server_info_t serverInfo)
 {
-    command->command_handler.func(command->args, client, server_info);
+    command->commandHandler.func(command->args, client, serverInfo);
     remove_from_list((void *)command, (node_t *)&client->commands);
 }
 
@@ -45,13 +45,13 @@ static bool should_be_handled(const client_command_t command,
     const client_t client)
 {
     clock_t now;
-    double time_elapsed;
+    double elapsedTime;
 
     if (client->type == GRAPHICAL)
         return true;
     now = clock();
-    time_elapsed = (double)(now - command->handled_at) / CLOCKS_PER_SEC * 10;
-    return time_elapsed >= command->seconds_to_wait;
+    elapsedTime = (double)(now - command->handledTime) / CLOCKS_PER_SEC * 10;
+    return elapsedTime >= command->waitDuration;
 }
 
 /**
@@ -61,10 +61,10 @@ static bool should_be_handled(const client_command_t command,
  *
  * @param command the command to initialize
  * @param client the client to initialize the command for
- * @param server_info the server info
+ * @param serverInfo the server info
 */
 static void initialize_command(const client_command_t command,
-    const client_t client, const server_info_t server_info)
+    const client_t client, const server_info_t serverInfo)
 {
     size_t i = 0;
 
@@ -72,15 +72,15 @@ static void initialize_command(const client_command_t command,
     command->args = str_to_word_array(command->command, " ");
     for (; COMMANDS[i].command; i++) {
         if (strcmp(COMMANDS[i].command, command->args[0]) == 0 &&
-            COMMANDS[i].client_type == client->type) {
-            command->command_handler = COMMANDS[i];
-            command->seconds_to_wait = COMMANDS[i].wait_units == 0 ? 0 :
-                COMMANDS[i].wait_units / server_info->freq;
+            COMMANDS[i].ClientType == client->type) {
+            command->commandHandler = COMMANDS[i];
+            command->waitDuration = COMMANDS[i].waitUnits == 0 ? 0 :
+                COMMANDS[i].waitUnits / serverInfo->freq;
             return;
         }
     }
-    command->command_handler = COMMANDS[i];
-    command->seconds_to_wait = 0;
+    command->commandHandler = COMMANDS[i];
+    command->waitDuration = 0;
 }
 
 /**
@@ -89,16 +89,16 @@ static void initialize_command(const client_command_t command,
  * by parsing it and executing it
  *
  * @param client the client to handle the command of
- * @param server_info the server info
+ * @param serverInfo the server info
 */
-void handle_command(const client_t client, const server_info_t server_info)
+void handle_command(const client_t client, const server_info_t serverInfo)
 {
-    const client_command_list_t command_node = client->commands;
+    const client_command_list_t commandNode = client->commands;
 
-    if (command_node->command->initialized == false) {
-        initialize_command(command_node->command, client, server_info);
-    } else if (should_be_handled(command_node->command, client)) {
-        execute_command(command_node->command, client, server_info);
+    if (commandNode->command->initialized == false) {
+        initialize_command(commandNode->command, client, serverInfo);
+    } else if (should_be_handled(commandNode->command, client)) {
+        execute_command(commandNode->command, client, serverInfo);
     } else {
         DEBUG_PRINT("Command not ready to be handled\n");
     }

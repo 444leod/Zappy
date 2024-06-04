@@ -24,7 +24,7 @@ void queue_packet_to_client_type(const enum CLIENT_TYPE type,
     clients_t tmp = clients;
 
     while (tmp) {
-        add_packet_to_queue(&tmp->client->packet_queue, packet);
+        add_packet_to_queue(&tmp->client->packetQueue, packet);
         tmp = tmp->next;
     }
 }
