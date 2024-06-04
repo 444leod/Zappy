@@ -15,7 +15,7 @@
  * @param fd the socket
  * @param port the port to update
 */
-void get_port(int fd, int *port)
+void get_port(const int fd, int *port)
 {
     struct sockaddr_in sin;
     socklen_t len = sizeof(sin);

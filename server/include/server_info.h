@@ -15,7 +15,7 @@ typedef struct team_name_s {
 } *team_name_t;
 
 typedef struct server_info_s {
-    int port;
+    uint16_t port;
     uint32_t clientsNb;
     uint32_t freq;
     uint32_t width;

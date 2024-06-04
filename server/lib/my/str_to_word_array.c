@@ -19,10 +19,10 @@
  *
  * @return the number of words
 */
-static size_t count_words(char *str, char *delim)
+static size_t count_words(const char *str, const char *delim)
 {
     size_t count = 0;
-    char *start = str;
+    char *start = my_strdup(str);
     char *end;
 
     end = strpbrk(start, delim);
@@ -44,11 +44,11 @@ static size_t count_words(char *str, char *delim)
  *
  * @return the array of words
 */
-char **str_to_word_array(char *str, char *delim)
+char **str_to_word_array(const char *str, const char *delim)
 {
     char **array = my_malloc(sizeof(char *) * (count_words(str, delim) + 1));
     int i = 0;
-    char *start = str;
+    char *start = my_strdup(str);
     char *end;
 
     end = strpbrk(start, delim);

@@ -21,7 +21,7 @@
  * @param sockfd the client socket
  * @param ip the server ip
 */
-void connect_to_server(int sockfd, char *ip, int port)
+void connect_to_server(const int sockfd, const char *ip, const uint16_t port)
 {
     struct sockaddr_in servaddr;
 

@@ -33,7 +33,7 @@ static void destroy_fds(client_t tmp)
  *
  * @param fd the fd of the client to remove
 */
-void remove_client(int fd)
+void remove_client(const int fd)
 {
     client_t *clients = get_clients();
     client_t tmp = *clients;

@@ -60,7 +60,7 @@ void remove_from_list(void *data, node_t *list)
  *
  * @return node_t the data
 */
-node_t get_node_by_index(int index, node_t list)
+node_t get_node_by_index(const int index, const node_t list)
 {
     node_t tmp = list;
     int i = 0;
@@ -82,7 +82,7 @@ node_t get_node_by_index(int index, node_t list)
  *
  * @return uint32_t the size of the list
 */
-uint32_t get_list_size(node_t list)
+uint32_t get_list_size(const node_t list)
 {
     node_t tmp = list;
     uint32_t i = 0;

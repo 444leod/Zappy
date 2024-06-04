@@ -122,7 +122,7 @@ static void check_name(char *actual_name, param_t other_params)
  *
  * @return the arguments list until the next flag or the end of the list
 */
-static param_t get_until_flag(param_t params)
+static param_t get_until_flag(const param_t params)
 {
     param_t new = NULL;
     param_t tmp = params;
@@ -141,7 +141,7 @@ static param_t get_until_flag(param_t params)
  *
  * @param params the arguments
 */
-static void check_team_names(param_t params)
+static void check_team_names(const param_t params)
 {
     param_t team_names = get_param("-n", params);
     param_t tmp = NULL;
@@ -167,7 +167,7 @@ static void check_team_names(param_t params)
  *
  * @param params the arguments
 */
-static void check_handled_parameters(param_t params)
+static void check_handled_parameters(const param_t params)
 {
     param_t tmp = params;
 
@@ -186,7 +186,7 @@ static void check_handled_parameters(param_t params)
  * @param argc the number of arguments
  * @param argv the arguments
 */
-void check_args(int argc, char *argv[])
+void check_args(const int argc, const char *argv[])
 {
     param_t params = NULL;
     param_informations_t param = NULL;
@@ -195,7 +195,7 @@ void check_args(int argc, char *argv[])
         display_help("Not enough parameters.\n");
     for (int i = 1; i < argc; i++) {
         param = my_malloc(sizeof(struct param_informations_s));
-        param->content = argv[i];
+        param->content = my_strdup(argv[i]);
         param->handled = false;
         add_to_list((void *)param, (node_t *)&params);
     }

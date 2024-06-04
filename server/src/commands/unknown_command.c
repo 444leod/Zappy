@@ -20,7 +20,7 @@
 void unknown_command(UNUSED char **args, client_t client,
     UNUSED server_info_t server_info)
 {
-    char *msg = "ko\n";
+    const char *msg = "ko\n";
     packet_t *packet = build_packet(msg);
 
     add_packet_to_queue(&client->packet_queue, packet);

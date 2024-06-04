@@ -13,17 +13,17 @@
 #include <stdbool.h>
 #include "escaped.h"
 
-void my_error(char *str);
-void prepare_exit(int socketFd);
-void my_exit(int status);
-char *my_strdup(char const *src);
-char **str_to_word_array(char *str, char *delim);
-int tablen(void **tab);
-char *supercat(int n, ...);
-char *my_strndup(char const *src, int n);
+void my_error(const char *str);
+void prepare_exit(const int socketFd);
+void my_exit(const int status);
+char *my_strdup(const char *src);
+char **str_to_word_array(const char *str, const char *delim);
+int tablen(const void **tab);
+char *supercat(const int n, ...);
+char *my_strndup(const char *src, const int n);
 char *get_current_dir(void);
 char *my_snprintf(const char *format, ...);
-char *replace_char(char *str, char find, char replace);
-void my_exit(int status);
-bool is_number(char *str);
-bool is_alphanum(char *str);
+char *replace_char(const char *str, const char find, const char replace);
+void my_exit(const int status);
+bool is_number(const char *str);
+bool is_alphanum(const char *str);

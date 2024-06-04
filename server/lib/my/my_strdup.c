@@ -17,7 +17,7 @@
  *
  * @return the duplicated string
 */
-char *my_strdup(char const *src)
+char *my_strdup(const char *src)
 {
     char *dest = my_malloc(sizeof(char) * (strlen(src) + 1));
 
@@ -34,7 +34,7 @@ char *my_strdup(char const *src)
  *
  * @return the duplicated string
 */
-char *my_strndup(char const *src, int n)
+char *my_strndup(const char *src, const int n)
 {
     char *dest = my_malloc(sizeof(char) * (n + 1));
 

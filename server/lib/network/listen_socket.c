@@ -15,9 +15,9 @@
  * @param socketFd the socket to listen
  * @param maxClients the maxClients to listen
 */
-void listen_socket(int socketFd, int maxClients)
+void listen_socket(const int socketFd, const int maxClients)
 {
-    int listenRes = listen(socketFd, maxClients);
+    const int listenRes = listen(socketFd, maxClients);
 
     if (listenRes == -1)
         my_error(supercat(2, "listen failed: ", strerror(errno)));

@@ -31,7 +31,7 @@ client_t *get_clients(void)
  *
  * @return the clients
 */
-clients_t get_clients_by_type(enum CLIENT_TYPE type)
+clients_t get_clients_by_type(const enum CLIENT_TYPE type)
 {
     clients_t clients = NULL;
     client_t *tmp = get_clients();
@@ -53,7 +53,7 @@ clients_t get_clients_by_type(enum CLIENT_TYPE type)
  *
  * @return the client
 */
-client_t get_client_by_fd(int fd)
+client_t get_client_by_fd(const int fd)
 {
     client_t *clients = get_clients();
     client_t tmp = *clients;

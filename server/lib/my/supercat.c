@@ -20,7 +20,7 @@
  *
  * @return the concatenated string
 */
-static char *my_strcat(char *dest, char *src)
+static char *my_strcat(const char *dest, const char *src)
 {
     char *tmp = my_malloc(strlen(dest) + strlen(src) + 1);
 
@@ -38,7 +38,7 @@ static char *my_strcat(char *dest, char *src)
  *
  * @return the concatenated string
 */
-char *supercat(int n, ...)
+char *supercat(const int n, ...)
 {
     va_list ap;
     char *str = my_strdup("");

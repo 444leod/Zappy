@@ -19,4 +19,4 @@ typedef struct param_s {
     param_informations_t informations;
 } *param_t;
 
-param_t get_param(char *flag, param_t params);
+param_t get_param(const char *flag, param_t params);

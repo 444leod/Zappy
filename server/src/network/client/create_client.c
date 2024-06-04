@@ -16,7 +16,7 @@
  *
  * @return the created client
 */
-client_t create_client(int fd)
+client_t create_client(const int fd)
 {
     client_t client = my_malloc(sizeof(struct client_s));
 
