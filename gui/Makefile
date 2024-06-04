@@ -15,7 +15,7 @@ __NAME = zappy_gui
 __SRC = main.cpp \
 	$(addprefix ./src/network/, $(__SRC_NETWORK))
 
-__SRC_NETWORK = ZappyClient.cpp \
+__SRC_NETWORK = Client.cpp \
 
 %.o: %.cpp
 	@$(__CC) -c -o $@ $< $(__CXXFLAGS)
