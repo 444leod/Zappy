@@ -12,25 +12,17 @@ __NC=\033[0m # No Color
 
 __NAME = zappy_ai
 
-__SRC = ./src/main.c
-
-%.o: %.c
-	@$(__CC) -c -o $@ $< $(__CFLAGS)
-
-__OBJ = $(__SRC:.c=.o)
-
-__CC = gcc
-
-__CFLAGS = -Wall -Wextra -Werror -Wpedantic
+__SRC = ./src/bot.py
 
 all: $(__NAME)
 
-$(__NAME): $(__OBJ)
-	@$(__CC) -o $(__NAME) $(__OBJ) $(__CFLAGS)
+$(__NAME):
+	@cp $(__SRC) zappy_ai
+	@chmod +x zappy_ai
 	@echo -ne "${__GREEN}$(__BOLD)Compilation of $(__NAME)$(__NC)"
 	@echo -e "${__GREEN}completed successfully.${__NC}"
 clean:
-	@rm -f $(__OBJ)
+	@echo -e "${__GREEN}Nothing to clean in Python project${__NC}"
 	@echo -ne "${__GREEN}$(__BOLD)Clean of $(__NAME)$(__NC)"
 	@echo -e "${__GREEN}completed successfully.${__NC}"
 
