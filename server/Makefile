@@ -34,6 +34,7 @@ __SRC_SRC := server.c \
 
 __SRC_COMMANDS := commands.c \
 	unknown_command.c \
+	auth.c \
 
 __SRC_AI := forward.c \
 

@@ -74,6 +74,26 @@ static client_command_t create_command(const char *command, const clock_t time)
 }
 
 /**
+ * @brief Clear the buffer overflow of an AI client
+ * @details Clear the buffer overflow of an AI client (if the client has more
+ * than 10 commands queued, new ones will be ignored)
+ *
+ * @param client the client to clear the buffer overflow of
+*/
+static void clear_ai_buffer_overflow(client_t client)
+{
+    uint32_t commandsSize = get_list_size((node_t)client->commands);
+
+    if (commandsSize < 10)
+        return;
+    while (commandsSize > 10) {
+        remove_from_list(get_node_by_index(11, (node_t)client->commands)->data,
+            (node_t *)&client->commands);
+        commandsSize--;
+    }
+}
+
+/**
  * @brief Queue the next command of a client
  * @details Queue the next command of a client
  * if the client has a next command, queue it
@@ -87,10 +107,6 @@ static void queue_command(const client_t client)
     int i = 0;
     const clock_t now = clock();
 
-    if (client->type == AI && get_list_size((node_t)client->commands) == 10) {
-        my_free(client->buffer);
-        return;
-    }
     while (client->buffer && strlen(client->buffer) > 0) {
         afterLineBreak = strstr(client->buffer, "\n");
         if (!afterLineBreak)
@@ -100,9 +116,8 @@ static void queue_command(const client_t client)
             (void *)&client->commands);
         client->buffer = client->buffer + i + 1;
     }
-    while (client->type == AI && get_list_size((node_t)client->commands) > 10)
-        remove_from_list(get_node_by_index(11, (node_t)client->commands)->data,
-            (node_t *)&client->commands);
+    if (client->type == AI)
+        clear_ai_buffer_overflow(client);
 }
 
 /**
