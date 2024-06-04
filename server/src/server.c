@@ -138,7 +138,7 @@ void zappy_loop(int socketFd, server_info_t serverInfo)
 */
 static void print_server_info(server_info_t serverInfo)
 {
-    team_name_t tmp = serverInfo->teamNames;
+    team_list_t teams = serverInfo->teams;
 
     DEBUG_PRINT("\nServer info:\n");
     DEBUG_PRINT("\tRunning on port %d\n", serverInfo->port);
@@ -152,9 +152,9 @@ static void print_server_info(server_info_t serverInfo)
         serverInfo->width, serverInfo->height);
     DEBUG_PRINT("\tFrequency: %d\n", serverInfo->freq);
     DEBUG_PRINT("\tTeam names:\n");
-    while (tmp) {
-        DEBUG_PRINT("\t  - %s\n", tmp->name);
-        tmp = tmp->next;
+    while (teams) {
+        DEBUG_PRINT("\t  - %s\n", teams->team->name);
+        teams = teams->next;
     }
     DEBUG_PRINT("\n");
 }
