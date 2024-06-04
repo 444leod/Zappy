@@ -40,6 +40,16 @@ namespace GUI {
                     std::string _message;
             };
 
+            class ZappyClientNotConnectedException : public ZappyClientException {
+                public:
+                    ZappyClientNotConnectedException() : ZappyClientException("The client is not connected to the server.") {}
+            };
+
+            class ZappyClientTimeoutException : public ZappyClientException {
+                public:
+                    ZappyClientTimeoutException(const std::string& message) : ZappyClientException(message) {}
+            };
+
         protected:
         private:
             uint16_t _port;

@@ -26,7 +26,7 @@ GUI::ZappyClient::ZappyClient(uint16_t port) noexcept : _port(port)
  * @throw ZappyClientException if the connection to the server fails
  * @throw ZappyClientException if the welcome message is not received
  * @throw ZappyClientException if the message could not be sent
- * @throw ZappyClientException if the message could not be sent within the timeout
+ * @throw ZappyClientTimeoutException if the message could not be sent within the timeout
 */
 void GUI::ZappyClient::connectToServer()
 {
@@ -42,7 +42,7 @@ void GUI::ZappyClient::connectToServer()
     while (!this->receive() && std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - now).count() < 5);
 
     if (!this->hasResponses())
-        throw ZappyClientException("Failed to connect to server (welcome not received.)");
+        throw ZappyClientTimeoutException("Failed to connect to server (welcome not received.)");
 
     std::string message = this->popResponse();
     if (message != "WELCOME")
@@ -57,15 +57,15 @@ void GUI::ZappyClient::connectToServer()
  *
  * @param timeout The timeout for the send operation, if not specified, the operation will block until the message is sent
  *
- * @throw ZappyClientException if the socket is not connected
+ * @throw ZappyClientNotConnectedException if the socket is not connected
  * @throw ZappyClientException if there is no message to send
  * @throw ZappyClientException if the message could not be sent
- * @throw ZappyClientException if the message could not be sent within the timeout
+ * @throw ZappyClientTimeoutException if the message could not be sent within the timeout
 */
 void GUI::ZappyClient::sendRequests(std::optional<std::chrono::milliseconds> timeout)
 {
     if (!_connected)
-        throw ZappyClientException("Not connected to server");
+        throw ZappyClientNotConnectedException();
     if (_requests.empty())
         throw ZappyClientException("No message to send");
     std::string fullRequest;
@@ -89,7 +89,7 @@ void GUI::ZappyClient::sendRequests(std::optional<std::chrono::milliseconds> tim
             sf::sleep(sf::milliseconds(10));
         } else {
             if (status == sf::Socket::NotReady)
-                throw ZappyClientException("Failed to send message to server (timeout)");
+                throw ZappyClientTimeoutException("Failed to send message to server (timeout)");
             throw ZappyClientException("Failed to send message to server");
         }
     }
@@ -133,12 +133,12 @@ void GUI::ZappyClient::queueRequests(const std::vector<std::string>& requests)
  *
  * @return bool true if a message has been received, false otherwise
  *
- * @throw ZappyClientException if the socket is not connected
+ * @throw ZappyClientNotConnectedException if the socket is not connected
 */
 bool GUI::ZappyClient::receive()
 {
     if (!_connected)
-        throw ZappyClientException("Not connected to server");
+        throw ZappyClientNotConnectedException();
 
     char buffer[1024];
     std::size_t received;
@@ -160,12 +160,12 @@ bool GUI::ZappyClient::receive()
 /**
  * @brief Disconnects the socket from the server
  *
- * @throw ZappyClientException if the socket is not connected
+ * @throw ZappyClientNotConnectedException if the socket is not connected
 */
 void GUI::ZappyClient::disconnect()
 {
     if (!_connected)
-        throw ZappyClientException("Not connected to server");
+        throw ZappyClientNotConnectedException();
 
     _socket.disconnect();
 }
