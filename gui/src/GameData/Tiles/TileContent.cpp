@@ -5,7 +5,7 @@
 ** TileContent
 */
 
-#include "TileContent.hpp"
+#include "Tiles/TileContent.hpp"
 
 namespace gui {
     void TileContent::removeEntity(std::uint32_t id)

@@ -14,6 +14,8 @@ __NAME = zappy_gui
 
 __SRC = src/main.cpp \
 		src/GameData/GameData.cpp \
+		src/GameData/Tiles/Map.cpp \
+		src/GameData/Tiles/TileContent.cpp \
 
 %.o: %.cpp
 	@$(__CC) -c -o $@ $< $(__CXXFLAGS)

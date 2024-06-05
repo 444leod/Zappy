@@ -53,24 +53,14 @@ namespace gui {
              * @return TileContent The tile content
              * @throw std::out_of_range If the coordinates are out of range
             */
-            TileContent getTileContentByCoordinates(Vector2u coordinates) const
-            {
-                auto it = this->_mapContent.find(coordinates);
-                if (it != this->_mapContent.end())
-                    return it->second;
-                else
-                    throw std::out_of_range("Coordinates out of range");
-            }
+            TileContent getTileContentByCoordinates(Vector2u coordinates) const;
 
             /**
              * @brief Check if the coordinates are valid
              * @param coordinates The coordinates
              * @return bool True if the coordinates are valid, false otherwise
             */
-            bool isValidCoordinates(Vector2u coordinates) const
-            {
-                return (coordinates.x() < this->_mapSize.x() && coordinates.y() < this->_mapSize.y());
-            }
+            bool isValidCoordinates(Vector2u coordinates) const { return (coordinates.x() < this->_mapSize.x() && coordinates.y() < this->_mapSize.y()); }
 
             /**
              * @brief Set the tile content at specific coordinates
@@ -78,45 +68,26 @@ namespace gui {
              * @param tileContent The new tile content
              * @throw std::out_of_range If the coordinates are out of range
             */
-            void setTileContent(Vector2u coordinates, TileContent tileContent)
-            {
-                if (!isValidCoordinates(coordinates))
-                    throw std::out_of_range("Coordinates out of range");
-
-                this->_mapContent[coordinates] = tileContent;
-            }
+            void setTileContent(Vector2u coordinates, TileContent tileContent);
 
             /**
              * @brief Get the map content
              * @return std::map<Vector2u, TileContent> The map content
             */
-            std::map<Vector2u, TileContent> mapContent() const
-            {
-                return this->_mapContent;
-            }
+            std::map<Vector2u, TileContent> mapContent() const { return this->_mapContent; }
 
             /**
              * @brief Set the map content
              * @param mapContent The map content
             */
-            void setMapContent(std::map<Vector2u, TileContent> mapContent)
-            {
-                this->_mapContent.clear(); // Clear the old map content
-
-                for (auto &tile : mapContent) {
-                    this->_mapContent[tile.first] = tile.second;
-                }
-            }
+            void setMapContent(std::map<Vector2u, TileContent> mapContent);
 
             /**
              * @brief Remove an entity from a tile
              * @param coordinates The coordinates of the tile
              * @param id The id of the entity to remove
             */
-            void removeEntityFromTile(Vector2u coordinates, std::uint32_t id)
-            {
-                this->_mapContent[coordinates].removeEntity(id);
-            }
+            void removeEntityFromTile(Vector2u coordinates, std::uint32_t id) { this->_mapContent[coordinates].removeEntity(id); }
 
         private:
             Vector2u _mapSize = {0, 0};
