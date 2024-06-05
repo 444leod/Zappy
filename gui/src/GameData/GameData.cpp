@@ -6,6 +6,7 @@
 */
 
 #include "GameData.hpp"
+#include <algorithm>
 
 namespace gui {
     void GameData::addPlayer(std::shared_ptr<Character> player)
@@ -16,12 +17,12 @@ namespace gui {
 
     void GameData::removePlayer(std::uint32_t playerId)
     {
-        for (auto it = this->_players.begin(); it != this->_players.end(); it++) {
-            if ((*it)->id() == playerId) {
-                this->_map.removeEntityFromTile((*it)->position(), playerId);
-                this->_players.erase(it);
-                return;
-            }
+        auto it = std::find_if(this->_players.begin(), this->_players.end(),
+            [playerId](const auto& player){ return player->id() == playerId; });
+
+        if (it != this->_players.end()) {
+            this->_map.removeEntityFromTile((*it)->position(), playerId);
+            this->_players.erase(it);
         }
     }
 
@@ -33,12 +34,12 @@ namespace gui {
 
     void GameData::removeEgg(std::uint32_t eggId)
     {
-        for (auto it = this->_eggs.begin(); it != this->_eggs.end(); it++) {
-            if ((*it)->id() == eggId) {
-                this->_map.removeEntityFromTile((*it)->position(), eggId);
-                this->_eggs.erase(it);
-                return;
-            }
+        auto it = std::find_if(this->_eggs.begin(), this->_eggs.end(),
+            [eggId](const auto& egg){ return egg->id() == eggId; });
+
+        if (it != this->_eggs.end()) {
+            this->_map.removeEntityFromTile((*it)->position(), eggId);
+            this->_eggs.erase(it);
         }
     }
 }
