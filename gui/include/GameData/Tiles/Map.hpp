@@ -101,6 +101,8 @@ namespace gui {
             */
             void setMapContent(std::map<Vector2u, TileContent> mapContent)
             {
+                this->_mapContent.clear(); // Clear the old map content
+
                 for (auto &tile : mapContent) {
                     this->_mapContent[tile.first] = tile.second;
                 }
