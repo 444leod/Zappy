@@ -68,8 +68,7 @@ static bool is_team_name_valid(char *name, server_info_t serverInfo,
  */
 static void queue_ko(client_t client)
 {
-    const char *msg = "ko\n";
-    packet_t *packet = build_packet(msg);
+    packet_t *packet = build_packet("ko");
 
     add_packet_to_queue(&client->packetQueue, packet);
 }
@@ -81,8 +80,7 @@ static void queue_ko(client_t client)
  */
 static void queue_ok(client_t client)
 {
-    const char *msg = "ok\n";
-    packet_t *packet = build_packet(msg);
+    packet_t *packet = build_packet("ok");
 
     add_packet_to_queue(&client->packetQueue, packet);
 }
@@ -138,8 +136,8 @@ static void send_start_informations(client_t client, uint32_t width,
 void auth(char **args, client_t client,
     server_info_t serverInfo)
 {
-    if (args[0] == NULL) {
-        printf("Client %d: No team name\n", client->fd);
+    if (tablen((const void **)args) != 1) {
+        printf("Client %d: Bad team name\n", client->fd);
         queue_ko(client);
         return;
     }
