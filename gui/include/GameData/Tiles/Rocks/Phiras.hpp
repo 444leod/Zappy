@@ -17,6 +17,6 @@
 namespace gui {
     class Phiras : public ARock {
         public:
-            Phiras(std::uint32_t rockQuantity = 0 ) : ARock( rockQuantity ) {};
+            Phiras(std::uint32_t quantity = 0 ) : ARock( quantity ) {};
     };
 }

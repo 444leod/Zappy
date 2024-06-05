@@ -17,6 +17,6 @@
 namespace gui {
     class Mendiane : public ARock {
         public:
-            Mendiane(std::uint32_t rockQuantity = 0 ) : ARock( rockQuantity ) {};
+            Mendiane(std::uint32_t quantity = 0 ) : ARock( quantity ) {};
     };
 }

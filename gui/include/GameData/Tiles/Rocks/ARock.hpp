@@ -18,9 +18,9 @@ namespace gui {
         public:
             /**
              * @brief Construct a new ARock object
-             * @param rockQuantity Quantity of rock
+             * @param quantity Quantity of rock
             */
-            ARock(std::uint32_t rockQuantity = 0) : _rockQuantity(rockQuantity) {};
+            ARock(std::uint32_t quantity = 0) : _quantity(quantity) {};
 
             /**
              * @brief Destroy the ARock object
@@ -31,27 +31,27 @@ namespace gui {
              * @brief Add rock to the quantity
              * @param quantity Quantity of rock to add
             */
-            virtual void addRock(std::uint32_t quantity) { this->_rockQuantity += quantity; };
+            virtual void addRock(std::uint32_t quantity) { this->_quantity += quantity; };
 
             /**
              * @brief Remove rock from the quantity
              * @param quantity Quantity of rock to remove
             */
-            virtual void removeRock(std::uint32_t quantity) { this->_rockQuantity -= quantity; };
+            virtual void removeRock(std::uint32_t quantity) { this->_quantity -= quantity; };
 
             /**
              * @brief Set the rock quantity
              * @param quantity Quantity of rock
             */
-            virtual void setRockQuantity(std::uint32_t quantity) { this->_rockQuantity = quantity; };
+            virtual void setquantity(std::uint32_t quantity) { this->_quantity = quantity; };
 
             /**
              * @brief Get the rock quantity
              * @return std::uint32_t Quantity of rock
             */
-            virtual std::uint32_t rockQuantity() const { return this->_rockQuantity; };
+            virtual std::uint32_t quantity() const { return this->_quantity; };
 
         protected:
-            std::uint32_t _rockQuantity;
+            std::uint32_t _quantity;
     };
 }

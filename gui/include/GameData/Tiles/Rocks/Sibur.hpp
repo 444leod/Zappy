@@ -17,6 +17,6 @@
 namespace gui {
     class Sibur : public ARock {
         public:
-            Sibur(std::uint32_t rockQuantity = 0) : ARock(rockQuantity) {};
+            Sibur(std::uint32_t quantity = 0) : ARock(quantity) {};
     };
 }

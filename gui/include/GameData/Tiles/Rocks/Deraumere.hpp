@@ -17,6 +17,6 @@
 namespace gui {
     class Deraumere : public ARock {
         public:
-            Deraumere(std::uint32_t rockQuantity = 0) : ARock(rockQuantity) {};
+            Deraumere(std::uint32_t quantity = 0) : ARock(quantity) {};
     };
 }

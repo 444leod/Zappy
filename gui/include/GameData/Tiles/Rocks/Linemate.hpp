@@ -17,6 +17,6 @@
 namespace gui {
     class Linemate : public ARock {
         public:
-            Linemate(std::uint32_t rockQuantity = 0) : ARock(rockQuantity) {};
+            Linemate(std::uint32_t quantity = 0) : ARock(quantity) {};
     };
 }

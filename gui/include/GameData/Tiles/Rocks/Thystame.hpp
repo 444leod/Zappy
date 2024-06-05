@@ -17,6 +17,6 @@
 namespace gui {
     class Thystame : public ARock {
         public:
-            Thystame(std::uint32_t rockQuantity = 0 ) : ARock( rockQuantity ) {};
+            Thystame(std::uint32_t quantity = 0 ) : ARock( quantity ) {};
     };
 }
