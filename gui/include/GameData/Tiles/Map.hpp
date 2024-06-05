@@ -53,7 +53,7 @@ namespace gui {
              * @return TileContent The tile content
              * @throw std::out_of_range If the coordinates are out of range
             */
-            TileContent tileContent(Vector2u coordinates) const
+            TileContent getTileContentByCoordinates(Vector2u coordinates) const
             {
                 auto it = this->_mapContent.find(coordinates);
                 if (it != this->_mapContent.end())
