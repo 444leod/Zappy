@@ -44,7 +44,7 @@ namespace gui {
              * @brief Get the entities of the tile
              * @return std::vector<std::shared_ptr<AEntity>> The entities of the tile
             */
-            std::vector<std::shared_ptr<AEntity>> entity() const { return this->_entities; }
+            std::vector<std::shared_ptr<AEntity>> entities() const { return this->_entities; }
 
             /**
              * @brief Add an entity to the tile
