@@ -49,10 +49,10 @@ namespace gui {
             void addTeamName(std::string teamName) { this->_teamNames.push_back(teamName); }
 
             /**
-             * @brief Get the player
+             * @brief Get the players vector
              * @return Character The player
             */
-            std::vector<std::shared_ptr<Character>> player() const { return this->_players; }
+            std::vector<std::shared_ptr<Character>> players() const { return this->_players; }
 
             /**
              * @brief Add a player
