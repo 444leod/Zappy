@@ -16,5 +16,6 @@ namespace gui {
                 return;
             }
         }
+        throw std::out_of_range("Entity not found");
     }
 }
