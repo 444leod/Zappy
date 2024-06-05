@@ -63,9 +63,8 @@ namespace gui {
 
             /**
              * @brief Add 1 to the player level
-             * @param playerLevel The player level
             */
-            void increasePlayerLevel(std::uint32_t playerLevel) { this->_level += playerLevel; }
+            void increasePlayerLevel() { this->_level += 1; }
 
         private:
             std::uint32_t _food = 0;
