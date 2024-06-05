@@ -21,7 +21,7 @@ namespace gui {
             [playerId](const auto& player){ return player->id() == playerId; });
 
         if (it != this->_players.end()) {
-            this->_map.removeEntityFromTile((*it)->position(), playerId);
+            this->_map.removeEntityAtCoordinates((*it)->position(), playerId);
             this->_players.erase(it);
         }
     }
@@ -38,7 +38,7 @@ namespace gui {
             [eggId](const auto& egg){ return egg->id() == eggId; });
 
         if (it != this->_eggs.end()) {
-            this->_map.removeEntityFromTile((*it)->position(), eggId);
+            this->_map.removeEntityAtCoordinates((*it)->position(), eggId);
             this->_eggs.erase(it);
         }
     }

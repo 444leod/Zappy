@@ -87,7 +87,7 @@ namespace gui {
              * @param coordinates The coordinates of the tile
              * @param id The id of the entity to remove
             */
-            void removeEntityFromTile(Vector2u coordinates, std::uint32_t id) { this->_mapContent[coordinates].removeEntity(id); }
+            void removeEntityAtCoordinates(Vector2u coordinates, std::uint32_t id) { this->_mapContent[coordinates].removeEntity(id); }
 
         private:
             Vector2u _mapSize = {0, 0};
