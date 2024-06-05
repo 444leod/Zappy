@@ -11,6 +11,7 @@
 #include "AEntity.hpp"
 #include <map>
 #include <vector>
+#include <memory>
 
 namespace gui {
     /**

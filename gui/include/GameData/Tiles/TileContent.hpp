@@ -56,14 +56,7 @@ namespace gui {
              * @brief Remove an entity from the tile
              * @param id The id of the entity to remove
             */
-            void removeEntity(std::uint32_t id) {
-                for (auto it = this->_entities.begin(); it != this->_entities.end(); it++) {
-                    if ((*it)->id() == id) {
-                        this->_entities.erase(it);
-                        return;
-                    }
-                }
-            }
+            void removeEntity(std::uint32_t id);
 
             /**
              * @brief Get the rocks of the tile
