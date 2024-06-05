@@ -5,7 +5,6 @@
 ** main
 */
 
-#include "Vector.hpp"
 #include "GameData.hpp"
 
 int main(int ac, char **av)
