@@ -17,7 +17,7 @@ namespace gui {
             throw std::out_of_range("Coordinates out of range");
     }
 
-    void Map::setTileContent(Vector2u coordinates, TileContent tileContent)
+    void Map::setTileContentByCoordinates(Vector2u coordinates, TileContent tileContent)
     {
         if (!isValidCoordinates(coordinates))
             throw std::out_of_range("Coordinates out of range");

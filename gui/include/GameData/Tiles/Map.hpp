@@ -68,7 +68,7 @@ namespace gui {
              * @param tileContent The new tile content
              * @throw std::out_of_range If the coordinates are out of range
             */
-            void setTileContent(Vector2u coordinates, TileContent tileContent);
+            void setTileContentByCoordinates(Vector2u coordinates, TileContent tileContent);
 
             /**
              * @brief Get the map content
