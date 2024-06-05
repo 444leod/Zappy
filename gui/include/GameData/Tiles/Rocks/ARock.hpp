@@ -43,7 +43,7 @@ namespace gui {
              * @brief Set the rock quantity
              * @param quantity Quantity of rock
             */
-            virtual void setquantity(std::uint32_t quantity) { this->_quantity = quantity; };
+            virtual void setQuantity(std::uint32_t quantity) { this->_quantity = quantity; };
 
             /**
              * @brief Get the rock quantity
