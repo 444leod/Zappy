@@ -17,11 +17,11 @@
 
 namespace gui {
     struct Rocks {
-        Linemate _linemate;
-        Deraumere _deraumere;
-        Sibur _sibur;
-        Mendiane _mendiane;
-        Phiras _phiras;
-        Thystame _thystame;
+        Linemate linemate;
+        Deraumere deraumere;
+        Sibur sibur;
+        Mendiane mendiane;
+        Phiras phiras;
+        Thystame thystame;
     };
 }

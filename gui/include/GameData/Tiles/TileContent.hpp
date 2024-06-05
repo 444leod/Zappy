@@ -59,16 +59,10 @@ namespace gui {
             void removeEntity(std::uint32_t id);
 
             /**
-             * @brief Get the rocks of the tile
+             * @brief Get the access to the rocks of the tile
              * @return Rocks The rocks of the tile
             */
-            Rocks rocks() const { return this->_rocks; }
-
-            /**
-             * @brief Set the rocks of the tile
-             * @param rocks The rocks of the tile
-            */
-            void setRocks(Rocks rocks) { this->_rocks = rocks; }
+            Rocks &rocks() { return this->_rocks; }
 
         private:
             std::uint32_t _food = 0;
