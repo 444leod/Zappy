@@ -13,6 +13,7 @@ __NC=\033[0m # No Color
 __NAME = zappy_gui
 
 __SRC = src/main.cpp \
+		src/GameData/GameData.cpp \
 
 %.o: %.cpp
 	@$(__CC) -c -o $@ $< $(__CXXFLAGS)

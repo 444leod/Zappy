@@ -58,25 +58,13 @@ namespace gui {
              * @brief Add a player
              * @param player The player
             */
-            void addPlayer(std::shared_ptr<Character> player) {
-                this->_players.push_back(player);
-                this->_map.tileContent(player->position()).addEntity(player);
-            }
+            void addPlayer(std::shared_ptr<Character> player);
 
             /**
              * @brief Remove a player
              * @param playerId The player id
             */
-            void removePlayer(std::uint32_t playerId)
-            {
-                for (auto it = this->_players.begin(); it != this->_players.end(); it++) {
-                    if ((*it)->id() == playerId) {
-                        this->_map.removeEntityFromTile((*it)->position(), playerId);
-                        this->_players.erase(it);
-                        return;
-                    }
-                }
-            }
+            void removePlayer(std::uint32_t playerId);
 
             /**
              * @brief Get the eggs
@@ -88,25 +76,13 @@ namespace gui {
              * @brief Add an egg
              * @param egg The egg
             */
-            void addEgg(std::shared_ptr<Egg> egg) {
-                this->_eggs.push_back(egg);
-                this->_map.tileContent(egg->position()).addEntity(egg);
-            }
+            void addEgg(std::shared_ptr<Egg> egg);
 
             /**
              * @brief Remove an egg
              * @param eggId The egg id
             */
-            void removeEgg(std::uint32_t eggId)
-            {
-                for (auto it = this->_eggs.begin(); it != this->_eggs.end(); it++) {
-                    if ((*it)->id() == eggId) {
-                        this->_map.removeEntityFromTile((*it)->position(), eggId);
-                        this->_eggs.erase(it);
-                        return;
-                    }
-                }
-            }
+            void removeEgg(std::uint32_t eggId);
 
             /**
              * @brief Get the messages
