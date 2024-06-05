@@ -10,4 +10,5 @@
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
 
-int init(void);
+void init(void);
+void assert_stdout_eq_str(char *str);

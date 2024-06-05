@@ -43,3 +43,6 @@ zappy_ref-2-0-2/**
 tester
 **/__pycache__
 vgcore*
+*.gcda
+*.gcno
+server_suite
