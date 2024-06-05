@@ -10,6 +10,8 @@
 #include <cstdint>
 #include "Orientation.hpp"
 #include "Vector.hpp"
+#include <vector>
+#include <memory>
 
 /**
  * @brief Class representing entity in the simulation
