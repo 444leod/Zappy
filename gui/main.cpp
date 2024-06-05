@@ -5,9 +5,10 @@
 ** main
 */
 
-int main(int ac, char **av)
+#include "macros.hpp"
+
+int main(UNUSED int argc, UNUSED char const *argv[])
 {
-    (void)ac;
-    (void)av;
     return 0;
 }
+
