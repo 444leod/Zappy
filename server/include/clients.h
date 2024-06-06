@@ -14,10 +14,11 @@
 #include "commands.h"
 #include "commands_list.h"
 #include "client_types.h"
+#include "teams.h"
 
 typedef struct client_s {
     int fd;
-    char *team;
+    team_t team;
     uint16_t clientNumber;
     packet_queue_t packetQueue;
     enum CLIENT_TYPE type;

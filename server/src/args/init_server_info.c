@@ -8,6 +8,7 @@
 #include "zappy.h"
 #include "garbage_collector.h"
 #include "params.h"
+#include "teams.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -118,13 +119,34 @@ static param_t get_until_flag(param_t params)
 */
 static void init_teams(param_t params, server_info_t serverInfo)
 {
-    param_t team = get_param("-n", params);
-    param_t teamNames = get_until_flag(team);
+    param_t teamValue = get_param("-n", params);
+    param_t teamNames = get_until_flag(teamValue);
+    team_t team;
 
     while (teamNames) {
-        add_to_list((void *)teamNames->informations->content,
-            (node_t *)&serverInfo->teamNames);
+        team = my_malloc(sizeof(struct team_s));
+        team->name = teamNames->informations->content;
+        team->actualNumber = 0;
+        team->remainingSlots = 0;
+        add_to_list((void *)team, (node_t *)&serverInfo->teams);
         teamNames = teamNames->next;
+    }
+}
+
+/**
+ * @brief Update the max clients of each teams.
+ * @details Update the max clients of each teams.
+ *
+ * @param teamsList the list of teams (linked list)
+ * @param clientsNb the maximum number of clients
+*/
+static void update_teams_max_clients(team_list_t teamsList, uint32_t clientsNb)
+{
+    team_list_t tmp = teamsList;
+
+    while (tmp) {
+        tmp->team->remainingSlots = clientsNb;
+        tmp = tmp->next;
     }
 }
 
@@ -155,5 +177,6 @@ server_info_t init_server_info(const char *argv[])
     init_height(params, serverInfo);
     init_clients_number(params, serverInfo);
     init_freq(params, serverInfo);
+    update_teams_max_clients(serverInfo->teams, serverInfo->clientsNb);
     return serverInfo;
 }

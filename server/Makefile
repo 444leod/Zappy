@@ -26,6 +26,7 @@ __SRC	=	$(addprefix src/, $(__SRC_SRC)) \
 	$(addprefix src/commands/graphical/, $(__SRC_GRAPHICAL)) \
 	$(addprefix src/network/, $(__SRC_NETWORK)) \
 	$(addprefix src/network/client/, $(__SRC_CLIENT)) \
+	$(addprefix src/utils/, $(__SRC_UTILS)) \
 
 __SRC_SRC := server.c \
 	exit.c \
@@ -34,6 +35,7 @@ __SRC_SRC := server.c \
 
 __SRC_COMMANDS := commands.c \
 	unknown_command.c \
+	auth.c \
 
 __SRC_AI := forward.c \
 
@@ -59,12 +61,20 @@ __SRC_CLIENT := add_client.c \
 	get_clients.c \
 	remove_client.c \
 
+__SRC_UTILS := queue_buffer.c \
+
+
 # UNIT TESTS
 __TEST_SRC	=	$(__SRC) \
-	$(addprefix ../tests/server/, $(__SRC_ROOT_TEST))
+	$(addprefix ../tests/server/, $(__SRC_ROOT_TEST)) \
+	$(addprefix ../tests/server/commands/, $(__SRC_COMMANDS_TEST)) \
 
-__SRC_ROOT_TEST := sample.c \
+__SRC_ROOT_TEST := utils.c \
 	client.c
+
+__SRC_COMMANDS_TEST := auth.c \
+
+
 
 # FUNCTIONAL TESTER
 __TESTER_SRC := tests/tester.cpp \
@@ -72,7 +82,7 @@ __TESTER_SRC := tests/tester.cpp \
 
 __CC = gcc
 __CFLAGS += -Wall -Wextra -Werror -Wpedantic -I./include -L. -lmy -lnetwork
-__TEST_FLAGS = $(__CFLAGS) --coverage -lcriterion
+__TEST_FLAGS = $(__CFLAGS) --coverage -lcriterion -I../tests/server
 
 %.o: %.c
 	@$(__CC) -c -o $@ $< $(__CFLAGS)

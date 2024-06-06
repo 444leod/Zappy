@@ -14,6 +14,12 @@ void init(void) {
     cr_redirect_stderr();
 }
 
+void assert_stdout_eq_str(char *str)
+{
+    fflush(stdout);
+    cr_assert_stdout_eq_str(str);
+}
+
 /**
  * A boolean assertion example.
  * You can simply check equalities this way.

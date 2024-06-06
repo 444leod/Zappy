@@ -70,6 +70,11 @@ static void initialize_command(const client_command_t command,
 
     command->initialized = true;
     command->args = str_to_word_array(command->command, " ");
+    if (client->type == NONE) {
+        command->commandHandler = AUTHENTIFICATION_COMMAND;
+        command->waitDuration = 0;
+        return;
+    }
     for (; COMMANDS[i].command; i++) {
         if (strcmp(COMMANDS[i].command, command->args[0]) == 0 &&
             COMMANDS[i].ClientType == client->type) {

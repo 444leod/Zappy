@@ -8,6 +8,9 @@
 #include "commands.h"
 #include <stddef.h>
 
+const command_t UNKNOWN_COMMAND = {NULL, &unknown_command, 0, NONE};
+const command_t AUTHENTIFICATION_COMMAND = {NULL, &auth, 0, NONE};
+
 /**
  * @brief The commands
  * @details The string command and its function
