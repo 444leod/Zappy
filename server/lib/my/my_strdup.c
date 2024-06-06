@@ -19,8 +19,11 @@
 */
 char *my_strdup(const char *src)
 {
-    char *dest = my_malloc(sizeof(char) * (strlen(src) + 1));
+    char *dest;
 
+    if (src == NULL)
+        return NULL;
+    dest = my_malloc(sizeof(char) * (strlen(src) + 1));
     strcpy(dest, src);
     return dest;
 }
@@ -34,10 +37,13 @@ char *my_strdup(const char *src)
  *
  * @return the duplicated string
 */
-char *my_strndup(const char *src, const int n)
+char *my_strndup(const char *src, const uint32_t n)
 {
-    char *dest = my_malloc(sizeof(char) * (n + 1));
+    char *dest;
 
+    if (src == NULL)
+        return NULL;
+    dest = my_malloc(sizeof(char) * (n + 1));
     strncpy(dest, src, n);
     dest[n] = '\0';
     return dest;

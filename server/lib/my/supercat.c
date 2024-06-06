@@ -43,11 +43,16 @@ char *supercat(const int n, ...)
     va_list ap;
     char *str = my_strdup("");
     char *tmp = NULL;
+    char *old_string = NULL;
 
     va_start(ap, n);
     for (int i = 0; i < n; i++) {
+        old_string = str;
         tmp = va_arg(ap, char *);
-        str = my_strcat(str, tmp);
+        if (tmp != NULL) {
+            str = my_strcat(str, tmp);
+            my_free(old_string);
+        }
     }
     va_end(ap);
     return str;
