@@ -12,12 +12,19 @@ __NC=\033[0m # No Color
 
 __NAME = zappy_ai
 
-__SRC = ./src/bot.py
+__PROGRAM = ./bot.py
+__SRC = ./ai_src/commands.py\
+		./ai_src/config.py \
+		./ai_src/connection_handler.py \
+
+
 
 all: $(__NAME)
 
 $(__NAME):
-	@cp $(__SRC) zappy_ai
+	@cp $(__PROGRAM) zappy_ai
+	@mkdir -p ../ai_src
+	@cp $(__SRC) ../ai_src
 	@chmod +x zappy_ai
 	@echo -ne "${__GREEN}$(__BOLD)Compilation of $(__NAME)$(__NC)"
 	@echo -e "${__GREEN}completed successfully.${__NC}"
@@ -28,6 +35,7 @@ clean:
 
 fclean: clean
 	@rm -f $(__NAME)
+	@rm -rf ../ai_src
 	@echo -ne "${__GREEN}$(__BOLD)Fclean of $(__NAME)$(__NC)"
 	@echo -e "${__GREEN}completed successfully.${__NC}"
 
