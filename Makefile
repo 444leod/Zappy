@@ -67,8 +67,13 @@ tests_clean:
 
 tests: tests_run tests_clean
 
+unit_tests:
+	@make unit_tests_run -s -C server
+	@make tests_clean -s -C server
+
 coverage:
-	@make coverage -s -C server
+	@make tests_run -s -C server
+	gcovr server
 	@make tests_clean -s -C server
 
 run: all

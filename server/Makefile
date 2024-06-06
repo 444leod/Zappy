@@ -7,7 +7,6 @@
 
 __GREEN=\033[0;32m
 __NC=\033[0m
-
 __INFO = ${__GREEN}[INFO]${__NC}
 
 __NAME = zappy_server
@@ -15,6 +14,12 @@ __TEST = server_suite
 __TESTER_NAME = tester
 __LIBMY = libmy.a
 __LIBNETWORK = libnetwork.a
+
+
+# =============================================================================
+# Server code sources
+# =============================================================================
+
 
 __ASRC = $(__SRC) \
 	main.c
@@ -59,7 +64,11 @@ __SRC_CLIENT := add_client.c \
 	get_clients.c \
 	remove_client.c \
 
-# UNIT TESTS
+
+# =============================================================================
+# Unit tests sources
+# =============================================================================
+
 __TEST_SRC	=	$(__SRC) \
 	$(addprefix ../tests/server/, $(__SRC_ROOT_TEST)) \
 	$(addprefix ../tests/server/lib/my/, $(__SRC_LIB_MY_TEST))
@@ -69,10 +78,29 @@ __SRC_ROOT_TEST := utils.c \
 
 __SRC_LIB_MY_TEST := escaped_string.c \
 	garbage_collector.c \
+	is_alphanum.c \
+	is_number.c \
+	my_snprintf.c \
+	linked_list.c \
+	my_strdup.c \
+	replace_char.c \
+	supercat.c \
+	tablen.c \
+	str_to_word_array.c \
 
-# FUNCTIONAL TESTER
+
+# =============================================================================
+# Functionnal tests sources
+# =============================================================================
+
 __TESTER_SRC := tests/tester.cpp \
 	tests/Test.cpp
+
+
+# =============================================================================
+# Compilation flags
+# =============================================================================
+
 
 __CC = gcc
 __CFLAGS += -Wall -Wextra -Werror -Wpedantic -I./include -L. -lmy -lnetwork
@@ -81,12 +109,24 @@ __TEST_FLAGS = $(__CFLAGS) --coverage -lcriterion -I../tests
 %.o: %.c
 	@$(__CC) -c -o $@ $< $(__CFLAGS)
 
+
+# =============================================================================
+# Objects
+# =============================================================================
+
+
 __OBJ = $(__ASRC:.c=.o)
 __TEST_OBJ = $(__TEST_SRC:.c=.o)
 __TESTER_OBJ = $(__TESTER_SRC:.cpp=.o)
 
 %.o: %.cpp
 	@g++ -c -o $@ $< -std=c++20
+
+
+# =============================================================================
+# Basic rules
+# =============================================================================
+
 
 all: $(__LIBMY) $(__LIBNETWORK) $(__NAME)
 	@echo -ne "\n${__INFO} Server compiled successfully.${__NC}\n"
@@ -112,8 +152,16 @@ fclean: clean
 
 re: fclean all
 
+
+# =============================================================================
+# Tests rules
+# =============================================================================
+
+
 $(__TESTER_NAME): all $(__TESTER_OBJ)
 	@g++ -o $(__TESTER_NAME) $(__TESTER_OBJ) -std=c++20 -DSILENT
+
+
 
 tests_run: $(__TESTER_NAME) $(__LIBMY) $(__LIBNETWORK)
 	@./$(__TESTER_NAME)
@@ -131,8 +179,15 @@ tests_clean:
 	@find . -name "*.gcda" -delete
 	@find . -name "*.gcno" -delete
 
-coverage: tests_run
-	@gcovr .
+unit_tests_run: $(__LIBMY) $(__LIBNETWORK) $(__NAME)
+	@gcc -o $(__TEST) $(__TEST_SRC) $(__TEST_FLAGS)
+	@./$(__TEST)
+
+
+# =============================================================================
+# Custom rules
+# =============================================================================
+
 
 debug:
 	@make debug -C ./lib -s
