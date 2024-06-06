@@ -61,10 +61,14 @@ __SRC_CLIENT := add_client.c \
 
 # UNIT TESTS
 __TEST_SRC	=	$(__SRC) \
-	$(addprefix ../tests/server/, $(__SRC_ROOT_TEST))
+	$(addprefix ../tests/server/, $(__SRC_ROOT_TEST)) \
+	$(addprefix ../tests/server/lib/my/, $(__SRC_LIB_MY_TEST))
 
-__SRC_ROOT_TEST := sample.c \
+__SRC_ROOT_TEST := utils.c \
 	client.c
+
+__SRC_LIB_MY_TEST := escaped_string.c \
+	garbage_collector.c \
 
 # FUNCTIONAL TESTER
 __TESTER_SRC := tests/tester.cpp \
@@ -72,7 +76,7 @@ __TESTER_SRC := tests/tester.cpp \
 
 __CC = gcc
 __CFLAGS += -Wall -Wextra -Werror -Wpedantic -I./include -L. -lmy -lnetwork
-__TEST_FLAGS = $(__CFLAGS) --coverage -lcriterion
+__TEST_FLAGS = $(__CFLAGS) --coverage -lcriterion -I../tests
 
 %.o: %.c
 	@$(__CC) -c -o $@ $< $(__CFLAGS)
