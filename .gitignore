@@ -38,6 +38,8 @@ zappy_ai
 zappy_gui
 .init_done
 .repository-config.json
+**/zappy_ref-2-0-2
+.trace
 zappy_ref-2-0-2/**
 **/.trace
 tester
