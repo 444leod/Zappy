@@ -26,6 +26,7 @@ __SRC	=	$(addprefix src/, $(__SRC_SRC)) \
 	$(addprefix src/commands/graphical/, $(__SRC_GRAPHICAL)) \
 	$(addprefix src/network/, $(__SRC_NETWORK)) \
 	$(addprefix src/network/client/, $(__SRC_CLIENT)) \
+	$(addprefix src/utils/, $(__SRC_UTILS)) \
 
 __SRC_SRC := server.c \
 	exit.c \
@@ -60,6 +61,9 @@ __SRC_CLIENT := add_client.c \
 	get_clients.c \
 	remove_client.c \
 
+__SRC_UTILS := queue_buffer.c \
+
+
 # UNIT TESTS
 __TEST_SRC	=	$(__SRC) \
 	$(addprefix ../tests/server/, $(__SRC_ROOT_TEST)) \
@@ -69,6 +73,8 @@ __SRC_ROOT_TEST := sample.c \
 	client.c
 
 __SRC_COMMANDS_TEST := auth.c \
+
+
 
 # FUNCTIONAL TESTER
 __TESTER_SRC := tests/tester.cpp \
