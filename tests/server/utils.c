@@ -8,10 +8,38 @@
 #include <unistd.h>
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
+#include "garbage_collector.h"
 
 void init(void) {
     cr_redirect_stdout();
     cr_redirect_stderr();
+}
+
+void verify_gc(gc_node_t *list, uint32_t size, ...)
+{
+    cr_assert_not_null(list);
+
+    if (size == 0) {
+        cr_assert_null(*list);
+        return;
+    } else
+        cr_assert_not_null(*list);
+
+    va_list ap;
+    va_start(ap, size);
+
+    gc_node_t tmp = *list;
+    gc_node_t first;
+
+    for (uint32_t i = 0; i < size; i++) {
+        if (i == 0)
+            first = tmp;
+        cr_assert_not_null(tmp);
+        cr_assert_eq(tmp->data, va_arg(ap, void *));
+        tmp = tmp->next;
+    }
+    cr_assert_eq(tmp, first);
+    va_end(ap);
 }
 
 /**
