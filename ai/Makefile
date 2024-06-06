@@ -12,17 +12,17 @@ __NC=\033[0m # No Color
 
 __NAME = zappy_ai
 
-__PROGRAM = ./bot.py
-__SRC = ./ai_src/commands.py\
-		./ai_src/config.py \
-		./ai_src/connection_handler.py \
+__ENTRY_POINT = ./bot.py
+__SRC = 		./ai_src/commands.py\
+				./ai_src/config.py \
+				./ai_src/connection_handler.py \
 
 
 
 all: $(__NAME)
 
 $(__NAME):
-	@cp $(__PROGRAM) zappy_ai
+	@cp $(__ENTRY_POINT) zappy_ai
 	@mkdir -p ../ai_src
 	@cp $(__SRC) ../ai_src
 	@chmod +x zappy_ai
