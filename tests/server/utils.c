@@ -42,6 +42,12 @@ void verify_gc(gc_node_t *list, uint32_t size, ...)
     va_end(ap);
 }
 
+void assert_stdout_eq_str(char *str)
+{
+    fflush(stdout);
+    cr_assert_stdout_eq_str(str);
+}
+
 /**
  * A boolean assertion example.
  * You can simply check equalities this way.
