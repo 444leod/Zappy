@@ -69,7 +69,7 @@ __TEST_SRC	=	$(__SRC) \
 	$(addprefix ../tests/server/, $(__SRC_ROOT_TEST)) \
 	$(addprefix ../tests/server/commands/, $(__SRC_COMMANDS_TEST)) \
 
-__SRC_ROOT_TEST := sample.c \
+__SRC_ROOT_TEST := utils.c \
 	client.c
 
 __SRC_COMMANDS_TEST := auth.c \
