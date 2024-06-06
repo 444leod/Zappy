@@ -13,6 +13,7 @@ __NC=\033[0m
 __NAME = zappy_gui
 
 __SRC = src/main.cpp \
+	$(addprefix ./src/network/, $(__SRC_NETWORK)) \
   	$(addprefix ./src/GameData/, $(__SRC_GAME_DATA)) \
 
 __SRC_NETWORK := Client.cpp \
