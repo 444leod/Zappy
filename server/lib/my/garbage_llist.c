@@ -29,14 +29,14 @@ g_llist_t *get_llist(void)
 */
 g_llist_t g_create(void *data)
 {
-    g_llist_t new_node = malloc(sizeof(garbage_t));
+    g_llist_t newNode = malloc(sizeof(garbage_t));
 
-    if (new_node == NULL)
+    if (newNode == NULL)
         return NULL;
-    new_node->data = data;
-    new_node->next = NULL;
-    new_node->prev = NULL;
-    return new_node;
+    newNode->data = data;
+    newNode->next = NULL;
+    newNode->prev = NULL;
+    return newNode;
 }
 
 /**
@@ -50,20 +50,20 @@ g_llist_t g_create(void *data)
 */
 g_llist_t g_insert_end(void *data, g_llist_t list)
 {
-    g_llist_t new_node = g_create(data);
+    g_llist_t newNode = g_create(data);
 
-    if (new_node == NULL)
+    if (newNode == NULL)
         return NULL;
     if (list == NULL) {
-        new_node->next = new_node;
-        new_node->prev = new_node;
-        list = new_node;
+        newNode->next = newNode;
+        newNode->prev = newNode;
+        list = newNode;
         return list;
     }
-    list->prev->next = new_node;
-    new_node->prev = list->prev;
-    new_node->next = list;
-    list->prev = new_node;
+    list->prev->next = newNode;
+    newNode->prev = list->prev;
+    newNode->next = list;
+    list->prev = newNode;
     return list;
 }
 

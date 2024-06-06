@@ -8,82 +8,83 @@
 #include "zappy.h"
 #include "garbage_collector.h"
 #include "params.h"
+#include "teams.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
 /**
  * @brief Initialize the port
- * @details correctly initialize the port in the server_info struct
+ * @details correctly initialize the port in the serverInfo struct
  *
  * @param params the arguments
- * @param server_info the server_info struct
+ * @param serverInfo the serverInfo struct
 */
-static void init_port(param_t params, server_info_t server_info)
+static void init_port(param_t params, server_info_t serverInfo)
 {
     param_t port = get_param("-p", params);
 
-    server_info->port = atoi(port->informations->content);
+    serverInfo->port = atoi(port->informations->content);
     port->informations->handled = true;
 }
 
 /**
  * @brief Initialize the clients number
- * @details correctly initialize the clients number in the server_info struct
+ * @details correctly initialize the clients number in the serverInfo struct
  *
  * @param params the arguments
- * @param server_info the server_info struct
+ * @param serverInfo the serverInfo struct
 */
-static void init_clients_number(param_t params, server_info_t server_info)
+static void init_clients_number(param_t params, server_info_t serverInfo)
 {
     param_t clientsNb = get_param("-c", params);
 
-    server_info->clientsNb = atoi(clientsNb->informations->content);
+    serverInfo->clientsNb = atoi(clientsNb->informations->content);
     clientsNb->informations->handled = true;
 }
 
 /**
  * @brief Initialize the width
- * @details correctly initialize the width in the server_info struct
+ * @details correctly initialize the width in the serverInfo struct
  *
  * @param params the arguments
- * @param server_info the server_info struct
+ * @param serverInfo the serverInfo struct
 */
-static void init_width(param_t params, server_info_t server_info)
+static void init_width(param_t params, server_info_t serverInfo)
 {
     param_t width = get_param("-x", params);
 
-    server_info->width = atoi(width->informations->content);
+    serverInfo->width = atoi(width->informations->content);
     width->informations->handled = true;
 }
 
 /**
  * @brief Initialize the height
- * @details correctly initialize the height in the server_info struct
+ * @details correctly initialize the height in the serverInfo struct
  *
  * @param params the arguments
- * @param server_info the server_info struct
+ * @param serverInfo the serverInfo struct
 */
-static void init_height(param_t params, server_info_t server_info)
+static void init_height(param_t params, server_info_t serverInfo)
 {
     param_t height = get_param("-y", params);
 
-    server_info->height = atoi(height->informations->content);
+    serverInfo->height = atoi(height->informations->content);
     height->informations->handled = true;
 }
 
 /**
  * @brief Initialize the frequency
- * @details correctly initialize the frequency in the server_info struct
+ * @details correctly initialize the frequency in the serverInfo struct
  *
  * @param params the arguments
- * @param server_info the server_info struct
+ * @param serverInfo the serverInfo struct
 */
-static void init_freq(param_t params, server_info_t server_info)
+static void init_freq(param_t params, server_info_t serverInfo)
 {
     param_t freq = get_param("-f", params);
 
-    server_info->freq = atoi(freq->informations->content);
+    serverInfo->freq = atoi(freq->informations->content);
     freq->informations->handled = true;
 }
 
@@ -111,35 +112,56 @@ static param_t get_until_flag(param_t params)
 
 /**
  * @brief Initialize the teams
- * @details correctly initialize the teams in the server_info struct
+ * @details correctly initialize the teams in the serverInfo struct
  *
  * @param params the arguments
- * @param server_info the server_info struct
+ * @param serverInfo the serverInfo struct
 */
-static void init_teams(param_t params, server_info_t server_info)
+static void init_teams(param_t params, server_info_t serverInfo)
 {
-    param_t team = get_param("-n", params);
-    param_t team_names = get_until_flag(team);
+    param_t teamValue = get_param("-n", params);
+    param_t teamNames = get_until_flag(teamValue);
+    team_t team;
 
-    while (team_names) {
-        add_to_list((void *)team_names->informations->content,
-            (node_t *)&server_info->team_names);
-        team_names = team_names->next;
+    while (teamNames) {
+        team = my_malloc(sizeof(struct team_s));
+        team->name = teamNames->informations->content;
+        team->actualNumber = 0;
+        team->remainingSlots = 0;
+        add_to_list((void *)team, (node_t *)&serverInfo->teams);
+        teamNames = teamNames->next;
     }
 }
 
 /**
- * @brief Initialize the server_info struct
- * @details correctly initialize the server_info struct with the port and the
+ * @brief Update the max clients of each teams.
+ * @details Update the max clients of each teams.
+ *
+ * @param teamsList the list of teams (linked list)
+ * @param clientsNb the maximum number of clients
+*/
+static void update_teams_max_clients(team_list_t teamsList, uint32_t clientsNb)
+{
+    team_list_t tmp = teamsList;
+
+    while (tmp) {
+        tmp->team->remainingSlots = clientsNb;
+        tmp = tmp->next;
+    }
+}
+
+/**
+ * @brief Initialize the serverInfo struct
+ * @details correctly initialize the serverInfo struct with the port and the
  *    path of the server
  *
  * @param argv the arguments of the program
  *
- * @return the server_info struct
+ * @return the serverInfo struct
 */
 server_info_t init_server_info(const char *argv[])
 {
-    server_info_t server_info = my_malloc(sizeof(struct server_info_s));
+    server_info_t serverInfo = my_malloc(sizeof(struct server_info_s));
     param_t params = NULL;
     param_informations_t param = NULL;
 
@@ -149,11 +171,12 @@ server_info_t init_server_info(const char *argv[])
         param->handled = false;
         add_to_list((void *)param, (node_t *)&params);
     }
-    init_teams(params, server_info);
-    init_port(params, server_info);
-    init_width(params, server_info);
-    init_height(params, server_info);
-    init_clients_number(params, server_info);
-    init_freq(params, server_info);
-    return server_info;
+    init_teams(params, serverInfo);
+    init_port(params, serverInfo);
+    init_width(params, serverInfo);
+    init_height(params, serverInfo);
+    init_clients_number(params, serverInfo);
+    init_freq(params, serverInfo);
+    update_teams_max_clients(serverInfo->teams, serverInfo->clientsNb);
+    return serverInfo;
 }

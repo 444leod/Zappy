@@ -101,15 +101,15 @@ static void check_freq(param_t params)
  * @brief Check the team names
  * @details Check if the team names are valid (not duplicate)
  *
- * @param actual_name the name to check
- * @param other_params the other team names
+ * @param actualName the name to check
+ * @param otherParams the other team names
 */
-static void check_name(char *actual_name, param_t other_params)
+static void check_name(char *actualName, param_t otherParams)
 {
-    while (other_params) {
-        if (strcmp(actual_name, other_params->informations->content) == 0)
+    while (otherParams) {
+        if (strcmp(actualName, otherParams->informations->content) == 0)
             display_help("Duplicate team names.\n");
-        other_params = other_params->next;
+        otherParams = otherParams->next;
     }
 }
 

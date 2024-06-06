@@ -5,9 +5,11 @@
 ** unknown_command
 */
 
-#include "commands.h"
 #include "packet.h"
 #include "clients.h"
+#include "lib.h"
+#include "zappy.h"
+#include <stdio.h>
 
 /**
  * @brief Unknown command
@@ -15,13 +17,12 @@
  *
  * @param args the arguments of the command
  * @param client the client that executed the command
- * @param server_info the server info
+ * @param serverInfo the server informations
  */
 void unknown_command(UNUSED char **args, client_t client,
-    UNUSED server_info_t server_info)
+    UNUSED server_info_t serverInfo)
 {
-    const char *msg = "ko\n";
-    packet_t *packet = build_packet(msg);
-
-    add_packet_to_queue(&client->packet_queue, packet);
+    printf("Client %d: Unknown command (%s)\n", client->fd,
+        get_escaped_string(args[0]));
+    queue_buffer(client, "ko");
 }

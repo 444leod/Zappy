@@ -46,7 +46,7 @@ static void add_clients_to_set(
     client_t tmp = *clients;
 
     while (tmp) {
-        if (tmp->packet_queue)
+        if (tmp->packetQueue)
             FD_SET(tmp->fd, writefds);
         FD_SET(tmp->fd, readfds);
         if (tmp->fd > *max_sd)
@@ -106,9 +106,9 @@ static void select_wrapper(int max_sd, fd_set *readfds,
  *  to handle the clients commands
  *
  * @param socketFd the socket file descriptor
- * @param server_info the server_info struct
+ * @param serverInfo the serverInfo struct
 */
-void zappy_loop(int socketFd, server_info_t server_info)
+void zappy_loop(int socketFd, server_info_t serverInfo)
 {
     fd_set readfds;
     fd_set writefds;
@@ -126,7 +126,7 @@ void zappy_loop(int socketFd, server_info_t server_info)
         select_wrapper(max_sd + 1, &readfds, &writefds, clients);
         if (FD_ISSET(socketFd, &readfds))
             add_new_client(socketFd);
-        loop_clients(clients, &readfds, &writefds, server_info);
+        loop_clients(clients, &readfds, &writefds, serverInfo);
     }
 }
 
@@ -134,27 +134,27 @@ void zappy_loop(int socketFd, server_info_t server_info)
  * @brief Print the server info
  * @details print the server info to the standard output in debug mode
  *
- * @param server_info the server_info struct
+ * @param serverInfo the serverInfo struct
 */
-static void print_server_info(server_info_t server_info)
+static void print_server_info(server_info_t serverInfo)
 {
-    team_name_t tmp = server_info->team_names;
+    team_list_t teams = serverInfo->teams;
 
     DEBUG_PRINT("\nServer info:\n");
-    DEBUG_PRINT("\tRunning on port %d\n", server_info->port);
-    DEBUG_PRINT("\t%d ", server_info->clientsNb);
-    if (server_info->clientsNb == 1)
+    DEBUG_PRINT("\tRunning on port %d\n", serverInfo->port);
+    DEBUG_PRINT("\t%d ", serverInfo->clientsNb);
+    if (serverInfo->clientsNb == 1)
         DEBUG_PRINT("client per team\n");
     else {
         DEBUG_PRINT("clients per team\n");
     }
     DEBUG_PRINT("\tMap size: %d * %d\n",
-        server_info->width, server_info->height);
-    DEBUG_PRINT("\tFrequency: %d\n", server_info->freq);
+        serverInfo->width, serverInfo->height);
+    DEBUG_PRINT("\tFrequency: %d\n", serverInfo->freq);
     DEBUG_PRINT("\tTeam names:\n");
-    while (tmp) {
-        DEBUG_PRINT("\t  - %s\n", tmp->name);
-        tmp = tmp->next;
+    while (teams) {
+        DEBUG_PRINT("\t  - %s\n", teams->team->name);
+        teams = teams->next;
     }
     DEBUG_PRINT("\n");
 }
@@ -162,7 +162,7 @@ static void print_server_info(server_info_t server_info)
 /**
  * @brief Main Zappy function
  * @details the main function of the Zappy server,
- *  it initializes the server_info struct and the socket,
+ *  it initializes the serverInfo struct and the socket,
  *  then it calls the zappy_loop function
  *  to start the server
  *
@@ -174,19 +174,19 @@ static void print_server_info(server_info_t server_info)
 int server(const int argc, const char *argv[])
 {
     int socketFd = -1;
-    server_info_t server_info;
+    server_info_t serverInfo;
 
     errno = 0;
     DEBUG_PRINT("Zappy server started\n");
     signal(2, handle_sigint);
     check_args(argc, argv);
-    server_info = init_server_info(argv);
+    serverInfo = init_server_info(argv);
     socketFd = get_socket();
     prepare_exit(socketFd);
-    bind_socket(socketFd, server_info->port);
-    print_server_info(server_info);
+    bind_socket(socketFd, serverInfo->port);
+    print_server_info(serverInfo);
     listen_socket(socketFd, 1024);
-    zappy_loop(socketFd, server_info);
+    zappy_loop(socketFd, serverInfo);
     close(socketFd);
     return 0;
 }

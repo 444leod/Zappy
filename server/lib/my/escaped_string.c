@@ -12,7 +12,7 @@
 #include "lib.h"
 #include "garbage_collector.h"
 
-struct special_char_s special_chars[] = {
+struct special_char_s SPECIAL_CHARS[] = {
     {'\n', "\\n"},
     {'\t', "\\t"},
     {'\v', "\\v"},
@@ -37,9 +37,9 @@ struct special_char_s special_chars[] = {
 */
 static const char *get_special_char(const char character)
 {
-    for (int i = 0; special_chars[i].str; i++) {
-        if (special_chars[i].str == character)
-            return special_chars[i].escaped;
+    for (int i = 0; SPECIAL_CHARS[i].str; i++) {
+        if (SPECIAL_CHARS[i].str == character)
+            return SPECIAL_CHARS[i].escaped;
     }
     return NULL;
 }

@@ -18,18 +18,22 @@ typedef struct client_s *client_t;
 typedef struct command_s {
     char *command;
     void (*func)(char **args, const client_t clients,
-        const server_info_t server_info);
-    uint32_t wait_units;
-    enum CLIENT_TYPE client_type;
+        const server_info_t serverInfo);
+    uint32_t waitUnits;
+    enum CLIENT_TYPE ClientType;
 } command_t;
 
 void msz(char **args, const client_t client,
-    const server_info_t server_info);
+    const server_info_t serverInfo);
 
 void forward(char **args, const client_t client,
-    const server_info_t server_info);
+    const server_info_t serverInfo);
 
 void unknown_command(char **args, const client_t client,
-    const server_info_t server_info);
+    const server_info_t serverInfo);
+
+void auth(char **args, const client_t client,
+    const server_info_t serverInfo);
 
 extern const command_t COMMANDS[];
+extern const command_t AUTHENTIFICATION_COMMAND;
