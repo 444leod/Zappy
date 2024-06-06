@@ -10,7 +10,7 @@
 #include <stdint.h>
 
 typedef struct team_s {
-    char *name;
+    const char *name;
     uint32_t actualNumber;
     uint32_t remainingSlots;
 } *team_t;
