@@ -10,6 +10,84 @@
 #include <unistd.h>
 
 /**
+ * @brief Create a new node
+ * @details Create a new node with the given data (a ptr)
+ *
+ * @param data the data to store in the node (a ptr)
+ *
+ * @return gc_node_t the new node
+*/
+static gc_node_t gc_create(void *data)
+{
+    gc_node_t newNode = malloc(sizeof(struct gc_node_s));
+
+    if (newNode == NULL)
+        return NULL;
+    newNode->data = data;
+    newNode->next = NULL;
+    newNode->prev = NULL;
+    return newNode;
+}
+
+/**
+ * @brief Insert a new node at the end of the list
+ * @details Insert a new node at the end of the list
+ *
+ * @param data the data to store in the new node
+ * @param list the list to insert the new node in
+ *
+ * @return gc_node_t the new list
+*/
+static gc_node_t gc_insert_end(void *data, gc_node_t list)
+{
+    gc_node_t newNode = gc_create(data);
+
+    if (newNode == NULL)
+        return NULL;
+    if (list == NULL) {
+        newNode->next = newNode;
+        newNode->prev = newNode;
+        list = newNode;
+        return list;
+    }
+    list->prev->next = newNode;
+    newNode->prev = list->prev;
+    newNode->next = list;
+    list->prev = newNode;
+    return list;
+}
+
+/**
+ * @brief Delete the first node of the list
+ * @details Delete the first node of the list
+ *
+ * @param list the list to delete the first node from
+ *
+ * @return gc_node_t the new list
+*/
+static gc_node_t gc_delete_begin(gc_node_t list)
+{
+    gc_node_t temp;
+
+    if (list == NULL)
+        return list;
+    else if (list->next == list) {
+        free(list->data);
+        free(list);
+        list = NULL;
+        return list;
+    }
+    temp = list;
+    list->prev->next = list->next;
+    list->next->prev = list->prev;
+    list = list->next;
+    free(temp->data);
+    free(temp);
+    temp = NULL;
+    return list;
+}
+
+/**
  * @brief Malloc wrapper with garbage collector
  * @details Malloc wrapper with garbage collector, store malloced pointers in a
  * linked list
@@ -21,12 +99,12 @@
 void *my_malloc(const size_t size)
 {
     void *variable = malloc(size);
-    g_llist_t *llist = get_llist();
+    gc_node_t *llist = gc_llist();
 
     if (variable == NULL)
         my_error("Malloc failed");
     memset(variable, 0, size);
-    *llist = g_insert_end(variable, *llist);
+    *llist = gc_insert_end(variable, *llist);
     if (*llist == NULL)
         my_error("Malloc failed");
     return variable;
@@ -41,17 +119,17 @@ void *my_malloc(const size_t size)
 */
 void my_free(void *pointer)
 {
-    g_llist_t *llist = get_llist();
-    g_llist_t temp;
+    gc_node_t *llist = gc_llist();
+    gc_node_t temp;
 
     if ((*llist)->data == pointer) {
-        *llist = g_delete_begin(*llist);
+        *llist = gc_delete_begin(*llist);
         return;
     }
     temp = (*llist)->next;
     while (temp != *llist) {
         if (temp->data == pointer) {
-            temp = g_delete_begin(temp);
+            temp = gc_delete_begin(temp);
             return;
         }
         temp = temp->next;
@@ -64,10 +142,10 @@ void my_free(void *pointer)
 */
 void my_free_all(void)
 {
-    g_llist_t *llist = get_llist();
+    gc_node_t *llist = gc_llist();
 
     while (*llist)
-        *llist = g_delete_begin(*llist);
+        *llist = gc_delete_begin(*llist);
 }
 
 /**
