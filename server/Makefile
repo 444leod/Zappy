@@ -123,7 +123,6 @@ __TESTER_OBJ = $(__TESTER_SRC:.cpp=.o)
 
 
 all: $(__LIBMY) $(__LIBNETWORK) $(__NAME)
-	@echo -ne "\n${__INFO} Server compiled successfully.${__NC}\n"
 
 $(__NAME): $(__OBJ)
 	@$(__CC) -o $(__NAME) $(__OBJ) $(__CFLAGS)

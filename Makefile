@@ -60,7 +60,9 @@ re: fclean all
 
 
 tests_run:	.init_done
+	@printf "\n$(__BOLD)$(__GREEN)$(__NC)SERVER TESTS$(__NC)\n"
 	@make tests_run -s -C server
+	@printf "\n$(__BOLD)$(__GREEN)SERVER LIBS TESTS$(__NC)\n"
 	@make tests_run -s -C server/lib
 
 tests_clean:
