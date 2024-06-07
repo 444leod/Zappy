@@ -75,7 +75,6 @@ __SRC_UTILS := queue_buffer.c \
 
 __TEST_SRC	= \
 	$(__SRC) \
-	$(addprefix ../tests/server/lib/my/test_, $(__SRC_LIB_MY_TEST)) \
 	$(addprefix ../tests/server/test_, $(__SRC_ROOT_TEST)) \
 	$(addprefix ../tests/server/commands/test_, $(__SRC_COMMANDS_TEST)) \
 
@@ -83,18 +82,6 @@ __SRC_ROOT_TEST := utils.c \
 	client.c
 
 __SRC_COMMANDS_TEST := auth.c \
-
-__SRC_LIB_MY_TEST := escaped_string.c \
-	garbage_collector.c \
-	is_alphanum.c \
-	is_number.c \
-	my_snprintf.c \
-	linked_list.c \
-	my_strdup.c \
-	replace_char.c \
-	supercat.c \
-	tablen.c \
-	str_to_word_array.c \
 
 
 # =============================================================================
@@ -124,7 +111,6 @@ __TEST_FLAGS = $(__CFLAGS) --coverage -lcriterion -I../tests/server -I../tests
 
 
 __OBJ = $(__ASRC:.c=.o)
-__TEST_OBJ = $(__TEST_SRC:.c=.o)
 __TESTER_OBJ = $(__TESTER_SRC:.cpp=.o)
 
 %.o: %.cpp
@@ -183,7 +169,6 @@ tests_clean:
 	@rm -f $(__TESTER_NAME)
 	@rm -f $(__TESTER_OBJ)
 	@rm -f $(__TEST)
-	@rm -f $(__TEST_OBJ)
 	@find . -name "*.gcda" -delete
 	@find . -name "*.gcno" -delete
 

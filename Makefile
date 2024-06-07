@@ -61,20 +61,26 @@ re: fclean all
 
 tests_run:	.init_done
 	@make tests_run -s -C server
+	@make tests_run -s -C server/lib
 
 tests_clean:
 	@make tests_clean -s -C server
+	@make tests_clean -s -C server/lib
 
 tests: tests_run tests_clean
 
 unit_tests:
 	@make unit_tests_run -s -C server
+	@make tests_run -s -C server/lib
 	@make tests_clean -s -C server
+	@make tests_clean -s -C server/lib
 
 coverage:
 	@make tests_run -s -C server
-	gcovr server
+	@make tests_run -s -C server/lib
+	@gcovr -e tests
 	@make tests_clean -s -C server
+	@make tests_clean -s -C server/lib
 
 run: all
 
