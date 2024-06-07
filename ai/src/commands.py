@@ -1,5 +1,7 @@
 import re
 from typing import List
+from collections import Counter
+from data import TileContent, Collectibles
 
 class ACommand:
     def __init__(self, name: str) -> None:
@@ -37,10 +39,37 @@ class Look(ACommand):
         super().__init__("Look")
     
     def interpret_result(self, res: str) -> dict:
-        super().interpret_result(res)
-        tab: List[str] = res.split(',')
-        vision: dict = {}
+        def str_to_tile(s: str) -> TileContent:
+            items = s.split()
+            counter = Counter(items)
+            
+            collectibles = Collectibles(
+                food=counter['food'],
+                linemate=counter['linemate'],
+                deraumere=counter['deraumere'],
+                sibur=counter['sibur'],
+                mendiane=counter['mendiane'],
+                phiras=counter['phiras'],
+                thystame=counter['thystame']
+            )
+            
+            nb_players = counter['player']
+            
+            return TileContent(collectibles=collectibles, nb_players=nb_players)
 
+        super().interpret_result(res)
+        tab: List[str] = res.strip().removeprefix('[').removesuffix(']').split(',')
+        vision = {}
+        n = 1
+        k = 0
+        while tab:
+            vision[str(k)] = []
+            for i in range(n):
+                vision[str(k)].append(str_to_tile(tab.pop(0)))
+            print(vision)
+            n = n + 2
+            k += 1
+        return vision
 
 class Inventory(ACommand):
     def __init__(self) -> None:
