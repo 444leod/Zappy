@@ -73,16 +73,16 @@ __SRC_UTILS := queue_buffer.c \
 # Unit tests sources
 # =============================================================================
 
-__TEST_SRC	=	$(__SRC) \
-	$(addprefix ../tests/server/, $(__SRC_ROOT_TEST)) \
-	$(addprefix ../tests/server/commands/, $(__SRC_COMMANDS_TEST)) \
-	$(addprefix ../tests/server/lib/my/, $(__SRC_LIB_MY_TEST))
+__TEST_SRC	= \
+	$(__SRC) \
+	$(addprefix ../tests/server/lib/my/test_, $(__SRC_LIB_MY_TEST)) \
+	$(addprefix ../tests/server/test_, $(__SRC_ROOT_TEST)) \
+	$(addprefix ../tests/server/commands/test_, $(__SRC_COMMANDS_TEST)) \
 
 __SRC_ROOT_TEST := utils.c \
 	client.c
 
 __SRC_COMMANDS_TEST := auth.c \
-
 
 __SRC_LIB_MY_TEST := escaped_string.c \
 	garbage_collector.c \
@@ -173,7 +173,7 @@ $(__TESTER_NAME): all $(__TESTER_OBJ)
 
 tests_run: $(__TESTER_NAME) $(__LIBMY) $(__LIBNETWORK)
 	@./$(__TESTER_NAME)
-	@gcc -o $(__TEST) $(__TEST_SRC) $(__TEST_FLAGS)
+	@$(CC) -o $(__TEST) $(__TEST_SRC) $(__TEST_FLAGS)
 	@./$(__TEST)
 
 tests_clean:
