@@ -62,17 +62,21 @@ __SRC_CLIENT := add_client.c \
 	remove_client.c \
 
 __SRC_UTILS := queue_buffer.c \
+	get_map.c \
 
 
 # UNIT TESTS
 __TEST_SRC	=	$(__SRC) \
-	$(addprefix ../tests/server/, $(__SRC_ROOT_TEST)) \
-	$(addprefix ../tests/server/commands/, $(__SRC_COMMANDS_TEST)) \
+	$(addprefix ../tests/server/test_, $(__SRC_ROOT_TEST)) \
+	$(addprefix ../tests/server/commands/test_, $(__SRC_COMMANDS_TEST)) \
+	$(addprefix ../tests/server/utils/test_, $(__SRC_UTILS_TEST)) \
 
 __SRC_ROOT_TEST := utils.c \
 	client.c
 
 __SRC_COMMANDS_TEST := auth.c \
+
+__SRC_UTILS_TEST := get_map.c \
 
 
 

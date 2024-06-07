@@ -178,5 +178,6 @@ server_info_t init_server_info(const char *argv[])
     init_clients_number(params, serverInfo);
     init_freq(params, serverInfo);
     update_teams_max_clients(serverInfo->teams, serverInfo->clientsNb);
+    serverInfo->map = create_map(serverInfo->width, serverInfo->height);
     return serverInfo;
 }
