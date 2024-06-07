@@ -1,4 +1,5 @@
 import re
+from typing import List
 
 class ACommand:
     def __init__(self, name: str) -> None:
@@ -35,7 +36,11 @@ class Look(ACommand):
     def __init__(self) -> None:
         super().__init__("Look")
     
-    #TODO: interpret_result to fill tilemap content
+    def interpret_result(self, res: str) -> dict:
+        super().interpret_result(res)
+        tab: List[str] = res.split(',')
+        vision: dict = {}
+
 
 class Inventory(ACommand):
     def __init__(self) -> None:

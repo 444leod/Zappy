@@ -15,8 +15,8 @@ class Orientation(Enum):
     WEST = 4
 
 @dataclass
-class InventoryInfo():
-    food: int = 10
+class Collectibles():
+    food: int = 0
     linemate: int = 0
     deraumere: int = 0
     sibur: int = 0
@@ -24,10 +24,13 @@ class InventoryInfo():
     phiras: int = 0
     thystame: int = 0
 
+    def __repr__(self) -> str:
+        return f"f{self.food}l{self.linemate}d{self.deraumere}s{self.sibur}m{self.mendiane}p{self.phiras}t{self.thystame}"
+
 @dataclass
 class PlayerInfo():
     level: int = 1
-    inv: InventoryInfo = field(default_factory=InventoryInfo)
+    inv: Collectibles = field(default_factory=lambda: Collectibles(food=10))
     pos: tuple[int, int] = (0, 0)
     orientation: Orientation = Orientation.NORTH
 
@@ -35,6 +38,24 @@ class PlayerInfo():
 class GeneralInfo():
     map_size: tuple[int, int] = (0, 0)
     nb_eggs: int = 0
+
+@dataclass
+class TileContent():
+    collectibles: Collectibles = field(default_factory=Collectibles)
+    hasSelf: bool = False
+
+    def __repr__(self) -> str:
+        return f"({self.collectibles}P{'1' if self.hasSelf else '0'})"
+
+@dataclass
+class Map():
+    tiles: List[List[TileContent]] = field(default_factory=list)
+
+    def __repr__(self) -> str:
+        res = ""
+        for row in self.tiles:
+            res += f"{row}\n"
+        return res
 
 class Bot():
     def __init__(self, verbose=False, traced=False) -> None:
@@ -75,6 +96,10 @@ class Bot():
 
         self.player_info: PlayerInfo = PlayerInfo()
 
+        self.map: Map = Map()
+        self.map.tiles = [[TileContent() for _ in range(self.general_info.map_size[0])] for _ in range(self.general_info.map_size[1])]
+        self.log(self.map)
+
         self.messages_received: List[tuple[int, str]] = [] # [(playerID, message), ..]
         self.messages_sent: List[str] = []
         self.cmd_sent: List[str] = []
@@ -103,7 +128,7 @@ class Bot():
     def run(self) -> None:
         while True:
             # Behavior logic here, send one command at a time!!
-            cmd_to_send: cmd.ACommand = cmd.Inventory()
+            cmd_to_send: cmd.ACommand = cmd.Look()
             self.cmd_sent.append(cmd_to_send.dump())
             self.com_handler.send_command(cmd_to_send.dump())
 
@@ -128,7 +153,10 @@ class Bot():
     def handle_commands_sent(self) -> None:
         # Handle the command sent
         if (self.cmd_sent[-1] == cmd.Inventory().dump()):
-            self.player_info.inv = InventoryInfo(**(cmd.Inventory().interpret_result(self.results[-1])))
+            self.player_info.inv = Collectibles(**(cmd.Inventory().interpret_result(self.results[-1])))
+        
+        if (self.cmd_sent[-1] == cmd.Look().dump()):
+            self.log(cmd.Look().interpret_result(self.results[-1]))
         
         #TODO: Handle other commands
 
