@@ -59,16 +59,15 @@ class Look(ACommand):
 
         super().interpret_result(res)
         tab: List[str] = res.strip().removeprefix('[').removesuffix(']').split(',')
-        vision = {}
-        n = 1
-        k = 0
+        vision: dict[str, TileContent] = {}
+        n: int = 1
+        key: int = 0
         while tab:
-            vision[str(k)] = []
-            for i in range(n):
-                vision[str(k)].append(str_to_tile(tab.pop(0)))
-            print(vision)
+            vision[str(key)] = []
+            for _ in range(n):
+                vision[str(key)].append(str_to_tile(tab.pop(0)))
             n = n + 2
-            k += 1
+            key += 1
         return vision
 
 class Inventory(ACommand):

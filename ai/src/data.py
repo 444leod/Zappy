@@ -26,7 +26,7 @@ class PlayerInfo():
     level: int = 1
     inv: Collectibles = field(default_factory=lambda: Collectibles(food=10))
     pos: tuple[int, int] = (0, 0)
-    orientation: Orientation = Orientation.NORTH
+    orientation: Orientation = Orientation.EAST
 
 @dataclass
 class GeneralInfo():
@@ -44,6 +44,36 @@ class TileContent():
 @dataclass
 class Map():
     tiles: List[List[TileContent]] = field(default_factory=list)
+
+
+    #vision = {'0': {'0': [TileContent], '1': [TileContent, TileContent, TileContent]}[TileContent], '1': [TileContent, TileContent, TileContent]}
+    def vision_update(
+        self,
+        vision: dict[str, TileContent],
+        orientation: Orientation,
+        player_pos: tuple[int, int]
+    ) -> None:
+        max_row = len(self.tiles)
+        max_col = len(self.tiles[0]) if max_row > 0 else 0
+
+        def update_tile(pos: tuple[int, int], content: TileContent) -> None:
+            row, col = pos
+            self.tiles[row][col] = content
+
+        for key, content in vision.items():
+            distance = int(key)
+            for i, tile_content in enumerate(content): #ALL INPUT IS REVERSED
+                if orientation == Orientation.NORTH: #reversed handling
+                    new_pos = (player_pos[0] - distance, player_pos[1] - (distance - i))
+                elif orientation == Orientation.SOUTH: #reversed handling
+                    new_pos = (player_pos[0] + distance, player_pos[1] + (distance - i))
+                elif orientation == Orientation.WEST: #not reversed handling
+                    new_pos = (player_pos[0] - (distance - i), player_pos[1] - distance)
+                elif orientation == Orientation.EAST: #not reversed handling
+                    new_pos = (player_pos[0] + (distance - i), player_pos[1] + distance)
+                new_pos = (new_pos[0] % max_row, new_pos[1] % max_col)
+                update_tile(new_pos, tile_content)
+        
 
     def __repr__(self) -> str:
         res = ""

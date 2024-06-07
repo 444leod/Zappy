@@ -106,7 +106,12 @@ class Bot():
             self.player_info.inv = Collectibles(**(cmd.Inventory().interpret_result(self.results[-1])))
         
         if (self.cmd_sent[-1] == cmd.Look().dump()):
-            self.log(cmd.Look().interpret_result(self.results[-1]))
+            self.map.vision_update(
+                cmd.Look().interpret_result(self.results[-1]),
+                self.player_info.orientation,
+                self.player_info.pos
+            )
+            self.log(self.map)
         
         #TODO: Handle other commands
 
