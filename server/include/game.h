@@ -11,6 +11,14 @@
 #include <time.h>
 #include "teams.h"
 
+#define D_FOOD 0.5
+#define D_LINEMATE 0.3
+#define D_DERAUMERE 0.15
+#define D_SIBUR 0.1
+#define D_MENDIANE 0.1
+#define D_PHIRAS 0.08
+#define D_THYSTAME 0.05
+
 enum ORIENTATION {
     NORTH = 1,
     EAST,
@@ -79,6 +87,7 @@ typedef struct position_s {
 } position_t;
 
 map_t create_map(uint32_t width, uint32_t height);
+void init_map(map_t map);
 tile_t get_tile_at_position(position_t position, map_t map);
 void add_player_at_position(player_t *player, position_t position, map_t map);
 void move_player(player_t *player, position_t position, map_t map);

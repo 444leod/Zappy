@@ -23,6 +23,7 @@ __SRC	=	$(addprefix src/, $(__SRC_SRC)) \
 	$(addprefix src/args/, $(__SRC_ARGS)) \
 	$(addprefix src/commands/, $(__SRC_COMMANDS)) \
 	$(addprefix src/commands/ai/, $(__SRC_AI)) \
+	$(addprefix src/game/, $(__SRC_GAME)) \
 	$(addprefix src/commands/graphical/, $(__SRC_GRAPHICAL)) \
 	$(addprefix src/network/, $(__SRC_NETWORK)) \
 	$(addprefix src/network/client/, $(__SRC_CLIENT)) \
@@ -38,6 +39,8 @@ __SRC_COMMANDS := commands.c \
 	auth.c \
 
 __SRC_AI := forward.c \
+
+__SRC_GAME := init_map.c \
 
 __SRC_GRAPHICAL := msz.c \
 
