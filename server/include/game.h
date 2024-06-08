@@ -37,7 +37,7 @@ typedef struct rocks_s {
 
 typedef struct player_s {
     int id;
-    team_t *team;
+    team_t team;
     int x;
     int y;
     int level;
@@ -75,6 +75,17 @@ typedef struct line_list_s {
     line_t line;
 } * line_list_t;
 
+typedef struct egg_s {
+    position_t pos;
+    team_t team;
+} * egg_t;
+
+typedef struct egg_list_s {
+    struct egg_list_s *next;
+    struct egg_list_s *prev;
+    egg_t egg;
+} * egg_list_t;
+
 typedef struct map_s {
     line_list_t line_list;
     uint32_t width;
@@ -92,3 +103,5 @@ tile_t get_tile_at_position(position_t position, map_t map);
 void add_player_at_position(player_t *player, position_t position, map_t map);
 void move_player(player_t *player, position_t position, map_t map);
 position_t get_player_position(player_t *player, map_t map);
+void add_egg_at_position(position_t position, map_t map);
+egg_t get_random_egg(team_t team, map_t map);
