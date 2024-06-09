@@ -16,7 +16,7 @@
  * @param position the position of the tile
  * @param map the map
  */
-void add_player_at_position(player_t *player, position_t position, map_t map)
+void add_player_at_position(player_t player, position_t position, map_t map)
 {
     tile_t tile = get_tile_at_position(position, map);
 
@@ -31,7 +31,7 @@ void add_player_at_position(player_t *player, position_t position, map_t map)
  * @param position the position
  * @param map the map
  */
-void move_player(player_t *player, position_t position, map_t map)
+void move_player(player_t player, position_t position, map_t map)
 {
     position_t old_position = get_player_position(player, map);
     tile_t tile = get_tile_at_position(old_position, map);
@@ -49,4 +49,5 @@ void move_player(player_t *player, position_t position, map_t map)
  */
 void add_egg_at_position(position_t position, map_t map)
 {
+    tile_t tile = get_tile_at_position(position, map);
 }

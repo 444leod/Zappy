@@ -39,7 +39,7 @@ tile_t get_tile_at_position(position_t position, map_t map)
  * @param map the map
  * @return position_t the position of the player
  */
-static int get_player_in_tile_list(player_t *player, tile_list_t tile_list)
+static int get_player_in_tile_list(player_t player, tile_list_t tile_list)
 {
     int index = 1;
     tile_list_t tmp = tile_list;
@@ -66,7 +66,7 @@ static int get_player_in_tile_list(player_t *player, tile_list_t tile_list)
  * @param map the map
  * @return position_t the position of the player
  */
-position_t get_player_position(player_t *player, map_t map)
+position_t get_player_position(player_t player, map_t map)
 {
     line_list_t line_list = map->line_list;
     uint32_t line_index = 0;

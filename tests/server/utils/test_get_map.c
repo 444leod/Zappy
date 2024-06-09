@@ -76,7 +76,7 @@ Test(get_map, get_tile_at_position_special)
     cr_assert_not_null(tile);
     cr_assert_eq(tile->food, 10);
 
-    player_t *player = my_malloc(sizeof(player_t));
+    player_t player = my_malloc(sizeof(player_t));
     player->id = 1;
     player->team = NULL;
 
@@ -96,7 +96,7 @@ Test(get_map, get_tile_at_position_special)
 Test(get_map, add_player_at_position)
 {
     map_t map = create_map(10, 10);
-    player_t *player = my_malloc(sizeof(player_t));
+    player_t player = my_malloc(sizeof(player_t));
     player->id = 1;
     player->team = NULL;
 
@@ -120,7 +120,7 @@ Test(get_map, add_player_at_position)
 Test(get_map, get_player_position)
 {
     map_t map = create_map(10, 10);
-    player_t *player = my_malloc(sizeof(player_t));
+    player_t player = my_malloc(sizeof(player_t));
     player->id = 1;
     player->team = NULL;
 
@@ -149,7 +149,7 @@ Test(get_map, get_player_position)
 Test(get_map, move_player)
 {
     map_t map = create_map(10, 10);
-    player_t *player = my_malloc(sizeof(player_t));
+    player_t player = my_malloc(sizeof(player_t));
     player->id = 1;
     player->team = NULL;
 

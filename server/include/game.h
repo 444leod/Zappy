@@ -45,12 +45,12 @@ typedef struct player_s {
     uint32_t food;
     enum ORIENTATION orientation;
     clock_t lastFoodEatenTime;
-} player_t;
+} * player_t;
 
 typedef struct player_list_s {
     struct player_list_s *next;
     struct player_list_s *prev;
-    player_t *player;
+    player_t player;
 } * player_list_t;
 
 typedef struct tile_s {
@@ -100,8 +100,8 @@ typedef struct position_s {
 map_t create_map(uint32_t width, uint32_t height);
 void init_map(map_t map);
 tile_t get_tile_at_position(position_t position, map_t map);
-void add_player_at_position(player_t *player, position_t position, map_t map);
-void move_player(player_t *player, position_t position, map_t map);
-position_t get_player_position(player_t *player, map_t map);
+void add_player_at_position(player_t player, position_t position, map_t map);
+void move_player(player_t player, position_t position, map_t map);
+position_t get_player_position(player_t player, map_t map);
 void add_egg_at_position(position_t position, map_t map);
 egg_t get_random_egg(team_t team, map_t map);
