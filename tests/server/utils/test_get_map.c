@@ -216,3 +216,46 @@ Test(get_map, init_map_rocks)
     cr_assert(rocks.phiras == 2);
     cr_assert(rocks.thystame == 1);
 }
+
+Test(get_map, adding_eggs)
+{
+    position_t pos = {0, 0};
+    map_t map = create_map(1, 1);
+    tile_t tile = get_tile_at_position(pos, map);
+    struct team_s team = {
+        .name = "Example Team",
+        .actualNumber = 0,
+        .remainingSlots = 1
+    };
+    uint32_t eggCount = 0;
+
+    eggCount = get_list_size((node_t)tile->eggs);
+    cr_assert(eggCount == 0);
+
+    add_egg_at_position(&team, pos, map);
+    add_egg_at_position(&team, pos, map);
+    add_egg_at_position(&team, pos, map);
+    add_egg_at_position(&team, pos, map);
+
+    eggCount = get_list_size((node_t)tile->eggs);
+    cr_assert(eggCount == 4);
+    cr_assert_str_eq(tile->eggs->egg->team->name, "Example Team");
+}
+
+Test(get_map, getting_team_eggs)
+{
+    position_t pos = {0, 0};
+    map_t map = create_map(1, 1);
+    struct team_s teamA = { "Good guys", 0, 1 };
+    struct team_s teamB = { "Mean guys", 0, 1 };
+
+    add_egg_at_position(&teamA, pos, map);
+    add_egg_at_position(&teamB, pos, map);
+    add_egg_at_position(&teamA, pos, map);
+    egg_list_t eggs = get_team_eggs(&teamA, map);
+    cr_assert(eggs != NULL);
+    uint32_t count = get_list_size((node_t)eggs);
+    cr_assert(count == 2);
+    cr_assert_str_eq(eggs->egg->team->name, "Good guys");
+    cr_assert_str_eq(eggs->next->egg->team->name, "Good guys");
+}

@@ -101,10 +101,10 @@ static void accumulate_tile_eggs(
     if (tile == NULL || eggs == NULL)
         return;
     list = tile->eggs;
+    size = get_list_size((node_t)list);
     for (uint32_t i = 0; i < size; i++) {
-        if (list->egg->team != team)
-            continue;
-        add_to_list((void *)list->egg, (node_t *)eggs);
+        if (list->egg->team == team)
+            add_to_list((void *)list->egg, (node_t *)eggs);
         list = list->next;
     }
 }
@@ -122,7 +122,6 @@ egg_list_t get_team_eggs(const team_t team, const map_t map)
 
     if (team == NULL || map == NULL)
         return NULL;
-    list = my_malloc(sizeof(struct egg_list_s));
     for (uint32_t y = 0; y < map->height; y++) {
         for (uint32_t x = 0; x < map->width; x++) {
             tile = get_tile_at_position((position_t){x, y}, map);
