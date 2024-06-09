@@ -170,3 +170,49 @@ Test(get_map, move_player)
     cr_assert_eq(position.x, 9);
     cr_assert_eq(position.y, 9);
 }
+
+Test(get_map, init_map_food)
+{
+    map_t map = create_map(2, 2);
+    init_map(map);
+
+    tile_t a = get_tile_at_position((position_t){0, 0}, map);
+    cr_assert(a != NULL);
+    tile_t b = get_tile_at_position((position_t){0, 1}, map);
+    cr_assert(b != NULL);
+    tile_t c = get_tile_at_position((position_t){1, 0}, map);
+    cr_assert(c != NULL);
+    tile_t d = get_tile_at_position((position_t){1, 1}, map);
+    cr_assert(d != NULL);
+
+    uint32_t food = a->food + b->food + c ->food + d->food;
+    cr_assert(food == 2);
+}
+
+Test(get_map, init_map_rocks)
+{
+    map_t map = create_map(5, 5);
+    rocks_t rocks = { 0 };
+    init_map(map);
+
+    line_list_t line = map->line_list;
+    for (int y = 0; y < 5; y++) {
+        tile_list_t tile = line->line->tile_list;
+        for (int x = 0; x < 5; x++) {
+            rocks.linemate += tile->tile->rocks.linemate;
+            rocks.deraumere += tile->tile->rocks.deraumere;
+            rocks.sibur += tile->tile->rocks.sibur;
+            rocks.mendiane += tile->tile->rocks.mendiane;
+            rocks.phiras += tile->tile->rocks.phiras;
+            rocks.thystame += tile->tile->rocks.thystame;
+            tile = tile->next;
+        }
+        line = line->next;
+    }
+    cr_assert(rocks.linemate == 7);
+    cr_assert(rocks.deraumere == 3);
+    cr_assert(rocks.sibur == 2);
+    cr_assert(rocks.mendiane == 2);
+    cr_assert(rocks.phiras == 2);
+    cr_assert(rocks.thystame == 1);
+}
