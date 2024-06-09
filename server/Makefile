@@ -40,7 +40,11 @@ __SRC_COMMANDS := commands.c \
 
 __SRC_AI := forward.c \
 
-__SRC_GAME := init_map.c \
+__SRC_GAME := \
+	create_map.c \
+	init_map.c \
+	manage_entities.c \
+	query_map.c \
 
 __SRC_GRAPHICAL := msz.c \
 
@@ -65,7 +69,6 @@ __SRC_CLIENT := add_client.c \
 	remove_client.c \
 
 __SRC_UTILS := queue_buffer.c \
-	get_map.c \
 
 
 # UNIT TESTS
