@@ -7,6 +7,7 @@
 
 #include "game.h"
 #include "linked_lists.h"
+#include "garbage_collector.h"
 
 /**
  * @brief Add a player to a tile at a given position
@@ -44,10 +45,16 @@ void move_player(player_t player, position_t position, map_t map)
 /**
  * @brief Adds an egg at a certain position.
  *
- * @param position the position to add the egg at.
+ * @param team the team of the eff
+ * @param pos the position to add the egg at.
  * @param map the map
  */
-void add_egg_at_position(position_t position, map_t map)
+void add_egg_at_position(const team_t team, const position_t pos, map_t map)
 {
-    tile_t tile = get_tile_at_position(position, map);
+    tile_t tile = get_tile_at_position(pos, map);
+    egg_t egg = my_malloc(sizeof(struct egg_s));
+
+    egg->team = team;
+    egg->pos = pos;
+    add_to_list((void *)egg, (node_t *)&tile->eggs);
 }
