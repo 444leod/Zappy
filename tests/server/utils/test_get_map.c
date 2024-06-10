@@ -127,41 +127,6 @@ Test(get_map, add_player_at_position)
     cr_assert_eq(get_list_size((node_t)tile->players), 2);
 }
 
-Test(get_map, get_player_position)
-{
-    map_t map = create_map(10, 10);
-    player_t player = my_malloc(sizeof(player_t));
-    uuid_t id1;
-    uuid_generate(id1);
-    uuid_copy(player->id, id1);
-    player->team = NULL;
-
-    add_player_at_position(player, (position_t){1, 1}, map);
-    position_t position = get_player_position(player, map);
-    cr_assert_eq(position.x, 1);
-    cr_assert_eq(position.y, 1);
-    player = my_malloc(sizeof(player_t));
-    uuid_t id2;
-    uuid_generate(id2);
-    uuid_copy(player->id, id2);
-    player->team = NULL;
-
-    add_player_at_position(player, (position_t){2, 5}, map);
-    position = get_player_position(player, map);
-    cr_assert_eq(position.x, 2);
-    cr_assert_eq(position.y, 5);
-    player = my_malloc(sizeof(player_t));
-    uuid_t id3;
-    uuid_generate(id3);
-    uuid_copy(player->id, id3);
-    player->team = NULL;
-
-    add_player_at_position(player, (position_t){2, 5}, map);
-    position = get_player_position(player, map);
-    cr_assert_eq(position.x, 2);
-    cr_assert_eq(position.y, 5);
-}
-
 Test(get_map, move_player)
 {
     map_t map = create_map(10, 10);
@@ -172,21 +137,20 @@ Test(get_map, move_player)
     player->team = NULL;
 
     add_player_at_position(player, (position_t){1, 1}, map);
-    position_t position = get_player_position(player, map);
-    cr_assert_eq(position.x, 1);
-    cr_assert_eq(position.y, 1);
+    cr_assert_eq(player->position.x, 1);
+    cr_assert_eq(player->position.y, 1);
+
     move_player(player, (position_t){2, 2}, map);
-    position = get_player_position(player, map);
-    cr_assert_eq(position.x, 2);
-    cr_assert_eq(position.y, 2);
+    cr_assert_eq(player->position.x, 2);
+    cr_assert_eq(player->position.y, 2);
+
     move_player(player, (position_t){2, 2}, map);
-    position = get_player_position(player, map);
-    cr_assert_eq(position.x, 2);
-    cr_assert_eq(position.y, 2);
+    cr_assert_eq(player->position.x, 2);
+    cr_assert_eq(player->position.y, 2);
+
     move_player(player, (position_t){9, 9}, map);
-    position = get_player_position(player, map);
-    cr_assert_eq(position.x, 9);
-    cr_assert_eq(position.y, 9);
+    cr_assert_eq(player->position.x, 9);
+    cr_assert_eq(player->position.y, 9);
 }
 
 Test(get_map, init_map_food)

@@ -22,6 +22,7 @@ void add_player_at_position(const player_t player, const position_t position,
 {
     const tile_t tile = get_tile_at_position(position, map);
 
+    player->position = position;
     add_to_list((void *)player, (node_t *)&tile->players);
 }
 
@@ -36,9 +37,10 @@ void add_player_at_position(const player_t player, const position_t position,
 void move_player(const player_t player, const position_t position,
     const map_t map)
 {
-    const position_t old_position = get_player_position(player, map);
+    const position_t old_position = player->position;
     tile_t tile = get_tile_at_position(old_position, map);
 
+    player->position = position;
     remove_from_list((void *)player, (node_t *)&tile->players);
     tile = get_tile_at_position(position, map);
     add_to_list((void *)player, (node_t *)&tile->players);

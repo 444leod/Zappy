@@ -103,7 +103,6 @@ void init_map(map_t map, team_list_t teams);
 tile_t get_tile_at_position(position_t position, map_t map);
 void add_player_at_position(player_t player, position_t position, map_t map);
 void move_player(player_t player, position_t position, map_t map);
-position_t get_player_position(player_t player, map_t map);
 void add_egg_at_position(const team_t, const position_t, map_t);
 egg_list_t get_team_eggs(const team_t team, const map_t map);
 egg_t get_random_egg(const team_t team, map_t map);
