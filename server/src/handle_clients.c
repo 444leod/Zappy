@@ -12,6 +12,7 @@
 #include "commands.h"
 #include "linked_lists.h"
 #include "garbage_collector.h"
+#include "debug.h"
 #include <unistd.h>
 #include <stdio.h>
 
@@ -63,7 +64,8 @@ static bool is_read_special_case(const client_t client,
  *
  * @return the created command
 */
-static client_command_t create_command(const char *command, const clock_t time)
+static client_command_t create_command(const char *command,
+    const struct timespec time)
 {
     client_command_t newCommand = my_malloc(sizeof(struct client_command_s));
 
@@ -105,8 +107,9 @@ static void queue_command(const client_t client)
 {
     char *afterLineBreak = NULL;
     int i = 0;
-    const clock_t now = clock();
+    struct timespec now;
 
+    clock_gettime(0, &now);
     while (client->buffer && strlen(client->buffer) > 0) {
         afterLineBreak = strstr(client->buffer, "\n");
         if (!afterLineBreak)
@@ -160,12 +163,15 @@ static void trigger_action(const client_t client, const fd_set *readfds,
 {
     if (client->fd == -1)
         return;
-    if (FD_ISSET(client->fd, readfds))
+    if (FD_ISSET(client->fd, readfds)) {
         read_buffer(client);
-    if (client->commands)
+    }
+    if (client->commands) {
         handle_command(client, serverInfo);
-    if (FD_ISSET(client->fd, writefds))
+    }
+    if (FD_ISSET(client->fd, writefds)) {
         send_buffer(client);
+    }
 }
 
 /**
