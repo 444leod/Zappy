@@ -77,27 +77,34 @@ Test(get_map, get_tile_at_position_special)
     cr_assert_eq(tile->food, 10);
 
     player_t player = my_malloc(sizeof(player_t));
-    player->id = 1;
+    uuid_t id1;
+    uuid_generate(id1);
+    uuid_copy(player->id, id1);
     player->team = NULL;
 
     add_to_list((void *)player, (node_t *)&tile->players);
     cr_assert_eq(tile->players->player, player);
     cr_assert_eq(get_list_size((node_t)tile->players), 1);
+    cr_assert(uuid_compare(tile->players->player->id, player->id) == 0);
 
     player = my_malloc(sizeof(player_t));
-    player->id = 2;
+    uuid_t id2;
+    uuid_generate(id2);
+    uuid_copy(player->id, id2);
     player->team = NULL;
 
     add_to_list((void *)player, (node_t *)&tile->players);
-    cr_assert_eq(tile->players->player->id, 1);
-    cr_assert_eq(tile->players->next->player->id, 2);
+    cr_assert(uuid_compare(tile->players->player->id, id1) == 0);
+    cr_assert(uuid_compare(tile->players->next->player->id, id2) == 0);
 }
 
 Test(get_map, add_player_at_position)
 {
     map_t map = create_map(10, 10);
     player_t player = my_malloc(sizeof(player_t));
-    player->id = 1;
+    uuid_t id1;
+    uuid_generate(id1);
+    uuid_copy(player->id, id1);
     player->team = NULL;
 
     add_player_at_position(player, (position_t){1, 1}, map);
@@ -108,12 +115,15 @@ Test(get_map, add_player_at_position)
     cr_assert_eq(tile->players->player, player);
     cr_assert_eq(get_list_size((node_t)tile->players), 1);
     player = my_malloc(sizeof(player_t));
-    player->id = 2;
+    uuid_t id2;
+    uuid_generate(id2);
+    uuid_copy(player->id, id2);
     player->team = NULL;
 
     add_player_at_position(player, (position_t){1, 1}, map);
-    cr_assert_eq(tile->players->player->id, 1);
-    cr_assert_eq(tile->players->next->player->id, 2);
+    cr_assert_eq(tile->players->next->player, player);
+    cr_assert(uuid_compare(tile->players->player->id, id1) == 0);
+    cr_assert(uuid_compare(tile->players->next->player->id, id2) == 0);
     cr_assert_eq(get_list_size((node_t)tile->players), 2);
 }
 
@@ -121,7 +131,9 @@ Test(get_map, get_player_position)
 {
     map_t map = create_map(10, 10);
     player_t player = my_malloc(sizeof(player_t));
-    player->id = 1;
+    uuid_t id1;
+    uuid_generate(id1);
+    uuid_copy(player->id, id1);
     player->team = NULL;
 
     add_player_at_position(player, (position_t){1, 1}, map);
@@ -129,7 +141,9 @@ Test(get_map, get_player_position)
     cr_assert_eq(position.x, 1);
     cr_assert_eq(position.y, 1);
     player = my_malloc(sizeof(player_t));
-    player->id = 2;
+    uuid_t id2;
+    uuid_generate(id2);
+    uuid_copy(player->id, id2);
     player->team = NULL;
 
     add_player_at_position(player, (position_t){2, 5}, map);
@@ -137,7 +151,9 @@ Test(get_map, get_player_position)
     cr_assert_eq(position.x, 2);
     cr_assert_eq(position.y, 5);
     player = my_malloc(sizeof(player_t));
-    player->id = 3;
+    uuid_t id3;
+    uuid_generate(id3);
+    uuid_copy(player->id, id3);
     player->team = NULL;
 
     add_player_at_position(player, (position_t){2, 5}, map);
@@ -150,7 +166,9 @@ Test(get_map, move_player)
 {
     map_t map = create_map(10, 10);
     player_t player = my_malloc(sizeof(player_t));
-    player->id = 1;
+    uuid_t id1;
+    uuid_generate(id1);
+    uuid_copy(player->id, id1);
     player->team = NULL;
 
     add_player_at_position(player, (position_t){1, 1}, map);
