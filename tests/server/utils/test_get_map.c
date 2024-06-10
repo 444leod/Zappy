@@ -173,8 +173,9 @@ Test(get_map, move_player)
 
 Test(get_map, init_map_food)
 {
+    struct team_list_s teams = { 0 };
     map_t map = create_map(2, 2);
-    init_map(map);
+    init_map(map, &teams);
 
     tile_t a = get_tile_at_position((position_t){0, 0}, map);
     cr_assert(a != NULL);
@@ -191,9 +192,10 @@ Test(get_map, init_map_food)
 
 Test(get_map, init_map_rocks)
 {
+    struct team_list_s teams = { 0 };
     map_t map = create_map(5, 5);
     rocks_t rocks = { 0 };
-    init_map(map);
+    init_map(map, &teams);
 
     line_list_t line = map->line_list;
     for (int y = 0; y < 5; y++) {
