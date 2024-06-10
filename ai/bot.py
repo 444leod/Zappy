@@ -2,10 +2,10 @@
 
 import sys
 from typing import List
-from connection_handler import ConnectionHandler
-from config import Config, HelpException, ArgError
-from data import Collectibles, PlayerInfo, GeneralInfo, TileContent, Map
-import commands as cmd
+from ai_src.connection_handler import ConnectionHandler
+from ai_src.config import Config, HelpException, ArgError
+from ai_src.data import PlayerInfo, GeneralInfo, Orientation, Collectibles, Map, TileContent
+import ai_src.commands as cmd
 
 class Bot():
     def __init__(self, verbose=False, traced=False) -> None:
@@ -48,7 +48,6 @@ class Bot():
 
         self.map: Map = Map()
         self.map.tiles = [[TileContent() for _ in range(self.general_info.map_size[0])] for _ in range(self.general_info.map_size[1])]
-        self.log(self.map)
 
         self.messages_received: List[tuple[int, str]] = [] # [(playerID, message), ..]
         self.messages_sent: List[str] = []

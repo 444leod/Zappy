@@ -1,7 +1,7 @@
 import re
 from typing import List
 from collections import Counter
-from data import TileContent, Collectibles
+from ai_src.data import TileContent, Collectibles
 
 class ACommand:
     def __init__(self, name: str) -> None:

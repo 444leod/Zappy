@@ -11,6 +11,7 @@
 #include <string.h>
 #include <uuid/uuid.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include "escaped.h"
 
 void my_error(const char *str);
@@ -20,7 +21,7 @@ char *my_strdup(const char *src);
 char **str_to_word_array(const char *str, const char *delim);
 int tablen(const void **tab);
 char *supercat(const int n, ...);
-char *my_strndup(const char *src, const int n);
+char *my_strndup(const char *src, const uint32_t n);
 char *get_current_dir(void);
 char *my_snprintf(const char *format, ...);
 char *replace_char(const char *str, const char find, const char replace);

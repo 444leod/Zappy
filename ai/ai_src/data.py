@@ -45,8 +45,6 @@ class TileContent():
 class Map():
     tiles: List[List[TileContent]] = field(default_factory=list)
 
-
-    #vision = {'0': {'0': [TileContent], '1': [TileContent, TileContent, TileContent]}[TileContent], '1': [TileContent, TileContent, TileContent]}
     def vision_update(
         self,
         vision: dict[str, TileContent],
