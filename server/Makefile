@@ -90,6 +90,7 @@ __SRC_ROOT_TEST := utils.c \
 	client.c
 
 __SRC_COMMANDS_TEST := auth.c \
+	ai.c \
 
 __SRC_UTILS_TEST := get_map.c \
 
