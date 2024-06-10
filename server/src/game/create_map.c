@@ -39,10 +39,10 @@ static tile_t create_tile(void)
  * @param width the width of the line
  * @return line_t the created line
  */
-static line_t create_line(uint32_t width)
+static line_t create_line(const uint32_t width)
 {
-    line_t line = my_malloc(sizeof(struct line_s));
-    tile_list_t tile_list = NULL;
+    const line_t line = my_malloc(sizeof(struct line_s));
+    const tile_list_t tile_list = NULL;
     tile_list_t tmp;
     tile_t tile = NULL;
 
@@ -66,9 +66,9 @@ static line_t create_line(uint32_t width)
  * @param height the height of the map
  * @return map_t the created map
  */
-map_t create_map(uint32_t width, uint32_t height)
+map_t create_map(const uint32_t width, const uint32_t height)
 {
-    map_t map = my_malloc(sizeof(struct map_s));
+    const map_t map = my_malloc(sizeof(struct map_s));
     line_t line = NULL;
     line_list_t tmp;
 

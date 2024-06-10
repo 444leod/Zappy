@@ -17,9 +17,10 @@
  * @param position the position of the tile
  * @param map the map
  */
-void add_player_at_position(player_t player, position_t position, map_t map)
+void add_player_at_position(const player_t player, const position_t position,
+    const map_t map)
 {
-    tile_t tile = get_tile_at_position(position, map);
+    const tile_t tile = get_tile_at_position(position, map);
 
     add_to_list((void *)player, (node_t *)&tile->players);
 }
@@ -32,9 +33,10 @@ void add_player_at_position(player_t player, position_t position, map_t map)
  * @param position the position
  * @param map the map
  */
-void move_player(player_t player, position_t position, map_t map)
+void move_player(const player_t player, const position_t position,
+    const map_t map)
 {
-    position_t old_position = get_player_position(player, map);
+    const position_t old_position = get_player_position(player, map);
     tile_t tile = get_tile_at_position(old_position, map);
 
     remove_from_list((void *)player, (node_t *)&tile->players);
@@ -51,8 +53,8 @@ void move_player(player_t player, position_t position, map_t map)
  */
 void add_egg_at_position(const team_t team, const position_t pos, map_t map)
 {
-    tile_t tile = get_tile_at_position(pos, map);
-    egg_t egg = my_malloc(sizeof(struct egg_s));
+    const tile_t tile = get_tile_at_position(pos, map);
+    const egg_t egg = my_malloc(sizeof(struct egg_s));
 
     egg->team = team;
     egg->pos = pos;
@@ -68,7 +70,7 @@ void add_egg_at_position(const team_t team, const position_t pos, map_t map)
  * @param map the map
  * @return The reference to the `player_t` structure allocated.
  */
-player_t egg_to_player(egg_t egg, map_t map)
+player_t egg_to_player(const egg_t egg, const map_t map)
 {
     tile_t tile = NULL;
     player_t player = NULL;

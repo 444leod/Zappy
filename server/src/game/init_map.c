@@ -11,10 +11,10 @@
 #include "server_info.h"
 #include "linked_lists.h"
 
-static void add_eggs(map_t map, team_list_t teams)
+static void add_eggs(const map_t map, team_list_t teams)
 {
     position_t pos = { 0, 0 };
-    uint32_t size = get_list_size((node_t)teams);
+    const uint32_t size = get_list_size((node_t)teams);
 
     for (uint32_t i = 0; i < size; i++) {
         DEBUG_PRINT("\tPutting egg for '%s'...", teams->team->name);
@@ -26,11 +26,11 @@ static void add_eggs(map_t map, team_list_t teams)
     }
 }
 
-static void add_thystame(map_t map)
+static void add_thystame(const map_t map)
 {
     position_t pos = { 0, 0 };
     tile_t tile = NULL;
-    uint32_t amount = map->width * map->height * D_THYSTAME;
+    const uint32_t amount = map->width * map->height * D_THYSTAME;
 
     DEBUG_PRINT("\tPutting in: %d thystame...", amount);
     for (uint32_t i = 0; i < amount; i++) {
@@ -42,11 +42,11 @@ static void add_thystame(map_t map)
     DEBUG_PRINT(" OK!\n");
 }
 
-static void add_phiras(map_t map)
+static void add_phiras(const map_t map)
 {
     position_t pos = { 0, 0 };
     tile_t tile = NULL;
-    uint32_t amount = map->width * map->height * D_PHIRAS;
+    const uint32_t amount = map->width * map->height * D_PHIRAS;
 
     DEBUG_PRINT("\tPutting in: %d phiras...", amount);
     for (uint32_t i = 0; i < amount; i++) {
@@ -58,11 +58,11 @@ static void add_phiras(map_t map)
     DEBUG_PRINT(" OK!\n");
 }
 
-static void add_mendiane(map_t map)
+static void add_mendiane(const map_t map)
 {
     position_t pos = { 0, 0 };
     tile_t tile = NULL;
-    uint32_t amount = map->width * map->height * D_MENDIANE;
+    const uint32_t amount = map->width * map->height * D_MENDIANE;
 
     DEBUG_PRINT("\tPutting in: %d mendiane...", amount);
     for (uint32_t i = 0; i < amount; i++) {
@@ -74,11 +74,11 @@ static void add_mendiane(map_t map)
     DEBUG_PRINT(" OK!\n");
 }
 
-static void add_sibur(map_t map)
+static void add_sibur(const map_t map)
 {
     position_t pos = { 0, 0 };
     tile_t tile = NULL;
-    uint32_t amount = map->width * map->height * D_SIBUR;
+    const uint32_t amount = map->width * map->height * D_SIBUR;
 
     DEBUG_PRINT("\tPutting in: %d sibur...", amount);
     for (uint32_t i = 0; i < amount; i++) {
@@ -90,11 +90,11 @@ static void add_sibur(map_t map)
     DEBUG_PRINT(" OK!\n");
 }
 
-static void add_deraumere(map_t map)
+static void add_deraumere(const map_t map)
 {
     position_t pos = { 0, 0 };
     tile_t tile = NULL;
-    uint32_t amount = map->width * map->height * D_DERAUMERE;
+    const uint32_t amount = map->width * map->height * D_DERAUMERE;
 
     DEBUG_PRINT("\tPutting in: %d deraumere...", amount);
     for (uint32_t i = 0; i < amount; i++) {
@@ -106,11 +106,11 @@ static void add_deraumere(map_t map)
     DEBUG_PRINT(" OK!\n");
 }
 
-static void add_linemate(map_t map)
+static void add_linemate(const map_t map)
 {
     position_t pos = { 0, 0 };
     tile_t tile = NULL;
-    uint32_t amount = map->width * map->height * D_LINEMATE;
+    const uint32_t amount = map->width * map->height * D_LINEMATE;
 
     DEBUG_PRINT("\tPutting in: %d linemate...", amount);
     for (uint32_t i = 0; i < amount; i++) {
@@ -122,11 +122,11 @@ static void add_linemate(map_t map)
     DEBUG_PRINT(" OK!\n");
 }
 
-static void add_food(map_t map)
+static void add_food(const map_t map)
 {
     position_t pos = { 0, 0 };
     tile_t tile = NULL;
-    uint32_t amount = map->width * map->height * D_FOOD;
+    const uint32_t amount = map->width * map->height * D_FOOD;
 
     DEBUG_PRINT("\tPutting in: %d food...", amount);
     for (uint32_t i = 0; i < amount; i++) {
@@ -145,7 +145,7 @@ static void add_food(map_t map)
  * @note Ressource are density based (always the same amount for a same size).
  * @note Ressources are scarsed randomly on the map.
  */
-void init_map(map_t map, team_list_t teams)
+void init_map(const map_t map, const team_list_t teams)
 {
     if (map == NULL || teams == NULL)
         return;

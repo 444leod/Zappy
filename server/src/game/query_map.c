@@ -18,9 +18,9 @@
  * @param map the map
  * @return tile_t the tile
  */
-tile_t get_tile_at_position(position_t position, map_t map)
+tile_t get_tile_at_position(const position_t position, const map_t map)
 {
-    line_list_t line = (line_list_t)get_node_by_index(position.y,
+    const line_list_t line = (line_list_t)get_node_by_index(position.y,
         (node_t)map->line_list);
     tile_list_t tile;
 
@@ -41,7 +41,8 @@ tile_t get_tile_at_position(position_t position, map_t map)
  * @param map the map
  * @return position_t the position of the player
  */
-static int get_player_in_tile_list(player_t player, tile_list_t tile_list)
+static int get_player_in_tile_list(const player_t player,
+    const tile_list_t tile_list)
 {
     int index = 1;
     tile_list_t tmp = tile_list;
@@ -68,7 +69,7 @@ static int get_player_in_tile_list(player_t player, tile_list_t tile_list)
  * @param map the map
  * @return position_t the position of the player
  */
-position_t get_player_position(player_t player, map_t map)
+position_t get_player_position(const player_t player, const map_t map)
 {
     line_list_t line_list = map->line_list;
     uint32_t line_index = 0;
@@ -139,12 +140,12 @@ egg_list_t get_team_eggs(const team_t team, const map_t map)
  * @param map the map
  * @return A corresponding `egg_t`, or `NULL` if not found.
  */
-egg_t get_random_egg(const team_t team, map_t map)
+egg_t get_random_egg(const team_t team, const map_t map)
 {
+    const egg_list_t list = get_team_eggs(team, map);
     uint32_t index = 0;
     uint32_t size = 0;
     egg_list_t node = NULL;
-    egg_list_t list = get_team_eggs(team, map);
 
     if (list == NULL)
         return NULL;
