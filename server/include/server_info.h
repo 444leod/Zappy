@@ -11,12 +11,6 @@
 #include "game.h"
 #include <stdint.h>
 
-typedef struct team_list_s {
-    struct team_list_s *next;
-    struct team_list_s *prev;
-    team_t team;
-} *team_list_t;
-
 typedef struct server_info_s {
     uint16_t port;
     uint32_t clientsNb;

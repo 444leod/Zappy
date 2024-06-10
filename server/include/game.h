@@ -99,7 +99,7 @@ typedef struct map_s {
 } * map_t;
 
 map_t create_map(uint32_t width, uint32_t height);
-void init_map(map_t map);
+void init_map(map_t map, team_list_t teams);
 tile_t get_tile_at_position(position_t position, map_t map);
 void add_player_at_position(player_t player, position_t position, map_t map);
 void move_player(player_t player, position_t position, map_t map);

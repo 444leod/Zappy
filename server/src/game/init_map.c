@@ -8,6 +8,23 @@
 #include <stdlib.h>
 #include "debug.h"
 #include "game.h"
+#include "server_info.h"
+#include "linked_lists.h"
+
+static void add_eggs(map_t map, team_list_t teams)
+{
+    position_t pos = { 0, 0 };
+    uint32_t size = get_list_size((node_t)teams);
+
+    for (uint32_t i = 0; i < size; i++) {
+        DEBUG_PRINT("\tPutting egg for '%s'...", teams->team->name);
+        pos.x = rand() % map->width;
+        pos.y = rand() % map->height;
+        add_egg_at_position(teams->team, pos, map);
+        teams = teams->next;
+        DEBUG_PRINT(" OK!\n");
+    }
+}
 
 static void add_thystame(map_t map)
 {
@@ -128,9 +145,9 @@ static void add_food(map_t map)
  * @note Ressource are density based (always the same amount for a same size).
  * @note Ressources are scarsed randomly on the map.
  */
-void init_map(map_t map)
+void init_map(map_t map, team_list_t teams)
 {
-    if (map == NULL)
+    if (map == NULL || teams == NULL)
         return;
     DEBUG_PRINT("\nMap setup:\n");
     add_food(map);
@@ -140,4 +157,5 @@ void init_map(map_t map)
     add_mendiane(map);
     add_phiras(map);
     add_thystame(map);
+    add_eggs(map, teams);
 }
