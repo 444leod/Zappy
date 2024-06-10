@@ -13,7 +13,6 @@
 #include <functional>
 #include <unordered_map>
 #include "ACommand.hpp"
-#include "CommandProtocol/Msz.hpp"
 #include "CommandProtocol/Bct.hpp"
 #include "CommandProtocol/Tna.hpp"
 #include "CommandProtocol/Pex.hpp"
@@ -23,6 +22,7 @@
 #include "CommandProtocol/Plv.hpp"
 #include "CommandProtocol/Pin.hpp"
 #include "CommandProtocol/Pic.hpp"
+#include "CommandProtocol/Pie.hpp"
 
 namespace gui {
     class GameDataManager {
@@ -47,7 +47,8 @@ namespace gui {
                 {"ppo", std::make_shared<Ppo>()},
                 {"plv", std::make_shared<Plv>()},
                 {"pin", std::make_shared<Pin>()},
-                {"pic", std::make_shared<Pic>()}
+                {"pic", std::make_shared<Pic>()},
+                {"pie", std::make_shared<Pie>()}
             };
     };
 }
