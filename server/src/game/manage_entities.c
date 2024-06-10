@@ -58,3 +58,31 @@ void add_egg_at_position(const team_t team, const position_t pos, map_t map)
     egg->pos = pos;
     add_to_list((void *)egg, (node_t *)&tile->eggs);
 }
+
+/**
+ * @brief Removes an egg and pops a pops a new player at the same position.
+ * @note The player is the same team as the egg.
+ * @note The player IS PLACED
+ *
+ * @param egg the egg
+ * @param map the map
+ * @return The reference to the `player_t` structure allocated.
+ */
+player_t egg_to_player(egg_t egg, map_t map)
+{
+    tile_t tile = NULL;
+    player_t player = NULL;
+
+    if (egg == NULL || map == NULL)
+        return NULL;
+    player = my_malloc(sizeof(struct player_s));
+    uuid_generate(player->id);
+    player->food = 10;
+    player->level = 1;
+    player->team = egg->team;
+    player->position = egg->pos;
+    tile = get_tile_at_position(egg->pos, map);
+    remove_from_list((void *)egg, (node_t *)tile->eggs);
+    add_to_list((void *)player, (node_t *)&tile->players);
+    return player;
+}

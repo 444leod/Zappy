@@ -18,7 +18,7 @@
 
 typedef struct client_s {
     int fd;
-    team_t team;
+    player_t player;
     uint16_t clientNumber;
     packet_queue_t packetQueue;
     enum CLIENT_TYPE type;

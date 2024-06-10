@@ -139,7 +139,7 @@ egg_list_t get_team_eggs(const team_t team, const map_t map)
  * @param map the map
  * @return A corresponding `egg_t`, or `NULL` if not found.
  */
-egg_t get_random_egg(team_t team, map_t map)
+egg_t get_random_egg(const team_t team, map_t map)
 {
     uint32_t index = 0;
     uint32_t size = 0;

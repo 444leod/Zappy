@@ -91,7 +91,8 @@ __TESTER_SRC := tests/tester.cpp \
 	tests/Test.cpp
 
 __CC = gcc
-__CFLAGS += -Wall -Wextra -Werror -Wpedantic -I./include -L. -lmy -lnetwork
+__CFLAGS += -Wall -Wextra -Werror -Wpedantic
+__CFLAGS += -I./include -L. -lmy -lnetwork -luuid
 __TEST_FLAGS = $(__CFLAGS) --coverage -lcriterion -I../tests/server
 
 %.o: %.c

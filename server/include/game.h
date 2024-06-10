@@ -9,6 +9,7 @@
 
 #include <stdint.h>
 #include <time.h>
+#include <uuid/uuid.h>
 #include "teams.h"
 
 #define D_FOOD 0.5
@@ -41,10 +42,9 @@ typedef struct rocks_s {
 } rocks_t;
 
 typedef struct player_s {
-    int id;
+    uuid_t id;
     team_t team;
-    int x;
-    int y;
+    position_t position;
     int level;
     rocks_t rocks;
     uint32_t food;
@@ -106,4 +106,5 @@ void move_player(player_t player, position_t position, map_t map);
 position_t get_player_position(player_t player, map_t map);
 void add_egg_at_position(const team_t, const position_t, map_t);
 egg_list_t get_team_eggs(const team_t team, const map_t map);
-egg_t get_random_team_egg(const team_t team, const map_t map);
+egg_t get_random_egg(const team_t team, map_t map);
+player_t egg_to_player(egg_t egg, map_t map);
