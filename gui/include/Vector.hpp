@@ -73,12 +73,12 @@ namespace gui {
             T _x = .0; // .0 so that the compiler knows it's double-sized
             T _y = .0;
     };
-}
 
-#define Vector2d Vector2<double>
-#define Vector2i Vector2<int>
-#define Vector2f Vector2<float>
-#define Vector2u Vector2<unsigned int>
+    using Vector2d = Vector2<double>;
+    using Vector2i = Vector2<int>;
+    using Vector2f = Vector2<float>;
+    using Vector2u = Vector2<unsigned int>;
+}
 
 template<typename T>
 std::ostream& operator<<(std::ostream& stream, const gui::Vector2<T>& vector)
