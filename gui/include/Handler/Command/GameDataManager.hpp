@@ -23,6 +23,7 @@
 #include "CommandProtocol/Pin.hpp"
 #include "CommandProtocol/Pic.hpp"
 #include "CommandProtocol/Pie.hpp"
+#include "CommandProtocol/Pdi.hpp"
 
 namespace gui {
     class GameDataManager {
@@ -48,7 +49,8 @@ namespace gui {
                 {"plv", std::make_shared<Plv>()},
                 {"pin", std::make_shared<Pin>()},
                 {"pic", std::make_shared<Pic>()},
-                {"pie", std::make_shared<Pie>()}
+                {"pie", std::make_shared<Pie>()},
+                {"pdi", std::make_shared<Pdi>()}
             };
     };
 }
