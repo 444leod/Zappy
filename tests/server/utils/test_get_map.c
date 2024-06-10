@@ -237,6 +237,24 @@ Test(get_map, init_map_rocks)
     cr_assert(rocks.thystame == 1);
 }
 
+Test(get_map, init_map_eggs)
+{
+    team_list_t teams = NULL;
+    struct team_s teamA = { "Good guys", 0, 1 };
+    struct team_s teamB = { "Mean guys", 0, 1 };
+    struct team_s teamC = { "Unknowns", 0, 1 };
+    add_to_list((void *)&teamA, (node_t *)&teams);
+    add_to_list((void *)&teamB, (node_t *)&teams);
+    map_t map = create_map(5, 5);
+    init_map(map, teams);
+    uint32_t a = get_list_size((node_t)get_team_eggs(&teamA, map));
+    uint32_t b = get_list_size((node_t)get_team_eggs(&teamB, map));
+    uint32_t c = get_list_size((node_t)get_team_eggs(&teamC, map));
+    cr_assert(a == 1);
+    cr_assert(b == 1);
+    cr_assert(c == 0);
+}
+
 Test(get_map, adding_eggs)
 {
     position_t pos = {0, 0};
@@ -278,4 +296,20 @@ Test(get_map, getting_team_eggs)
     cr_assert(count == 2);
     cr_assert_str_eq(eggs->egg->team->name, "Good guys");
     cr_assert_str_eq(eggs->next->egg->team->name, "Good guys");
+}
+
+Test(get_map, egg_to_player)
+{
+    team_list_t teams = NULL;
+    struct team_s team = { "Good guys", 0, 1 };
+    add_to_list((void *)&team, (node_t *)&teams);
+    map_t map = create_map(1, 1);
+    init_map(map, teams);
+    egg_t egg = get_random_egg(&team, map);
+    player_t player = egg_to_player(egg, map);
+    cr_assert(player != NULL);
+    cr_assert_str_eq(player->team->name, "Good guys");
+    cr_assert(player->position.x == 0);
+    cr_assert(player->position.y == 0);
+    cr_assert(player->food == 10);
 }
