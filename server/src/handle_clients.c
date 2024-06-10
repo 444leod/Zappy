@@ -65,12 +65,12 @@ static bool is_read_special_case(const client_t client,
  * @return the created command
 */
 static client_command_t create_command(const char *command,
-    const struct timespec time)
+    const struct timespec *time)
 {
     client_command_t newCommand = my_malloc(sizeof(struct client_command_s));
 
     newCommand->command = my_strdup(command);
-    newCommand->handledTime = time;
+    newCommand->handledTime = *time;
     newCommand->initialized = false;
     return newCommand;
 }
@@ -108,6 +108,7 @@ static void queue_command(const client_t client)
     char *afterLineBreak = NULL;
     int i = 0;
     struct timespec now;
+    char *buffer = NULL;
 
     clock_gettime(0, &now);
     while (client->buffer && strlen(client->buffer) > 0) {
@@ -115,7 +116,8 @@ static void queue_command(const client_t client)
         if (!afterLineBreak)
             break;
         i = afterLineBreak - client->buffer;
-        add_to_list((void *)create_command(my_strndup(client->buffer, i), now),
+        buffer = my_strndup(client->buffer, i);
+        add_to_list((void *)create_command(buffer, &now),
             (void *)&client->commands);
         client->buffer = client->buffer + i + 1;
     }
