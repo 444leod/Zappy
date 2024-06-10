@@ -7,10 +7,10 @@
 
 #include "Handler/Command/CommandProtocol/Msz.hpp"
 
-void gui::Msz::send()
+void gui::Msz::send(std::string command, ntw::Client &client)
 {
-    // std::string str = "msz\n";
-    // this->_data->getNetwork()->send(str);
+    client.queueRequest(command + "\n");
+    client.sendRequests();
 }
 
 void gui::Msz::receive(std::string command, GameData &gameData)

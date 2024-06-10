@@ -7,10 +7,10 @@
 
 #include "Handler/Command/CommandProtocol/Plv.hpp"
 
-void gui::Plv::send()
+void gui::Plv::send(std::string command, ntw::Client &client)
 {
-    // std::string str = "plv\n";
-    // this->_data->getNetwork()->send(str);
+    client.queueRequest(command + "\n");
+    client.sendRequests();
 }
 
 void gui::Plv::receive(std::string command, GameData &gameData)

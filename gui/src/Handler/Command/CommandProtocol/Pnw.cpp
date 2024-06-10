@@ -7,9 +7,10 @@
 
 #include "Handler/Command/CommandProtocol/Pnw.hpp"
 
-void gui::Pnw::send()
+void gui::Pnw::send(std::string command, ntw::Client &client)
 {
-    return;
+    (void)command;
+    (void)client;
 }
 
 gui::Orientation gui::Pnw::getOrientationFromStr(std::string orientation)

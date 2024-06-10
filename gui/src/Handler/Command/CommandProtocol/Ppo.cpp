@@ -7,10 +7,10 @@
 
 #include "Handler/Command/CommandProtocol/Ppo.hpp"
 
-void gui::Ppo::send()
+void gui::Ppo::send(std::string command, ntw::Client &client)
 {
-    // std::string str = "ppo\n";
-    // this->_data->getNetwork()->send(str);
+    client.queueRequest(command + "\n");
+    client.sendRequests();
 }
 
 gui::Orientation gui::Ppo::getOrientationFromStr(std::string orientation)

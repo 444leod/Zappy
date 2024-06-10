@@ -7,9 +7,10 @@
 
 #include "Handler/Command/CommandProtocol/Seg.hpp"
 
-void gui::Seg::send()
+void gui::Seg::send(std::string command, ntw::Client &client)
 {
-    return;
+    (void)command;
+    (void)client;
 }
 
 void gui::Seg::receive(std::string command, GameData &gameData)

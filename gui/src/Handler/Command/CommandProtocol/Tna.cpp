@@ -7,10 +7,10 @@
 
 #include "Handler/Command/CommandProtocol/Tna.hpp"
 
-void gui::Tna::send()
+void gui::Tna::send(std::string command, ntw::Client &client)
 {
-    // std::string str = "tna\n";
-    // this->_data->getGraphical()->getSocket()->write(str);
+    client.queueRequest(command + "\n");
+    client.sendRequests();
 }
 
 void gui::Tna::receive(std::string command, GameData &gameData)

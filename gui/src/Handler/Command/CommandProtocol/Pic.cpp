@@ -7,9 +7,10 @@
 
 #include "Handler/Command/CommandProtocol/Pic.hpp"
 
-void gui::Pic::send()
+void gui::Pic::send(std::string command, ntw::Client &client)
 {
-    return;
+    (void)command;
+    (void)client;
 }
 
 void gui::Pic::receive(std::string command, GameData &gameData)

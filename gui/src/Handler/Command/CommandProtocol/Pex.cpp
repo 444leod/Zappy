@@ -7,9 +7,10 @@
 
 #include "Handler/Command/CommandProtocol/Pex.hpp"
 
-void gui::Pex::send()
+void gui::Pex::send(std::string command, ntw::Client &client)
 {
-    return;
+    (void)command;
+    (void)client;
 }
 
 void gui::Pex::receive(std::string command, GameData &gameData)

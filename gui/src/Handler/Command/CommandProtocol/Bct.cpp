@@ -7,9 +7,10 @@
 
 #include "Handler/Command/CommandProtocol/Bct.hpp"
 
-void gui::Bct::send()
+void gui::Bct::send(std::string command, ntw::Client &client)
 {
-    return;
+    client.queueRequest(command + "\n");
+    client.sendRequests();
 }
 
 void gui::Bct::receive(std::string command, GameData &gameData)

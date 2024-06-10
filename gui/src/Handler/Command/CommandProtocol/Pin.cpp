@@ -7,10 +7,10 @@
 
 #include "Handler/Command/CommandProtocol/Pin.hpp"
 
-void gui::Pin::send()
+void gui::Pin::send(std::string command, ntw::Client &client)
 {
-    // std::string str = "pin\n";
-    // this->_data->getNetwork()->send(str);
+    client.queueRequest(command + "\n");
+    client.sendRequests();
 }
 
 void gui::Pin::receive(std::string command, GameData &gameData)

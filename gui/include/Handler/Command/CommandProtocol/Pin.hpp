@@ -12,7 +12,7 @@
 namespace gui {
     class Pin : public ACommand {
         public:
-            void send() override;
+            void send(std::string command, ntw::Client &client) override;
             void receive(std::string command, GameData &gameData) override;
 
         protected:
