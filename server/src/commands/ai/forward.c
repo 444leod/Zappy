@@ -18,11 +18,18 @@
  * @param client the client that executed the command
  * @param serverInfo the server info
  */
-void forward(UNUSED char **args, client_t client,
-    UNUSED server_info_t serverInfo)
+void forward(UNUSED char **args, client_t client, server_info_t serverInfo)
 {
     const char *msg = "ok\n";
     packet_t *packet = build_packet(msg);
+    position_t pos = client->player->position;
 
+    pos.y -= client->player->orientation == NORTH;
+    pos.y += client->player->orientation == SOUTH;
+    pos.x += client->player->orientation == EAST;
+    pos.x -= client->player->orientation == WEST;
+    pos.x %= serverInfo->map->width;
+    pos.y %= serverInfo->map->height;
+    move_player(client->player, pos, serverInfo->map);
     add_packet_to_queue(&client->packetQueue, packet);
 }
