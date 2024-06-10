@@ -9,6 +9,7 @@
 #include "packet.h"
 #include "lib.h"
 #include "clients.h"
+#include "zappy.h"
 
 /**
  * @brief Msz command
