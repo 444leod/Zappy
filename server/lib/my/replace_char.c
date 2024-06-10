@@ -5,6 +5,8 @@
 ** replace_char
 */
 
+#include <stddef.h>
+
 /**
  * @brief Replace a character in a string
  * @details Replace a character in a string
@@ -17,6 +19,8 @@
 */
 char *replace_char(char *str, const char find, const char replace)
 {
+    if (str == NULL)
+        return NULL;
     for (int i = 0; str[i] != '\0'; i++) {
         if (str[i] == find) {
             str[i] = replace;
