@@ -16,12 +16,25 @@ __NAME = zappy_gui
 __SRC = src/main.cpp \
 	$(addprefix ./src/network/, $(__SRC_NETWORK)) \
   	$(addprefix ./src/GameData/, $(__SRC_GAME_DATA)) \
+  	$(addprefix ./src/Handler/Command/, $(__SRC_COMMAND_HANDLING)) \
 
 __SRC_NETWORK := Client.cpp \
 
 __SRC_GAME_DATA := GameData.cpp \
 	Tiles/Map.cpp \
 	Tiles/TileContent.cpp \
+
+__SRC_COMMAND_HANDLING := GameDataManager.cpp \
+	CommandProtocol/Msz.cpp \
+	CommandProtocol/Bct.cpp \
+	CommandProtocol/Tna.cpp \
+	CommandProtocol/Pex.cpp \
+	CommandProtocol/Seg.cpp \
+	CommandProtocol/Pnw.cpp \
+	CommandProtocol/Ppo.cpp \
+	CommandProtocol/Plv.cpp \
+	CommandProtocol/Pin.cpp \
+	CommandProtocol/Pic.cpp \
 
 %.o: %.cpp
 	@$(__CC) -c -o $@ $< $(__CXXFLAGS)
