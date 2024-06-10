@@ -75,10 +75,12 @@ namespace gui {
          *
          * @param name the name of the texture
          * @param specification the specification required to create the texture
+         * @param width the width of the texture
+         * @param height the height of the texture
          * @return true if the texture has been loaded
          * @return false if the texture failed to load
          */
-        virtual bool load(const std::string& name, const TextureSpecification& specification) = 0;
+        virtual bool load(const std::string& name, const TextureSpecification& specification, unsigned int width, unsigned int height) = 0;
 
         /**
          * @brief Retrieves a texture

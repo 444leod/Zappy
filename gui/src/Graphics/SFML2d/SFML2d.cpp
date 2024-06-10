@@ -59,7 +59,7 @@ public:
     SFML2dTextureManager() = default;
     virtual ~SFML2dTextureManager() = default;
 
-    virtual bool load(const std::string& name, const gui::TextureSpecification& specification)
+    virtual bool load(const std::string& name, const gui::TextureSpecification& specification, unsigned int width = 1, unsigned int height = 1)
     {
         auto texture = std::make_shared<SFML2dTexture>();
 
@@ -84,7 +84,7 @@ public:
 
         auto color = std::get<gui::Color>(specification.graphical);
         auto img = sf::Image{};
-        img.create(1, 1, sf::Color(color.red, color.green, color.blue, color.alpha));
+        img.create(width, height, sf::Color(color.red, color.green, color.blue, color.alpha));
         auto sftex = std::make_shared<sf::Texture>();
         if (!sftex->loadFromImage(img))
             return false;
@@ -535,17 +535,18 @@ public:
         this->_window.clear(sf::Color{color.red, color.green, color.blue, color.alpha});
     }
 
-    virtual void draw(std::shared_ptr<gui::ITexture> texture, float x, float y)
+    virtual void draw(std::shared_ptr<gui::ITexture> texture, float x, float y, float width = 1.0f, float height = 1.0f, float scale)
     {
         if (texture == nullptr)
             return;
 
-        auto rect = sf::RectangleShape{sf::Vector2f{static_cast<float>(this->_tileSize), static_cast<float>(this->_tileSize)}};
+        auto rect = sf::RectangleShape{sf::Vector2f{static_cast<float>(width * this->_tileSize), static_cast<float>(height * this->_tileSize)}};
         auto tex = std::dynamic_pointer_cast<SFML2dTexture>(texture);
 
         rect.setTexture(tex->raw().get());
         rect.setTextureRect(tex->subrect());
         rect.setPosition(x * this->_tileSize, y * this->_tileSize);
+        rect.setScale(scale, scale);
         this->_window.draw(rect);
     }
 
