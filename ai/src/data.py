@@ -26,7 +26,7 @@ class PlayerInfo():
     level: int = 1
     inv: Collectibles = field(default_factory=lambda: Collectibles(food=10))
     pos: tuple[int, int] = (0, 0)
-    orientation: Orientation = Orientation.EAST
+    orientation: Orientation = Orientation.NORTH
 
 @dataclass
 class GeneralInfo():
@@ -60,20 +60,23 @@ class Map():
             row, col = pos
             self.tiles[row][col] = content
 
+        if orientation == Orientation.WEST or orientation == Orientation.EAST:
+            for key, content in vision.items():
+                vision[key].reverse()
+
         for key, content in vision.items():
             distance = int(key)
             for i, tile_content in enumerate(content): #ALL INPUT IS REVERSED
-                if orientation == Orientation.NORTH: #reversed handling
+                if orientation == Orientation.NORTH: #Works by subject standard
                     new_pos = (player_pos[0] - distance, player_pos[1] - (distance - i))
-                elif orientation == Orientation.SOUTH: #reversed handling
+                elif orientation == Orientation.SOUTH: #Works by subject standard
                     new_pos = (player_pos[0] + distance, player_pos[1] + (distance - i))
-                elif orientation == Orientation.WEST: #not reversed handling
+                elif orientation == Orientation.WEST: #Does not work by subject standard
                     new_pos = (player_pos[0] - (distance - i), player_pos[1] - distance)
-                elif orientation == Orientation.EAST: #not reversed handling
+                elif orientation == Orientation.EAST: #Does not work by subject standard
                     new_pos = (player_pos[0] + (distance - i), player_pos[1] + distance)
                 new_pos = (new_pos[0] % max_row, new_pos[1] % max_col)
                 update_tile(new_pos, tile_content)
-        
 
     def __repr__(self) -> str:
         res = ""

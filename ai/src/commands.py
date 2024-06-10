@@ -66,8 +66,11 @@ class Look(ACommand):
             vision[str(key)] = []
             for _ in range(n):
                 vision[str(key)].append(str_to_tile(tab.pop(0)))
-            n = n + 2
+            n += 2
             key += 1
+        #!!! THE REVERSE TRICK
+        for key, _ in vision.items():
+            vision[key].reverse()
         return vision
 
 class Inventory(ACommand):
