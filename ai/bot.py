@@ -2,10 +2,10 @@
 
 import sys
 from typing import List
-from connection_handler import ConnectionHandler
-from config import Config, HelpException, ArgError
+from ai_src.connection_handler import ConnectionHandler
+from ai_src.config import Config, HelpException, ArgError
 from enum import Enum
-import commands as cmd
+import ai_src.commands as cmd
 from dataclasses import dataclass, field
 
 class Orientation(Enum):

@@ -12,18 +12,13 @@
     #include <unistd.h>
     #include <stdint.h>
 
-struct garbagec_t {
+typedef struct gc_node_s {
     void *data;
-    struct garbagec_t *next;
-    struct garbagec_t *prev;
-};
+    struct gc_node_s *next;
+    struct gc_node_s *prev;
+} *gc_node_t;
 
-typedef struct garbagec_t garbage_t;
-typedef garbage_t *g_llist_t;
-g_llist_t g_create(void *data);
-g_llist_t g_delete_begin(g_llist_t list);
-g_llist_t g_insert_end(void *data, g_llist_t list);
-g_llist_t *get_llist(void);
+gc_node_t *gc_llist(void);
 void my_free_all(void);
 void my_free(void *pointer);
 void *my_malloc(size_t size);
