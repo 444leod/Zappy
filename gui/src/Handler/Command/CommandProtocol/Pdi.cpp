@@ -5,9 +5,9 @@
 ** Pdi
 */
 
-#include "Handler/Command/CommandProtocol/Pdi.hpp"
+#include "Pdi.hpp"
 
-void gui::Pdi::send(std::string command, ntw::Client &client)
+void gui::Pdi::stage(ntw::Client &client, std::string command)
 {
     (void)command;
     (void)client;

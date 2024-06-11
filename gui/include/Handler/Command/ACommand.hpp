@@ -13,7 +13,7 @@
 namespace gui {
     class ACommand : public ICommand {
         public:
-            virtual void send(std::string command, ntw::Client &client) = 0;
+            virtual void stage(ntw::Client &client, std::string command) = 0;
             virtual void receive(std::string command, GameData &gameData) = 0;
     };
 }

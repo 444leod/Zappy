@@ -5,9 +5,9 @@
 ** Pex
 */
 
-#include "Handler/Command/CommandProtocol/Pex.hpp"
+#include "Pex.hpp"
 
-void gui::Pex::send(std::string command, ntw::Client &client)
+void gui::Pex::stage(ntw::Client &client, std::string command)
 {
     (void)command;
     (void)client;

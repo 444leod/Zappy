@@ -5,9 +5,9 @@
 ** Seg
 */
 
-#include "Handler/Command/CommandProtocol/Seg.hpp"
+#include "Seg.hpp"
 
-void gui::Seg::send(std::string command, ntw::Client &client)
+void gui::Seg::stage(ntw::Client &client, std::string command)
 {
     (void)command;
     (void)client;

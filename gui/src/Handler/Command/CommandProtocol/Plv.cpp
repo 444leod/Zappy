@@ -5,9 +5,9 @@
 ** Plv
 */
 
-#include "Handler/Command/CommandProtocol/Plv.hpp"
+#include "Plv.hpp"
 
-void gui::Plv::send(std::string command, ntw::Client &client)
+void gui::Plv::stage(ntw::Client &client, std::string command)
 {
     client.queueRequest(command + "\n");
     client.sendRequests();

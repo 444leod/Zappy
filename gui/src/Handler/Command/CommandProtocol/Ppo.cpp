@@ -5,9 +5,9 @@
 ** Ppo
 */
 
-#include "Handler/Command/CommandProtocol/Ppo.hpp"
+#include "Ppo.hpp"
 
-void gui::Ppo::send(std::string command, ntw::Client &client)
+void gui::Ppo::stage(ntw::Client &client, std::string command)
 {
     client.queueRequest(command + "\n");
     client.sendRequests();

@@ -5,12 +5,12 @@
 ** Tna
 */
 
-#include "Handler/Command/CommandProtocol/Tna.hpp"
+#include "Tna.hpp"
 
-void gui::Tna::send(std::string command, ntw::Client &client)
+void gui::Tna::stage(ntw::Client &client, std::string command)
 {
-    client.queueRequest(command + "\n");
-    client.sendRequests();
+    (void)command;
+    client.queueRequest("tna\n");
 }
 
 void gui::Tna::receive(std::string command, GameData &gameData)

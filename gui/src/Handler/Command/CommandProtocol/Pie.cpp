@@ -5,9 +5,9 @@
 ** Pie
 */
 
-#include "Handler/Command/CommandProtocol/Pie.hpp"
+#include "Pie.hpp"
 
-void gui::Pie::send(std::string command, ntw::Client &client)
+void gui::Pie::stage(ntw::Client &client, std::string command)
 {
     (void)command;
     (void)client;

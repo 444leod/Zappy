@@ -5,9 +5,9 @@
 ** Edi
 */
 
-#include "Handler/Command/CommandProtocol/Edi.hpp"
+#include "Edi.hpp"
 
-void gui::Edi::send(std::string command, ntw::Client &client)
+void gui::Edi::stage(ntw::Client &client, std::string command)
 {
     (void)command;
     (void)client;

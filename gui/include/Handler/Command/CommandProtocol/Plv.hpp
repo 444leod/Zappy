@@ -12,7 +12,7 @@
 namespace gui {
     class Plv : public ACommand {
         public:
-            void send(std::string command, ntw::Client &client) override;
+            void stage(ntw::Client &client, std::string command) override;
             void receive(std::string command, GameData &gameData) override;
 
         protected:

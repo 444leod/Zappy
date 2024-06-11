@@ -5,9 +5,9 @@
 ** Pin
 */
 
-#include "Handler/Command/CommandProtocol/Pin.hpp"
+#include "Pin.hpp"
 
-void gui::Pin::send(std::string command, ntw::Client &client)
+void gui::Pin::stage(ntw::Client &client, std::string command)
 {
     client.queueRequest(command + "\n");
     client.sendRequests();

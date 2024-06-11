@@ -5,12 +5,12 @@
 ** Msz
 */
 
-#include "Handler/Command/CommandProtocol/Msz.hpp"
+#include "Msz.hpp"
 
-void gui::Msz::send(std::string command, ntw::Client &client)
+void gui::Msz::stage(ntw::Client &client, std::string command)
 {
-    client.queueRequest(command + "\n");
-    client.sendRequests();
+    (void)command;
+    client.queueRequest("msz\n");
 }
 
 void gui::Msz::receive(std::string command, GameData &gameData)

@@ -13,19 +13,19 @@
 #include <functional>
 #include <unordered_map>
 #include "ACommand.hpp"
-#include "CommandProtocol/Msz.hpp"
-#include "CommandProtocol/Bct.hpp"
-#include "CommandProtocol/Tna.hpp"
-#include "CommandProtocol/Pex.hpp"
-#include "CommandProtocol/Seg.hpp"
-#include "CommandProtocol/Pnw.hpp"
-#include "CommandProtocol/Ppo.hpp"
-#include "CommandProtocol/Plv.hpp"
-#include "CommandProtocol/Pin.hpp"
-#include "CommandProtocol/Pic.hpp"
-#include "CommandProtocol/Pie.hpp"
-#include "CommandProtocol/Pdi.hpp"
-#include "CommandProtocol/Edi.hpp"
+#include "Msz.hpp"
+#include "Bct.hpp"
+#include "Tna.hpp"
+#include "Pex.hpp"
+#include "Seg.hpp"
+#include "Pnw.hpp"
+#include "Ppo.hpp"
+#include "Plv.hpp"
+#include "Pin.hpp"
+#include "Pic.hpp"
+#include "Pie.hpp"
+#include "Pdi.hpp"
+#include "Edi.hpp"
 
 namespace gui {
     class GameDataManager {

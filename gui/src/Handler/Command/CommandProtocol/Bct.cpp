@@ -5,9 +5,9 @@
 ** Bct
 */
 
-#include "Handler/Command/CommandProtocol/Bct.hpp"
+#include "Bct.hpp"
 
-void gui::Bct::send(std::string command, ntw::Client &client)
+void gui::Bct::stage(ntw::Client &client, std::string command)
 {
     client.queueRequest(command + "\n");
     client.sendRequests();

@@ -5,9 +5,9 @@
 ** Pic
 */
 
-#include "Handler/Command/CommandProtocol/Pic.hpp"
+#include "Pic.hpp"
 
-void gui::Pic::send(std::string command, ntw::Client &client)
+void gui::Pic::stage(ntw::Client &client, std::string command)
 {
     (void)command;
     (void)client;

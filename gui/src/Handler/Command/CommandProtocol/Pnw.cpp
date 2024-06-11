@@ -5,9 +5,9 @@
 ** Pnw
 */
 
-#include "Handler/Command/CommandProtocol/Pnw.hpp"
+#include "Pnw.hpp"
 
-void gui::Pnw::send(std::string command, ntw::Client &client)
+void gui::Pnw::stage(ntw::Client &client, std::string command)
 {
     (void)command;
     (void)client;
