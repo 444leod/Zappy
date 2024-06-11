@@ -11,6 +11,11 @@
 #include "server_info.h"
 #include "linked_lists.h"
 
+/**
+ * @brief Adds teams eggs to the map in a randomly distributed way.
+ * @param map The map to add teams eggs to.
+ * @param teams The list of teams.
+ */
 static void add_eggs(const map_t map, team_list_t teams)
 {
     position_t pos = { 0, 0 };
@@ -26,6 +31,10 @@ static void add_eggs(const map_t map, team_list_t teams)
     }
 }
 
+/**
+ * @brief Adds thystame to the map in an randomly distributed way.
+ * @param map The map to add thystame to.
+ */
 static void add_thystame(const map_t map)
 {
     position_t pos = { 0, 0 };
@@ -42,6 +51,10 @@ static void add_thystame(const map_t map)
     DEBUG_PRINT(" OK!\n");
 }
 
+/**
+ * @brief Adds phiras to the map in an randomly distributed way.
+ * @param map The map to add phiras to.
+ */
 static void add_phiras(const map_t map)
 {
     position_t pos = { 0, 0 };
@@ -58,6 +71,10 @@ static void add_phiras(const map_t map)
     DEBUG_PRINT(" OK!\n");
 }
 
+/**
+ * @brief Adds mendiane to the map in an randomly distributed way.
+ * @param map The map to add mendiane to.
+ */
 static void add_mendiane(const map_t map)
 {
     position_t pos = { 0, 0 };
@@ -74,6 +91,10 @@ static void add_mendiane(const map_t map)
     DEBUG_PRINT(" OK!\n");
 }
 
+/**
+ * @brief Adds sibur to the map in an randomly distributed way.
+ * @param map The map to add sibur to.
+ */
 static void add_sibur(const map_t map)
 {
     position_t pos = { 0, 0 };
@@ -90,6 +111,10 @@ static void add_sibur(const map_t map)
     DEBUG_PRINT(" OK!\n");
 }
 
+/**
+ * @brief Adds deraumere to the map in an randomly distributed way.
+ * @param map The map to add deraumere to.
+ */
 static void add_deraumere(const map_t map)
 {
     position_t pos = { 0, 0 };
@@ -106,6 +131,10 @@ static void add_deraumere(const map_t map)
     DEBUG_PRINT(" OK!\n");
 }
 
+/**
+ * @brief Adds linemate to the map in an randomly distributed way.
+ * @param map The map to add linemate to.
+ */
 static void add_linemate(const map_t map)
 {
     position_t pos = { 0, 0 };
@@ -122,6 +151,10 @@ static void add_linemate(const map_t map)
     DEBUG_PRINT(" OK!\n");
 }
 
+/**
+ * @brief Adds food to the map in an randomly distributed way.
+ * @param map The map to add food to.
+ */
 static void add_food(const map_t map)
 {
     position_t pos = { 0, 0 };
