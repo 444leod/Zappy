@@ -9,8 +9,12 @@
 
 void gui::Plv::stage(ntw::Client &client, std::string parameters)
 {
-    client.queueRequest(parameters + "\n");
-    client.sendRequests();
+    std::istringstream iss(parameters);
+    std::uint32_t playerLevel;
+
+    iss >> playerLevel;
+
+    client.queueRequest("plv " + std::to_string(playerLevel));
 }
 
 void gui::Plv::receive(std::string command, GameData &gameData)
