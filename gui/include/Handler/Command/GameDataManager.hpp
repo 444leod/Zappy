@@ -29,6 +29,7 @@
 #include "Pgt.hpp"
 #include "Pbc.hpp"
 #include "Enw.hpp"
+#include "Mct.hpp"
 
 namespace gui {
     class GameDataManager {
@@ -60,7 +61,8 @@ namespace gui {
                 {"pdr", std::make_shared<Pdr>()},
                 {"pgt", std::make_shared<Pgt>()},
                 {"pbc", std::make_shared<Pbc>()},
-                {"enw", std::make_shared<Enw>()}
+                {"enw", std::make_shared<Enw>()},
+                {"mct", std::make_shared<Mct>()}
             };
     };
 }
