@@ -61,7 +61,6 @@ Test(auth, valid_ai_team_name)
     client_t client = create_client(0);
     client->packetQueue = NULL;
     char *args[] = {"team1", NULL};
-    cr_assert(0 == 0);
 
     auth(args, client, server_info);
     cr_assert(client->team != NULL);
