@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-from src.connection_handler import ConnectionHandler
-from src.config import Config, HelpException, ArgError
-import src.commands as cmd
+from ai_src.connection_handler import ConnectionHandler
+from ai_src.config import Config, HelpException, ArgError
+import ai_src.commands as cmd
 import sys
 
 # Dummy script to test the use the broadcast command as a client
