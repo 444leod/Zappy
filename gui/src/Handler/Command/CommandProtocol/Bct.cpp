@@ -26,6 +26,8 @@ void gui::Bct::receive(std::string command, GameData &gameData)
 
     iss >> token >> x >> y >> food >> linemate >> deraumere >> sibur >> mendiane >> phiras >> thystame;
 
+    if (x >= gameData.mapRef().mapSize().x() || y >= gameData.mapRef().mapSize().y())
+        throw std::invalid_argument("Invalid tile coordinates, out of map bounds.");
     Vector2u coordinates(x, y);
     TileContent tileContent;
 
