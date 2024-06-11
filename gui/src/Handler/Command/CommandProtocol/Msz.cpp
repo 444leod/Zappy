@@ -17,10 +17,12 @@ void gui::Msz::receive(std::string command, GameData &gameData)
 {
     std::istringstream iss(command);
     std::string token;
-    std::uint32_t width, height;
+    std::uint32_t x, y;
 
-    iss >> token >> width >> height;
-    Vector2u mapSize(width, height);
+    iss >> token >> x >> y;
+    Vector2u mapSize(x, y);
 
+    if (x >= gameData.mapRef().mapSize().x() || y >= gameData.mapRef().mapSize().y())
+        throw std::invalid_argument("Invalid tile coordinates, out of map bounds.");
     gameData.mapRef().setMapSize(mapSize);
 }
