@@ -24,8 +24,8 @@ void gui::Seg::receive(std::string command, GameData &gameData)
     for (std::size_t i = 0; i < gameData.teamNames().size(); i++) {
         if (gameData.teamNames()[i] == teamName) {
             // gameData.teamNames()[i].setIsDead(true);
-            gameData.teamNames().erase(gameData.teamNames().begin() + i);
             break;
-        }
+        } else
+            throw std::runtime_error("Team not found");
     }
 }
