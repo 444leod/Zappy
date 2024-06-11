@@ -80,16 +80,24 @@ __SRC_UTILS := queue_buffer.c \
 # Unit tests sources
 # =============================================================================
 
+__TEST_PATH := ../tests/server/src/
+
 __TEST_SRC	= \
 	$(__SRC) \
-	$(addprefix ../tests/server/test_, $(__SRC_ROOT_TEST)) \
-	$(addprefix ../tests/server/commands/test_, $(__SRC_COMMANDS_TEST)) \
-	$(addprefix ../tests/server/utils/test_, $(__SRC_UTILS_TEST)) \
+	../tests/server/test_global_utils.c \
+	$(addprefix $(__TEST_PATH)test_, $(__SRC_ROOT_TEST)) \
+	$(addprefix $(__TEST_PATH)commands/test_, $(__SRC_COMMANDS_TEST)) \
+	$(addprefix $(__TEST_PATH)commands/graphical/test_
+		$(__SRC_GRAPHICAL_TEST)) \
+	$(addprefix $(__TEST_PATH)utils/test_, $(__SRC_UTILS_TEST)) \
 
 __SRC_ROOT_TEST := utils.c \
 	client.c
 
 __SRC_COMMANDS_TEST := auth.c \
+
+__SRC_GRAPHICAL_TEST := msz.c \
+	# bct.c \
 
 __SRC_UTILS_TEST := get_map.c \
 
@@ -110,7 +118,8 @@ __TESTER_SRC := tests/tester.cpp \
 __CC = gcc
 __CFLAGS += -Wall -Wextra -Werror -Wpedantic
 __CFLAGS += -I./include -L. -lmy -lnetwork -luuid
-__TEST_FLAGS = $(__CFLAGS) --coverage -lcriterion -I../tests/server -I../tests
+__TEST_FLAGS = $(__CFLAGS) --coverage -lcriterion \
+	-I../tests/server -I../tests -I../tests/server/src
 
 %.o: %.c
 	@$(__CC) -c -o $@ $< $(__CFLAGS)

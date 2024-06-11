@@ -5,7 +5,7 @@
 ** authentification tests
 */
 
-#include "testing.h"
+#include "source_header.h"
 #include <sys/wait.h>
 #include "zappy.h"
 #include "commands.h"
