@@ -102,7 +102,8 @@ class Bot():
 
     def handle_commands_sent(self) -> None:
         # Handle the command sent
-        match self.cmd_sent[-1]:
+        cmd_sent: str = self.cmd_sent[-1].split(" ")[0]
+        match cmd_sent:
             case "Inventory":
                 self.player_info.inv = Collectibles(**(cmd.Inventory().interpret_result(self.results[-1])))
             case "Look":
@@ -119,6 +120,9 @@ class Bot():
                 self.player_info.orientation = turn_right(self.player_info.orientation)
             case "Left":
                 self.player_info.orientation = turn_left(self.player_info.orientation)
+            case "Broadcast":
+                self.messages_sent.append(cmd_sent)
+        
             
 
 def main() -> None:
