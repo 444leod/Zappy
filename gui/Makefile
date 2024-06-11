@@ -43,6 +43,7 @@ __SRC_COMMAND_HANDLING := GameDataManager.cpp \
 	CommandProtocol/Pbc.cpp \
 	CommandProtocol/Enw.cpp \
 	CommandProtocol/Mct.cpp \
+	CommandProtocol/Ebo.cpp \
 
 %.o: %.cpp
 	@$(__CC) -c -o $@ $< $(__CXXFLAGS)
