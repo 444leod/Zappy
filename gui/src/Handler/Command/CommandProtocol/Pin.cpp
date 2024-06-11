@@ -24,10 +24,11 @@ void gui::Pin::receive(std::string command, GameData &gameData)
     std::string token;
     std::uint32_t playerId;
     std::uint32_t x, y;
-    std::uint32_t food;
-    std::uint32_t linemate, deraumere, sibur, mendiane, phiras, thystame;
+    std::uint32_t linemate, deraumere, sibur, mendiane, phiras, thystame, food;
 
     iss >> token >> playerId >> x >> y >> food >> linemate >> deraumere >> sibur >> mendiane >> phiras >> thystame;
+    if (x >= gameData.mapRef().mapSize().x() || y >= gameData.mapRef().mapSize().y())
+        throw std::invalid_argument("Invalid tile coordinates, out of map bounds.");
     Vector2u pos(x, y);
     Character player;
     Rocks rocks;
@@ -39,6 +40,11 @@ void gui::Pin::receive(std::string command, GameData &gameData)
     rocks.phiras.setQuantity(phiras);
     rocks.thystame.setQuantity(thystame);
 
-    gameData.players().at(playerId)->setFood(food);
-    gameData.players().at(playerId)->setRocks(rocks);
+    if (!gameData.playerExists(playerId))
+        throw std::runtime_error("Player does not exist in the game data.");
+    if (gameData.players().at(playerId)->position() == pos) {
+        gameData.players().at(playerId)->setFood(food);
+        gameData.players().at(playerId)->setRocks(rocks);
+    } else
+        throw std::runtime_error("Player position does not match the position in the game data.");
 }
