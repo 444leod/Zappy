@@ -51,10 +51,10 @@ namespace gui {
         return it != this->_players.end();
     }
 
-    bool GameData::teamExists(std::string teamName) const
+    bool GameData::teamExists(const std::string& teamName) const
     {
         auto it = std::find_if(this->_teamNames.begin(), this->_teamNames.end(),
-            [teamName](const auto& team){ return team.name() == teamName; });
+            [teamName](const auto& team){ return team == teamName; });
 
         return it != this->_teamNames.end();
     }

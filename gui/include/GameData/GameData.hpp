@@ -114,7 +114,7 @@ namespace gui {
              * @param teamName The team name
              * @return bool True if the team exists, false otherwise
             */
-            bool teamExists(std::string teamName) const;
+            bool teamExists(const std::string &teamName) const;
 
             /**
              * @brief check if the given egg id exists
