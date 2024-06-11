@@ -78,7 +78,7 @@ class Bot():
     def run(self) -> None:
         while True:
             # Behavior logic here, send one command at a time!!
-            cmd_to_send: cmd.ACommand = cmd.Look()
+            cmd_to_send: cmd.ACommand = cmd.ConnectNbr()
             self.cmd_sent.append(cmd_to_send.dump())
             self.com_handler.send_command(cmd_to_send.dump())
 
@@ -121,7 +121,17 @@ class Bot():
             case "Left":
                 self.player_info.orientation = turn_left(self.player_info.orientation)
             case "Broadcast":
-                self.messages_sent.append(cmd_sent)
+                self.messages_sent.append(cmd.Broadcast().interpret_result(self.results[-1]))
+            case "Connect_nbr":
+                cmd.ConnectNbr().interpret_result(self.results[-1])
+            case "Eject":
+                try :
+                    cmd.Eject().interpret_result(self.results[-1])
+                    self.map[self.player_info.pos].nb_player = 1
+                except Exception:
+                    pass
+            case _:
+                pass
         
             
 

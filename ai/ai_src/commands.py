@@ -89,8 +89,12 @@ class Broadcast(ACommand):
 class ConnectNbr(ACommand):
     def __init__(self) -> None:
         super().__init__("Connect_nbr")
-    
-    #TODO: interpret_result to change nb_eggs
+
+    def interpret_result(self, res: str) -> int:
+        super().interpret_result(res)
+        print("hihi", res)
+        return int(res)
+
 
 class Fork(ACommand):
     def __init__(self) -> None:
@@ -101,6 +105,9 @@ class Fork(ACommand):
 class Eject(ACommand):
     def __init__(self) -> None:
         super().__init__("Eject")
+
+    def interpret_result(self, res: str) -> dict:
+        return super().interpret_result(res)
 
 class Take(ACommand):
     def __init__(self, obj) -> None:
