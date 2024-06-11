@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** zappy
 ** File description:
-** ACommand
+** ICommand
 */
 
 #pragma once
@@ -13,7 +13,7 @@
 #include "GameData.hpp"
 
 namespace gui {
-    class ACommand {
+    class ICommand {
         public:
             virtual void stage(ntw::Client &client, std::string parameters = "") = 0;
             virtual void receive(std::string command, GameData &gameData) = 0;

@@ -12,7 +12,6 @@
 #include <sstream>
 #include <functional>
 #include <unordered_map>
-#include "ACommand.hpp"
 #include "Msz.hpp"
 #include "Bct.hpp"
 #include "Tna.hpp"
@@ -44,7 +43,7 @@ namespace gui {
             std::uint32_t _port;
             GameData _gameData;
             ntw::Client _client;
-            std::unordered_map<std::string, std::shared_ptr<ACommand>> _responseHandlers = {
+            std::unordered_map<std::string, std::shared_ptr<ICommand>> _responseHandlers = {
                 {"msz", std::make_shared<Msz>()},
                 {"bct", std::make_shared<Bct>()},
                 {"tna", std::make_shared<Tna>()},

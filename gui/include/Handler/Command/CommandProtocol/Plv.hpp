@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "../ACommand.hpp"
+#include "../ICommand.hpp"
 
 namespace gui {
-    class Plv : public ACommand {
+    class Plv : public ICommand {
         public:
             /**
              * @brief Stage the command

@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "../ACommand.hpp"
+#include "../ICommand.hpp"
 
 namespace gui {
-    class Pin : public ACommand {
+    class Pin : public ICommand {
         public:
             /**
              * @brief Stage the command
