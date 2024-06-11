@@ -13,19 +13,6 @@ void gui::Ppo::stage(ntw::Client &client, std::string command)
     client.sendRequests();
 }
 
-gui::Orientation gui::Ppo::getOrientationFromStr(std::string orientation)
-{
-    if (orientation == "NORTH")
-        return gui::Orientation::NORTH;
-    if (orientation == "EAST")
-        return gui::Orientation::EAST;
-    if (orientation == "SOUTH")
-        return gui::Orientation::SOUTH;
-    if (orientation == "WEST")
-        return gui::Orientation::WEST;
-    return gui::Orientation::NORTH;
-}
-
 void gui::Ppo::receive(std::string command, GameData &gameData)
 {
     std::istringstream iss(command);
@@ -33,8 +20,16 @@ void gui::Ppo::receive(std::string command, GameData &gameData)
     std::uint32_t playerId;
     std::uint32_t x, y;
     std::string orientation;
+    Orientation playerOrientation;
 
     iss >> token >> playerId >> x >> y >> orientation;
+
+    auto it = _orientationMap.find(orientation);
+    if (it != _orientationMap.end())
+        playerOrientation = it->second;
+    else
+        throw std::invalid_argument("Invalid orientation: " + orientation);
+
     gameData.players().at(playerId)->setPosition(Vector2u(x, y));
-    gameData.players().at(playerId)->setOrientation(getOrientationFromStr(orientation));
+    gameData.players().at(playerId)->setOrientation(playerOrientation);
 }

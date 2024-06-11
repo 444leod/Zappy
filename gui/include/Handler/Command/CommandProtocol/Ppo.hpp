@@ -16,11 +16,11 @@ namespace gui {
             void receive(std::string command, GameData &gameData) override;
 
         private:
-            /**
-             * @brief get the orientation based on a string
-             * @param orientation The orientation
-             * @return Orientation The orientation
-            */
-            Orientation getOrientationFromStr(std::string orientation);
+            std::map<std::string, Orientation> _orientationMap = {
+                {"NORTH", Orientation::NORTH},
+                {"EAST", Orientation::EAST},
+                {"SOUTH", Orientation::SOUTH},
+                {"WEST", Orientation::WEST}
+            };
     };
 }
