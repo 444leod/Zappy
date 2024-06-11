@@ -12,7 +12,7 @@
 
 /**
  * @brief bct command
- * @details Get the size of the map
+ * @details Send the content of a tile to a client
  *
  * @param args the arguments of the command
  * @param client the client that executed the command
