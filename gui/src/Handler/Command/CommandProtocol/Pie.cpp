@@ -22,5 +22,10 @@ void gui::Pie::receive(std::string command, GameData &gameData)
     std::uint32_t result;
 
     iss >> token >> x >> y >> result;
+
+    if (x >= gameData.mapRef().mapSize().x() || y >= gameData.mapRef().mapSize().y())
+        throw std::invalid_argument("Invalid tile coordinates, out of map bounds.");
+    if (result != 1 || result != 0)
+        throw std::invalid_argument("Invalid incantation result.");
     // gameData.setIncantationResult(Vetcor2u(x, y), result);
 }
