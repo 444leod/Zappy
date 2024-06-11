@@ -9,8 +9,12 @@
 
 void gui::Ppo::stage(ntw::Client &client, std::string parameters)
 {
-    client.queueRequest(parameters + "\n");
-    client.sendRequests();
+    std::istringstream iss(parameters);
+    std::uint32_t playerId;
+
+    iss >> playerId;
+
+    client.queueRequest("ppo " + std::to_string(playerId));
 }
 
 void gui::Ppo::receive(std::string command, GameData &gameData)
@@ -24,12 +28,17 @@ void gui::Ppo::receive(std::string command, GameData &gameData)
 
     iss >> token >> playerId >> x >> y >> orientation;
 
+    if (!gameData.playerExists(playerId))
+        throw std::runtime_error("Player does not exist in the game data.");
+
+    if (x >= gameData.mapRef().mapSize().x() || y >= gameData.mapRef().mapSize().y())
+        throw std::invalid_argument("Player position is out of bounds.");
+    gameData.players().at(playerId)->setPosition(Vector2u(x, y));
+
     auto it = _orientationMap.find(orientation);
     if (it != _orientationMap.end())
         playerOrientation = it->second;
     else
         throw std::invalid_argument("Invalid orientation: " + orientation);
-
-    gameData.players().at(playerId)->setPosition(Vector2u(x, y));
     gameData.players().at(playerId)->setOrientation(playerOrientation);
 }
