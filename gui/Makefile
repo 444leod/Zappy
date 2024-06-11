@@ -52,7 +52,8 @@ __CC = g++
 
 __CXXFLAGS += -Wall -Wextra -Werror -Wpedantic
 __CXXFLAGS += -lsfml-network -lsfml-system
-__CXXFLAGS += -I./include -I./src/network -I./include/GameData -I./include/Handler/Command/CommandProtocol
+__CXXFLAGS += -I./include -I./src/network -I./include/GameData
+__CXXFLAGS += -I./include/Handler/Command/CommandProtocol
 
 all: $(__NAME)
 
