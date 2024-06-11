@@ -20,7 +20,7 @@
 void left(UNUSED char **args, client_t client,
     UNUSED server_info_t serverInfo)
 {
-    const char *msg = "ok\n";
+    const char *msg = "ok";
     packet_t *packet = build_packet(msg);
 
     client->player->orientation = ((client->player->orientation - 2) % 4) + 1;
