@@ -10,7 +10,7 @@
 void gui::Tna::stage(ntw::Client &client, std::string parameters)
 {
     (void)parameters;
-    client.queueRequest("tna\n");
+    client.queueRequest("tna");
 }
 
 void gui::Tna::receive(std::string command, GameData &gameData)
