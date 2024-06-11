@@ -6,6 +6,7 @@ from ai_src.connection_handler import ConnectionHandler
 from ai_src.config import Config, HelpException, ArgError
 from ai_src.data import PlayerInfo, GeneralInfo, Orientation, Collectibles, Map, TileContent
 import ai_src.commands as cmd
+from ai_src.utiles import add_tuples, turn_left, turn_right
 
 class Bot():
     def __init__(self, verbose=False, traced=False) -> None:
@@ -101,18 +102,24 @@ class Bot():
 
     def handle_commands_sent(self) -> None:
         # Handle the command sent
-        if (self.cmd_sent[-1] == cmd.Inventory().dump()):
-            self.player_info.inv = Collectibles(**(cmd.Inventory().interpret_result(self.results[-1])))
-        
-        if (self.cmd_sent[-1] == cmd.Look().dump()):
-            self.map.vision_update(
-                cmd.Look().interpret_result(self.results[-1]),
-                self.player_info.orientation,
-                self.player_info.pos
-            )
-            self.log(self.map)
-        
-        #TODO: Handle other commands
+        match self.cmd_sent[-1]:
+            case "Inventory":
+                self.player_info.inv = Collectibles(**(cmd.Inventory().interpret_result(self.results[-1])))
+            case "Look":
+                self.map.vision_update(
+                    cmd.Look().interpret_result(self.results[-1]),
+                    self.player_info.orientation,
+                    self.player_info.pos
+                )
+            case "Forward":
+                self.map[self.player_info.pos].nb_players -= 1
+                self.player_info.pos = add_tuples(self.player_info.pos, self.player_info.orientation.value)
+                self.map[self.player_info.pos].nb_players += 1
+            case "Right": 
+                self.player_info.orientation = turn_right(self.player_info.orientation)
+            case "Left":
+                self.player_info.orientation = turn_left(self.player_info.orientation)
+            
 
 def main() -> None:
     bot = Bot(
