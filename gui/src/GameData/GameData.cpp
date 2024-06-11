@@ -50,4 +50,20 @@ namespace gui {
 
         return it != this->_players.end();
     }
+
+    bool GameData::teamExists(std::string teamName) const
+    {
+        auto it = std::find_if(this->_teamNames.begin(), this->_teamNames.end(),
+            [teamName](const auto& team){ return team.name() == teamName; });
+
+        return it != this->_teamNames.end();
+    }
+
+    bool GameData::eggExists(std::uint32_t eggId) const
+    {
+        auto it = std::find_if(this->_eggs.begin(), this->_eggs.end(),
+            [eggId](const auto& egg){ return egg->id() == eggId; });
+
+        return it != this->_eggs.end();
+    }
 }

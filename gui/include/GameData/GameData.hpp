@@ -109,6 +109,20 @@ namespace gui {
             */
             bool playerExists(std::uint32_t playerId) const;
 
+            /**
+             * @brief check if the given team name exists
+             * @param teamName The team name
+             * @return bool True if the team exists, false otherwise
+            */
+            bool teamExists(std::string teamName) const;
+
+            /**
+             * @brief check if the given egg id exists
+             * @param eggId The egg id
+             * @return bool True if the egg exists, false otherwise
+            */
+            bool eggExists(std::uint32_t eggId) const;
+
         private:
             std::vector<std::string> _teamNames = {};
             Map _map;
