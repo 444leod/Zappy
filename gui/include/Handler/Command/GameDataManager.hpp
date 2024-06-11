@@ -27,6 +27,7 @@
 #include "Pdi.hpp"
 #include "Edi.hpp"
 #include "Pdr.hpp"
+#include "Pgt.hpp"
 
 namespace gui {
     class GameDataManager {
@@ -55,7 +56,8 @@ namespace gui {
                 {"pie", std::make_shared<Pie>()},
                 {"pdi", std::make_shared<Pdi>()},
                 {"edi", std::make_shared<Edi>()},
-                {"pdr", std::make_shared<Pdr>()}
+                {"pdr", std::make_shared<Pdr>()},
+                {"pgt", std::make_shared<Pgt>()}
             };
     };
 }
