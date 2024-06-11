@@ -13,6 +13,7 @@
 #include <functional>
 #include <unordered_map>
 #include "ACommand.hpp"
+#include "CommandProtocol/Msz.hpp"
 #include "CommandProtocol/Bct.hpp"
 #include "CommandProtocol/Tna.hpp"
 #include "CommandProtocol/Pex.hpp"
