@@ -28,6 +28,7 @@
 #include "Edi.hpp"
 #include "Pdr.hpp"
 #include "Pgt.hpp"
+#include "Pbc.hpp"
 
 namespace gui {
     class GameDataManager {
