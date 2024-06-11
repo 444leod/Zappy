@@ -21,5 +21,7 @@ void gui::Edi::receive(std::string command, GameData &gameData)
     std::uint32_t eggId;
 
     iss >> token >> eggId;
+    if (!gameData.eggExists(eggId))
+        throw std::invalid_argument("Egg does not exist");
     // gameData.eggs().at(eggId).setIsDead(true);
 }
