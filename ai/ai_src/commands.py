@@ -63,9 +63,9 @@ class Look(ACommand):
         n: int = 1
         key: int = 0
         while tab:
-            vision[str(key)] = []
+            vision[key] = []
             for _ in range(n):
-                vision[str(key)].append(str_to_tile(tab.pop(0)))
+                vision[key].append(str_to_tile(tab.pop(0)))
             n += 2
             key += 1
         #!!! THE REVERSE TRICK

@@ -47,7 +47,7 @@ class Map():
 
     def vision_update(
         self,
-        vision: dict[str, TileContent],
+        vision: dict[int, TileContent],
         orientation: Orientation,
         player_pos: tuple[int, int]
     ) -> None:
@@ -63,15 +63,15 @@ class Map():
                 vision[key].reverse()
 
         for key, content in vision.items():
-            distance = int(key)
-            for i, tile_content in enumerate(content): #ALL INPUT IS REVERSED
-                if orientation == Orientation.NORTH: #Works by subject standard
+            distance = key
+            for i, tile_content in enumerate(content):
+                if orientation == Orientation.NORTH:
                     new_pos = (player_pos[0] - distance, player_pos[1] - (distance - i))
-                elif orientation == Orientation.SOUTH: #Works by subject standard
+                elif orientation == Orientation.SOUTH:
                     new_pos = (player_pos[0] + distance, player_pos[1] + (distance - i))
-                elif orientation == Orientation.WEST: #Does not work by subject standard
+                elif orientation == Orientation.WEST:
                     new_pos = (player_pos[0] - (distance - i), player_pos[1] - distance)
-                elif orientation == Orientation.EAST: #Does not work by subject standard
+                elif orientation == Orientation.EAST:
                     new_pos = (player_pos[0] + (distance - i), player_pos[1] + distance)
                 new_pos = (new_pos[0] % max_row, new_pos[1] % max_col)
                 update_tile(new_pos, tile_content)
