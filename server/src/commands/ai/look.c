@@ -135,10 +135,8 @@ void look(UNUSED char **args, client_t client, server_info_t serverInfo)
 {
     tile_list_t tiles = get_vision_tiles(client->player, serverInfo->map);
     const char *vision = format_vision(tiles);
-    char *msg = my_strdup(vision);
-    packet_t *packet = build_packet(msg);
+    packet_t *packet = build_packet(vision);
 
     my_free((void *)tiles);
-    my_free((void *)vision);
     add_packet_to_queue(&client->packetQueue, packet);
 }

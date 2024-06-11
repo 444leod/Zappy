@@ -38,6 +38,7 @@ void forward(ARGS);
 void right(ARGS);
 void left(ARGS);
 void look(ARGS);
+void inventory(ARGS);
 
 ///////////////////////////////////////////////////////////////////////////////
 // OTHER COMMANDS

@@ -47,6 +47,7 @@ __SRC_AI := forward.c \
 	right.c \
 	left.c \
 	look.c \
+	inventory.c \
 
 __SRC_GAME := \
 	create_map.c \
