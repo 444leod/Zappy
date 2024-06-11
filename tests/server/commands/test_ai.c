@@ -8,6 +8,7 @@
 #include "testing.h"
 #include "commands.h"
 #include "clients.h"
+#include "lib.h"
 
 Test(ai_commands, forward_north)
 {
@@ -137,5 +138,5 @@ Test(ai_commands, vision_level1)
     look(NULL, &client, &server);
     char *result = client.packetQueue->packet->buffer;
     cr_assert(result != NULL);
-    cr_assert_str_eq(result, "[player, , food linemate, ]");
+    cr_assert_str_eq(result, "[player,,food linemate,]");
 }

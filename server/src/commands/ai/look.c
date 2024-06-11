@@ -64,32 +64,11 @@ static tile_list_t get_vision_tiles(const player_t player, const map_t map)
     return list;
 }
 
-/**
- * @brief Appends a suffix to a string.
- * It there is content in the string, separates with a separator
- *
- * @param str The string to append to
- * @param suf The suffix to append
- * @param sep The potential separator
- * @return A newly allocated string
- */
-static char *append_to_string(char *str, const char *suf, const char *sep)
+static char *replace(char **old, char *new)
 {
-    size_t strLen = strlen(str);
-    size_t sufLen = strlen(suf);
-    size_t sepLen = strlen(sep);
-    size_t size = 1 + strLen + sufLen + (strLen > 0 ? sepLen : 0);
-    char *result = malloc(size);
-
-    result[0] = 0;
-    result[size] = 0;
-    strcat(result, str);
-    if (strLen > 0) {
-        strcat(result, sep);
-        free(str);
-    }
-    strcat(result, suf);
-    return result;
+    my_free(*old);
+    *old = new;
+    return *old;
 }
 
 /**
@@ -100,24 +79,24 @@ static char *append_to_string(char *str, const char *suf, const char *sep)
  */
 static char *format_tile_content(const tile_t tile)
 {
-    char *str = "";
+    char *str = my_strdup("");
 
     for (uint32_t i = 0; i < get_list_size((node_t)tile->players); i++)
-        str = append_to_string(str, "player", " ");
+        replace(&str, supercat(3, str, (!*str ? "" : " "), "player"));
     for (uint32_t i = 0; i < tile->food; i++)
-        str = append_to_string(str, "food", " ");
+        replace(&str, supercat(3, str, (!*str ? "" : " "), "food"));
     for (uint32_t i = 0; i < tile->rocks.linemate; i++)
-        str = append_to_string(str, "linemate", " ");
+        replace(&str, supercat(3, str, (!*str ? "" : " "), "linemate"));
     for (uint32_t i = 0; i < tile->rocks.deraumere; i++)
-        str = append_to_string(str, "deraumere", " ");
+        replace(&str, supercat(3, str, (!*str ? "" : " "), "deraumere"));
     for (uint32_t i = 0; i < tile->rocks.sibur; i++)
-        str = append_to_string(str, "sibur", " ");
+        replace(&str, supercat(3, str, (!*str ? "" : " "), "sibur"));
     for (uint32_t i = 0; i < tile->rocks.mendiane; i++)
-        str = append_to_string(str, "mendiane", " ");
+        replace(&str, supercat(3, str, (!*str ? "" : " "), "mendiane"));
     for (uint32_t i = 0; i < tile->rocks.phiras; i++)
-        str = append_to_string(str, "phiras", " ");
+        replace(&str, supercat(3, str, (!*str ? "" : " "), "phiras"));
     for (uint32_t i = 0; i < tile->rocks.thystame; i++)
-        str = append_to_string(str, "thystame", " ");
+        replace(&str, supercat(3, str, (!*str ? "" : " "), "thystame"));
     return str;
 }
 
@@ -130,20 +109,18 @@ static char *format_tile_content(const tile_t tile)
 static char *format_vision(tile_list_t tiles)
 {
     char *suffix = NULL;
-    char *str = "";
+    char *str = my_strdup("[");
     uint32_t count = get_list_size((node_t)tiles);
 
-    str = append_to_string(str, "[", "");
     for (uint32_t i = 0; i < count; i++) {
         suffix = format_tile_content(tiles->tile);
-        str = append_to_string(str, suffix, "");
+        replace(&str, supercat(2, str, suffix));
+        my_free(suffix);
         if (i < count - 1)
-            str = append_to_string(str, ", ", "");
-        if (suffix[0] != 0)
-            free(suffix);
+            replace(&str, supercat(2, str, ","));
         tiles = tiles->next;
     }
-    return append_to_string(str, "]", "");
+    return replace(&str, supercat(2, str, "]"));
 }
 
 /**
@@ -162,6 +139,6 @@ void look(UNUSED char **args, client_t client, server_info_t serverInfo)
     packet_t *packet = build_packet(msg);
 
     my_free((void *)tiles);
-    free((void *)vision);
+    my_free((void *)vision);
     add_packet_to_queue(&client->packetQueue, packet);
 }
