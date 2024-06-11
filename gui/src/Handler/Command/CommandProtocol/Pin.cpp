@@ -42,9 +42,6 @@ void gui::Pin::receive(std::string command, GameData &gameData)
 
     if (!gameData.playerExists(playerId))
         throw std::invalid_argument("Player does not exist in the game data.");
-    if (gameData.players().at(playerId)->position() == pos) {
-        gameData.players().at(playerId)->setFood(food);
-        gameData.players().at(playerId)->setRocks(rocks);
-    } else
-        throw std::invalid_argument("Player position does not match the position in the game data.");
+    gameData.players().at(playerId)->setFood(food);
+    gameData.players().at(playerId)->setRocks(rocks);
 }
