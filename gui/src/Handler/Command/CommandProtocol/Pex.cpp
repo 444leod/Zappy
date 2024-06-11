@@ -7,9 +7,9 @@
 
 #include "Pex.hpp"
 
-void gui::Pex::stage(ntw::Client &client, std::string command)
+void gui::Pex::stage(ntw::Client &client, std::string parameters)
 {
-    (void)command;
+    (void)parameters;
     (void)client;
 }
 

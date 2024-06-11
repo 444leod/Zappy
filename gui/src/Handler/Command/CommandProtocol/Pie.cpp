@@ -7,9 +7,9 @@
 
 #include "Pie.hpp"
 
-void gui::Pie::stage(ntw::Client &client, std::string command)
+void gui::Pie::stage(ntw::Client &client, std::string parameters)
 {
-    (void)command;
+    (void)parameters;
     (void)client;
 }
 

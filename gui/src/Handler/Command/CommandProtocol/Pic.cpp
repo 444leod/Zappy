@@ -7,9 +7,9 @@
 
 #include "Pic.hpp"
 
-void gui::Pic::stage(ntw::Client &client, std::string command)
+void gui::Pic::stage(ntw::Client &client, std::string parameters)
 {
-    (void)command;
+    (void)parameters;
     (void)client;
 }
 

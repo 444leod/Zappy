@@ -7,9 +7,9 @@
 
 #include "Pin.hpp"
 
-void gui::Pin::stage(ntw::Client &client, std::string command)
+void gui::Pin::stage(ntw::Client &client, std::string parameters)
 {
-    client.queueRequest(command + "\n");
+    client.queueRequest(parameters + "\n");
     client.sendRequests();
 }
 

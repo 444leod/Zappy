@@ -7,9 +7,9 @@
 
 #include "Tna.hpp"
 
-void gui::Tna::stage(ntw::Client &client, std::string command)
+void gui::Tna::stage(ntw::Client &client, std::string parameters)
 {
-    (void)command;
+    (void)parameters;
     client.queueRequest("tna\n");
 }
 

@@ -7,9 +7,9 @@
 
 #include "Ppo.hpp"
 
-void gui::Ppo::stage(ntw::Client &client, std::string command)
+void gui::Ppo::stage(ntw::Client &client, std::string parameters)
 {
-    client.queueRequest(command + "\n");
+    client.queueRequest(parameters + "\n");
     client.sendRequests();
 }
 

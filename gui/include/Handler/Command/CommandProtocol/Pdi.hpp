@@ -12,7 +12,7 @@
 namespace gui {
     class Pdi : public ACommand {
         public:
-            void stage(ntw::Client &client, std::string command) override;
+            void stage(ntw::Client &client, std::string parameters = "") override;
             void receive(std::string command, GameData &gameData) override;
 
         protected:

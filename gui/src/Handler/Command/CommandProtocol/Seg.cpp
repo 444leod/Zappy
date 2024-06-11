@@ -7,9 +7,9 @@
 
 #include "Seg.hpp"
 
-void gui::Seg::stage(ntw::Client &client, std::string command)
+void gui::Seg::stage(ntw::Client &client, std::string parameters)
 {
-    (void)command;
+    (void)parameters;
     (void)client;
 }
 

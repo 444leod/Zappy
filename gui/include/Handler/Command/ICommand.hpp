@@ -18,7 +18,7 @@ namespace gui {
             ICommand() = default;
             ~ICommand() = default;
 
-            virtual void stage(ntw::Client &client, std::string command) = 0;
+            virtual void stage(ntw::Client &client, std::string parameters = "") = 0;
             virtual void receive(std::string command, GameData &gameData) = 0;
     };
 }

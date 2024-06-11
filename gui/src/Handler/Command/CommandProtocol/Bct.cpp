@@ -7,9 +7,9 @@
 
 #include "Bct.hpp"
 
-void gui::Bct::stage(ntw::Client &client, std::string command)
+void gui::Bct::stage(ntw::Client &client, std::string parameters)
 {
-    client.queueRequest(command + "\n");
+    client.queueRequest(parameters + "\n");
     client.sendRequests();
 }
 

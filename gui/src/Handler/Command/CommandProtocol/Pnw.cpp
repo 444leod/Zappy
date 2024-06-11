@@ -7,9 +7,9 @@
 
 #include "Pnw.hpp"
 
-void gui::Pnw::stage(ntw::Client &client, std::string command)
+void gui::Pnw::stage(ntw::Client &client, std::string parameters)
 {
-    (void)command;
+    (void)parameters;
     (void)client;
 }
 
@@ -31,6 +31,7 @@ void gui::Pnw::receive(std::string command, GameData &gameData)
         playerOrientation = it->second;
     else
         throw std::invalid_argument("Invalid orientation: " + orientation);
+    (void)playerOrientation;
     // gui::Character newPlayer;
     // newPlayer.setNewConnection(playerId, Vector2u(x, y), playerOrientation, level, teamName);
     // gameData.addPlayer(std::make_shared<gui::Character>(newPlayer));

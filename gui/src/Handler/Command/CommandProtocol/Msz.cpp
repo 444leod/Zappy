@@ -7,9 +7,9 @@
 
 #include "Msz.hpp"
 
-void gui::Msz::stage(ntw::Client &client, std::string command)
+void gui::Msz::stage(ntw::Client &client, std::string parameters)
 {
-    (void)command;
+    (void)parameters;
     client.queueRequest("msz\n");
 }
 

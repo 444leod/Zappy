@@ -7,9 +7,9 @@
 
 #include "Pdi.hpp"
 
-void gui::Pdi::stage(ntw::Client &client, std::string command)
+void gui::Pdi::stage(ntw::Client &client, std::string parameters)
 {
-    (void)command;
+    (void)parameters;
     (void)client;
 }
 
