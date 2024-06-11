@@ -23,17 +23,23 @@ typedef struct command_s {
     enum CLIENT_TYPE ClientType;
 } command_t;
 
-void msz(char **args, const client_t client,
-    const server_info_t serverInfo);
-
-void forward(char **args, const client_t client,
-    const server_info_t serverInfo);
-
 void unknown_command(char **args, const client_t client,
     const server_info_t serverInfo);
 
 void auth(char **args, const client_t client,
     const server_info_t serverInfo);
 
+void forward(char **args, const client_t client,
+    const server_info_t serverInfo);
+
+void msz(char **args, const client_t client,
+    const server_info_t serverInfo);
+
+void bct(char **args, const client_t client,
+    const server_info_t serverInfo);
+
 extern const command_t COMMANDS[];
 extern const command_t AUTHENTIFICATION_COMMAND;
+
+void send_tile_content(const client_t client, const server_info_t serverInfo,
+    const position_t pos);

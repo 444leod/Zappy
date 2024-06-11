@@ -42,8 +42,12 @@ __SRC_SRC := server.c \
 __SRC_COMMANDS := commands.c \
 	unknown_command.c \
 	auth.c \
+	utils.c \
 
 __SRC_AI := forward.c \
+
+__SRC_GRAPHICAL := msz.c \
+	bct.c \
 
 __SRC_GAME := \
 	create_map.c \
@@ -51,7 +55,6 @@ __SRC_GAME := \
 	manage_entities.c \
 	query_map.c \
 
-__SRC_GRAPHICAL := msz.c \
 
 __SRC_ARGS := params.c \
 	check_args.c \
@@ -87,7 +90,7 @@ __TEST_SRC	= \
 	../tests/server/test_global_utils.c \
 	$(addprefix $(__TEST_PATH)test_, $(__SRC_ROOT_TEST)) \
 	$(addprefix $(__TEST_PATH)commands/test_, $(__SRC_COMMANDS_TEST)) \
-	$(addprefix $(__TEST_PATH)commands/graphical/test_
+	$(addprefix $(__TEST_PATH)commands/graphical/test_, \
 		$(__SRC_GRAPHICAL_TEST)) \
 	$(addprefix $(__TEST_PATH)utils/test_, $(__SRC_UTILS_TEST)) \
 
@@ -97,7 +100,7 @@ __SRC_ROOT_TEST := utils.c \
 __SRC_COMMANDS_TEST := auth.c \
 
 __SRC_GRAPHICAL_TEST := msz.c \
-	# bct.c \
+	bct.c \
 
 __SRC_UTILS_TEST := get_map.c \
 
