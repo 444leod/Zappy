@@ -42,3 +42,21 @@ Test(ai_commands, forward_east_bounds)
     cr_assert(player.position.x == 0);
     cr_assert(player.position.y == 4);
 }
+
+Test(ai_commands, right_4_times)
+{
+    struct client_s client = { 0 };
+    struct player_s player = { 0 };
+
+    player.orientation = NORTH;
+    client.player = &player;
+
+    right(NULL, &client, NULL);
+    cr_assert(player.orientation == EAST);
+    right(NULL, &client, NULL);
+    cr_assert(player.orientation == SOUTH);
+    right(NULL, &client, NULL);
+    cr_assert(player.orientation == WEST);
+    right(NULL, &client, NULL);
+    cr_assert(player.orientation == NORTH);
+}

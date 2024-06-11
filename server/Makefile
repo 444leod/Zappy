@@ -44,6 +44,7 @@ __SRC_COMMANDS := commands.c \
 	auth.c \
 
 __SRC_AI := forward.c \
+	right.c \
 
 __SRC_GAME := \
 	create_map.c \
