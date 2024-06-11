@@ -37,6 +37,7 @@ void msz(ARGS);
 void forward(ARGS);
 void right(ARGS);
 void left(ARGS);
+void look(ARGS);
 
 ///////////////////////////////////////////////////////////////////////////////
 // OTHER COMMANDS

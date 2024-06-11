@@ -17,6 +17,11 @@ const command_t AUTHENTIFICATION_COMMAND = {NULL, &auth, 0, NONE};
 */
 const command_t COMMANDS[] = {
     {"msz", &msz, 0, GRAPHICAL},
+
     {"Forward", &forward, 7, AI},
+    {"Right", &right, 7, AI},
+    {"Left", &left, 7, AI},
+    {"Look", &look, 7, AI},
+
     {NULL, &unknown_command, 0, NONE}
 };
