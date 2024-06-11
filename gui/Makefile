@@ -38,6 +38,7 @@ __SRC_COMMAND_HANDLING := GameDataManager.cpp \
 	CommandProtocol/Pie.cpp \
 	CommandProtocol/Pdi.cpp \
 	CommandProtocol/Edi.cpp \
+	CommandProtocol/Pdr.cpp \
 
 %.o: %.cpp
 	@$(__CC) -c -o $@ $< $(__CXXFLAGS)
