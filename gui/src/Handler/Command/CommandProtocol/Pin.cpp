@@ -9,8 +9,12 @@
 
 void gui::Pin::stage(ntw::Client &client, std::string parameters)
 {
-    client.queueRequest(parameters + "\n");
-    client.sendRequests();
+    std::istringstream iss(parameters);
+    std::uint32_t playerId;
+
+    iss >> playerId;
+
+    client.queueRequest("pin " + std::to_string(playerId));
 }
 
 void gui::Pin::receive(std::string command, GameData &gameData)
