@@ -9,8 +9,12 @@
 
 void gui::Bct::stage(ntw::Client &client, std::string parameters)
 {
-    client.queueRequest(parameters + "\n");
-    client.sendRequests();
+    std::istringstream iss(parameters);
+    std::uint32_t x, y;
+
+    iss >> x >> y;
+
+    client.queueRequest("bct " + std::to_string(x) + " " + std::to_string(y));
 }
 
 void gui::Bct::receive(std::string command, GameData &gameData)
