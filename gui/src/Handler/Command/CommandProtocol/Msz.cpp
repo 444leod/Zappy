@@ -10,7 +10,7 @@
 void gui::Msz::stage(ntw::Client &client, std::string parameters)
 {
     (void)parameters;
-    client.queueRequest("msz\n");
+    client.queueRequest("msz");
 }
 
 void gui::Msz::receive(std::string command, GameData &gameData)
