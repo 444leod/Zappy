@@ -45,6 +45,7 @@ __SRC_COMMANDS := commands.c \
 
 __SRC_AI := forward.c \
 	right.c \
+	left.c \
 
 __SRC_GAME := \
 	create_map.c \

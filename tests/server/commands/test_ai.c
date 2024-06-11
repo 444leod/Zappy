@@ -60,3 +60,21 @@ Test(ai_commands, right_4_times)
     right(NULL, &client, NULL);
     cr_assert(player.orientation == NORTH);
 }
+
+Test(ai_commands, left_4_times)
+{
+    struct client_s client = { 0 };
+    struct player_s player = { 0 };
+
+    player.orientation = NORTH;
+    client.player = &player;
+
+    left(NULL, &client, NULL);
+    cr_assert(player.orientation == WEST);
+    left(NULL, &client, NULL);
+    cr_assert(player.orientation == SOUTH);
+    left(NULL, &client, NULL);
+    cr_assert(player.orientation == EAST);
+    left(NULL, &client, NULL);
+    cr_assert(player.orientation == NORTH);
+}
