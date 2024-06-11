@@ -40,7 +40,7 @@ void gui::Pnw::receive(std::string command, GameData &gameData)
     if (!gameData.teamExists(teamName))
         throw std::invalid_argument("Team does not exist in the game data.");
     (void)playerOrientation;
-    // gui::Character newPlayer;
-    // newPlayer.setNewConnection(playerId, Vector2u(x, y), playerOrientation, level, teamName);
-    // gameData.addPlayer(std::make_shared<gui::Character>(newPlayer));
+    // std::shared_ptr<gui::Character> newPlayer = std::make_shared<gui::Character>();
+    // newPlayer->setNewConnection(playerId, Vector2u(x, y), playerOrientation, level, teamName);
+    // gameData.addPlayer(newPlayer);
 }
