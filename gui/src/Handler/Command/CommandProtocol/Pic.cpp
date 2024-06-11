@@ -28,11 +28,11 @@ void gui::Pic::receive(std::string command, GameData &gameData)
         throw std::invalid_argument("Invalid tile coordinates, out of map bounds.");
     while (iss >> playerId) {
         if (!gameData.playerExists(playerId))
-            throw std::runtime_error("Player does not exist");
+            throw std::invalid_argument("Player does not exist");
         if (gameData.players().at(playerId)->position().x() != x || gameData.players().at(playerId)->position().y() != y)
-            throw std::runtime_error("Player position does not match the position in the game data.");
+            throw std::invalid_argument("Player position does not match the position in the game data.");
         if (gameData.players().at(playerId)->playerLevel() != level)
-            throw std::runtime_error("Player level does not match the level in the game data.");
+            throw std::invalid_argument("Player level does not match the level in the game data.");
         // gameData.players().at(playerId).setIsIncantating(true);
     }
 }

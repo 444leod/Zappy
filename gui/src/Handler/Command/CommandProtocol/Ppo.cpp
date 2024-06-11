@@ -29,7 +29,7 @@ void gui::Ppo::receive(std::string command, GameData &gameData)
     iss >> token >> playerId >> x >> y >> orientation;
 
     if (!gameData.playerExists(playerId))
-        throw std::runtime_error("Player does not exist in the game data.");
+        throw std::invalid_argument("Player does not exist in the game data.");
 
     if (x >= gameData.mapRef().mapSize().x() || y >= gameData.mapRef().mapSize().y())
         throw std::invalid_argument("Player position is out of bounds.");

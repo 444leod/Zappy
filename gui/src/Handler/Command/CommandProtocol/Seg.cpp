@@ -26,6 +26,6 @@ void gui::Seg::receive(std::string command, GameData &gameData)
             // gameData.teamNames()[i].setIsDead(true);
             break;
         } else
-            throw std::runtime_error("Team not found");
+            throw std::invalid_argument("Team not found");
     }
 }

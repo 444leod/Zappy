@@ -28,8 +28,8 @@ void gui::Plv::receive(std::string command, GameData &gameData)
     iss >> token >> playerId >> level;
 
     if (!gameData.playerExists(playerId))
-        throw std::runtime_error("Player does not exist in the game data.");
+        throw std::invalid_argument("Player does not exist in the game data.");
     if (gameData.players().at(playerId)->playerLevel() < level || level > 8 || gameData.players().at(playerId)->playerLevel() > level)
-        throw std::runtime_error("Player level received does not match the player level in the game data.");
+        throw std::invalid_argument("Player level received does not match the player level in the game data.");
     // gameData.players().at(playerId)->increasePlayerLevel();
 }

@@ -32,13 +32,13 @@ void gui::Pnw::receive(std::string command, GameData &gameData)
     else
         throw std::invalid_argument("Invalid orientation: " + orientation);
     if (gameData.playerExists(playerId))
-        throw std::runtime_error("Player alreasy exist in the game data with this id.");
+        throw std::invalid_argument("Player alreasy exist in the game data with this id.");
     if (level != 1)
-        throw std::runtime_error("Player must spawn as level 1.");
+        throw std::invalid_argument("Player must spawn as level 1.");
     if (x >= gameData.mapRef().mapSize().x() || y >= gameData.mapRef().mapSize().y())
         throw std::invalid_argument("Player position is out of bounds.");
     if (!gameData.teamExists(teamName))
-        throw std::runtime_error("Team does not exist in the game data.");
+        throw std::invalid_argument("Team does not exist in the game data.");
     (void)playerOrientation;
     // gui::Character newPlayer;
     // newPlayer.setNewConnection(playerId, Vector2u(x, y), playerOrientation, level, teamName);

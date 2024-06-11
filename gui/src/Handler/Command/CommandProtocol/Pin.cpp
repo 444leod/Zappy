@@ -41,10 +41,10 @@ void gui::Pin::receive(std::string command, GameData &gameData)
     rocks.thystame.setQuantity(thystame);
 
     if (!gameData.playerExists(playerId))
-        throw std::runtime_error("Player does not exist in the game data.");
+        throw std::invalid_argument("Player does not exist in the game data.");
     if (gameData.players().at(playerId)->position() == pos) {
         gameData.players().at(playerId)->setFood(food);
         gameData.players().at(playerId)->setRocks(rocks);
     } else
-        throw std::runtime_error("Player position does not match the position in the game data.");
+        throw std::invalid_argument("Player position does not match the position in the game data.");
 }
