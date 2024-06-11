@@ -21,5 +21,7 @@ void gui::Pex::receive(std::string command, GameData &gameData)
     std::uint32_t playerId;
 
     iss >> token >> playerId;
+    if (!gameData.playerExists(playerId))
+        throw std::invalid_argument("Player does not exist");
     // gameData.players().at(playerId).setIsExpulsed(true);
 }
