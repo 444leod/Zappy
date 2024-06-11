@@ -42,4 +42,12 @@ namespace gui {
             this->_eggs.erase(it);
         }
     }
+
+    bool GameData::playerExists(std::uint32_t playerId) const
+    {
+        auto it = std::find_if(this->_players.begin(), this->_players.end(),
+            [playerId](const auto& player){ return player->id() == playerId; });
+
+        return it != this->_players.end();
+    }
 }

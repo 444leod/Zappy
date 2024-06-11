@@ -102,6 +102,13 @@ namespace gui {
             */
             Map& mapRef() { return this->_map; }
 
+            /**
+             * @brief check if the given id corresponds to a player
+             * @param playerId The player id
+             * @return bool True if the player exists, false otherwise
+            */
+            bool playerExists(std::uint32_t playerId) const;
+
         private:
             std::vector<std::string> _teamNames = {};
             Map _map;
