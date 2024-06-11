@@ -24,6 +24,7 @@ Test(ai_commands, forward_north)
     forward(NULL, &client, &server);
     cr_assert(player.position.x == 2);
     cr_assert(player.position.y == 1);
+    cr_assert_str_eq(client.packetQueue->packet->buffer, "ok");
 }
 
 Test(ai_commands, forward_east_bounds)
@@ -41,6 +42,7 @@ Test(ai_commands, forward_east_bounds)
     forward(NULL, &client, &server);
     cr_assert(player.position.x == 0);
     cr_assert(player.position.y == 4);
+    cr_assert_str_eq(client.packetQueue->packet->buffer, "ok");
 }
 
 Test(ai_commands, right_4_times)
@@ -59,6 +61,15 @@ Test(ai_commands, right_4_times)
     cr_assert(player.orientation == WEST);
     right(NULL, &client, NULL);
     cr_assert(player.orientation == NORTH);
+
+    packet_queue_t queue = client.packetQueue;
+    uint32_t qsize = 0;
+    while (queue != NULL) {
+        cr_assert_str_eq(queue->packet->buffer, "ok");
+        qsize++;
+        queue = queue->next;
+    }
+    cr_assert_eq(qsize, 4);
 }
 
 Test(ai_commands, left_4_times)
@@ -77,6 +88,15 @@ Test(ai_commands, left_4_times)
     cr_assert(player.orientation == EAST);
     left(NULL, &client, NULL);
     cr_assert(player.orientation == NORTH);
+
+    packet_queue_t queue = client.packetQueue;
+    uint32_t qsize = 0;
+    while (queue != NULL) {
+        cr_assert_str_eq(queue->packet->buffer, "ok");
+        qsize++;
+        queue = queue->next;
+    }
+    cr_assert_eq(qsize, 4);
 }
 
 Test(ai_commands, vision_level0)
