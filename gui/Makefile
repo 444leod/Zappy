@@ -48,6 +48,7 @@ __SRC_COMMAND_HANDLING := GameDataManager.cpp \
 	CommandProtocol/Sgt.cpp \
 	CommandProtocol/Sst.cpp \
 	CommandProtocol/Smg.cpp \
+	CommandProtocol/Suc.cpp \
 
 %.o: %.cpp
 	@$(__CC) -c -o $@ $< $(__CXXFLAGS)
