@@ -10,6 +10,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <algorithm>
 
 namespace gui {
     class ArgumentChecking {
