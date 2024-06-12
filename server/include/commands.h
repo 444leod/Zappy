@@ -39,6 +39,7 @@ void right(ARGS);
 void left(ARGS);
 void look(ARGS);
 void inventory(ARGS);
+void connect_nbr(ARGS);
 
 ///////////////////////////////////////////////////////////////////////////////
 // OTHER COMMANDS

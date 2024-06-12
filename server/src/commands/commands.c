@@ -22,7 +22,8 @@ const command_t COMMANDS[] = {
     {"Right", &right, 7, AI},
     {"Left", &left, 7, AI},
     {"Look", &look, 7, AI},
-    {"Inventory", &inventory, 7, AI},
+    {"Inventory", &inventory, 1, AI},
+    {"Connect_nbr", &connect_nbr, 7, AI},
 
     {NULL, &unknown_command, 0, NONE}
 };
