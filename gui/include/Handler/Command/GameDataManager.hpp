@@ -33,6 +33,7 @@
 #include "Ebo.hpp"
 #include "Pfk.hpp"
 #include "Sgt.hpp"
+#include "Sst.hpp"
 
 namespace gui {
     class GameDataManager {
@@ -68,7 +69,8 @@ namespace gui {
                 {"mct", std::make_shared<Mct>()},
                 {"ebo", std::make_shared<Ebo>()},
                 {"pfk", std::make_shared<Pfk>()},
-                {"sgt", std::make_shared<Sgt>()}
+                {"sgt", std::make_shared<Sgt>()},
+                {"sst", std::make_shared<Sst>()}
             };
     };
 }
