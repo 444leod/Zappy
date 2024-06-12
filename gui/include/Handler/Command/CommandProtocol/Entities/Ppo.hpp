@@ -13,15 +13,19 @@ namespace gui {
     class Ppo : public ICommand {
         public:
             /**
-             * @brief Stage the command
+             * @brief The command Ppo send the player id to the server and expect the orientation of the player
              * @param client The client
              * @param parameters The parameters
             */
             void stage(ntw::Client &client, std::string parameters = "") override;
 
             /**
-             * @brief Receive the command
-             * @param command The command
+             * @brief The command Ppo receive the orientation of a player
+             * @note Receive the command: ppo #n x y o
+             * @note #n -> player id
+             * @note x y -> x and y position
+             * @note o -> player orientation (NORTH, EAST, SOUTH, WEST)
+             * @param command The command given by the server
              * @param gameData The game data
             */
             void receive(std::string command, GameData &gameData) override;
