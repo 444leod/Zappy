@@ -11,7 +11,7 @@
 #include "lib.h"
 #include "garbage_collector.h"
 
-static const char *cleancat(char *a, char *b)
+static char *cleancat(char *a, char *b)
 {
     char *result = supercat(2, a, b);
 
@@ -34,7 +34,7 @@ static char *add_rock(char *str, const char *rock, uint32_t n)
     return result;
 }
 
-static const char *format_inventory(rocks_t rocks)
+static char *format_inventory(rocks_t rocks)
 {
     char *str = my_strdup("[");
 
@@ -64,8 +64,9 @@ static const char *format_inventory(rocks_t rocks)
 void inventory(UNUSED char **args, client_t client,
     UNUSED server_info_t serverInfo)
 {
-    const char *inv = format_inventory(client->player->rocks);
+    char *inv = format_inventory(client->player->rocks);
     packet_t *packet = build_packet(inv);
 
+    my_free(inv);
     add_packet_to_queue(&client->packetQueue, packet);
 }
