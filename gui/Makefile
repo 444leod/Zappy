@@ -16,7 +16,8 @@ __NAME = zappy_gui
 __SRC = src/main.cpp \
 	$(addprefix ./src/network/, $(__SRC_NETWORK)) \
   	$(addprefix ./src/GameData/, $(__SRC_GAME_DATA)) \
-  	$(addprefix ./src/Handler/Command/, $(__SRC_COMMAND_HANDLING)) \
+  	$(addprefix ./src/Handler/Command/, $(__SRC_GAME_DATA_MANAGER)) \
+  	$(addprefix ./src/Handler/Command/CommandProtocol/, $(__SRC_CMD_HANDLE)) \
 
 __SRC_NETWORK := Client.cpp \
 
@@ -24,32 +25,33 @@ __SRC_GAME_DATA := GameData.cpp \
 	Tiles/Map.cpp \
 	Tiles/TileContent.cpp \
 
-__SRC_COMMAND_HANDLING := GameDataManager.cpp \
-	CommandProtocol/Msz.cpp \
-	CommandProtocol/Bct.cpp \
-	CommandProtocol/Tna.cpp \
-	CommandProtocol/Pex.cpp \
-	CommandProtocol/Seg.cpp \
-	CommandProtocol/Pnw.cpp \
-	CommandProtocol/Ppo.cpp \
-	CommandProtocol/Plv.cpp \
-	CommandProtocol/Pin.cpp \
-	CommandProtocol/Pic.cpp \
-	CommandProtocol/Pie.cpp \
-	CommandProtocol/Pdi.cpp \
-	CommandProtocol/Edi.cpp \
-	CommandProtocol/Pdr.cpp \
-	CommandProtocol/Pgt.cpp \
-	CommandProtocol/Pbc.cpp \
-	CommandProtocol/Enw.cpp \
-	CommandProtocol/Mct.cpp \
-	CommandProtocol/Ebo.cpp \
-	CommandProtocol/Pfk.cpp \
-	CommandProtocol/Sgt.cpp \
-	CommandProtocol/Sst.cpp \
-	CommandProtocol/Smg.cpp \
-	CommandProtocol/Suc.cpp \
-	CommandProtocol/Sbp.cpp \
+__SRC_GAME_DATA_MANAGER := GameDataManager.cpp \
+
+__SRC_CMD_HANDLE := Map/Bct.cpp \
+	Map/Msz.cpp \
+	Map/Mct.cpp \
+	Entities/Tna.cpp \
+	Entities/Pnw.cpp \
+	Entities/Ppo.cpp \
+	Entities/Plv.cpp \
+	Entities/Pin.cpp \
+	Action/Pic.cpp \
+	Action/Pie.cpp \
+	Action/Pdr.cpp \
+	Action/Pgt.cpp \
+	Action/Pex.cpp \
+	Action/Pbc.cpp \
+	Action/Enw.cpp \
+	Action/Pfk.cpp \
+	Server/Smg.cpp \
+	Server/Suc.cpp \
+	Server/Sbp.cpp \
+	Server/Ebo.cpp \
+	Status/Sst.cpp \
+	Status/Pdi.cpp \
+	Status/Seg.cpp \
+	Status/Sgt.cpp \
+	Status/Edi.cpp \
 
 %.o: %.cpp
 	@$(__CC) -c -o $@ $< $(__CXXFLAGS)
@@ -66,6 +68,11 @@ __CXXFLAGS += -Wall -Wextra -Werror -Wpedantic
 __CXXFLAGS += -lsfml-network -lsfml-system
 __CXXFLAGS += -I./include -I./src/network -I./include/GameData
 __CXXFLAGS += -I./include/Handler/Command/CommandProtocol
+__CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Map
+__CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Entities
+__CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Action
+__CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Server
+__CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Status
 
 all: $(__NAME)
 
