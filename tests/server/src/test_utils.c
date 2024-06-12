@@ -44,5 +44,6 @@ client_t test_create_client(uint32_t id)
     client_t client = create_client(id);
 
     client->packetQueue = NULL;
+    add_client(client);
     return client;
 }

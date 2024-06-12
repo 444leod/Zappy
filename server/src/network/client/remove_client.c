@@ -35,21 +35,15 @@ static void destroy_fds(client_t tmp)
 */
 void remove_client(const int fd)
 {
-    client_t *clients = get_clients();
-    client_t tmp = *clients;
-    client_t prev = NULL;
+    client_list_t *clients = get_clients();
+    client_list_t clientNode = *clients;
 
-    if (tmp && tmp->fd == fd) {
-        *clients = tmp->next;
-        destroy_fds(tmp);
-        return;
+    while (clientNode) {
+        if (clientNode->client->fd == fd) {
+            destroy_fds(clientNode->client);
+            remove_from_list((node_t *)clientNode->client, (node_t *)clients);
+            return;
+        }
+        clientNode = clientNode->next;
     }
-    while (tmp && tmp->fd != fd) {
-        prev = tmp;
-        tmp = tmp->next;
-    }
-    if (!tmp)
-        return;
-    destroy_fds(tmp);
-    prev->next = tmp->next;
 }

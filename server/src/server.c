@@ -38,20 +38,20 @@ static void handle_sigint(UNUSED int sig)
  * @param max_sd the max_sd variable
 */
 static void add_clients_to_set(
-    client_t *clients,
+    client_list_t clients,
     fd_set *readfds,
     fd_set *writefds,
     int *max_sd)
 {
-    client_t tmp = *clients;
+    client_list_t clientNode = clients;
 
-    while (tmp) {
-        if (tmp->packetQueue)
-            FD_SET(tmp->fd, writefds);
-        FD_SET(tmp->fd, readfds);
-        if (tmp->fd > *max_sd)
-            *max_sd = tmp->fd;
-        tmp = tmp->next;
+    while (clientNode) {
+        if (clientNode->client->packetQueue)
+            FD_SET(clientNode->client->fd, writefds);
+        FD_SET(clientNode->client->fd, readfds);
+        if (clientNode->client->fd > *max_sd)
+            *max_sd = clientNode->client->fd;
+        clientNode = clientNode->next;
     }
 }
 
@@ -66,16 +66,12 @@ static void add_new_client(int socketFd)
     int new_socket = 0;
     struct sockaddr_in address;
     int addrlen = sizeof(address);
-    client_t *clients = get_clients();
 
     new_socket = accept(socketFd, (struct sockaddr *)&address,
         (socklen_t *)&addrlen);
     if (new_socket < 0)
         my_error("new client: accept failed");
-    if (*clients == NULL)
-        *clients = create_client(new_socket);
-    else
-        add_client(create_client(new_socket));
+    add_client(create_client(new_socket));
 }
 
 /**
@@ -89,7 +85,7 @@ static void add_new_client(int socketFd)
  * @param clients the list of clients
 */
 static void select_wrapper(int max_sd, fd_set *readfds,
-    fd_set *writefds, UNUSED client_t *clients)
+    fd_set *writefds, UNUSED client_list_t clients)
 {
     struct timeval timeout = {0, 100};
     int activity = 0;
@@ -113,10 +109,10 @@ void zappy_loop(int socketFd, server_info_t serverInfo)
     fd_set readfds;
     fd_set writefds;
     int max_sd = 0;
-    client_t *clients = NULL;
+    client_list_t clients = NULL;
 
     while (1) {
-        clients = get_clients();
+        clients = (*get_clients());
         FD_ZERO(&readfds);
         FD_ZERO(&writefds);
         FD_SET(socketFd, &readfds);

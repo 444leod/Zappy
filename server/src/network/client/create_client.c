@@ -21,7 +21,6 @@ client_t create_client(const int fd)
     client_t client = my_malloc(sizeof(struct client_s));
 
     client->fd = fd;
-    client->next = NULL;
     client->commands = NULL;
     client->buffer = NULL;
     client->type = NONE;
