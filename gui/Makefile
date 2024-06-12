@@ -73,6 +73,7 @@ __CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Entities
 __CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Action
 __CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Server
 __CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Status
+__CXXFLAGS += -I./include/Handler/Command/ -I./include/Handler/
 
 all: $(__NAME)
 

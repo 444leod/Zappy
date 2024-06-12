@@ -5,13 +5,14 @@
 ** main
 */
 
-#include "Handler/Command/GameDataManager.hpp"
+#include "GameDataManager.hpp"
+#include "ArgumentChecking.hpp"
 #include <cstring>
 
 /**
  * @brief Print the usage
  */
-void printUsage()
+void gui::ArgumentChecking::printUsage()
 {
     std::cout << "USAGE: ./zappy_gui -p port -h machine" << std::endl;
     std::cout << "port: the port number" << std::endl;
@@ -23,7 +24,7 @@ void printUsage()
  * @param args The arguments
  * @return The flags in a map
  */
-std::map<std::string, std::string> checkFlags(std::vector<std::string> args)
+std::map<std::string, std::string> gui::ArgumentChecking::checkFlags(std::vector<std::string> args)
 {
     int p_count = std::count(args.begin(), args.end(), "-p");
     int h_count = std::count(args.begin(), args.end(), "-h");
@@ -46,7 +47,7 @@ std::map<std::string, std::string> checkFlags(std::vector<std::string> args)
  * @param ac The number of arguments
  * @param av The arguments
  */
-void checkArgs(int ac, char **av)
+void gui::ArgumentChecking::checkArgs(int ac, char **av)
 {
     std::vector<std::string> args(av, av + ac);
     std::map<std::string, std::string> flags;
@@ -55,7 +56,6 @@ void checkArgs(int ac, char **av)
         printUsage();
         throw std::invalid_argument("Invalid number of arguments");
     }
-    checkFlags(args);
     flags = checkFlags(args);
     if (flags.find("p") != flags.end()) {
         std::string port = flags["p"];
@@ -74,7 +74,8 @@ void checkArgs(int ac, char **av)
 int main(int ac, char **av)
 {
     try {
-        checkArgs(ac, av);
+        std::shared_ptr<gui::ArgumentChecking> argCheck = std::make_shared<gui::ArgumentChecking>();
+        argCheck->checkArgs(ac, av);
         std::uint32_t port = std::atoi(av[2]);
         gui::GameDataManager gameDataManager(port);
         while (1)
