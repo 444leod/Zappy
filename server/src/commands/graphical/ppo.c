@@ -15,10 +15,10 @@
  *
  * @param client the client that executed the command
  * @param server_info the server info
- * @param player_id the player id
+ * @param playerNumber the player id
  */
-void send_player_pos(const client_t client, const server_info_t server_info,
-    const uint32_t player_id)
+void send_player_pos(const client_t client, UNUSED
+    const server_info_t server_info, const uint32_t playerNumber)
 {
     client_list_t clients = *get_clients();
     player_t player = NULL;
@@ -26,16 +26,17 @@ void send_player_pos(const client_t client, const server_info_t server_info,
     while (clients) {
         if (clients->client->player)
             player = clients->client->player;
-        if (player->id == player_id) {
+        if (player && player->playerNumber == playerNumber) {
             queue_buffer(client, my_snprintf("ppo %d %d %d %d",
-                player_id,
+                playerNumber,
                 player->position.x, player->position.y,
                 player->orientation));
             return;
         }
         player = NULL;
+        clients = clients->next;
     }
-    printf("ppo %d: player not found\n", player_id);
+    printf("Client %d: ppo %d: player not found\n", client->fd, playerNumber);
     queue_buffer(client, "sbp");
 }
 
@@ -51,10 +52,12 @@ void ppo(char **args, const client_t client,
     const server_info_t server_info)
 {
     if (tablen((const void **)args) != 2) {
+        printf("Client %d: ppo: bad argument number\n", client->fd);
         queue_buffer(client, "sbp");
         return;
     }
     if (!is_number(args[1])) {
+        printf("Client %d: ppo: argument is not a number\n", client->fd);
         queue_buffer(client, "sbp");
         return;
     }
