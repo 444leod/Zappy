@@ -38,6 +38,9 @@ void msz(char **args, const client_t client,
 void bct(char **args, const client_t client,
     const server_info_t serverInfo);
 
+void mct(char **args, const client_t client,
+    const server_info_t serverInfo);
+
 extern const command_t COMMANDS[];
 extern const command_t AUTHENTIFICATION_COMMAND;
 

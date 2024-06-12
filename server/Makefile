@@ -37,7 +37,7 @@ __SRC	=	$(addprefix src/, $(__SRC_SRC)) \
 __SRC_SRC := server.c \
 	exit.c \
 	handle_clients.c \
-	handle_commands.c
+	handle_commands.c \
 
 __SRC_COMMANDS := commands.c \
 	unknown_command.c \
@@ -48,6 +48,7 @@ __SRC_AI := forward.c \
 
 __SRC_GRAPHICAL := msz.c \
 	bct.c \
+	mct.c \
 
 __SRC_GAME := \
 	create_map.c \
@@ -101,6 +102,7 @@ __SRC_COMMANDS_TEST := auth.c \
 
 __SRC_GRAPHICAL_TEST := msz.c \
 	bct.c \
+	mct.c \
 
 __SRC_UTILS_TEST := get_map.c \
 
