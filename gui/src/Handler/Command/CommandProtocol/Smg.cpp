@@ -1,0 +1,25 @@
+/*
+** EPITECH PROJECT, 2024
+** zappy
+** File description:
+** Smg
+*/
+
+#include "Smg.hpp"
+
+void gui::Smg::stage(ntw::Client &client, std::string parameters)
+{
+    (void)client;
+    (void)parameters;
+}
+
+void gui::Smg::receive(std::string command, GameData &gameData)
+{
+    (void)gameData;
+    std::istringstream iss(command);
+    std::string token;
+    std::string message;
+
+    iss >> token >> message;
+    // gameData.displayServerMessage(message);
+}
