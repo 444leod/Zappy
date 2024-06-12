@@ -76,15 +76,16 @@ class Bot():
 
     def run(self) -> None:
         while True:
-            # Behavior logic here, send one command at a time!!
-            cmd_to_send: cmd.ACommand = cmd.Look()
-            self.cmd_sent.append(cmd_to_send.dump())
-            self.com_handler.send_command(cmd_to_send.dump())
-
+            self.behavior_logic()
             self.base_funcs_loop()
-
             self.handle_commands_sent()
     
+    def behavior_logic(self) -> None:
+        # Behavior logic here, send one command at a time!!
+        cmd_to_send: cmd.ACommand = cmd.Look()
+        self.cmd_sent.append(cmd_to_send.dump())
+        self.com_handler.send_command(cmd_to_send.dump())
+
     def base_funcs_loop(self) -> None:
         while True:
             # Wait for the response
