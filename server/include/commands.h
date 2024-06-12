@@ -40,6 +40,7 @@ void left(ARGS);
 void look(ARGS);
 void inventory(ARGS);
 void connect_nbr(ARGS);
+void fork_player(ARGS);
 
 ///////////////////////////////////////////////////////////////////////////////
 // OTHER COMMANDS

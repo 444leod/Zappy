@@ -24,6 +24,7 @@ const command_t COMMANDS[] = {
     {"Look", &look, 7, AI},
     {"Inventory", &inventory, 1, AI},
     {"Connect_nbr", &connect_nbr, 7, AI},
+    {"Fork", &fork_player, 42, AI},
 
     {NULL, &unknown_command, 0, NONE}
 };
