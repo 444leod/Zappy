@@ -25,7 +25,8 @@ Test(auth, valid_ai_team_name)
     cr_assert(client->player->team->actualNumber == 1);
     cr_assert(client->player->team->remainingSlots == 9);
     cr_assert(client->type == AI);
-    cr_assert(client->clientNumber == 0);
+    cr_assert(client->teamClientNumber == 0);
+    cr_assert(client->player->playerNumber == 0);
     assert_packet_queue(client->packetQueue, 2, "9", "10 10");
     assert_stdout_eq_str("Client 0: Connected as teamName\n");
 }
@@ -40,7 +41,7 @@ Test(auth, valid_graphical_team_name)
 
     auth(args, client, server_info);
     cr_assert(client->type == GRAPHICAL);
-    cr_assert(client->clientNumber == 0);
+    cr_assert(client->teamClientNumber == 0);
     cr_assert_null(client->player);
     assert_packet_queue(client->packetQueue, 1, "ok");
     assert_stdout_eq_str("Client 0: Connected as GRAPHIC\n");
@@ -102,7 +103,39 @@ Test(auth, multiple_args)
 
     auth(args, client, server_info);
     cr_assert_null(client->player);
-    cr_assert(client->type == NONE);
+    cr_assert_eq(client->type, NONE);
     assert_packet_queue(client->packetQueue, 1, "ko");
     assert_stdout_eq_str("Client 0: Bad team name\n");
+}
+
+Test(auth, multiple_connexions)
+{
+    cr_redirect_stdout();
+    server_info_t server_info = get_server_info();
+    client_t client = create_client(0);
+    client->packetQueue = NULL;
+    char *args[] = {"teamName", NULL};
+
+    auth(args, client, server_info);
+    cr_assert_not_null(client->player);
+    cr_assert_not_null(client->player->team);
+    cr_assert_eq(client->player->team->actualNumber, 1);
+    cr_assert_eq(client->player->team->remainingSlots, 9);
+    cr_assert_eq(client->type, AI);
+    cr_assert_eq(client->teamClientNumber, 0);
+    cr_assert_eq(client->player->playerNumber, 0);
+    assert_packet_queue(client->packetQueue, 2, "9", "10 10");
+
+    client_t client1 = create_client(1);
+    client1->packetQueue = NULL;
+
+    auth(args, client1, server_info);
+    cr_assert_not_null(client1->player);
+    cr_assert_not_null(client1->player->team);
+    cr_assert_eq(client1->player->team->actualNumber, 2);
+    cr_assert_eq(client1->player->team->remainingSlots, 8);
+    cr_assert_eq(client1->type, AI);
+    cr_assert_eq(client1->teamClientNumber, 1);
+    cr_assert_eq(client1->player->playerNumber, 1);
+    assert_packet_queue(client1->packetQueue, 2, "8", "10 10");
 }

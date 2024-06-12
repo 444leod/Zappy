@@ -26,7 +26,7 @@ client_t create_client(const int fd)
     client->buffer = NULL;
     client->type = NONE;
     client->player = NULL;
-    client->clientNumber = 0;
+    client->teamClientNumber = 0;
     client->packetQueue = NULL;
     add_packet_to_queue(&client->packetQueue, build_packet("WELCOME"));
     return client;

@@ -24,5 +24,8 @@ void unknown_command(UNUSED char **args, client_t client,
 {
     printf("Client %d: Unknown command (%s)\n", client->fd,
         get_escaped_string(args[0]));
-    queue_buffer(client, "ko");
+    if (client->type == GRAPHICAL)
+        queue_buffer(client, "suc");
+    else
+        queue_buffer(client, "ko");
 }

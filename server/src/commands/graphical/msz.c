@@ -22,7 +22,7 @@ void msz(char **args, client_t client,
     server_info_t serverInfo)
 {
     if (tablen((const void **)args) > 1) {
-        queue_buffer(client, "ko");
+        queue_buffer(client, "sbp");
         return;
     }
     queue_buffer(client,

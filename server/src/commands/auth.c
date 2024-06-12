@@ -80,11 +80,14 @@ static void spawn_player(const char *teamName, const client_t client,
     const team_t team = get_team_by_name(teamName, server->teams);
     egg_t egg = get_random_egg(team, server->map);
     player_t player = egg_to_player(egg, server->map);
+    static uint32_t actualNumber = 0;
 
     client->player = player;
     team->remainingSlots--;
-    client->clientNumber = team->actualNumber;
+    client->teamClientNumber = team->actualNumber;
+    client->player->playerNumber = actualNumber;
     team->actualNumber++;
+    actualNumber++;
     printf("Client %d: Connected as %s\n", client->fd,
         get_escaped_string(teamName));
 }

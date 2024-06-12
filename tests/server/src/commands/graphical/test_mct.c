@@ -79,5 +79,5 @@ Test(mct, too_much_parameters)
     server_info_t serverInfo = get_server_info();
 
     mct((char *[]){"mct", "azuieyaeuy", NULL}, client, serverInfo);
-    assert_packet_queue(client->packetQueue, 1, "ko");
+    assert_packet_queue(client->packetQueue, 1, "sbp");
 }

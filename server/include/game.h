@@ -43,6 +43,7 @@ typedef struct rocks_s {
 
 typedef struct player_s {
     uuid_t id;
+    uint32_t playerNumber;
     team_t team;
     position_t position;
     int level;

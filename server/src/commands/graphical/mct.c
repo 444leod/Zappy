@@ -22,7 +22,7 @@ void mct(char **args, const client_t client,
     const server_info_t server_info)
 {
     if (tablen((const void **)args) > 1) {
-        queue_buffer(client, "ko");
+        queue_buffer(client, "sbp");
         return;
     }
     for (uint32_t y = 0; y < server_info->height; y++) {

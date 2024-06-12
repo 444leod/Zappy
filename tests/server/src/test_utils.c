@@ -32,7 +32,11 @@ void assert_packet_queue(packet_queue_t packetQueue, uint32_t packets_number, ..
 
 server_info_t get_server_info()
 {
-    return init_server_info((const char *[]){"./zappy_server", "-p", "4242", "-f", "1", "-c", "10", "-x", "10", "-y", "10", "-n", "teamName", "team2", NULL});
+    server_info_t servInfo = init_server_info((const char *[]){"./zappy_server", "-p", "4242", "-f", "1", "-c", "10", "-x", "10", "-y", "10", "-n", "teamName", "team2", NULL});
+    servInfo->map = create_map(10, 10);
+    init_map(servInfo->map, servInfo->teams);
+
+    return servInfo;
 }
 
 client_t test_create_client(uint32_t id)

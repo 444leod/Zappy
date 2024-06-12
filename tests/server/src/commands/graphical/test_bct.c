@@ -14,7 +14,7 @@ Test(bct, too_much_parameters)
     server_info_t serverInfo = get_server_info();
 
     bct((char *[]){"bct", "1", "1", "1", "1", NULL}, client, serverInfo);
-    assert_packet_queue(client->packetQueue, 1, "ko");
+    assert_packet_queue(client->packetQueue, 1, "sbp");
 }
 
 Test(bct, valid_command_empty_tile)

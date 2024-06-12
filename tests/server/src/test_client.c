@@ -12,5 +12,5 @@
 Test(client, create) {
     client_t c = create_client(0);
     cr_expect(c != NULL);
-    cr_assert(c->clientNumber == 0);
+    cr_assert(c->teamClientNumber == 0);
 }

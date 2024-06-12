@@ -24,17 +24,17 @@ void bct(char **args, const client_t client,
     position_t pos;
 
     if (tablen((const void **)args) != 3) {
-        queue_buffer(client, "ko");
+        queue_buffer(client, "sbp");
         return;
     }
     if (!is_number(args[1]) || !is_number(args[2])) {
-        queue_buffer(client, "ko");
+        queue_buffer(client, "sbp");
         return;
     }
     pos = (position_t){atoi(args[1]), atoi(args[2])};
     if ((uint32_t)pos.x > serverInfo->width || pos.x < 0 ||
         (uint32_t)pos.y > serverInfo->height || pos.y < 0) {
-        queue_buffer(client, "ko");
+        queue_buffer(client, "sbp");
         return;
     }
     send_tile_content(client, serverInfo, pos);

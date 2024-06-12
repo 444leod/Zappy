@@ -15,7 +15,7 @@ Test(msz, too_much_parameters)
     server_info_t serverInfo = get_server_info();
 
     msz((char *[]){"msz", "azuieyaeuy", NULL}, client, serverInfo);
-    assert_packet_queue(client->packetQueue, 1, "ko");
+    assert_packet_queue(client->packetQueue, 1, "sbp");
 }
 
 Test(msz, valid_command)

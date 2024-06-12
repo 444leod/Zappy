@@ -24,7 +24,7 @@ void tna(char **args, const client_t client,
     team_list_t teams;
 
     if (tablen((const void **)args) > 1) {
-        queue_buffer(client, "ko");
+        queue_buffer(client, "sbp");
         return;
     }
     teams = server_info->teams;
