@@ -41,6 +41,9 @@ void bct(char **args, const client_t client,
 void mct(char **args, const client_t client,
     const server_info_t serverInfo);
 
+void tna(char **args, const client_t client,
+    const server_info_t serverInfo);
+
 extern const command_t COMMANDS[];
 extern const command_t AUTHENTIFICATION_COMMAND;
 
