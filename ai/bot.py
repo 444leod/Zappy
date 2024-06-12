@@ -5,6 +5,7 @@ from typing import List
 from ai_src.connection_handler import ConnectionHandler
 from ai_src.config import Config, HelpException, ArgError
 from ai_src.data import PlayerInfo, GeneralInfo, Orientation, Collectibles, Map, TileContent
+from ai_src.behaviors import LookingForwards
 import ai_src.commands as cmd
 
 class Bot():
@@ -56,6 +57,7 @@ class Bot():
             "dead\n" : self.die,
             "message": self.receive_broadcast  
         }
+        self.current_behavior = LookingForwards() 
 
     def log(self, *args, **kargs) -> None:
         if (self.verbose):
@@ -82,7 +84,8 @@ class Bot():
     
     def behavior_logic(self) -> None:
         # Behavior logic here, send one command at a time!!
-        cmd_to_send: cmd.ACommand = cmd.Look()
+        cmd_to_send: cmd.ACommand = self.current_behavior.get_next_command()
+        self.log(cmd_to_send.dump())
         self.cmd_sent.append(cmd_to_send.dump())
         self.com_handler.send_command(cmd_to_send.dump())
 
