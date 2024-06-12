@@ -36,6 +36,7 @@
 #include "Sst.hpp"
 #include "Smg.hpp"
 #include "Suc.hpp"
+#include "Sbp.hpp"
 
 namespace gui {
     class GameDataManager {
@@ -74,7 +75,8 @@ namespace gui {
                 {"sgt", std::make_shared<Sgt>()},
                 {"sst", std::make_shared<Sst>()},
                 {"smg", std::make_shared<Smg>()},
-                {"suc", std::make_shared<Suc>()}
+                {"suc", std::make_shared<Suc>()},
+                {"sbp", std::make_shared<Sbp>()}
             };
     };
 }
