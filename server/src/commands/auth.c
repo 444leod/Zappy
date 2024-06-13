@@ -10,6 +10,7 @@
 #include "clients.h"
 #include "lib.h"
 #include "zappy.h"
+#include "game.h"
 #include "debug.h"
 #include <stdio.h>
 
@@ -68,19 +69,20 @@ static bool is_team_name_valid(const char *teamName,
 }
 
 /**
- * @brief Update the client team
- * @details Update the client team and set the client number
+ * @brief Spawn the player in its given team
  *
  * @param teamName the team name
- * @param client the client to update
- * @param teams the server teams list
+ * @param client the client that will spawn a player
+ * @param server the serverInfo
  */
-static void update_client_team(const char *teamName, const client_t client,
-    const team_list_t teams)
+static void spawn_player(const char *teamName, const client_t client,
+    server_info_t server)
 {
-    const team_t team = get_team_by_name(teamName, teams);
+    const team_t team = get_team_by_name(teamName, server->teams);
+    egg_t egg = get_random_egg(team, server->map);
+    player_t player = egg_to_player(egg, server->map);
 
-    client->team = team;
+    client->player = player;
     team->remainingSlots--;
     client->clientNumber = team->actualNumber;
     team->actualNumber++;
@@ -99,8 +101,10 @@ static void update_client_team(const char *teamName, const client_t client,
 static void send_start_informations(const client_t client,
     const uint32_t width, const uint32_t height)
 {
-    queue_buffer(client, my_snprintf("%d", client->team->remainingSlots));
-    queue_buffer(client, my_snprintf("%d %d", width, height));
+    queue_buffer(client,
+        my_snprintf("%d", client->player->team->remainingSlots));
+    queue_buffer(client,
+        my_snprintf("%d %d", width, height));
 }
 
 /**
@@ -131,6 +135,6 @@ void auth(char **args, const client_t client,
         return;
     }
     client->type = AI;
-    update_client_team(args[0], client, serverInfo->teams);
+    spawn_player(args[0], client, serverInfo);
     send_start_informations(client, serverInfo->width, serverInfo->height);
 }
