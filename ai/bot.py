@@ -76,8 +76,6 @@ class Bot():
         self.messages_received.append((int(tab[1][:-1]), tab[2]))
 
     def run(self) -> None:
-        lst = ["food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"]
-        i = 0
         while True:
             # Behavior logic here, send one command at a time!!
             cmd_to_send: cmd.ACommand = cmd.Incantation()
@@ -87,7 +85,6 @@ class Bot():
             self.base_funcs_loop()
 
             self.handle_commands_sent()
-            self.log(f"Player info: {self.player_info.level}")
     
     def base_funcs_loop(self) -> None:
         while True:
@@ -144,7 +141,6 @@ class Bot():
                 except Exception as e:
                     self.log(e)
                     self.log("Failed to fork")
-                    pass
             case "Take":
                 try:
                     pos = self.player_info.pos
@@ -155,7 +151,6 @@ class Bot():
                 except Exception as e:
                     self.log(e)
                     self.log("Failed to take object")
-                    pass
             case "Set":
                 try:
                     pos = self.player_info.pos
@@ -165,20 +160,18 @@ class Bot():
                 except Exception as e:
                     self.log(e)
                     self.log("Failed to set object")
-                    pass
             case "Incantation":
                 try:
+                    cmd.Incantation().interpret_result(self.results[-1])
+                    self.base_funcs_loop()
                     cmd.Incantation().interpret_result(self.results[-1])
                     self.player_info.level += 1
                 except Exception as e:
                     self.log(e)
                     self.log("Failed to incant")
-                    pass
             
             case _:
                 pass
-        
-            
 
 def main() -> None:
     bot = Bot(
