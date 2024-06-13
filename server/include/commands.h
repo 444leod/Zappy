@@ -56,6 +56,9 @@ void pin(char **args, const client_t client,
 void sgt(char **args, const client_t client,
     const server_info_t serverInfo);
 
+void sst(char **args, const client_t client,
+    const server_info_t serverInfo);
+
 extern const command_t COMMANDS[];
 extern const command_t AUTHENTIFICATION_COMMAND;
 
