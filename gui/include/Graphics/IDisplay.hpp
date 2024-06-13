@@ -177,7 +177,7 @@ namespace gui {
          * @param height the height of the texture
          * @param scale the scale of the texture
          */
-        virtual void draw(std::shared_ptr<ITexture> texture, float x, float y, float width, float height, float scale) = 0;
+        virtual void draw(std::shared_ptr<ITexture> texture, float x, float y, float scale) = 0;
 
         /**td::shared_ptr<ITexture> g
          * @brief Draws a string to the display

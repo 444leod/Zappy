@@ -535,19 +535,19 @@ public:
         this->_window.clear(sf::Color{color.red, color.green, color.blue, color.alpha});
     }
 
-    virtual void draw(std::shared_ptr<gui::ITexture> texture, float x, float y, float width = 1.0f, float height = 1.0f, float scale)
+    virtual void draw(std::shared_ptr<gui::ITexture> texture, float x, float y, float scale)
     {
         if (texture == nullptr)
             return;
 
-        auto rect = sf::RectangleShape{sf::Vector2f{static_cast<float>(width * this->_tileSize), static_cast<float>(height * this->_tileSize)}};
+        auto sprite = sf::Sprite{};
         auto tex = std::dynamic_pointer_cast<SFML2dTexture>(texture);
 
-        rect.setTexture(tex->raw().get());
-        rect.setTextureRect(tex->subrect());
-        rect.setPosition(x * this->_tileSize, y * this->_tileSize);
-        rect.setScale(scale, scale);
-        this->_window.draw(rect);
+        sprite.setTexture(*tex->raw().get());
+        sprite.setTextureRect(tex->subrect());
+        sprite.setPosition(x * this->_tileSize, y * this->_tileSize);
+        sprite.setScale(scale, scale);
+        this->_window.draw(sprite);
     }
 
     virtual void print(const std::string& string, std::shared_ptr<gui::IFont> font, float x, float y)
