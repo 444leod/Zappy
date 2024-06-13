@@ -50,7 +50,7 @@ typedef struct player_s {
     rocks_t rocks;
     uint32_t food;
     enum ORIENTATION orientation;
-    clock_t lastFoodEatenTime;
+    struct timespec lastEaten;
 } * player_t;
 
 typedef struct player_list_s {

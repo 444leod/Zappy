@@ -10,6 +10,13 @@
 #include "lib.h"
 #include "zappy.h"
 
+/**
+ * @brief Send the player level to a client
+ * @details Send the player level to a client
+ *
+ * @param client the client that executed the command
+ * @param playerNumber the player number
+*/
 void send_player_level(const client_t client, const int playerNumber)
 {
     player_t player = get_player_by_player_number(playerNumber);

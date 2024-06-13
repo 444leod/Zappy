@@ -83,6 +83,7 @@ static void spawn_player(const char *teamName, const client_t client,
     static uint32_t actualNumber = 0;
 
     client->player = player;
+    client->player->rocks = (rocks_t){0, 0, 0, 0, 0, 0};
     team->remainingSlots--;
     client->teamClientNumber = team->actualNumber;
     client->player->playerNumber = actualNumber;

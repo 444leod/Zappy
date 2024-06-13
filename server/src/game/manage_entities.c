@@ -8,6 +8,7 @@
 #include "game.h"
 #include "linked_lists.h"
 #include "garbage_collector.h"
+#include <time.h>
 
 /**
  * @brief Add a player to a tile at a given position
@@ -81,7 +82,8 @@ player_t egg_to_player(const egg_t egg, const map_t map)
         return NULL;
     player = my_malloc(sizeof(struct player_s));
     uuid_generate(player->id);
-    player->food = 10;
+    clock_gettime(CLOCK_REALTIME, &player->lastEaten);
+    player->food = 0;
     player->level = 1;
     player->team = egg->team;
     player->position = egg->pos;
