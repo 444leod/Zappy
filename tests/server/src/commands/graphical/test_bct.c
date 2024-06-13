@@ -10,11 +10,13 @@
 
 Test(bct, too_much_parameters)
 {
+    cr_redirect_stdout();
     client_t client = test_create_client(0);
     server_info_t serverInfo = get_server_info();
 
     bct((char *[]){"bct", "1", "1", "1", "1", NULL}, client, serverInfo);
     assert_packet_queue(client->packetQueue, 1, "sbp");
+    assert_stdout_eq_str("Client 0: bct: bad argument number\n");
 }
 
 Test(bct, valid_command_empty_tile)

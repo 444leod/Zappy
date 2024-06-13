@@ -97,7 +97,7 @@ void tna(char **args, const client_t client,
     const server_info_t server_info)
 {
     if (tablen((const void **)args) > 1) {
-        printf("Client %d: tna: too many arguments\n", client->fd);
+        printf("Client %d: tna: bad argument number\n", client->fd);
         queue_buffer(client, "sbp");
         return;
     }

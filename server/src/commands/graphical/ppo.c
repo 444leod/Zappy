@@ -20,7 +20,7 @@ char *get_player_pos_string(const player_t player)
 {
     char orientation = get_char_by_orientation((int)player->orientation);
 
-    return my_snprintf("ppo %d %d %d %d",
+    return my_snprintf("ppo %d %d %d %c",
         player->playerNumber,
         player->position.x, player->position.y,
         orientation);
@@ -41,6 +41,8 @@ void send_player_pos_to_client_list(const client_list_t clients,
 
     if (player)
         player_pos_string = get_player_pos_string(player);
+    else
+        printf("GLOBAL: ppo %d: player not found\n", playerNumber);
     while (tmp) {
         queue_buffer(tmp->client, player_pos_string);
         tmp = tmp->next;
@@ -64,7 +66,8 @@ void send_player_pos_to_client(const client_t client, const int playerNumber)
     if (player)
         player_pos_string = get_player_pos_string(player);
     else
-        printf("GLOBAL: ppo %d: player not found\n", playerNumber);
+        printf("Client %d: ppo %d: player not found\n", client->fd,
+            playerNumber);
     queue_buffer(client, player_pos_string);
     if (player)
         my_free(player_pos_string);

@@ -80,5 +80,6 @@ void sst(char **args, const client_t client,
         return;
     }
     serverInfo->freq = time_unit;
-    send_time_unit_modification_to_client(client, time_unit);
+    send_time_unit_modification_to_client_list(get_clients_by_type(GRAPHICAL),
+        time_unit);
 }

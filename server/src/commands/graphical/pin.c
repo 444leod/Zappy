@@ -18,7 +18,7 @@
  */
 char *get_player_inventory_string(const player_t player)
 {
-    return my_snprintf("pin %d %d %d %d %d %d %d %d %d",
+    return my_snprintf("pin %d %d %d %d %d %d %d %d",
         player->playerNumber, player->food,
         player->rocks.linemate, player->rocks.deraumere,
         player->rocks.sibur, player->rocks.mendiane,
