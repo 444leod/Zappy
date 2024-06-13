@@ -5,6 +5,8 @@
 ** Color
 */
 
+#pragma once
+
 #include <cstdint>
 
 namespace gui {

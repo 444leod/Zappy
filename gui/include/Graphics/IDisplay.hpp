@@ -11,7 +11,6 @@
 #include "ITextureManager.hpp"
 #include <vector>
 #include <string>
-#include "../GameData/GameData.hpp"
 
 namespace gui {
     /**
