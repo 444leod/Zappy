@@ -10,11 +10,35 @@
 #include "lib.h"
 #include "zappy.h"
 
+/**
+ * @brief Change the server frequency
+ * @details Change the server frequency
+ *
+ * @param time_unit the new time unit
+ * @param server_info the server info
+ */
+void change_server_freq(int time_unit, server_info_t server_info)
+{
+    char *packet_string = my_snprintf("sst %d", time_unit);
+    packet_t *packet = build_packet(packet_string);
+
+    server_info->freq = time_unit;
+    queue_packet_to_client_type(GRAPHICAL, packet);
+    my_free(packet_string);
+}
+
+/**
+ * @brief Sst command
+ * @details Set the frequency of the server
+ *
+ * @param args the arguments of the command
+ * @param client the client that executed the command
+ * @param server_info the server info
+ */
 void sst(char **args, const client_t client,
     const server_info_t serverInfo)
 {
     int time_unit = 0;
-    packet_t *packet;
 
     if (tablen((const void **)args) != 2) {
         printf("Client %d: sst: bad argument number\n", client->fd);
@@ -27,7 +51,5 @@ void sst(char **args, const client_t client,
         queue_buffer(client, "sbp");
         return;
     }
-    serverInfo->freq = time_unit;
-    packet = build_packet(my_snprintf("sst %d", time_unit));
-    queue_packet_to_client_type(GRAPHICAL, packet);
+    change_server_freq(time_unit, serverInfo);
 }

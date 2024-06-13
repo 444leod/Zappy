@@ -34,6 +34,7 @@ void send_player_inventory(const client_t client, const int playerNumber)
         player->rocks.sibur, player->rocks.mendiane,
         player->rocks.phiras, player->rocks.thystame);
     queue_buffer(client, inventory);
+    my_free(inventory);
 }
 
 /**

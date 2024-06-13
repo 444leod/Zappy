@@ -22,6 +22,7 @@ void tna(char **args, const client_t client,
     const server_info_t server_info)
 {
     team_list_t teams;
+    char *packet_string;
 
     if (tablen((const void **)args) > 1) {
         queue_buffer(client, "sbp");
@@ -29,7 +30,9 @@ void tna(char **args, const client_t client,
     }
     teams = server_info->teams;
     while (teams) {
-        queue_buffer(client, my_snprintf("tna %s", teams->team->name));
+        packet_string = my_snprintf("tna %s", teams->team->name);
+        queue_buffer(client, packet_string);
+        my_free(packet_string);
         teams = teams->next;
     }
 }

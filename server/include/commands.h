@@ -10,6 +10,7 @@
 #include "client_types.h"
 #include "server_info.h"
 #include "macros.h"
+#include "garbage_collector.h"
 #include <sys/select.h>
 #include <stdbool.h>
 

@@ -49,6 +49,7 @@ static bool is_read_special_case(const client_t client,
     }
     if (valread == 0) {
         remove_client(client->fd);
+        client->fd = -1;
         return true;
     }
     return false;
@@ -190,7 +191,8 @@ void loop_clients(const client_list_t clients, const fd_set *readfds,
             continue;
         }
         trigger_action(clientNode->client, readfds, writefds, serverInfo);
-        if (clientNode && clientNode->client->fd == tempFd)
+        if (clientNode && clientNode->client &&
+            clientNode->client->fd == tempFd)
             clientNode = clientNode->next;
     }
 }

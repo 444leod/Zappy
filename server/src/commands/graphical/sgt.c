@@ -21,10 +21,14 @@
 void sgt(char **args, const client_t client,
     const server_info_t server_info)
 {
+    char *packet_string;
+
     if (tablen((const void **)args) > 1) {
         queue_buffer(client, "sbp");
         printf("Client %d: sgt: bad argument number\n", client->fd);
         return;
     }
-    queue_buffer(client, my_snprintf("sgt %d", server_info->freq));
+    packet_string = my_snprintf("sgt %d", server_info->freq);
+    queue_buffer(client, packet_string);
+    my_free(packet_string);
 }

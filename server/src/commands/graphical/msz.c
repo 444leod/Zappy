@@ -21,10 +21,14 @@
 void msz(char **args, client_t client,
     server_info_t serverInfo)
 {
+    char *packet_string;
+
     if (tablen((const void **)args) > 1) {
         queue_buffer(client, "sbp");
         return;
     }
-    queue_buffer(client,
-        my_snprintf("msz %d %d", serverInfo->width, serverInfo->height));
+    packet_string = my_snprintf("msz %d %d",
+        serverInfo->width, serverInfo->height);
+    queue_buffer(client, packet_string);
+    my_free(packet_string);
 }

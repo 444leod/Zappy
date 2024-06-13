@@ -53,17 +53,20 @@ static bool is_team_name_valid(const char *teamName,
 {
     team_list_t teams = serverInfo->teams;
     const team_t team = get_team_by_name(teamName, teams);
+    char *escaped_string = get_escaped_string(teamName);
 
     if (team == NULL) {
         printf("Client %d: Invalid team name (%s)\n", client->fd,
-            get_escaped_string(teamName));
+            escaped_string);
+        my_free(escaped_string);
         return false;
     }
     if (team->remainingSlots == 0) {
-        printf("Client %d: Team %s is full\n", client->fd,
-            get_escaped_string(teamName));
+        printf("Client %d: Team %s is full\n", client->fd, escaped_string);
+        my_free(escaped_string);
         return false;
     }
+    my_free(escaped_string);
     return true;
 }
 
@@ -104,10 +107,14 @@ static void spawn_player(const char *teamName, const client_t client,
 static void send_start_informations(const client_t client,
     const uint32_t width, const uint32_t height)
 {
-    queue_buffer(client,
-        my_snprintf("%d", client->player->team->remainingSlots));
-    queue_buffer(client,
-        my_snprintf("%d %d", width, height));
+    char *packet_string =
+        my_snprintf("%d", client->player->team->remainingSlots);
+
+    queue_buffer(client, packet_string);
+    my_free(packet_string);
+    packet_string = my_snprintf("%d %d", width, height);
+    queue_buffer(client, packet_string);
+    my_free(packet_string);
 }
 
 /**

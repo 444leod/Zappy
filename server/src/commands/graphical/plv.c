@@ -20,6 +20,7 @@
 void send_player_level(const client_t client, const int playerNumber)
 {
     player_t player = get_player_by_player_number(playerNumber);
+    char *packet_string;
 
     if (!player) {
         printf("Client %d: plv %d: player not found\n",
@@ -27,8 +28,10 @@ void send_player_level(const client_t client, const int playerNumber)
         queue_buffer(client, "sbp");
         return;
     }
-    queue_buffer(client, my_snprintf("plv %d %d",
-        player->playerNumber, player->level));
+    packet_string = my_snprintf("plv %d %d",
+        player->playerNumber, player->level);
+    queue_buffer(client, packet_string);
+    my_free(packet_string);
 }
 
 /**
