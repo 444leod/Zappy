@@ -11,16 +11,27 @@
 #include "zappy.h"
 
 /**
+ * @brief Get the player level string
+ *
+ * @param player the player
+ * @return char* the player level string
+ */
+char *get_player_level_string(const player_t player)
+{
+    return my_snprintf("plv %d %d", player->playerNumber, player->level);
+}
+
+/**
  * @brief Send the player level to a client
  * @details Send the player level to a client
  *
  * @param client the client that executed the command
  * @param playerNumber the player number
 */
-void send_player_level(const client_t client, const int playerNumber)
+void send_player_level_to_client(const client_t client, const int playerNumber)
 {
     player_t player = get_player_by_player_number(playerNumber);
-    char *packet_string;
+    char *player_level_string;
 
     if (!player) {
         printf("Client %d: plv %d: player not found\n",
@@ -28,10 +39,35 @@ void send_player_level(const client_t client, const int playerNumber)
         queue_buffer(client, "sbp");
         return;
     }
-    packet_string = my_snprintf("plv %d %d",
-        player->playerNumber, player->level);
-    queue_buffer(client, packet_string);
-    my_free(packet_string);
+    player_level_string = get_player_level_string(player);
+    queue_buffer(client, player_level_string);
+    my_free(player_level_string);
+}
+
+/**
+ * @brief Send the player level to a list of clients
+ * @details Send the player level to a list of clients
+ *
+ * @param clients the list of clients
+ * @param playerNumber the player number
+*/
+void send_player_level_to_client_list(const client_list_t clients,
+    const int playerNumber)
+{
+    client_list_t tmp = clients;
+    player_t player = get_player_by_player_number(playerNumber);
+    char *player_level_string = "sbp";
+
+    if (player)
+        player_level_string = get_player_level_string(player);
+    else
+        printf("GLOBAL: plv %d: player not found\n", playerNumber);
+    while (tmp) {
+        queue_buffer(tmp->client, player_level_string);
+        tmp = tmp->next;
+    }
+    if (player)
+        my_free(player_level_string);
 }
 
 /**
@@ -58,5 +94,5 @@ void plv(char **args, const client_t client,
         queue_buffer(client, "sbp");
         return;
     }
-    send_player_level(client, playerNumber);
+    send_player_level_to_client(client, playerNumber);
 }

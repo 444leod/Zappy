@@ -11,13 +11,29 @@
 #include "zappy.h"
 
 /**
- * @brief Send the player inventory to a client
- * @details Send the player inventory to a client
+ * @brief Get the player inventory string
+ *
+ * @param player the player
+ * @return char* the player inventory string
+ */
+char *get_player_inventory_string(const player_t player)
+{
+    return my_snprintf("pin %d %d %d %d %d %d %d %d %d",
+        player->playerNumber, player->food,
+        player->rocks.linemate, player->rocks.deraumere,
+        player->rocks.sibur, player->rocks.mendiane,
+        player->rocks.phiras, player->rocks.thystame);
+}
+
+/**
+ * @brief Send the player inventory to a client by the playerNumber
+ * @details Send the player inventory to a client by the playerNumber
  *
  * @param client the client that executed the command
  * @param playerNumber the player number
 */
-void send_player_inventory(const client_t client, const int playerNumber)
+void send_player_inventory_to_client(const client_t client,
+    const int playerNumber)
 {
     player_t player = get_player_by_player_number(playerNumber);
     char *inventory;
@@ -28,13 +44,35 @@ void send_player_inventory(const client_t client, const int playerNumber)
         queue_buffer(client, "sbp");
         return;
     }
-    inventory = my_snprintf("pin %d %d %d %d %d %d %d %d",
-        player->playerNumber, player->food,
-        player->rocks.linemate, player->rocks.deraumere,
-        player->rocks.sibur, player->rocks.mendiane,
-        player->rocks.phiras, player->rocks.thystame);
+    inventory = get_player_inventory_string(player);
     queue_buffer(client, inventory);
     my_free(inventory);
+}
+
+/**
+ * @brief Send the player inventory to a list of clients
+ * @details Send the player inventory to a list of clients
+ *
+ * @param clients the list of clients
+ * @param playerNumber the player number
+ */
+void send_player_inventory_to_client_list(const client_list_t clients,
+    const int playerNumber)
+{
+    client_list_t tmp = clients;
+    player_t player = get_player_by_player_number(playerNumber);
+    char *inventory = "sbp";
+
+    if (player)
+        inventory = get_player_inventory_string(player);
+    else
+        printf("GLOBAL: pin %d: player not found\n", playerNumber);
+    while (tmp) {
+        queue_buffer(tmp->client, inventory);
+        tmp = tmp->next;
+    }
+    if (player)
+        my_free(inventory);
 }
 
 /**
@@ -61,5 +99,5 @@ void pin(char **args, const client_t client,
         queue_buffer(client, "sbp");
         return;
     }
-    send_player_inventory(client, playerNumber);
+    send_player_inventory_to_client(client, playerNumber);
 }

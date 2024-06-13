@@ -11,20 +11,48 @@
 #include "zappy.h"
 
 /**
- * @brief Change the server frequency
- * @details Change the server frequency
+ * @brief Get the time unit modification string
  *
- * @param time_unit the new time unit
- * @param server_info the server info
+ * @param time_unit the time unit
+ * @return char* the time unit modification string
  */
-void change_server_freq(int time_unit, server_info_t server_info)
+char *get_time_unit_modification_string(int time_unit)
 {
-    char *packet_string = my_snprintf("sst %d", time_unit);
-    packet_t *packet = build_packet(packet_string);
+    return my_snprintf("sst %d", time_unit);
+}
 
-    server_info->freq = time_unit;
-    queue_packet_to_client_type(GRAPHICAL, packet);
-    my_free(packet_string);
+/**
+ * @brief Send the time unit modification to a client
+ *
+ * @param client the client that executed the command
+ * @param time_unit the time unit
+ */
+void send_time_unit_modification_to_client(const client_t client,
+    int time_unit)
+{
+    char *time_unit_string = get_time_unit_modification_string(time_unit);
+
+    queue_buffer(client, time_unit_string);
+    my_free(time_unit_string);
+}
+
+/**
+ * @brief Send the time unit modification to all the clients in the list
+ *
+ * @param clients the list of clients
+ * @param time_unit the time unit
+ */
+void send_time_unit_modification_to_client_list(const client_list_t clients,
+    int time_unit)
+{
+    char *time_unit_string = get_time_unit_modification_string(time_unit);
+    client_list_t tmp = clients;
+
+    while (tmp) {
+        queue_buffer(tmp->client, time_unit_string);
+        tmp = tmp->next;
+    }
+    my_free(time_unit_string);
 }
 
 /**
@@ -51,5 +79,6 @@ void sst(char **args, const client_t client,
         queue_buffer(client, "sbp");
         return;
     }
-    change_server_freq(time_unit, serverInfo);
+    serverInfo->freq = time_unit;
+    send_time_unit_modification_to_client(client, time_unit);
 }
