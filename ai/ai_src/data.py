@@ -20,7 +20,19 @@ class Collectibles():
 
     def __repr__(self) -> str:
         return f"f{self.food}l{self.linemate}d{self.deraumere}s{self.sibur}m{self.mendiane}p{self.phiras}t{self.thystame}"
+    
+    def add_object_by_name(self, str_to_take : str):
+        if hasattr(self, str_to_take):
+            setattr(self, str_to_take, getattr(self, str_to_take) + 1)
 
+    def remove_object_by_name(self, str_to_take : str):
+        if hasattr(self, str_to_take):
+            setattr(self, str_to_take, getattr(self, str_to_take) - 1)
+
+    def get_nbr_object_by_name(self, str_to_take : str) -> int:
+        if hasattr(self, str_to_take):
+            return getattr(self, str_to_take)
+        return 0
 @dataclass
 class PlayerInfo():
     level: int = 1

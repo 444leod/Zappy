@@ -76,15 +76,18 @@ class Bot():
         self.messages_received.append((int(tab[1][:-1]), tab[2]))
 
     def run(self) -> None:
+        lst = ["food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"]
+        i = 0
         while True:
             # Behavior logic here, send one command at a time!!
-            cmd_to_send: cmd.ACommand = cmd.ConnectNbr()
+            cmd_to_send: cmd.ACommand = cmd.Incantation()
             self.cmd_sent.append(cmd_to_send.dump())
             self.com_handler.send_command(cmd_to_send.dump())
 
             self.base_funcs_loop()
 
             self.handle_commands_sent()
+            self.log(f"Player info: {self.player_info.level}")
     
     def base_funcs_loop(self) -> None:
         while True:
@@ -103,6 +106,10 @@ class Bot():
     def handle_commands_sent(self) -> None:
         # Handle the command sent
         cmd_sent: str = self.cmd_sent[-1].split(" ")[0]
+        try :
+            cmd_sup: str = self.cmd_sent[-1].split(" ")[1]
+        except IndexError:
+            cmd_sup = ""
         match cmd_sent:
             case "Inventory":
                 self.player_info.inv = Collectibles(**(cmd.Inventory().interpret_result(self.results[-1])))
@@ -130,6 +137,36 @@ class Bot():
                     self.map[self.player_info.pos].nb_player = 1
                 except Exception:
                     pass
+            case "Take":
+                try:
+                    pos = self.player_info.pos
+                    cmd.Take().interpret_result(self.results[-1])
+                    self.player_info.inv.add_object_by_name(cmd_sup)
+                    if self.map.tiles[pos[0]][pos[1]].collectibles.get_nbr_object_by_name(cmd_sup) > 0:
+                        self.map.tiles[pos[0]][pos[1]].collectibles.remove_object_by_name(cmd_sup)
+                except Exception as e:
+                    self.log(e)
+                    self.log("Failed to take object")
+                    pass
+            case "Set":
+                try:
+                    pos = self.player_info.pos
+                    cmd.Set().interpret_result(self.results[-1])
+                    self.player_info.inv.remove_object_by_name(cmd_sup)
+                    self.map.tiles[pos[0]][pos[1]].collectibles.add_object_by_name(cmd_sup)
+                except Exception as e:
+                    self.log(e)
+                    self.log("Failed to set object")
+                    pass
+            case "Incantation":
+                try:
+                    cmd.Incantation().interpret_result(self.results[-1])
+                    self.player_info.level += 1
+                except Exception as e:
+                    self.log(e)
+                    self.log("Failed to incant")
+                    pass
+            
             case _:
                 pass
         

@@ -83,7 +83,7 @@ class Inventory(ACommand):
         return {item: int(quantity) for item, quantity in items}
 
 class Broadcast(ACommand):
-    def __init__(self, message: str) -> None:
+    def __init__(self, message: str = "") -> None:
         super().__init__(f"Broadcast {message}")
 
 class ConnectNbr(ACommand):
@@ -98,7 +98,7 @@ class ConnectNbr(ACommand):
 
 class Fork(ACommand):
     def __init__(self) -> None:
-        super().__init("Fork")
+        super().__init__("Fork")
     
     #TODO: interpret_result to change nb_eggs
 
@@ -106,23 +106,16 @@ class Eject(ACommand):
     def __init__(self) -> None:
         super().__init__("Eject")
 
-    def interpret_result(self, res: str) -> dict:
-        return super().interpret_result(res)
-
 class Take(ACommand):
-    def __init__(self, obj) -> None:
-        super().__init(f"Take {obj}")
-    
-    #TODO: interpret_result to change player inv and tilecontent
+    def __init__(self, obj: str = "") -> None:
+        super().__init__(f"Take {obj}")
 
 class Set(ACommand):
-    def __init__(self, obj) -> None:
-        super().__init(f"Set {obj}")
-    
-    #TODO: interpret_result to change player inv and tilecontent
+    def __init__(self, obj: str = "") -> None:
+        super().__init__(f"Set {obj}")
 
 class Incantation(ACommand):
     def __init__(self) -> None:
-        super().__init("Incantation")
+        super().__init__("Incantation")
     
     #TODO: interpret_result to change player level
