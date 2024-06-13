@@ -17,27 +17,22 @@
  * @param server_info the server info
  * @param playerNumber the player id
  */
-void send_player_pos(const client_t client, UNUSED
-    const server_info_t server_info, const uint32_t playerNumber)
+void send_player_pos(const client_t client, const int playerNumber)
 {
-    client_list_t clients = *get_clients();
-    player_t player = NULL;
+    player_t player = get_player_by_player_number(playerNumber);
+    char orientation;
 
-    while (clients) {
-        if (clients->client->player)
-            player = clients->client->player;
-        if (player && player->playerNumber == playerNumber) {
-            queue_buffer(client, my_snprintf("ppo %d %d %d %d",
-                playerNumber,
-                player->position.x, player->position.y,
-                player->orientation));
-            return;
-        }
-        player = NULL;
-        clients = clients->next;
+    if (!player) {
+        printf("Client %d: ppo %d: player not found\n",
+            client->fd, playerNumber);
+        queue_buffer(client, "sbp");
+        return;
     }
-    printf("Client %d: ppo %d: player not found\n", client->fd, playerNumber);
-    queue_buffer(client, "sbp");
+    orientation = get_char_by_orientation((int)player->orientation);
+    queue_buffer(client, my_snprintf("ppo %d %d %d %c",
+        player->playerNumber,
+        player->position.x, player->position.y,
+        orientation));
 }
 
 /**
@@ -49,17 +44,20 @@ void send_player_pos(const client_t client, UNUSED
  * @param server_info the server info
  */
 void ppo(char **args, const client_t client,
-    const server_info_t server_info)
+    UNUSED const server_info_t server_info)
 {
+    int playerNumber;
+
     if (tablen((const void **)args) != 2) {
         printf("Client %d: ppo: bad argument number\n", client->fd);
         queue_buffer(client, "sbp");
         return;
     }
-    if (!is_number(args[1])) {
+    playerNumber = atoi(args[1]);
+    if (!is_number(args[1]) || playerNumber < 0) {
         printf("Client %d: ppo: argument is not a number\n", client->fd);
         queue_buffer(client, "sbp");
         return;
     }
-    send_player_pos(client, server_info, atoi(args[1]));
+    send_player_pos(client, playerNumber);
 }

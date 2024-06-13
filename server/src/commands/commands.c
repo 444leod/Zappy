@@ -21,6 +21,7 @@ const command_t COMMANDS[] = {
     {"mct", &mct, 0, GRAPHICAL},
     {"tna", &tna, 0, GRAPHICAL},
     {"ppo", &ppo, 0, GRAPHICAL},
+    {"plv", &plv, 0, GRAPHICAL},
     {"Forward", &forward, 7, AI},
     {NULL, &unknown_command, 0, NONE}
 };

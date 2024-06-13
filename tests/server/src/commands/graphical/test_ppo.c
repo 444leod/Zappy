@@ -30,23 +30,7 @@ Test(ppo, valid_command)
     client->packetQueue = NULL;
     ppo((char *[]){"ppo", "0", NULL}, client, serverInfo);
     position_t pos = client->player->position;
-    enum ORIENTATION ori = client->player->orientation;
-    char orientationChar = '0';
-    switch (ori) {
-        case NORTH:
-            orientationChar = 'N';
-            break;
-        case SOUTH:
-            orientationChar = 'S';
-            break;
-        case EAST:
-            orientationChar = 'E';
-            break;
-        case WEST:
-            orientationChar = 'W';
-            break;
-    }
-    assert_packet_queue(client->packetQueue, 1, my_snprintf("ppo 0 %d %d %c", pos.x, pos.y, orientationChar));
+    assert_packet_queue(client->packetQueue, 1, my_snprintf("ppo 0 %d %d N", pos.x, pos.y));
 }
 
 Test(ppo, valid_command_multiple_players)

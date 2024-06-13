@@ -85,6 +85,7 @@ player_t egg_to_player(const egg_t egg, const map_t map)
     player->level = 1;
     player->team = egg->team;
     player->position = egg->pos;
+    player->orientation = NORTH;
     tile = get_tile_at_position(egg->pos, map);
     remove_from_list((void *)egg, (node_t *)tile->eggs);
     add_to_list((void *)player, (node_t *)&tile->players);

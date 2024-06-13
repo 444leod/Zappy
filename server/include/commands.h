@@ -47,8 +47,13 @@ void tna(char **args, const client_t client,
 void ppo(char **args, const client_t client,
     const server_info_t serverInfo);
 
+void plv(char **args, const client_t client,
+    const server_info_t serverInfo);
+
 extern const command_t COMMANDS[];
 extern const command_t AUTHENTIFICATION_COMMAND;
 
 void send_tile_content(const client_t client, const server_info_t serverInfo,
     const position_t pos);
+player_t get_player_by_player_number(const uint32_t playerNumber);
+char get_char_by_orientation(int orientation);

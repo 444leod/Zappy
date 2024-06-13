@@ -51,6 +51,7 @@ __SRC_GRAPHICAL := msz.c \
 	mct.c \
 	tna.c \
 	ppo.c \
+	plv.c \
 
 __SRC_GAME := \
 	create_map.c \
@@ -107,6 +108,7 @@ __SRC_GRAPHICAL_TEST := msz.c \
 	mct.c \
 	tna.c \
 	ppo.c \
+	plv.c \
 
 __SRC_UTILS_TEST := get_map.c \
 
