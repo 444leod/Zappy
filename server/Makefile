@@ -53,6 +53,7 @@ __SRC_GRAPHICAL := msz.c \
 	ppo.c \
 	plv.c \
 	pin.c \
+	sgt.c \
 
 __SRC_GAME := \
 	create_map.c \
@@ -111,6 +112,7 @@ __SRC_GRAPHICAL_TEST := msz.c \
 	ppo.c \
 	plv.c \
 	pin.c \
+	sgt.c \
 
 __SRC_UTILS_TEST := get_map.c \
 
