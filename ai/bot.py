@@ -2,39 +2,10 @@
 
 import sys
 from typing import List
-from connection_handler import ConnectionHandler
-from config import Config, HelpException, ArgError
-from enum import Enum
-import commands as cmd
-from dataclasses import dataclass, field
-
-class Orientation(Enum):
-    NORTH = 1
-    EAST = 2
-    SOUTH = 3
-    WEST = 4
-
-@dataclass
-class InventoryInfo():
-    food: int = 10
-    linemate: int = 0
-    deraumere: int = 0
-    sibur: int = 0
-    mendiane: int = 0
-    phiras: int = 0
-    thystame: int = 0
-
-@dataclass
-class PlayerInfo():
-    level: int = 1
-    inv: InventoryInfo = field(default_factory=InventoryInfo)
-    pos: tuple[int, int] = (0, 0)
-    orientation: Orientation = Orientation.NORTH
-
-@dataclass
-class GeneralInfo():
-    map_size: tuple[int, int] = (0, 0)
-    nb_eggs: int = 0
+from ai_src.connection_handler import ConnectionHandler
+from ai_src.config import Config, HelpException, ArgError
+from ai_src.data import PlayerInfo, GeneralInfo, Orientation, Collectibles, Map, TileContent
+import ai_src.commands as cmd
 
 class Bot():
     def __init__(self, verbose=False, traced=False) -> None:
@@ -75,6 +46,9 @@ class Bot():
 
         self.player_info: PlayerInfo = PlayerInfo()
 
+        self.map: Map = Map()
+        self.map.tiles = [[TileContent() for _ in range(self.general_info.map_size[0])] for _ in range(self.general_info.map_size[1])]
+
         self.messages_received: List[tuple[int, str]] = [] # [(playerID, message), ..]
         self.messages_sent: List[str] = []
         self.cmd_sent: List[str] = []
@@ -103,7 +77,7 @@ class Bot():
     def run(self) -> None:
         while True:
             # Behavior logic here, send one command at a time!!
-            cmd_to_send: cmd.ACommand = cmd.Inventory()
+            cmd_to_send: cmd.ACommand = cmd.Look()
             self.cmd_sent.append(cmd_to_send.dump())
             self.com_handler.send_command(cmd_to_send.dump())
 
@@ -128,7 +102,15 @@ class Bot():
     def handle_commands_sent(self) -> None:
         # Handle the command sent
         if (self.cmd_sent[-1] == cmd.Inventory().dump()):
-            self.player_info.inv = InventoryInfo(**(cmd.Inventory().interpret_result(self.results[-1])))
+            self.player_info.inv = Collectibles(**(cmd.Inventory().interpret_result(self.results[-1])))
+        
+        if (self.cmd_sent[-1] == cmd.Look().dump()):
+            self.map.vision_update(
+                cmd.Look().interpret_result(self.results[-1]),
+                self.player_info.orientation,
+                self.player_info.pos
+            )
+            self.log(self.map)
         
         #TODO: Handle other commands
 

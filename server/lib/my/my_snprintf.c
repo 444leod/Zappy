@@ -26,6 +26,8 @@ char *my_snprintf(const char *format, ...)
     int size = 0;
     char *str = NULL;
 
+    if (format == NULL)
+        return NULL;
     va_start(args, format);
     va_copy(copy, args);
     size = vsnprintf(NULL, 0, format, copy);

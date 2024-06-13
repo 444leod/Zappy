@@ -7,7 +7,6 @@
 
 __GREEN=\033[0;32m
 __NC=\033[0m
-
 __INFO = ${__GREEN}[INFO]${__NC}
 
 __NAME = zappy_server
@@ -16,6 +15,12 @@ __TESTER_NAME = tester
 __LIBMY = libmy.a
 __LIBNETWORK = libnetwork.a
 
+
+# =============================================================================
+# Server code sources
+# =============================================================================
+
+
 __ASRC = $(__SRC) \
 	main.c
 
@@ -23,6 +28,7 @@ __SRC	=	$(addprefix src/, $(__SRC_SRC)) \
 	$(addprefix src/args/, $(__SRC_ARGS)) \
 	$(addprefix src/commands/, $(__SRC_COMMANDS)) \
 	$(addprefix src/commands/ai/, $(__SRC_AI)) \
+	$(addprefix src/game/, $(__SRC_GAME)) \
 	$(addprefix src/commands/graphical/, $(__SRC_GRAPHICAL)) \
 	$(addprefix src/network/, $(__SRC_NETWORK)) \
 	$(addprefix src/network/client/, $(__SRC_CLIENT)) \
@@ -31,13 +37,20 @@ __SRC	=	$(addprefix src/, $(__SRC_SRC)) \
 __SRC_SRC := server.c \
 	exit.c \
 	handle_clients.c \
-	handle_commands.c
+	handle_commands.c \
+	select_wrapper.c \
 
 __SRC_COMMANDS := commands.c \
 	unknown_command.c \
 	auth.c \
 
 __SRC_AI := forward.c \
+
+__SRC_GAME := \
+	create_map.c \
+	init_map.c \
+	manage_entities.c \
+	query_map.c \
 
 __SRC_GRAPHICAL := msz.c \
 
@@ -64,41 +77,68 @@ __SRC_CLIENT := add_client.c \
 __SRC_UTILS := queue_buffer.c \
 
 
-# UNIT TESTS
-__TEST_SRC	=	$(__SRC) \
-	$(addprefix ../tests/server/, $(__SRC_ROOT_TEST)) \
-	$(addprefix ../tests/server/commands/, $(__SRC_COMMANDS_TEST)) \
+# =============================================================================
+# Unit tests sources
+# =============================================================================
+
+__TEST_SRC	= \
+	$(__SRC) \
+	$(addprefix ../tests/server/test_, $(__SRC_ROOT_TEST)) \
+	$(addprefix ../tests/server/commands/test_, $(__SRC_COMMANDS_TEST)) \
+	$(addprefix ../tests/server/utils/test_, $(__SRC_UTILS_TEST)) \
 
 __SRC_ROOT_TEST := utils.c \
 	client.c
 
 __SRC_COMMANDS_TEST := auth.c \
 
+__SRC_UTILS_TEST := get_map.c \
+
+# =============================================================================
+# Functionnal tests sources
+# =============================================================================
 
 
-# FUNCTIONAL TESTER
 __TESTER_SRC := tests/tester.cpp \
 	tests/Test.cpp
 
+
+# =============================================================================
+# Compilation flags
+# =============================================================================
+
+
 __CC = gcc
-__CFLAGS += -Wall -Wextra -Werror -Wpedantic -I./include -L. -lmy -lnetwork
-__TEST_FLAGS = $(__CFLAGS) --coverage -lcriterion -I../tests/server
+__CFLAGS += -Wall -Wextra -Werror -Wpedantic
+__CFLAGS += -I./include -L. -lmy -lnetwork -luuid
+__TEST_FLAGS = $(__CFLAGS) --coverage -lcriterion -I../tests/server -I../tests
 
 %.o: %.c
 	@$(__CC) -c -o $@ $< $(__CFLAGS)
 
+
+# =============================================================================
+# Objects
+# =============================================================================
+
+
 __OBJ = $(__ASRC:.c=.o)
-__TEST_OBJ = $(__TEST_SRC:.c=.o)
 __TESTER_OBJ = $(__TESTER_SRC:.cpp=.o)
 
 %.o: %.cpp
 	@g++ -c -o $@ $< -std=c++20
 
+
+# =============================================================================
+# Basic rules
+# =============================================================================
+
+
 all: $(__LIBMY) $(__LIBNETWORK) $(__NAME)
-	@echo -ne "\n${__INFO} Server compiled successfully.${__NC}\n"
 
 $(__NAME): $(__OBJ)
 	@$(__CC) -o $(__NAME) $(__OBJ) $(__CFLAGS)
+	@echo -ne "\n${__INFO} Server compiled successfully.${__NC}\n"
 
 $(__LIBMY):
 	@make -C ./lib -s
@@ -118,12 +158,20 @@ fclean: clean
 
 re: fclean all
 
+
+# =============================================================================
+# Tests rules
+# =============================================================================
+
+
 $(__TESTER_NAME): all $(__TESTER_OBJ)
 	@g++ -o $(__TESTER_NAME) $(__TESTER_OBJ) -std=c++20 -DSILENT
 
+
+
 tests_run: $(__TESTER_NAME) $(__LIBMY) $(__LIBNETWORK)
 	@./$(__TESTER_NAME)
-	@gcc -o $(__TEST) $(__TEST_SRC) $(__TEST_FLAGS)
+	@$(CC) -o $(__TEST) $(__TEST_SRC) $(__TEST_FLAGS)
 	@./$(__TEST)
 
 tests_clean:
@@ -133,12 +181,18 @@ tests_clean:
 	@rm -f $(__TESTER_NAME)
 	@rm -f $(__TESTER_OBJ)
 	@rm -f $(__TEST)
-	@rm -f $(__TEST_OBJ)
 	@find . -name "*.gcda" -delete
 	@find . -name "*.gcno" -delete
 
-coverage: tests_run
-	@gcovr .
+unit_tests_run: $(__LIBMY) $(__LIBNETWORK) $(__NAME)
+	@gcc -o $(__TEST) $(__TEST_SRC) $(__TEST_FLAGS)
+	@./$(__TEST)
+
+
+# =============================================================================
+# Custom rules
+# =============================================================================
+
 
 debug:
 	@make debug -C ./lib -s
