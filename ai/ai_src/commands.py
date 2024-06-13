@@ -1,4 +1,7 @@
 import re
+from typing import List
+from collections import Counter
+from ai_src.data import TileContent, Collectibles
 
 class ACommand:
     def __init__(self, name: str) -> None:
@@ -35,7 +38,40 @@ class Look(ACommand):
     def __init__(self) -> None:
         super().__init__("Look")
     
-    #TODO: interpret_result to fill tilemap content
+    def interpret_result(self, res: str) -> dict:
+        def str_to_tile(s: str) -> TileContent:
+            items = s.split()
+            counter = Counter(items)
+            
+            collectibles = Collectibles(
+                food=counter['food'],
+                linemate=counter['linemate'],
+                deraumere=counter['deraumere'],
+                sibur=counter['sibur'],
+                mendiane=counter['mendiane'],
+                phiras=counter['phiras'],
+                thystame=counter['thystame']
+            )
+            
+            nb_players = counter['player']
+            
+            return TileContent(collectibles=collectibles, nb_players=nb_players)
+
+        super().interpret_result(res)
+        tab: List[str] = res.strip().removeprefix('[').removesuffix(']').split(',')
+        vision: dict[str, TileContent] = {}
+        n: int = 1
+        key: int = 0
+        while tab:
+            vision[key] = []
+            for _ in range(n):
+                vision[key].append(str_to_tile(tab.pop(0)))
+            n += 2
+            key += 1
+        #!!! THE REVERSE TRICK
+        for key, _ in vision.items():
+            vision[key].reverse()
+        return vision
 
 class Inventory(ACommand):
     def __init__(self) -> None:

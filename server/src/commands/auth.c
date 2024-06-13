@@ -11,6 +11,7 @@
 #include "lib.h"
 #include "zappy.h"
 #include "game.h"
+#include "debug.h"
 #include <stdio.h>
 
 /**
@@ -117,6 +118,7 @@ static void send_start_informations(const client_t client,
 void auth(char **args, const client_t client,
     const server_info_t serverInfo)
 {
+    DEBUG_PRINT("Authentificating %d\n", client->fd);
     if (tablen((const void **)args) != 1) {
         printf("Client %d: Bad team name\n", client->fd);
         queue_buffer(client, "ko");
