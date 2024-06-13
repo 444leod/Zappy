@@ -68,9 +68,6 @@ class Look(ACommand):
                 vision[key].append(str_to_tile(tab.pop(0)))
             n += 2
             key += 1
-        #!!! THE REVERSE TRICK
-        for key, _ in vision.items():
-            vision[key].reverse()
         return vision
 
 class Inventory(ACommand):
@@ -94,12 +91,10 @@ class ConnectNbr(ACommand):
         super().interpret_result(res)
         return int(res)
 
-
 class Fork(ACommand):
     def __init__(self) -> None:
         super().__init__("Fork")
     
-
 class Eject(ACommand):
     def __init__(self) -> None:
         super().__init__("Eject")
