@@ -92,7 +92,6 @@ class ConnectNbr(ACommand):
 
     def interpret_result(self, res: str) -> int:
         super().interpret_result(res)
-        print("hihi", res)
         return int(res)
 
 
@@ -100,7 +99,6 @@ class Fork(ACommand):
     def __init__(self) -> None:
         super().__init__("Fork")
     
-    #TODO: interpret_result to change nb_eggs
 
 class Eject(ACommand):
     def __init__(self) -> None:
@@ -118,4 +116,3 @@ class Incantation(ACommand):
     def __init__(self) -> None:
         super().__init__("Incantation")
     
-    #TODO: interpret_result to change player level

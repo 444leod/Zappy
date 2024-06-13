@@ -6,7 +6,7 @@ from ai_src.connection_handler import ConnectionHandler
 from ai_src.config import Config, HelpException, ArgError
 from ai_src.data import PlayerInfo, GeneralInfo, Orientation, Collectibles, Map, TileContent
 import ai_src.commands as cmd
-from ai_src.utiles import add_tuples, turn_left, turn_right
+from ai.ai_src.utils import add_tuples, turn_left, turn_right
 
 class Bot():
     def __init__(self, verbose=False, traced=False) -> None:
@@ -136,6 +136,14 @@ class Bot():
                     cmd.Eject().interpret_result(self.results[-1])
                     self.map[self.player_info.pos].nb_player = 1
                 except Exception:
+                    pass
+            case "Fork":
+                try:
+                    cmd.Fork().interpret_result(self.results[-1])
+                    self.general_info.nb_eggs += 1
+                except Exception as e:
+                    self.log(e)
+                    self.log("Failed to fork")
                     pass
             case "Take":
                 try:
