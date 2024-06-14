@@ -51,7 +51,7 @@ Test(pin, valid_command)
     auth((char *[]){"teamName", NULL}, client, serverInfo);
     client->packetQueue = NULL;
     pin((char *[]){"pin", "0", NULL}, client, serverInfo);
-    assert_packet_queue(client->packetQueue, 1, "pin 0 0 0 0 0 0 0 0");
+    assert_packet_queue(client->packetQueue, 1, "pin 0 10 0 0 0 0 0 0");
 }
 
 Test(pin, valid_command_multiple_players)

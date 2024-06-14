@@ -91,7 +91,7 @@ player_t egg_to_player(const egg_t egg, const map_t map)
     player->level = 1;
     player->team = egg->team;
     player->position = egg->pos;
-    player->orientation = NORTH;
+    player->orientation = (enum ORIENTATION)(rand() % 4) + 1;
     player->egg_number = egg->number;
     tile = get_tile_at_position(egg->pos, map);
     remove_from_list((void *)egg, (node_t *)tile->eggs);

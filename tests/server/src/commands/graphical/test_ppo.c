@@ -30,7 +30,8 @@ Test(ppo, valid_command)
     client->packetQueue = NULL;
     ppo((char *[]){"ppo", "0", NULL}, client, serverInfo);
     position_t pos = client->player->position;
-    assert_packet_queue(client->packetQueue, 1, my_snprintf("ppo 0 %d %d N", pos.x, pos.y));
+    char orientation = get_char_by_orientation(client->player->orientation);
+    assert_packet_queue(client->packetQueue, 1, my_snprintf("ppo 0 %d %d %c", pos.x, pos.y, orientation));
 }
 
 Test(ppo, valid_command_multiple_players)
