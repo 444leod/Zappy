@@ -275,5 +275,5 @@ Test(get_map, egg_to_player)
     cr_assert_str_eq(player->team->name, "Good guys");
     cr_assert(player->position.x == 0);
     cr_assert(player->position.y == 0);
-    cr_assert(player->food == 0);
+    cr_assert(player->food == 10);
 }

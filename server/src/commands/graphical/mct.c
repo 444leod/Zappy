@@ -6,7 +6,6 @@
 */
 
 #include "commands.h"
-#include "packet.h"
 #include "lib.h"
 #include "zappy.h"
 #include "commands_utils.h"
