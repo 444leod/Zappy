@@ -87,15 +87,15 @@ namespace gui {
 
             /**
              * @brief Get the messages
-             * @return std::vector<Message> The messages
+             * @return std::vector<message> The messages
             */
-            std::vector<Message> messages() const { return this->_messages; }
+            std::vector<message> messages() const { return this->_messages; }
 
             /**
              * @brief Add a message
              * @param message The message
             */
-            void addMessage(Message message) { this->_messages.push_back(message); }
+            void addMessage(message message) { this->_messages.push_back(message); }
 
             /**
              * @brief Get the REFERENCE of the map
@@ -143,6 +143,6 @@ namespace gui {
             Map _map;
             std::vector<std::shared_ptr<Character>> _players = {};
             std::vector<std::shared_ptr<Egg>> _eggs = {};
-            std::vector<Message> _messages = {};
+            std::vector<message> _messages = {};
     };
 }

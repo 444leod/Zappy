@@ -93,6 +93,12 @@ namespace gui {
             */
             void isLayingAnEgg(bool isLayingAnEgg) { this->_isLayingAnEgg = isLayingAnEgg; }
 
+            /**
+             * @brief Broadcast a message
+             * @param message The message to broadcast
+            */
+            void broadcast(UNUSED message message) const { /* TO DO */};
+
         private:
             bool _isLayingAnEgg = false;
             std::uint32_t _food = 0;

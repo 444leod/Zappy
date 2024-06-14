@@ -29,5 +29,5 @@ void gui::Pdi::receive(std::string command, GameData &gameData)
     auto player = gameData.getPlayerById(playerId);
     if (player.has_value())
         std::cout << "Player " << playerId << " died" << std::endl;
-        // player.value().setIsDead(true);
+        // player.value().kill(true);
 }

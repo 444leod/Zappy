@@ -29,5 +29,5 @@ void gui::Edi::receive(std::string command, GameData &gameData)
     auto egg = gameData.getEggById(eggId);
     if (egg.has_value())
         std::cout << "Egg " << eggId << " is dead" << std::endl;
-        // egg.value().setIsDead(true);
+        // egg.value().kill(true);
 }

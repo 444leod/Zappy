@@ -12,6 +12,8 @@
 #include "Vector.hpp"
 #include <vector>
 #include <memory>
+#include "macros.hpp"
+#include "Message.hpp"
 
 /**
  * @brief Class representing entity in the simulation
