@@ -103,6 +103,10 @@ class ConnectNbr(ACommand):
         super().__init__("Connect_nbr")
 
     def interpret_result(self, res: str) -> int:
+        """
+        Interprets the result of the Connect_nbr command
+        return the numner of team unsued slots
+        """
         super().interpret_result(res)
         return int(res)
 
