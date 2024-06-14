@@ -32,10 +32,13 @@ Test(pnw, new_player_to_1_graphical)
     cr_assert_null(graphical_client->player);
     cr_assert_eq(graphical_client->type, GRAPHICAL);
 
-    assert_packet_queue(graphical_client->packetQueue, 1, my_snprintf("pnw %d %d %d %c %d %s",
+    char *egg_player_connexion_string = my_snprintf("ebo %d", ai_client->player->egg_number);
+    char *new_connexion_string = my_snprintf("pnw %d %d %d %c %d %s",
         ai_client->player->playerNumber, ai_client->player->position.x,
         ai_client->player->position.y, get_char_by_orientation(ai_client->player->orientation),
-        ai_client->player->level, ai_client->player->team->name));
+        ai_client->player->level, ai_client->player->team->name);
+
+    assert_packet_queue(graphical_client->packetQueue, 2, egg_player_connexion_string, new_connexion_string);
 }
 
 Test(pnw, new_player_to_2_graphical)
@@ -65,12 +68,13 @@ Test(pnw, new_player_to_2_graphical)
     cr_assert_null(graphical_client2->player);
     cr_assert_eq(graphical_client2->type, GRAPHICAL);
 
-    assert_packet_queue(graphical_client->packetQueue, 1, my_snprintf("pnw %d %d %d %c %d %s",
+    char *egg_player_connexion_string = my_snprintf("ebo %d", ai_client->player->egg_number);
+
+    char *new_connexion_string = my_snprintf("pnw %d %d %d %c %d %s",
         ai_client->player->playerNumber, ai_client->player->position.x,
         ai_client->player->position.y, get_char_by_orientation(ai_client->player->orientation),
-        ai_client->player->level, ai_client->player->team->name));
-    assert_packet_queue(graphical_client2->packetQueue, 1, my_snprintf("pnw %d %d %d %c %d %s",
-        ai_client->player->playerNumber, ai_client->player->position.x,
-        ai_client->player->position.y, get_char_by_orientation(ai_client->player->orientation),
-        ai_client->player->level, ai_client->player->team->name));
+        ai_client->player->level, ai_client->player->team->name);
+
+    assert_packet_queue(graphical_client->packetQueue, 2, egg_player_connexion_string, new_connexion_string);
+    assert_packet_queue(graphical_client2->packetQueue, 2, egg_player_connexion_string, new_connexion_string);
 }

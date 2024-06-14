@@ -56,6 +56,7 @@ __SRC_GRAPHICAL := msz.c \
 	sgt.c \
 	sst.c \
 	pnw.c \
+	ebo.c \
 
 __SRC_GAME := \
 	create_map.c \

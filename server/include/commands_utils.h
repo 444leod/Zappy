@@ -68,3 +68,10 @@ void send_new_player_to_client(const client_t client, const player_t player);
 void send_new_player_to_client_list(const client_list_t clients,
     const player_t player);
 void send_new_player_to_graphical(const player_t player);
+
+char *get_egg_player_connexion_string(const egg_t egg);
+void send_egg_player_connexion_to_client(const client_t client,
+    const egg_t egg);
+void send_egg_player_connexion_to_client_list(const client_list_t clients,
+    const egg_t egg);
+void send_egg_player_connexion_to_graphical(const egg_t egg);
