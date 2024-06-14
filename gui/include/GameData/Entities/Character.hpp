@@ -99,10 +99,16 @@ namespace gui {
             */
             void broadcast(UNUSED message message) const { /* TO DO */};
 
+            /**
+             * @brief drop the ressource on the tile
+            */
+            void dropRessource() { this->_dropRessource = true; };
+
         private:
             bool _isLayingAnEgg = false;
             std::uint32_t _food = 0;
             std::uint32_t _level = 0;
             Rocks _rocks;
+            bool _dropRessource = false;
     };
 }
