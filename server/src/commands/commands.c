@@ -27,6 +27,7 @@ const command_t COMMANDS[] = {
     {"Fork", &fork_player, 42, AI},
     {"Eject", &eject, 7, AI},
     {"Take", &take, 7, AI},
+    {"Set", &set, 7, AI},
 
     {NULL, &unknown_command, 0, NONE}
 };

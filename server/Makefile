@@ -52,6 +52,7 @@ __SRC_AI := forward.c \
 	fork.c \
 	eject.c \
 	take.c \
+	set.c \
 
 __SRC_GAME := \
 	create_map.c \
@@ -110,6 +111,7 @@ __SRC_AI_TEST	:=	\
 	inventory.c \
 	look.c \
 	take.c \
+	set.c \
 
 __SRC_UTILS_TEST := get_map.c \
 

@@ -43,6 +43,7 @@ void connect_nbr(ARGS);
 void fork_player(ARGS);
 void eject(ARGS);
 void take(ARGS);
+void set(ARGS);
 
 ///////////////////////////////////////////////////////////////////////////////
 // OTHER COMMANDS
