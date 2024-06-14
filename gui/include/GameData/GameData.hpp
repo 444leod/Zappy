@@ -138,6 +138,23 @@ namespace gui {
             */
             std::optional<std::shared_ptr<Egg>> getEggById(std::uint32_t eggId) const;
 
+            /**
+             * @brief display the command error parameters
+            */
+            void displayCommandParameter() const { std::cerr << "Command error: invalid parameters" << std::endl; }
+
+            /**
+             * @brief display the the server message
+             * @param message The message
+            */
+            void displayServerMessage(const std::string &message) const { std::cerr << message << std::endl; }
+
+            /**
+             * @brief display unknown command
+             * @param command The command
+            */
+            void displayUnknownCommand(const std::string &command) const { std::cerr << "Unknown command: " << command << std::endl; }
+
         private:
             std::vector<std::string> _teamNames = {};
             Map _map;

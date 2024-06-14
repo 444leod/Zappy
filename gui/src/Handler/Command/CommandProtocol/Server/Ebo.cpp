@@ -29,5 +29,5 @@ void gui::Ebo::receive(std::string command, GameData &gameData)
     auto egg = gameData.getEggById(eggId);
     if (egg.has_value())
         std::cout << "Egg " << eggId << " is hatched" << std::endl;
-        // egg.value().hatch(true);
+        egg.value()->hatch(true);
 }

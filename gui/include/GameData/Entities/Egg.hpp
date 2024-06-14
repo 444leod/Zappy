@@ -23,5 +23,14 @@ namespace gui {
                 : AEntity(id, position, teamName) {}
 
             ~Egg() = default;
+
+            /**
+             * @brief set the hatched value
+             * @param hatched The hatched value
+            */
+            void hatch(bool hatched) { this->_hatched = hatched; }
+
+        private:
+            bool _hatched = false;
     };
 }
