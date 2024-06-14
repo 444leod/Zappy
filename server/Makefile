@@ -50,6 +50,7 @@ __SRC_AI := forward.c \
 	inventory.c \
 	connect_nbr.c \
 	fork.c \
+	eject.c \
 
 __SRC_GAME := \
 	create_map.c \

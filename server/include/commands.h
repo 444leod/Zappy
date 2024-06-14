@@ -41,6 +41,7 @@ void look(ARGS);
 void inventory(ARGS);
 void connect_nbr(ARGS);
 void fork_player(ARGS);
+void eject(ARGS);
 
 ///////////////////////////////////////////////////////////////////////////////
 // OTHER COMMANDS

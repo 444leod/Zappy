@@ -33,7 +33,7 @@ typedef struct client_list_s {
     client_t client;
 } *client_list_t;
 
-void add_client(client_t client);
+void add_client(const client_t client);
 void remove_client(int fd);
 client_t create_client(int fd);
 client_t *get_clients(void);
