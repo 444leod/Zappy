@@ -9,12 +9,10 @@
 
 void gui::Sst::stage(ntw::Client &client, std::string parameters)
 {
-    std::istringstream iss(parameters);
-    std::uint32_t timeUnit;
+    if (parameters.empty())
+        throw std::invalid_argument("Invalid sst arguments");
 
-    iss >> timeUnit;
-
-    client.queueRequest("sst " + timeUnit);
+    client.queueRequest("sst " + parameters);
 }
 
 void gui::Sst::receive(std::string command, GameData &gameData)

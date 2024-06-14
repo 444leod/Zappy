@@ -9,12 +9,10 @@
 
 void gui::Plv::stage(ntw::Client &client, std::string parameters)
 {
-    std::istringstream iss(parameters);
-    std::uint32_t playerId;
+    if (parameters.empty())
+        throw std::invalid_argument("Invalid plv arguments");
 
-    iss >> playerId;
-
-    client.queueRequest("plv " + std::to_string(playerId));
+    client.queueRequest("plv " + parameters);
 }
 
 void gui::Plv::receive(std::string command, GameData &gameData)

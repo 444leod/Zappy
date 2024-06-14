@@ -9,12 +9,10 @@
 
 void gui::Ppo::stage(ntw::Client &client, std::string parameters)
 {
-    std::istringstream iss(parameters);
-    std::uint32_t playerId;
+    if (parameters.empty())
+        throw std::invalid_argument("Invalid ppo arguments");
 
-    iss >> playerId;
-
-    client.queueRequest("ppo " + std::to_string(playerId));
+    client.queueRequest("ppo " + parameters);
 }
 
 void gui::Ppo::receive(std::string command, GameData &gameData)
