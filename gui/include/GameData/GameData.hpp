@@ -11,6 +11,7 @@
 #include <iostream>
 #include <map>
 #include <memory>
+#include <optional>
 #include "Tiles/TileContent.hpp"
 #include "Entities/Character.hpp"
 #include "Entities/Egg.hpp"
@@ -122,6 +123,13 @@ namespace gui {
              * @return bool True if the egg exists, false otherwise
             */
             bool eggExists(std::uint32_t eggId) const;
+
+            /**
+             * @brief get the player vector by player id
+             * @param playerId The player id
+             * @return std::shared_ptr<Character> The player
+            */
+            std::optional<std::shared_ptr<Character>> getPlayerById(std::uint32_t playerId) const;
 
         private:
             std::vector<std::string> _teamNames = {};

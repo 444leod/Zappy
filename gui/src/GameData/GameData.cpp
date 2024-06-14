@@ -66,4 +66,13 @@ namespace gui {
 
         return it != this->_eggs.end();
     }
+
+    std::optional<std::shared_ptr<Character>> GameData::getPlayerById(std::uint32_t playerId) const
+    {
+        for (const auto &player : this->_players) {
+            if (player->id() == playerId)
+                return player;
+        }
+        return std::nullopt;
+    }
 }
