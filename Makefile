@@ -7,6 +7,7 @@
 
 __RED=\033[0;31m
 __GREEN=\033[0;32m
+__BLUE=\033[0;34m
 __BOLD=\033[1m
 __NC=\033[0m # No Color
 
@@ -20,8 +21,8 @@ check_init: .init_done
 	@echo "Debug: $(__BOLD)${__GREEN}${FORCE_MAKE}"
 	@if [ -z "${FORCE_MAKE}" ]; then \
 		if [ $(check_init) = "false" ]; then \
-			echo -ne "${__RED}Repository is not initialized. "; \
-			echo -e "Please run $(__BOLD)'make init'${__NC}$(__RED).${__NC}"; \
+			printf "$(__RED)Repository is not initialized. "; \
+			printf "Please run $(__BOLD)'make init'$(__NC)$(__RED).$(__NC)"; \
 			exit 1; \
 		else \
 			touch .init_done; \
@@ -37,8 +38,19 @@ $(__NAME): .init_done
 	@mv server/zappy_server .
 	@mv gui/zappy_gui .
 	@mv ai/zappy_ai .
-	@echo -ne "${__GREEN}$(__BOLD)Compilation$(__NC)"
-	@echo -e "${__GREEN}completed successfully.${__NC}"
+	@printf "$(__GREEN)$(__BOLD)Compilation of zappy_server$(__NC)\n"
+	@printf "$(__GREEN)completed successfully.$(__NC)\n"
+
+dev: .init_done
+	@make -s -C server
+	@make -s -C gui
+	@make -s -C ai
+	@mv server/zappy_server .
+	@mv gui/zappy_gui .
+	@mv ai/zappy_ai .
+	@printf "$(__BLUE)$(__BOLD)Compilating dev mode for zappy_server$(__NC)\n"
+	@printf "$(__BLUE)completed successfully.$(__NC)\n"
+
 clean:
 	@make clean -s -C server
 	@make clean -s -C gui
@@ -46,21 +58,21 @@ clean:
 	@rm -f zappy_server
 	@rm -f zappy_gui
 	@rm -f zappy_ai
-	@echo -ne "${__GREEN}$(__BOLD)Clean$(__NC)"
-	@echo -e "${__GREEN}completed successfully.${__NC}"
+	@printf "$(__GREEN)$(__BOLD)Clean$(__NC)\n"
+	@printf "$(__GREEN)completed successfully.$(__NC)\n"
 
 fclean: clean
 	@make fclean -s -C server
 	@make fclean -s -C gui
 	@make fclean -s -C ai
-	@echo -ne "${__GREEN}$(__BOLD)Fclean$(__NC)"
-	@echo -e "${__GREEN}completed successfully.${__NC}"
+	@printf "$(__GREEN)$(__BOLD)Fclean$(__NC)\n"
+	@printf "$(__GREEN)completed successfully.$(__NC)\n"
 
 re: fclean all
 
 
 tests_run:	.init_done
-	@printf "\n$(__BOLD)$(__GREEN)$(__NC)SERVER TESTS$(__NC)\n"
+	@printf "\n$(__BOLD)$(__GREEN)SERVER TESTS$(__NC)\n"
 	@make tests_run -s -C server
 	@printf "\n$(__BOLD)$(__GREEN)SERVER LIBS TESTS$(__NC)\n"
 	@make tests_run -s -C server/lib
@@ -90,16 +102,16 @@ init: install-dependancies install-hooks install-mango __update-repo-config
 
 install-dependancies:
 	@if [ $(is_jq_installed) = "false" ]; then \
-		echo -ne "${__RED}jq is not installed." \
-		echo "$(__BOLD)Please install jq before running this command.${__NC}";\
+		printf "${__RED}jq is not installed.\n" \
+		printf "$(__BOLD)Please install jq beforehand.${__NC}\n";\
 		exit 1; \
 	fi
 
 install-hooks:
 	@cp .githooks/commit-msg .git/hooks/commit-msg
 	@chmod +x .git/hooks/commit-msg
-	@echo -ne "${__GREEN}$(__BOLD)Hooks$(__NC)"
-	@echo -e "${__GREEN}installed successfully.${__NC}"
+	@printf "${__GREEN}$(__BOLD)Hooks$(__NC)\n"
+	@printf "${__GREEN}installed successfully.${__NC}\n"
 
 install-mango:
 	@chmod +x ./init/install-mango.sh
