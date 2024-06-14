@@ -33,7 +33,7 @@ namespace gui {
              * @param teamName Team name of the entity
             */
             AEntity(std::uint32_t id, Vector2u position, Orientation orientation, std::string teamName)
-                : _id(id), _position(position), _orientation(orientation), _teamName(teamName) {}
+                : _position(position), _orientation(orientation), _id(id), _teamName(teamName) {}
 
             /**
              * @brief Destroy the AEntity object

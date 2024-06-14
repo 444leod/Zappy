@@ -64,7 +64,13 @@ namespace gui {
             void operator/=(U factor) {
                 this->_x /= factor; this->_y /= factor; }
 
-            bool operator==(const Vector2<T>& other) const { return std::size(*this - other) < 0.001; }
+            T distance(const Vector2<T>& other) const {
+                T dx = _x - other._x;
+                T dy = _y - other._y;
+                return std::sqrt(dx * dx + dy * dy);
+            }
+
+            bool operator==(const Vector2<T>& other) const { return distance(other) < 0.001; }
 
             bool operator!=(const Vector2<T>& other) const { return !(*this == other); }
 
