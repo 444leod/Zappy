@@ -38,6 +38,7 @@ __SRC_SRC := server.c \
 	exit.c \
 	handle_clients.c \
 	handle_commands.c \
+	select_wrapper.c \
 
 __SRC_COMMANDS := commands.c \
 	unknown_command.c \
@@ -64,13 +65,8 @@ __SRC_GAME := \
 	manage_entities.c \
 	query_map.c \
 
-
-__SRC_ARGS := params.c \
-	check_args.c \
-	init_server_info.c \
-	display_help.c \
-
-__SRC_ARGS := params.c \
+__SRC_ARGS := \
+	params.c \
 	check_args.c \
 	init_server_info.c \
 	display_help.c \
@@ -166,6 +162,7 @@ all: $(__LIBMY) $(__LIBNETWORK) $(__NAME)
 
 $(__NAME): $(__OBJ)
 	@$(__CC) -o $(__NAME) $(__OBJ) $(__CFLAGS)
+	@echo -ne "\n${__INFO} Server compiled successfully.${__NC}\n"
 
 $(__LIBMY):
 	@make -C ./lib -s

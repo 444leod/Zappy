@@ -12,6 +12,7 @@
 #include "commands.h"
 #include "linked_lists.h"
 #include "garbage_collector.h"
+#include "debug.h"
 #include <unistd.h>
 #include <stdio.h>
 
@@ -64,12 +65,13 @@ static bool is_read_special_case(const client_t client,
  *
  * @return the created command
 */
-static client_command_t create_command(const char *command, const clock_t time)
+static client_command_t create_command(const char *command,
+    const struct timespec *time)
 {
     client_command_t newCommand = my_malloc(sizeof(struct client_command_s));
 
     newCommand->command = my_strdup(command);
-    newCommand->handledTime = time;
+    newCommand->handledTime = *time;
     newCommand->initialized = false;
     return newCommand;
 }
@@ -106,14 +108,17 @@ static void queue_command(const client_t client)
 {
     char *afterLineBreak = NULL;
     int i = 0;
-    const clock_t now = clock();
+    struct timespec now;
+    char *buffer = NULL;
 
+    clock_gettime(0, &now);
     while (client->buffer && strlen(client->buffer) > 0) {
         afterLineBreak = strstr(client->buffer, "\n");
         if (!afterLineBreak)
             break;
         i = afterLineBreak - client->buffer;
-        add_to_list((void *)create_command(my_strndup(client->buffer, i), now),
+        buffer = my_strndup(client->buffer, i);
+        add_to_list((void *)create_command(buffer, &now),
             (void *)&client->commands);
         client->buffer = client->buffer + i + 1;
     }
@@ -161,12 +166,15 @@ static void trigger_action(const client_t client, const fd_set *readfds,
 {
     if (client->fd == -1)
         return;
-    if (FD_ISSET(client->fd, readfds))
+    if (FD_ISSET(client->fd, readfds)) {
         read_buffer(client);
-    if (client->commands)
+    }
+    if (client->commands) {
         handle_command(client, serverInfo);
-    if (FD_ISSET(client->fd, writefds))
+    }
+    if (FD_ISSET(client->fd, writefds)) {
         send_buffer(client);
+    }
 }
 
 /**
