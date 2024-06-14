@@ -28,6 +28,6 @@ void gui::Pgt::receive(std::string command, GameData &gameData)
         throw std::invalid_argument("Player does not exist");
     auto player = gameData.getPlayerById(playerId);
     for (std::uint32_t i = 0; i < ressourceNbr; i++)
-        std::cout << "Player " << playerId << " picked up a ressource" << std::endl;
-        // player.value().pickRessource();
+        if (player.has_value())
+            player.value()->pickingRessource();
 }

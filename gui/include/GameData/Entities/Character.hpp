@@ -110,12 +110,36 @@ namespace gui {
             */
             void expulsed(bool isExpulsed) { this->_isExpulsed = isExpulsed; }
 
+            /**
+             * @brief set the player picking ressource
+             * @param pickingRessource The player picking ressource
+            */
+            void pickingRessource() { this->_pickingRessource = true; }
+
+            /**
+             * @brief set the player incantating
+             * @param isIncantating The player incantating
+            */
+            void incantating(bool isIncantating) { this->_isIncantating = isIncantating; }
+
+            /**
+             * @brief set the player incantation result
+             * @param position The position of the incantation
+             * @param level The level of the incantation
+             * @param result The result of the incantation
+             * @note The result can be true or false
+            */
+            void incantationResult(UNUSED Vector2u position, UNUSED std::uint32_t level, bool result);
+
         private:
-            bool _isLayingAnEgg = false;
             std::uint32_t _food = 0;
             std::uint32_t _level = 0;
             Rocks _rocks;
+            bool _isLayingAnEgg = false;
             bool _dropRessource = false;
+            bool _pickingRessource = false;
             bool _isExpulsed = false;
+            bool _isIncantating = false;
+            bool _incantationResult = false;
     };
 }

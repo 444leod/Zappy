@@ -38,7 +38,7 @@ void gui::Pic::receive(std::string command, GameData &gameData)
             if (players.value()->playerLevel() != level)
                 throw std::invalid_argument("Player level does not match the level in the game data.");
             std::cout << "Player " << playerId << " is incantating" << std::endl;
-            // players.value().setIsIncantating(true);
+            players.value()->incantating(true);
         }
     }
 }
