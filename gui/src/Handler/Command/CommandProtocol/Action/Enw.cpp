@@ -11,7 +11,7 @@ void gui::Enw::stage(ntw::Client &client, std::string parameters)
 {
     (void)client;
     (void)parameters;
-    std::cerr << "Command enw: can't be staged" << std::endl;
+    std::cerr << "Command enw: can't be staged." << std::endl;
 }
 
 void gui::Enw::receive(std::string command, GameData &gameData)

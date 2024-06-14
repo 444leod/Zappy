@@ -11,7 +11,7 @@ void gui::Pgt::stage(ntw::Client &client, std::string parameters)
 {
     (void)parameters;
     (void)client;
-    std::cerr << "Command pgt: can't be staged" << std::endl;
+    std::cerr << "Command pgt: can't be staged." << std::endl;
 }
 
 void gui::Pgt::receive(std::string command, GameData &gameData)

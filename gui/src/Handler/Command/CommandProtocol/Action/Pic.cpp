@@ -11,7 +11,7 @@ void gui::Pic::stage(ntw::Client &client, std::string parameters)
 {
     (void)parameters;
     (void)client;
-    std::cerr << "Command pic: can't be staged" << std::endl;
+    std::cerr << "Command pic: can't be staged." << std::endl;
 }
 
 void gui::Pic::receive(std::string command, GameData &gameData)

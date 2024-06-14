@@ -11,7 +11,7 @@ void gui::Pdi::stage(ntw::Client &client, std::string parameters)
 {
     (void)parameters;
     (void)client;
-    std::cerr << "Command pdi: can't be staged" << std::endl;
+    std::cerr << "Command pdi: can't be staged." << std::endl;
 }
 
 void gui::Pdi::receive(std::string command, GameData &gameData)

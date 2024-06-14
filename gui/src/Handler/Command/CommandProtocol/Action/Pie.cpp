@@ -11,7 +11,7 @@ void gui::Pie::stage(ntw::Client &client, std::string parameters)
 {
     (void)parameters;
     (void)client;
-    std::cerr << "Command pie: can't be staged" << std::endl;
+    std::cerr << "Command pie: can't be staged." << std::endl;
 }
 
 void gui::Pie::receive(std::string command, GameData &gameData)

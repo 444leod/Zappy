@@ -11,7 +11,7 @@ void gui::Suc::stage(ntw::Client &client, std::string parameters)
 {
     (void)client;
     (void)parameters;
-    std::cerr << "Command suc: can't be staged" << std::endl;
+    std::cerr << "Command suc: can't be staged." << std::endl;
 }
 
 void gui::Suc::receive(std::string command, GameData &gameData)

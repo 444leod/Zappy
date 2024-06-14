@@ -11,7 +11,7 @@ void gui::Pfk::stage(ntw::Client &client, std::string parameters)
 {
     (void)parameters;
     (void)client;
-    std::cerr << "Command pfk: can't be staged" << std::endl;
+    std::cerr << "Command pfk: can't be staged." << std::endl;
 }
 
 void gui::Pfk::receive(std::string command, GameData &gameData)

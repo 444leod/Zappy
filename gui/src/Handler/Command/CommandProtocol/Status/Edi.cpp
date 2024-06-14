@@ -11,7 +11,7 @@ void gui::Edi::stage(ntw::Client &client, std::string parameters)
 {
     (void)parameters;
     (void)client;
-    std::cerr << "Command edi: can't be staged" << std::endl;
+    std::cerr << "Command edi: can't be staged." << std::endl;
 }
 
 void gui::Edi::receive(std::string command, GameData &gameData)

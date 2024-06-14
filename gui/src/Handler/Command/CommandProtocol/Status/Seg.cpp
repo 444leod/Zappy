@@ -11,7 +11,7 @@ void gui::Seg::stage(ntw::Client &client, std::string parameters)
 {
     (void)parameters;
     (void)client;
-    std::cerr << "Command seg: can't be staged" << std::endl;
+    std::cerr << "Command seg: can't be staged." << std::endl;
 }
 
 void gui::Seg::receive(std::string command, GameData &gameData)
