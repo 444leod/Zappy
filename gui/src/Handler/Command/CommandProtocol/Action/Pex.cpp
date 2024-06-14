@@ -11,6 +11,7 @@ void gui::Pex::stage(ntw::Client &client, std::string parameters)
 {
     (void)parameters;
     (void)client;
+    std::cerr << "Command pex: can't be staged" << std::endl;
 }
 
 void gui::Pex::receive(std::string command, GameData &gameData)

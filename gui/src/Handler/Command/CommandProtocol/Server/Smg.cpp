@@ -11,6 +11,7 @@ void gui::Smg::stage(ntw::Client &client, std::string parameters)
 {
     (void)client;
     (void)parameters;
+    std::cerr << "Command smg: can't be staged" << std::endl;
 }
 
 void gui::Smg::receive(std::string command, GameData &gameData)

@@ -11,6 +11,7 @@ void gui::Pnw::stage(ntw::Client &client, std::string parameters)
 {
     (void)parameters;
     (void)client;
+    std::cerr << "Command pnw: can't be staged" << std::endl;
 }
 
 void gui::Pnw::receive(std::string command, GameData &gameData)

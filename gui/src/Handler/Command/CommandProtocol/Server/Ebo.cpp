@@ -11,6 +11,7 @@ void gui::Ebo::stage(ntw::Client &client, std::string parameters)
 {
     (void)client;
     (void)parameters;
+    std::cerr << "Command ebo: can't be staged" << std::endl;
 }
 
 void gui::Ebo::receive(std::string command, GameData &gameData)

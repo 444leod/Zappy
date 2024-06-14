@@ -11,6 +11,7 @@ void gui::Sbp::stage(ntw::Client &client, std::string parameters)
 {
     (void)client;
     (void)parameters;
+    std::cerr << "Command sbp: can't be staged" << std::endl;
 }
 
 void gui::Sbp::receive(std::string command, GameData &gameData)

@@ -11,6 +11,7 @@ void gui::Pbc::stage(ntw::Client &client, std::string parameters)
 {
     (void)parameters;
     (void)client;
+    std::cerr << "Command pbc: can't be staged" << std::endl;
 }
 
 void gui::Pbc::receive(std::string command, GameData &gameData)

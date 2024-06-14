@@ -11,6 +11,7 @@ void gui::Pdr::stage(ntw::Client &client, std::string parameters)
 {
     (void)parameters;
     (void)client;
+    std::cerr << "Command pdr: can't be staged" << std::endl;
 }
 
 void gui::Pdr::receive(std::string command, GameData &gameData)
