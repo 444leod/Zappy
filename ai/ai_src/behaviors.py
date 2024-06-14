@@ -8,7 +8,7 @@ class ABehavior:
         """
         self.command_stack: List[cmd.ACommand] = []
 
-    def get_next_command(self) -> cmd.ACommand:
+    def get_next_command(self, player_info, map) -> cmd.ACommand:
         """
         Get the next command to execute from the stack
         """
@@ -41,7 +41,6 @@ class LookingForward(ABehavior):
         """
         self.command_stack.append(cmd.Look())
         self.command_stack.append(cmd.Forward())
-
 
 class TalkingWalker(ABehavior):
     def __init__(self):

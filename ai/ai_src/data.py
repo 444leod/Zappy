@@ -12,6 +12,17 @@ EAST: tuple[int, int] = (1, 0)
 SOUTH: tuple[int, int] = (0, -1)
 WEST: tuple[int, int] = (-1, 0)
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 @dataclass
 class Collectibles():
     """
@@ -66,14 +77,6 @@ class PlayerInfo():
     orientation: tuple[int, int] = NORTH
 
 @dataclass
-class GeneralInfo():
-    """
-    Dataclass representing the general information
-    """
-    map_size: tuple[int, int] = (0, 0)
-    nb_eggs: int = 0
-
-@dataclass
 class TileContent():
     """
     Dataclass representing the content of a tile
@@ -93,6 +96,8 @@ class Map():
     Dataclass representing the map
     """
     tiles: List[List[TileContent]] = field(default_factory=list)
+    map_size: tuple[int, int] = (0, 0)
+    player_pos: tuple[int, int] = (0, 0)
 
     def vision_update(
         self,
@@ -136,6 +141,8 @@ class Map():
         Returns a string representation of the map
         """
         res = ""
-        for row in self.tiles:
-            res += f"{row}\n"
+        for x, row in enumerate(self.tiles):
+            for y, tile in enumerate(row):
+                res += f"{bcolors.OKGREEN}{tile}{bcolors.ENDC}" if (x, y) == self.player_pos else f"{tile}"
+            res += "\n"
         return res
