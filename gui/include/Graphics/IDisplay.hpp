@@ -76,13 +76,6 @@ namespace gui {
         virtual void setFramerate(uint32_t framerate) = 0;
 
         /**
-         * @brief Sets the size of a single tile
-         *
-         * @param size the size of a single tile
-         */
-        virtual void setTileSize(std::size_t size) = 0;
-
-        /**
          * @brief Sets the number of tiles per row
          *
          * @param width the number of tiles per row
@@ -109,13 +102,6 @@ namespace gui {
          * @return uint32_t The framerate limit
          */
         virtual uint32_t framerate() const = 0;
-
-        /**
-         * @brief Returns the size of tiles
-         *
-         * @return std::size_t The size of tiles
-         */
-        virtual std::size_t tileSize() const = 0;
 
         /**
          * @brief Returns the number of columns of the display

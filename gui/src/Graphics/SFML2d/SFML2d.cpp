@@ -20,28 +20,18 @@ public:
 
     void load(
         const gui::TextureSpecification& spec,
-        const std::shared_ptr<sf::Texture>& texture,
-        std::optional<gui::Rect<uint32_t>> rect
-    )
+        const std::shared_ptr<sf::Texture>& texture
+        )
     {
         this->_spec = spec;
         this->_texture = texture;
 
-        if (rect.has_value()) {
-            this->_rect = sf::IntRect(
-                rect.value().x,
-                rect.value().y,
-                rect.value().width,
-                rect.value().height
-            );
-        } else {
-            this->_rect = sf::IntRect(
-                0,
-                0,
-                texture->getSize().x,
-                texture->getSize().y
-            );
-        }
+        this->_rect = sf::IntRect(
+            0,
+            0,
+            texture->getSize().x,
+            texture->getSize().y
+        );
     }
 
     virtual const gui::TextureSpecification& specification() const { return this->_spec; }
@@ -59,36 +49,24 @@ public:
     SFML2dTextureManager() = default;
     virtual ~SFML2dTextureManager() = default;
 
-    virtual bool load(const std::string& name, const gui::TextureSpecification& specification, unsigned int width = 1, unsigned int height = 1)
+    virtual bool load(const std::string& name, const gui::TextureSpecification& specification)
     {
-        auto texture = std::make_shared<SFML2dTexture>();
-
-        if (std::holds_alternative<gui::TextureImage>(specification.graphical)) {
-            auto image = std::get<gui::TextureImage>(specification.graphical);
-
-            if (this->_cache.find(image.path) != this->_cache.end()) {
-                texture->load(specification, this->_cache[image.path], image.subrect);
-                this->_textures[name] = texture;
-                return true;
-            }
-
-            auto sftex = std::make_shared<sf::Texture>();
-            if (!sftex->loadFromFile(image.path))
-                return false;
-
-            this->_cache[image.path] = sftex;
-            texture->load(specification, sftex, image.subrect);
+        auto cachedTexture = this->_cache.find(specification.graphical.path);
+        if (cachedTexture != this->_cache.end()) {
+            auto texture = std::make_shared<SFML2dTexture>();
+            texture->load(specification, cachedTexture->second);
             this->_textures[name] = texture;
             return true;
         }
 
-        auto color = std::get<gui::Color>(specification.graphical);
-        auto img = sf::Image{};
-        img.create(width, height, sf::Color(color.red, color.green, color.blue, color.alpha));
-        auto sftex = std::make_shared<sf::Texture>();
-        if (!sftex->loadFromImage(img))
+        auto newTexture = std::make_shared<sf::Texture>();
+        if (!newTexture->loadFromFile(specification.graphical.path)) {
             return false;
-        texture->load(specification, sftex, std::nullopt);
+        }
+
+        this->_cache[specification.graphical.path] = newTexture;
+        auto texture = std::make_shared<SFML2dTexture>();
+        texture->load(specification, newTexture);
         this->_textures[name] = texture;
         return true;
     }
@@ -366,15 +344,14 @@ class SFML2dDisplay : public gui::IDisplay {
 public:
     SFML2dDisplay()
     {
-        this->_tileSize = 16;
-        this->_width = 80;
-        this->_height = 60;
+        this->_width = 1920;
+        this->_height = 1080;
         this->_framerate = 0;
         this->_title = "GUI Application";
 
         sf::VideoMode mode;
-        mode.width = this->_width * this->_tileSize;
-        mode.height = this->_height * this->_tileSize;
+        mode.width = this->_width;
+        mode.height = this->_height;
         mode.bitsPerPixel = 32;
         this->_window.create(mode, this->_title, sf::Style::Titlebar | sf::Style::Close);
         this->_window.setKeyRepeatEnabled(false);
@@ -392,12 +369,6 @@ public:
     {
         this->_framerate = framerate;
         this->_window.setFramerateLimit(framerate);
-    }
-
-    virtual void setTileSize(std::size_t size)
-    {
-        this->_tileSize = size;
-        this->_resizeWindow();
     }
 
     virtual void setWidth(std::size_t width)
@@ -420,11 +391,6 @@ public:
     virtual uint32_t framerate() const
     {
         return this->_framerate;
-    }
-
-    virtual std::size_t tileSize() const
-    {
-        return this->_tileSize;
     }
 
     virtual std::size_t width() const
@@ -500,8 +466,8 @@ public:
             case sf::Event::MouseButtonPressed:
                 e.type = gui::EventType::MOUSE_BUTTON_PRESSED;
                 e.mouse.button = SFML2dDisplay::MapSFML2dMouseButton(event.mouseButton.button);
-                e.mouse.x = event.mouseButton.x / this->_tileSize;
-                e.mouse.y = event.mouseButton.y / this->_tileSize;
+                e.mouse.x = event.mouseButton.x;
+                e.mouse.y = event.mouseButton.y;
                 this->_events.push_back(std::move(e));
                 break;
             default:
@@ -545,7 +511,7 @@ public:
 
         sprite.setTexture(*tex->raw().get());
         sprite.setTextureRect(tex->subrect());
-        sprite.setPosition(x * this->_tileSize, y * this->_tileSize);
+        sprite.setPosition(x, y);
         sprite.setScale(scale, scale);
         this->_window.draw(sprite);
     }
@@ -558,7 +524,7 @@ public:
         auto attr = std::dynamic_pointer_cast<SFML2dFont>(font);
         auto text = sf::Text(sf::String(string), attr->font(), attr->size());
         text.setFillColor(attr->color());
-        text.setPosition(x * this->_tileSize, y * this->_tileSize);
+        text.setPosition(x, y);
         this->_window.draw(text);
     }
 
@@ -572,7 +538,7 @@ public:
         text.setFillColor(attr->color());
         text.setPosition(x, y);
         auto bounds = text.getLocalBounds();
-        return {bounds.left, bounds.top, bounds.width / this->_tileSize, bounds.height / this->_tileSize};
+        return {bounds.left, bounds.top, bounds.width, bounds.height};
     }
 
     virtual void flush()
@@ -584,8 +550,8 @@ private:
     virtual void _resizeWindow()
     {
         sf::Vector2u size;
-        size.x = this->_width * this->_tileSize;
-        size.y = this->_height * this->_tileSize;
+        size.x = this->_width;
+        size.y = this->_height;
 
         this->_window.setSize(size);
         this->_window.setView(sf::View(sf::FloatRect(0, 0, size.x, size.y)));
@@ -598,7 +564,6 @@ private:
     uint32_t _framerate;
     std::size_t _width;
     std::size_t _height;
-    std::size_t _tileSize;
     std::deque<gui::Event> _events;
 };
 

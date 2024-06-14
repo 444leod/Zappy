@@ -32,20 +32,14 @@ namespace gui {
      */
     struct TextureImage {
         std::string path;
-        std::optional<Rect<uint32_t>> subrect = std::nullopt;
     };
-
-    /**
-     * @brief Represents the specification required to create a graphical texture
-     */
-    using TextureGraphicalSpecification = std::variant<TextureImage, Color>;
 
     /**
      * @brief Represents the specification required to create a texture
      */
     struct TextureSpecification {
         TextureTextualSpecification textual;
-        TextureGraphicalSpecification graphical;
+        TextureImage graphical;
     };
 
     /**
@@ -80,7 +74,7 @@ namespace gui {
          * @return true if the texture has been loaded
          * @return false if the texture failed to load
          */
-        virtual bool load(const std::string& name, const TextureSpecification& specification, unsigned int width, unsigned int height) = 0;
+        virtual bool load(const std::string& name, const TextureSpecification& specification) = 0;
 
         /**
          * @brief Retrieves a texture
