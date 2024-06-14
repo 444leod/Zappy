@@ -13,7 +13,7 @@
 typedef struct client_command_s {
     char *command;
     char **args;
-    clock_t handledTime;
+    struct timespec handledTime;
     bool initialized;
     double waitDuration;
     command_t commandHandler;

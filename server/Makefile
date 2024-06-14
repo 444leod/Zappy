@@ -37,7 +37,8 @@ __SRC	=	$(addprefix src/, $(__SRC_SRC)) \
 __SRC_SRC := server.c \
 	exit.c \
 	handle_clients.c \
-	handle_commands.c
+	handle_commands.c \
+	select_wrapper.c \
 
 __SRC_COMMANDS := commands.c \
 	unknown_command.c \
@@ -159,6 +160,7 @@ all: $(__LIBMY) $(__LIBNETWORK) $(__NAME)
 
 $(__NAME): $(__OBJ)
 	@$(__CC) -o $(__NAME) $(__OBJ) $(__CFLAGS)
+	@echo -ne "\n${__INFO} Server compiled successfully.${__NC}\n"
 
 $(__LIBMY):
 	@make -C ./lib -s

@@ -38,3 +38,5 @@ void queue_packet_to_player(player_t player, packet_t *packet);
 server_info_t init_server_info(const char *argv[]);
 void display_help(const char *str);
 void queue_buffer(const client_t client, const char *buffer);
+void select_wrapper(int *max_sd, fd_set *readfds,
+    fd_set *writefds, client_t *clients);

@@ -16,6 +16,8 @@ __ENTRY_POINT = ./bot.py
 __SRC = 		./ai_src/commands.py\
 				./ai_src/config.py \
 				./ai_src/connection_handler.py \
+				./ai_src/data.py \
+				./ai_src/utils.py \
 
 
 
