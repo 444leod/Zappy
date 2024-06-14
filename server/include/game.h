@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <time.h>
 #include <uuid/uuid.h>
+#include <stdbool.h>
 #include "teams.h"
 
 #define D_FOOD 0.5
@@ -98,6 +99,11 @@ typedef struct map_s {
     uint32_t height;
 } * map_t;
 
+typedef struct pickup_command_s {
+    const char *key;
+    bool (*fun)(player_t, tile_t);
+} pickup_command_t;
+
 map_t create_map(uint32_t width, uint32_t height);
 void init_map(map_t map, team_list_t teams);
 tile_t get_tile_at_position(position_t position, map_t map);
@@ -107,4 +113,4 @@ void add_egg_at_position(const team_t, const position_t, map_t);
 egg_list_t get_team_eggs(const team_t team, const map_t map);
 egg_t get_random_egg(const team_t team, map_t map);
 player_t egg_to_player(egg_t egg, map_t map);
-void player_pick_up(const char *key, player_t player, tile_t tile);
+bool player_pick_up(const char *key, player_t player, tile_t tile);

@@ -13,25 +13,11 @@
 
 #include <stdio.h>
 
-static bool tile_contains(const char *k, tile_t tile)
-{
-    if (strcmp(k, "food") == 0 && tile->food > 0)
-        return true;
-    if (strcmp(k, "linemate") == 0 && tile->rocks.linemate > 0)
-        return true;
-    if (strcmp(k, "deraumere") == 0 && tile->rocks.deraumere > 0)
-        return true;
-    if (strcmp(k, "sibur") == 0 && tile->rocks.sibur > 0)
-        return true;
-    if (strcmp(k, "mendiane") == 0 && tile->rocks.mendiane > 0)
-        return true;
-    if (strcmp(k, "phiras") == 0 && tile->rocks.phiras > 0)
-        return true;
-    if (strcmp(k, "thystame") == 0 && tile->rocks.thystame > 0)
-        return true;
-    return false;
-}
-
+/**
+ * @brief Gets the first argument if there is one
+ * @param args the argument list
+ * @return NULL if it failed, the first arg if there is one.
+ */
 static const char *get_content_arg(char **args)
 {
     uint32_t count = 0;
@@ -44,14 +30,18 @@ static const char *get_content_arg(char **args)
     return args[0];
 }
 
+/**
+ * @brief Adds a KO packet to queue
+ * @param packet_queue the packet queue
+ */
 static void throw_ko(packet_queue_t *packet_queue)
 {
     add_packet_to_queue(packet_queue, build_packet("ko"));
 }
 
 /**
- * @brief Fork command
- * @details Creates an egg at player's feet
+ * @brief Take command
+ * @details Let a user pick up an object from the tile it's on.
  *
  * @param args the arguments of the command
  * @param client the client that executed the command
@@ -67,10 +57,8 @@ void take(char **args, client_t client, server_info_t serverInfo)
         throw_ko(&client->packetQueue);
         return;
     }
-    if (!tile_contains(arg, tile)) {
+    if (!player_pick_up(arg, player, tile))
         throw_ko(&client->packetQueue);
-        return;
-    }
-    player_pick_up(arg, player, tile);
-    add_packet_to_queue(&client->packetQueue, build_packet("ok"));
+    else
+        add_packet_to_queue(&client->packetQueue, build_packet("ok"));
 }

@@ -8,62 +8,108 @@
 #include <string.h>
 #include "game.h"
 
-static void player_pick_food(player_t player, tile_t tile)
+/**
+ * @brief Picks up food
+ */
+static bool pick_food(player_t player, tile_t tile)
 {
+    if (tile->food == 0)
+        return false;
     player->food++;
     tile->food--;
+    return true;
 }
 
-static void player_pick_linemate(player_t player, tile_t tile)
+/**
+ * @brief Picks up linemate
+ */
+static bool pick_linemate(player_t player, tile_t tile)
 {
+    if (tile->rocks.linemate == 0)
+        return false;
     player->rocks.linemate++;
     tile->rocks.linemate--;
+    return true;
 }
 
-static void player_pick_deraumere(player_t player, tile_t tile)
+/**
+ * @brief Picks up deraumere
+ */
+static bool pick_deraumere(player_t player, tile_t tile)
 {
+    if (tile->rocks.deraumere == 0)
+        return false;
     player->rocks.deraumere++;
     tile->rocks.deraumere--;
+    return true;
 }
 
-static void player_pick_sibur(player_t player, tile_t tile)
+/**
+ * @brief Picks up sibur
+ */
+static bool pick_sibur(player_t player, tile_t tile)
 {
+    if (tile->rocks.sibur == 0)
+        return false;
     player->rocks.sibur++;
     tile->rocks.sibur--;
+    return true;
 }
 
-static void player_pick_mendiane(player_t player, tile_t tile)
+/**
+ * @brief Picks up mendiane
+ */
+static bool pick_mendiane(player_t player, tile_t tile)
 {
+    if (tile->rocks.mendiane == 0)
+        return false;
     player->rocks.mendiane++;
     tile->rocks.mendiane--;
+    return true;
 }
 
-static void player_pick_phiras(player_t player, tile_t tile)
+/**
+ * @brief Picks up phiras
+ */
+static bool pick_phiras(player_t player, tile_t tile)
 {
+    if (tile->rocks.phiras == 0)
+        return false;
     player->rocks.phiras++;
     tile->rocks.phiras--;
+    return true;
 }
 
-static void player_pick_thystame(player_t player, tile_t tile)
+/**
+ * @brief Picks up thystame
+ */
+static bool pick_thystame(player_t player, tile_t tile)
 {
+    if (tile->rocks.thystame == 0)
+        return false;
     player->rocks.thystame++;
     tile->rocks.thystame--;
+    return true;
 }
 
-void player_pick_up(const char *key, player_t player, tile_t tile)
+/**
+ * @brief Let a player pick up an item from a tile.
+ * @param key the name of the content to pick up
+ * @param player the player
+ * @param tile the tile
+ * @return `true` if it succeeded in picking up. `false` otherwise.
+ */
+bool player_pick_up(const char *key, player_t player, tile_t tile)
 {
-    if (strcmp(key, "food") == 0)
-        player_pick_food(player, tile);
-    if (strcmp(key, "linemate") == 0)
-        player_pick_linemate(player, tile);
-    if (strcmp(key, "deraumere") == 0)
-        player_pick_deraumere(player, tile);
-    if (strcmp(key, "sibur") == 0)
-        player_pick_sibur(player, tile);
-    if (strcmp(key, "mendiane") == 0)
-        player_pick_mendiane(player, tile);
-    if (strcmp(key, "phiras") == 0)
-        player_pick_phiras(player, tile);
-    if (strcmp(key, "thystame") == 0)
-        player_pick_thystame(player, tile);
+    pickup_command_t cmds[] = { {"food", &pick_food},
+        {"linemate", &pick_linemate}, {"deraumere", &pick_deraumere},
+        {"sibur", &pick_sibur}, {"mendiane", &pick_mendiane},
+        {"phiras", &pick_phiras}, {"thystame", &pick_thystame},
+    };
+
+    for (uint8_t i = 0; i < 7; i++) {
+        if (strcmp(cmds[i].key, key) == 0)
+            return cmds[i].fun(player, tile);
+    }
+    return false;
 }
