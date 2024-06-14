@@ -75,7 +75,26 @@ namespace gui {
             */
             void increasePlayerLevel() { this->_level += 1; }
 
+            /**
+             * @brief Set the player level
+             * @param level The player level
+            */
+            void setPlayerLevel(std::uint32_t level) { this->_level = level; }
+
+            /**
+             * @brief Get the is laying an egg
+             * @return bool The is laying an egg
+            */
+            bool layingAnEgg() const { return this->_isLayingAnEgg; }
+
+            /**
+             * @brief Set the is laying an egg
+             * @param isLayingAnEgg The is laying an egg
+            */
+            void isLayingAnEgg(bool isLayingAnEgg) { this->_isLayingAnEgg = isLayingAnEgg; }
+
         private:
+            bool _isLayingAnEgg = false;
             std::uint32_t _food = 0;
             std::uint32_t _level = 0;
             Rocks _rocks;

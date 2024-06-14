@@ -18,6 +18,10 @@ namespace gui {
     class Egg : public AEntity {
         public:
             Egg() = default;
+
+            Egg(std::uint32_t id, Vector2u position, std::string teamName)
+                : AEntity(id, position, teamName) {}
+
             ~Egg() = default;
     };
 }
