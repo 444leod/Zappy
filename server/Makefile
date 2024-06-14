@@ -28,6 +28,7 @@ __SRC	=	$(addprefix src/, $(__SRC_SRC)) \
 	$(addprefix src/args/, $(__SRC_ARGS)) \
 	$(addprefix src/commands/, $(__SRC_COMMANDS)) \
 	$(addprefix src/commands/ai/, $(__SRC_AI)) \
+	$(addprefix src/game/, $(__SRC_GAME)) \
 	$(addprefix src/commands/graphical/, $(__SRC_GRAPHICAL)) \
 	$(addprefix src/network/, $(__SRC_NETWORK)) \
 	$(addprefix src/network/client/, $(__SRC_CLIENT)) \
@@ -36,13 +37,20 @@ __SRC	=	$(addprefix src/, $(__SRC_SRC)) \
 __SRC_SRC := server.c \
 	exit.c \
 	handle_clients.c \
-	handle_commands.c
+	handle_commands.c \
+	select_wrapper.c \
 
 __SRC_COMMANDS := commands.c \
 	unknown_command.c \
 	auth.c \
 
 __SRC_AI := forward.c \
+
+__SRC_GAME := \
+	create_map.c \
+	init_map.c \
+	manage_entities.c \
+	query_map.c \
 
 __SRC_GRAPHICAL := msz.c \
 
@@ -77,16 +85,19 @@ __TEST_SRC	= \
 	$(__SRC) \
 	$(addprefix ../tests/server/test_, $(__SRC_ROOT_TEST)) \
 	$(addprefix ../tests/server/commands/test_, $(__SRC_COMMANDS_TEST)) \
+	$(addprefix ../tests/server/utils/test_, $(__SRC_UTILS_TEST)) \
 
 __SRC_ROOT_TEST := utils.c \
 	client.c
 
 __SRC_COMMANDS_TEST := auth.c \
 
+__SRC_UTILS_TEST := get_map.c \
 
 # =============================================================================
 # Functionnal tests sources
 # =============================================================================
+
 
 __TESTER_SRC := tests/tester.cpp \
 	tests/Test.cpp
@@ -98,7 +109,8 @@ __TESTER_SRC := tests/tester.cpp \
 
 
 __CC = gcc
-__CFLAGS += -Wall -Wextra -Werror -Wpedantic -I./include -L. -lmy -lnetwork
+__CFLAGS += -Wall -Wextra -Werror -Wpedantic
+__CFLAGS += -I./include -L. -lmy -lnetwork -luuid
 __TEST_FLAGS = $(__CFLAGS) --coverage -lcriterion -I../tests/server -I../tests
 
 %.o: %.c
@@ -126,6 +138,7 @@ all: $(__LIBMY) $(__LIBNETWORK) $(__NAME)
 
 $(__NAME): $(__OBJ)
 	@$(__CC) -o $(__NAME) $(__OBJ) $(__CFLAGS)
+	@echo -ne "\n${__INFO} Server compiled successfully.${__NC}\n"
 
 $(__LIBMY):
 	@make -C ./lib -s

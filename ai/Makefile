@@ -18,8 +18,7 @@ __SRC = 		./ai_src/commands.py\
 				./ai_src/connection_handler.py \
 				./ai_src/data.py \
 				./ai_src/behaviors.py \
-
-
+				./ai_src/utils.py
 
 all: $(__NAME)
 
