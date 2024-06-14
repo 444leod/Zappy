@@ -41,5 +41,35 @@ namespace gui {
              * @param lib the current library
              */
             void draw(ILibrary& lib, GameData& gameData);
+
+            /**
+             * @brief Draw the map
+             * @param lib the current library
+             */
+            void drawMap(ILibrary& lib, GameData& gameData);
+
+            /**
+             * @brief Draw the players
+             * @param lib the current library
+             */
+            void drawPlayers(ILibrary& lib, GameData& gameData);
+
+            /**
+             * @brief Draw the eggs
+             * @param lib the current library
+             */
+            void drawEggs(ILibrary& lib, GameData& gameData);
+
+            /**
+             * @brief Draw the messages
+             * @param lib the current library
+             */
+            void drawMessages(ILibrary& lib, GameData& gameData);
+
+            /**
+             * @brief Draw the team names
+             * @param lib the current library
+             */
+            void drawTeamNames(ILibrary& lib, GameData& gameData);
     };
 }

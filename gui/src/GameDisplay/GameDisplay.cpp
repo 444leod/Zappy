@@ -13,14 +13,8 @@ void gui::GameDisplay::initialize(ILibrary& lib, GameData& data)
 {
     lib.display().setTitle("Zappy GUI");
     lib.display().setFramerate(60);
-    lib.display().setTileSize(64);
-    lib.display().setWidth(1920);
-    lib.display().setHeight(1080);
 
     // init textures
-    // gui::TextureSpecification spec;
-    // spec.graphical = gui::TextureImage{"assets/ground.png"};
-    // lib.textures().load("ground", spec, 20, 10);
 }
 
 void gui::GameDisplay::onKeyPressed(ILibrary& lib, KeyCode key, bool shift)
@@ -33,11 +27,32 @@ void gui::GameDisplay::onMouseButtonPressed(ILibrary& lib, MouseButton button, i
 
 }
 
+void gui::GameDisplay::drawMap(ILibrary& lib, GameData& data)
+{
+
+}
+
+void gui::GameDisplay::drawPlayers(ILibrary& lib, GameData& data)
+{
+
+}
+
+void gui::GameDisplay::drawEggs(ILibrary& lib, GameData& data)
+{
+
+}
+
+void gui::GameDisplay::drawMessages(ILibrary& lib, GameData& data)
+{
+
+}
+
 void gui::GameDisplay::draw(ILibrary& lib, GameData& data)
 {
     lib.display().clear(gui::Color{0, 0, 255, 0});
-    // drawMap(lib);
-    // drawPlayers(lib);
-    // drawEggs(lib);
-    // drawResources(lib);
+    drawMap(lib, data);
+    drawPlayers(lib, data);
+    drawEggs(lib, data);
+    drawMessages(lib, data);
+    drawTeamNames(lib, data);
 }

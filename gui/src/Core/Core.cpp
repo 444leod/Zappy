@@ -85,7 +85,7 @@ namespace gui {
                 auto lib_switch = false;
                 auto before = std::chrono::high_resolution_clock::now();
 
-                _GameDisplay.initialize(*_cur_lib, _GameData);
+                _gameDisplay.initialize(*_cur_lib, _gameData);
                 while (this->_cur_lib->display().opened()) {
                     gui::Event event = {};
                     auto now = std::chrono::high_resolution_clock::now();
@@ -101,15 +101,15 @@ namespace gui {
                     this->_cur_lib->display().update(deltaTime);
 
                     while (_cur_lib->display().pollEvent(event)) {
-
+                        // Event handling
                     }
-                    _GameDisplay.draw(*_cur_lib, _GameData);
+                    _gameDisplay.draw(*_cur_lib, _gameData);
                 }
             }
 
         private:
-            GameData _GameData;
-            GameDisplay _GameDisplay;
+            GameData _gameData;
+            GameDisplay _gameDisplay;
             std::shared_ptr<gui::ILibrary> _cur_lib = nullptr;
             std::shared_ptr<LibraryObject> _lib_handler = nullptr;
             LibraryLoader _loader;
