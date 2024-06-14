@@ -13,15 +13,15 @@ namespace gui {
     class Seg : public ICommand {
         public:
             /**
-             * @brief The command seg send nothing to the server
+             * @brief The command seg sends nothing to the server
              * @param client The client
              * @param parameters The parameters
             */
             void stage(ntw::Client &client, std::string parameters = "") override;
 
             /**
-             * @brief The command seg receive when the server send the end of the game for a team
-             * @note Receive the command: seg N
+             * @brief The command seg receives when the server send the end of the game for a team
+             * @note Receives the command: seg N
              * @note N -> team name
              * @param command The command given by the server
              * @param gameData The game data

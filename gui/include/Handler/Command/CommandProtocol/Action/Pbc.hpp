@@ -13,15 +13,15 @@ namespace gui {
     class Pbc : public ICommand {
         public:
             /**
-             * @brief The command Pbc send nothing to the server
+             * @brief The command Pbc sends nothing to the server
              * @param client The client
              * @param parameters The parameters
             */
             void stage(ntw::Client &client, std::string parameters = "") override;
 
             /**
-             * @brief The command Pbc receive when a player broadcast a message
-             * @note Receive the command: pbc #n message
+             * @brief The command Pbc receives when a player broadcast a message
+             * @note Receives the command: pbc #n message
              * @note #n -> player id
              * @note message -> message
              * @param command The command given by the server

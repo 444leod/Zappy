@@ -13,15 +13,15 @@ namespace gui {
     class Suc : public ICommand {
         public:
             /**
-             * @brief The command Suc send nothing to the server
+             * @brief The command Suc sends nothing to the server
              * @param client The client
              * @param parameters The parameters
             */
             void stage(ntw::Client &client, std::string parameters = "") override;
 
             /**
-             * @brief The command Suc receive when the server send an unknown command
-             * @note Receive the command: suc
+             * @brief The command Suc receives when the server send an unknown command
+             * @note Receives the command: suc
              * @param command The command given by the server
              * @param gameData The game data
             */

@@ -13,15 +13,15 @@ namespace gui {
     class Pie : public ICommand {
         public:
             /**
-             * @brief The command Pie send nothing to the server
+             * @brief The command Pie sends nothing to the server
              * @param client The client
              * @param parameters The parameters
             */
             void stage(ntw::Client &client, std::string parameters = "") override;
 
             /**
-             * @brief The command get result when an incantation is done
-             * @note Receive the command: pie X Y R
+             * @brief The command gets result when an incantation is done
+             * @note Receives the command: pie X Y R
              * @note X Y -> x and y position
              * @note R -> result of the incantation
              * @param command The command given by the server

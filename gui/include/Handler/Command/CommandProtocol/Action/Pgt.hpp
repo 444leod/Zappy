@@ -13,15 +13,15 @@ namespace gui {
     class Pgt : public ICommand {
         public:
             /**
-             * @brief The command Enw send nothing to the server
+             * @brief The command Enw sends nothing to the server
              * @param client The client
              * @param parameters The parameters
             */
             void stage(ntw::Client &client, std::string parameters = "") override;
 
             /**
-             * @brief The command Pgt receive when a player take an item
-             * @note Receive the command: pgt #n i
+             * @brief The command Pgt receives when a player take an item
+             * @note Receives the command: pgt #n i
              * @note #n -> player id
              * @note i -> item number
              * @param command The command given by the server

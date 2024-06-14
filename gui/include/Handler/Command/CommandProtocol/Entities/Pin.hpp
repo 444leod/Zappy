@@ -13,7 +13,7 @@ namespace gui {
     class Pin : public ICommand {
         public:
             /**
-             * @brief The command Pin send: pin #n
+             * @brief The command Pin sends: pin #n
              * @note #n -> player id
              * @param client The client
              * @param parameters The parameters
@@ -21,8 +21,8 @@ namespace gui {
             void stage(ntw::Client &client, std::string parameters = "") override;
 
             /**
-             * @brief The command get the player's inventory
-             * @note Receive the command: pin #n x y q0 q1 q2 q3 q4 q5 q6
+             * @brief The command gets the player's inventory
+             * @note Receives the command: pin #n x y q0 q1 q2 q3 q4 q5 q6
              * @note #n -> player id
              * @note x y -> x and y position
              * @note q0 -> food

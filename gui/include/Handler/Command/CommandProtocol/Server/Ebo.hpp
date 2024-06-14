@@ -13,15 +13,15 @@ namespace gui {
     class Ebo : public ICommand {
         public:
             /**
-             * @brief The command Ebo send nothing to the server
+             * @brief The command Ebo sends nothing to the server
              * @param client The client
              * @param parameters The parameters
             */
             void stage(ntw::Client &client, std::string parameters = "") override;
 
             /**
-             * @brief The command Ebo receive when there is a connection to an egg
-             * @note Receive the command: ebo #e
+             * @brief The command Ebo receives when there is a connection to an egg
+             * @note Receives the command: ebo #e
              * @note #e -> egg id
              * @param command The command given by the server
              * @param gameData The game data

@@ -13,15 +13,15 @@ namespace gui {
     class Pnw : public ICommand {
         public:
             /**
-             * @brief The command Pnw send nothing to the server
+             * @brief The command Pnw sends nothing to the server
              * @param client The client
              * @param parameters The parameters
             */
             void stage(ntw::Client &client, std::string parameters = "") override;
 
             /**
-             * @brief The command Pnw receive when a player is created
-             * @note Receive the command: pnw #n x y o l n
+             * @brief The command Pnw receives when a player is created
+             * @note Receives the command: pnw #n x y o l n
              * @note #n -> player id
              * @note x y -> x and y position
              * @note o -> player orientation (NORTH, EAST, SOUTH, WEST)

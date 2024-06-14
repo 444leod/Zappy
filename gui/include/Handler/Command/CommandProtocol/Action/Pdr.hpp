@@ -13,15 +13,15 @@ namespace gui {
     class Pdr : public ICommand {
         public:
             /**
-             * @brief The command Pdr send nothing to the server
+             * @brief The command Pdr sends nothing to the server
              * @param client The client
              * @param parameters The parameters
             */
             void stage(ntw::Client &client, std::string parameters = "") override;
 
             /**
-             * @brief The command Pdr receive when a player drop an item
-             * @note Receive the command: pdr #n i
+             * @brief The command Pdr receives when a player drop an item
+             * @note Receives the command: pdr #n i
              * @note #n -> player id
              * @note i -> item number
              * @param command The command given by the server

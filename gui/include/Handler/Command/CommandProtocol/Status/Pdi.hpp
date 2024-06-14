@@ -13,15 +13,15 @@ namespace gui {
     class Pdi : public ICommand {
         public:
             /**
-             * @brief The command pdi send nothing to the server
+             * @brief The command pdi sends nothing to the server
              * @param client The client
              * @param parameters The parameters
             */
             void stage(ntw::Client &client, std::string parameters = "") override;
 
             /**
-             * @brief The command pdi receive when a player die
-             * @note Receive the command: pdi #n
+             * @brief The command pdi receives when a player die
+             * @note Receives the command: pdi #n
              * @note #n -> player id
              * @param command The command given by the server
              * @param gameData The game data
