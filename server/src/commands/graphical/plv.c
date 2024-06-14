@@ -83,7 +83,7 @@ void plv(char **args, const client_t client,
 {
     int playerNumber;
 
-    if (tablen((const void **)args) != 1) {
+    if (tablen((const void **)args) != 2) {
         printf("Client %d: plv: bad argument number\n", client->fd);
         queue_buffer(client, "sbp");
         return;

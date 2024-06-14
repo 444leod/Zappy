@@ -55,6 +55,7 @@ __SRC_GRAPHICAL := msz.c \
 	pin.c \
 	sgt.c \
 	sst.c \
+	pnw.c \
 
 __SRC_GAME := \
 	create_map.c \
@@ -115,6 +116,7 @@ __SRC_GRAPHICAL_TEST := msz.c \
 	pin.c \
 	sgt.c \
 	sst.c \
+	pnw.c \
 
 __SRC_UTILS_TEST := get_map.c \
 

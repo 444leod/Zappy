@@ -62,3 +62,9 @@ char *get_team_name_list_string(const team_list_t teams);
 void send_team_name_list_to_client(const client_t client, const team_t team);
 void send_team_name_list_to_client_list(const client_list_t clients,
     const team_t team);
+
+char *get_new_player_string(const player_t player);
+void send_new_player_to_client(const client_t client, const player_t player);
+void send_new_player_to_client_list(const client_list_t clients,
+    const player_t player);
+void send_new_player_to_graphical(const player_t player);

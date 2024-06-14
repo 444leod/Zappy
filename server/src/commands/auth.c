@@ -11,6 +11,7 @@
 #include "lib.h"
 #include "zappy.h"
 #include "game.h"
+#include "commands_utils.h"
 #include <stdio.h>
 
 /**
@@ -146,4 +147,5 @@ void auth(char **args, const client_t client,
     client->type = AI;
     spawn_player(args[0], client, serverInfo);
     send_start_informations(client, serverInfo->width, serverInfo->height);
+    send_new_player_to_graphical(client->player);
 }

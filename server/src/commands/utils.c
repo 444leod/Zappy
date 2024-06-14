@@ -45,16 +45,12 @@ char get_char_by_orientation(int orientation)
 {
     switch (orientation) {
         case 1:
-            printf("NORTH\n");
             return ('N');
         case 2:
-            printf("EAST\n");
             return ('E');
         case 3:
-            printf("SOUTH\n");
             return ('S');
         case 4:
-            printf("WEST\n");
             return ('W');
     }
     return -1;
