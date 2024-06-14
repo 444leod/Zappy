@@ -2,15 +2,15 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import List
 
-class Orientation(Enum):
-    """
-    Enum representing the orientation of a player
-    They are represented as tuples (x, y) to facilitate the computation of the new position
-    """
-    NORTH = (0, 1)
-    EAST = (1, 0)
-    SOUTH = (0, -1)
-    WEST = (-1, 0)
+# class Orientation(Enum):
+"""
+CONST VARIABLES representing the orientation of a player
+They are represented as tuples (x, y) to facilitate the computation of the new position
+"""
+NORTH: tuple[int, int] = (0, 1)
+EAST: tuple[int, int] = (1, 0)
+SOUTH: tuple[int, int] = (0, -1)
+WEST: tuple[int, int] = (-1, 0)
 
 @dataclass
 class Collectibles():
@@ -42,6 +42,8 @@ class Collectibles():
         """
         Remove an object to the collectibles based on its name
         """
+        NORTH = "acab"
+        print(NORTH)
         if hasattr(self, str_to_take):
             setattr(self, str_to_take, getattr(self, str_to_take) - 1)
 
@@ -61,7 +63,7 @@ class PlayerInfo():
     level: int = 1
     inv: Collectibles = field(default_factory=lambda: Collectibles(food=10))
     pos: tuple[int, int] = (0, 0)
-    orientation: Orientation = Orientation.NORTH
+    orientation: tuple[int, int] = NORTH
 
 @dataclass
 class GeneralInfo():
@@ -95,7 +97,7 @@ class Map():
     def vision_update(
         self,
         vision: dict[int, TileContent],
-        orientation: Orientation,
+        orientation: tuple[int, int],
         player_pos: tuple[int, int]
     ) -> None:
         """
@@ -111,20 +113,20 @@ class Map():
             row, col = pos
             self.tiles[row][col] = content
 
-        if orientation == Orientation.WEST or orientation == Orientation.EAST:
+        if orientation == WEST or orientation == EAST:
             for key, content in vision.items():
                 vision[key].reverse()
 
         for key, content in vision.items():
             distance = key
             for i, tile_content in enumerate(content):
-                if orientation == Orientation.NORTH:
+                if orientation == NORTH:
                     new_pos = (player_pos[0] - distance, player_pos[1] - (distance - i))
-                elif orientation == Orientation.SOUTH:
+                elif orientation == SOUTH:
                     new_pos = (player_pos[0] + distance, player_pos[1] + (distance - i))
-                elif orientation == Orientation.WEST:
+                elif orientation == WEST:
                     new_pos = (player_pos[0] - (distance - i), player_pos[1] - distance)
-                elif orientation == Orientation.EAST:
+                elif orientation == EAST:
                     new_pos = (player_pos[0] + (distance - i), player_pos[1] + distance)
                 new_pos = (new_pos[0] % max_row, new_pos[1] % max_col)
                 update_tile(new_pos, tile_content)

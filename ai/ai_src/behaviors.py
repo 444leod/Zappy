@@ -41,3 +41,20 @@ class LookingForward(ABehavior):
         """
         self.command_stack.append(cmd.Look())
         self.command_stack.append(cmd.Forward())
+
+
+class TalkingWalker(ABehavior):
+    def __init__(self):
+        """
+        TalkingWalker behavior, dummy behavior that talks and moves
+        """
+        super().__init__()
+
+    def generate_command_stack(self) -> None:
+        """
+        Generate the command stack for the TalkingWalker behavior
+        """
+        self.command_stack.append(cmd.Broadcast("Hello"))
+        self.command_stack.append(cmd.Forward())
+        self.command_stack.append(cmd.Forward())
+        self.command_stack.append(cmd.Right())

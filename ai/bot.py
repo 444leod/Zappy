@@ -4,8 +4,8 @@ import sys
 from typing import List
 from ai_src.connection_handler import ConnectionHandler
 from ai_src.config import Config, HelpException, ArgError
-from ai_src.data import PlayerInfo, GeneralInfo, Orientation, Collectibles, Map, TileContent
-from ai_src.behaviors import LookingForward
+from ai_src.data import PlayerInfo, GeneralInfo, Collectibles, Map, TileContent
+from ai_src.behaviors import LookingForward, TalkingWalker
 import ai_src.commands as cmd
 from ai.ai_src.utils import add_tuples, turn_left, turn_right
 
@@ -64,7 +64,7 @@ class Bot():
             "dead\n" : self.die,
             "message": self.receive_broadcast  
         }
-        self.current_behavior = LookingForward() 
+        self.current_behavior = TalkingWalker() 
     
     def run(self) -> None:
         """
@@ -135,7 +135,8 @@ class Bot():
         """
         pos = self.player_info.pos
         self.map.tiles[pos[0]][pos[1]].nb_players -= 1
-        self.player_info.pos = add_tuples(self.player_info.pos, self.player_info.orientation.value)
+        self.player_info.pos = add_tuples(self.player_info.pos, self.player_info.orientation)
+        self.player_info.pos = (self.player_info.pos[0] % self.general_info.map_size[0], self.player_info.pos[1] % self.general_info.map_size[1])
         self.map.tiles[pos[0]][pos[1]].nb_players += 1
 
     def handle_look(self) -> None:
@@ -222,7 +223,7 @@ class Bot():
             case "Inventory": self.player_info.inv = Collectibles(**(cmd.Inventory().interpret_result(self.results[-1])))
             case "Look": self.handle_look()
             case "Forward": self.handle_forward()
-            case "Right": self.player_info.orientation = turn_right(self.player_info.orientation)
+            case "Right": self.player_info.orientation= turn_right(self.player_info.orientation)
             case "Left": self.player_info.orientation = turn_left(self.player_info.orientation)
             case "Broadcast": self.messages_sent.append(cmd.Broadcast().interpret_result(self.results[-1]))
             case "Connect_nbr": cmd.ConnectNbr().interpret_result(self.results[-1])
