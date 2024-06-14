@@ -131,6 +131,13 @@ namespace gui {
             */
             std::optional<std::shared_ptr<Character>> getPlayerById(std::uint32_t playerId) const;
 
+            /**
+             * @brief get the egg vector by egg id
+             * @param eggId The egg id
+             * @return std::shared_ptr<Egg> The egg
+            */
+            std::optional<std::shared_ptr<Egg>> getEggById(std::uint32_t eggId) const;
+
         private:
             std::vector<std::string> _teamNames = {};
             Map _map;

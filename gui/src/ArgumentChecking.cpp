@@ -10,7 +10,7 @@
 /**
  * @brief Print the usage
  */
-void gui::ArgumentChecking::printUsage()
+void gui::ArgumentChecking::printUsage() const
 {
     std::cout << "USAGE: ./zappy_gui -p port -h machine" << std::endl;
     std::cout << "port: the port number" << std::endl;
@@ -22,7 +22,7 @@ void gui::ArgumentChecking::printUsage()
  * @param args The arguments
  * @return The flags in a map
  */
-std::map<std::string, std::string> gui::ArgumentChecking::checkFlags(std::vector<std::string> args)
+std::map<std::string, std::string> gui::ArgumentChecking::checkFlags(std::vector<std::string> args) const
 {
     int p_count = std::count(args.begin(), args.end(), "-p");
     int h_count = std::count(args.begin(), args.end(), "-h");
@@ -45,7 +45,7 @@ std::map<std::string, std::string> gui::ArgumentChecking::checkFlags(std::vector
  * @param ac The number of arguments
  * @param av The arguments
  */
-void gui::ArgumentChecking::checkArgs(int ac, char **av)
+void gui::ArgumentChecking::checkArgs(int ac, char **av) const
 {
     std::vector<std::string> args(av, av + ac);
     std::map<std::string, std::string> flags;

@@ -75,4 +75,13 @@ namespace gui {
         }
         return std::nullopt;
     }
+
+    std::optional<std::shared_ptr<Egg>> GameData::getEggById(std::uint32_t eggId) const
+    {
+        for (const auto &egg : this->_eggs) {
+            if (egg->id() == eggId)
+                return egg;
+        }
+        return std::nullopt;
+    }
 }
