@@ -22,12 +22,19 @@ void gui::Enw::receive(std::string command, GameData &gameData)
     std::uint32_t x, y;
 
     iss >> token >> eggId >> playerId >> x >> y;
+    if (iss.fail())
+        throw std::invalid_argument("Invalid arguments");
     if (!gameData.eggExists(eggId))
         throw std::invalid_argument("Egg does not exist");
     if (!gameData.playerExists(playerId))
         throw std::invalid_argument("Player does not exist");
     if (x >= gameData.mapRef().mapSize().x() || y >= gameData.mapRef().mapSize().y())
         throw std::invalid_argument("Invalid position");
-    // gameData.players().at(playerId).setEggId(eggId);
-    // gameData.players().at(playerId).isLayingAnEgg(false);
+
+    auto player = gameData.getPlayerById(playerId);
+    if (player.has_value()) {
+        std::cout << "Player " << playerId << " laid an egg with id " << eggId << std::endl;
+        // player.value().setEggId(eggId);
+        // player.value().isLayingAnEgg(false);
+    }
 }

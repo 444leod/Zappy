@@ -27,7 +27,8 @@ void gui::Ppo::receive(std::string command, GameData &gameData)
     Orientation playerOrientation;
 
     iss >> token >> playerId >> x >> y >> orientation;
-
+    if (iss.fail())
+        throw std::invalid_argument("Invalid arguments");
     if (!gameData.playerExists(playerId))
         throw std::invalid_argument("Player does not exist in the game data.");
 
@@ -40,5 +41,8 @@ void gui::Ppo::receive(std::string command, GameData &gameData)
         playerOrientation = it->second;
     else
         throw std::invalid_argument("Invalid orientation: " + orientation);
-    gameData.players().at(playerId)->setOrientation(playerOrientation);
+
+    auto player = gameData.getPlayerById(playerId);
+    if (player.has_value())
+        player.value()->setOrientation(playerOrientation);
 }

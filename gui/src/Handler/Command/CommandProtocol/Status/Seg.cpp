@@ -21,7 +21,8 @@ void gui::Seg::receive(std::string command, GameData &gameData)
     std::string teamName;
 
     iss >> token >> teamName;
-
+    if (iss.fail())
+        throw std::invalid_argument("Invalid arguments");
     for (std::size_t i = 0; i < gameData.teamNames().size(); i++) {
         if (gameData.teamNames()[i] == teamName) {
             // gameData.teamNames()[i].setIsDead(true);

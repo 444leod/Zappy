@@ -16,13 +16,17 @@ void gui::Pex::stage(ntw::Client &client, std::string parameters)
 
 void gui::Pex::receive(std::string command, GameData &gameData)
 {
-    (void)gameData;
     std::istringstream iss(command);
     std::string token;
     std::uint32_t playerId;
 
     iss >> token >> playerId;
+    if (iss.fail())
+        throw std::invalid_argument("Invalid arguments");
     if (!gameData.playerExists(playerId))
         throw std::invalid_argument("Player does not exist");
-    // gameData.players().at(playerId).setIsExpulsed(true);
+    auto player = gameData.getPlayerById(playerId);
+    if (player.has_value())
+        std::cout << "Player " << playerId << " is expulsed" << std::endl;
+        // player.value().setIsExpulsed(true);
 }

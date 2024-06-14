@@ -22,8 +22,14 @@ void gui::Pbc::receive(std::string command, GameData &gameData)
     std::string message;
 
     iss >> token >> playerId >> message;
+    if (iss.fail())
+        throw std::invalid_argument("Invalid arguments");
     if (!gameData.playerExists(playerId))
         throw std::invalid_argument("Player does not exist");
     std::cout << "Player " << playerId << " broadcasted: " << message << std::endl;
-    // gameData.players().at(playerId).setBroadcast(message);
+
+    auto player = gameData.getPlayerById(playerId);
+    if (player.has_value())
+        std::cout << "Player broadcasted: " << message << std::endl;
+        // player.value().setBroadcast(message);
 }

@@ -22,5 +22,7 @@ void gui::Smg::receive(std::string command, GameData &gameData)
     std::string message;
 
     iss >> token >> message;
+    if (iss.fail())
+        throw std::invalid_argument("Invalid arguments");
     // gameData.displayServerMessage(message);
 }

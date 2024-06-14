@@ -19,17 +19,21 @@ void gui::Plv::stage(ntw::Client &client, std::string parameters)
 
 void gui::Plv::receive(std::string command, GameData &gameData)
 {
-    (void)gameData;
     std::istringstream iss(command);
     std::string token;
     std::uint32_t playerId;
     std::uint32_t level;
 
     iss >> token >> playerId >> level;
-
+    if (iss.fail())
+        throw std::invalid_argument("Invalid arguments");
     if (!gameData.playerExists(playerId))
         throw std::invalid_argument("Player does not exist in the game data.");
-    if (gameData.players().at(playerId)->playerLevel() < level || level > 8 || gameData.players().at(playerId)->playerLevel() > level)
-        throw std::invalid_argument("Player level received does not match the player level in the game data.");
-    // gameData.players().at(playerId)->increasePlayerLevel();
+    auto player = gameData.getPlayerById(playerId);
+    if (player.has_value()) {
+        if (player.value()->playerLevel() < level || level > 8 || player.value()->playerLevel() > level)
+            throw std::invalid_argument("Player level received does not match the player level in the game data.");
+        std::cout << "Player " << playerId << " level is now: " << level << std::endl;
+        // player.value().setLevel(level);
+    }
 }

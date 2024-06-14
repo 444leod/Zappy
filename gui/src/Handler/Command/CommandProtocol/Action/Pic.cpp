@@ -24,16 +24,21 @@ void gui::Pic::receive(std::string command, GameData &gameData)
     std::uint32_t playerId;
 
     iss >> token >> x >> y >> level;
-
+    if (iss.fail())
+        throw std::invalid_argument("Invalid arguments");
     if (x >= gameData.mapRef().mapSize().x() || y >= gameData.mapRef().mapSize().y())
         throw std::invalid_argument("Invalid tile coordinates, out of map bounds.");
+    auto players = gameData.getPlayerById(playerId);
     while (iss >> playerId) {
-        if (!gameData.playerExists(playerId))
-            throw std::invalid_argument("Player does not exist");
-        if (gameData.players().at(playerId)->position().x() != x || gameData.players().at(playerId)->position().y() != y)
-            throw std::invalid_argument("Player position does not match the position in the game data.");
-        if (gameData.players().at(playerId)->playerLevel() != level)
-            throw std::invalid_argument("Player level does not match the level in the game data.");
-        // gameData.players().at(playerId).setIsIncantating(true);
+        if (players.has_value()) {
+            if (!gameData.playerExists(playerId))
+                throw std::invalid_argument("Player does not exist");
+            if (players.value()->position().x() != x || players.value()->position().y() != y)
+                throw std::invalid_argument("Player position does not match the position in the game data.");
+            if (players.value()->playerLevel() != level)
+                throw std::invalid_argument("Player level does not match the level in the game data.");
+            std::cout << "Player " << playerId << " is incantating" << std::endl;
+            // players.value().setIsIncantating(true);
+        }
     }
 }

@@ -22,8 +22,12 @@ void gui::Pdi::receive(std::string command, GameData &gameData)
     std::uint32_t playerId;
 
     iss >> token >> playerId;
-
+    if (iss.fail())
+        throw std::invalid_argument("Invalid arguments");
     if (!gameData.playerExists(playerId))
         throw std::invalid_argument("Player does not exist");
-    // gameData.players().at(playerId).setIsDead(true);
+    auto player = gameData.getPlayerById(playerId);
+    if (player.has_value())
+        std::cout << "Player " << playerId << " died" << std::endl;
+        // player.value().setIsDead(true);
 }

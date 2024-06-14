@@ -20,6 +20,8 @@ void gui::Msz::receive(std::string command, GameData &gameData)
     std::uint32_t x, y;
 
     iss >> token >> x >> y;
+    if (iss.fail())
+        throw std::invalid_argument("Invalid arguments");
     Vector2u mapSize(x, y);
 
     if (x >= gameData.mapRef().mapSize().x() || y >= gameData.mapRef().mapSize().y())

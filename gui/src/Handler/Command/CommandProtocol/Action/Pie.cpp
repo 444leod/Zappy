@@ -23,10 +23,14 @@ void gui::Pie::receive(std::string command, GameData &gameData)
     std::uint32_t result;
 
     iss >> token >> x >> y >> result;
-
+    if (iss.fail())
+        throw std::invalid_argument("Invalid arguments");
     if (x >= gameData.mapRef().mapSize().x() || y >= gameData.mapRef().mapSize().y())
         throw std::invalid_argument("Invalid tile coordinates, out of map bounds.");
     if (result != 1 || result != 0)
         throw std::invalid_argument("Invalid incantation result.");
-    // gameData.setIncantationResult(Vetcor2u(x, y), result);
+    auto players = gameData.getPlayerById(result);
+    if (players.has_value())
+        std::cout << "Incantation result: " << result << std::endl;
+        // players.value().setIncantationResult(Vetcor2u(x, y), result);
 }

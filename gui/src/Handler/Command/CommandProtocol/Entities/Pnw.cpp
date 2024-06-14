@@ -16,7 +16,6 @@ void gui::Pnw::stage(ntw::Client &client, std::string parameters)
 
 void gui::Pnw::receive(std::string command, GameData &gameData)
 {
-    (void)gameData;
     std::istringstream iss(command);
     std::string token;
     std::uint32_t playerId, level;
@@ -26,7 +25,8 @@ void gui::Pnw::receive(std::string command, GameData &gameData)
     Orientation playerOrientation;
 
     iss >> token >> playerId >> x >> y >> orientation >> level >> teamName;
-
+    if (iss.fail())
+        throw std::invalid_argument("Invalid arguments");
     auto it = _orientationMap.find(orientation);
     if (it != _orientationMap.end())
         playerOrientation = it->second;
@@ -40,8 +40,6 @@ void gui::Pnw::receive(std::string command, GameData &gameData)
         throw std::invalid_argument("Player position is out of bounds.");
     if (!gameData.teamExists(teamName))
         throw std::invalid_argument("Team does not exist in the game data.");
-    (void)playerOrientation;
-    // std::shared_ptr<gui::Character> newPlayer = std::make_shared<gui::Character>();
-    // newPlayer->setNewConnection(playerId, Vector2u(x, y), playerOrientation, level, teamName);
-    // gameData.addPlayer(newPlayer);
+    std::shared_ptr<gui::Character> newPlayer = std::make_shared<gui::Character>(playerId, Vector2u(x, y), playerOrientation, level, teamName);
+    gameData.addPlayer(newPlayer);
 }

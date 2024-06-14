@@ -19,7 +19,6 @@ void gui::Pin::stage(ntw::Client &client, std::string parameters)
 
 void gui::Pin::receive(std::string command, GameData &gameData)
 {
-    (void)gameData;
     std::istringstream iss(command);
     std::string token;
     std::uint32_t playerId;
@@ -27,6 +26,8 @@ void gui::Pin::receive(std::string command, GameData &gameData)
     std::uint32_t linemate, deraumere, sibur, mendiane, phiras, thystame, food;
 
     iss >> token >> playerId >> x >> y >> food >> linemate >> deraumere >> sibur >> mendiane >> phiras >> thystame;
+    if (iss.fail())
+        throw std::invalid_argument("Invalid arguments");
     if (x >= gameData.mapRef().mapSize().x() || y >= gameData.mapRef().mapSize().y())
         throw std::invalid_argument("Invalid tile coordinates, out of map bounds.");
     Vector2u pos(x, y);
@@ -42,6 +43,10 @@ void gui::Pin::receive(std::string command, GameData &gameData)
 
     if (!gameData.playerExists(playerId))
         throw std::invalid_argument("Player does not exist in the game data.");
-    gameData.players().at(playerId)->setFood(food);
-    gameData.players().at(playerId)->setRocks(rocks);
+
+    auto players = gameData.getPlayerById(playerId);
+    if (players.has_value()) {
+        players.value()->setFood(food);
+        players.value()->setRocks(rocks);
+    }
 }
