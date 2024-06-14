@@ -47,12 +47,18 @@ void gui::GameDisplay::drawMessages(ILibrary& lib, GameData& data)
 
 }
 
+void gui::GameDisplay::drawTeamNames(ILibrary& lib, GameData& data)
+{
+
+}
+
 void gui::GameDisplay::draw(ILibrary& lib, GameData& data)
 {
     lib.display().clear(gui::Color{0, 0, 255, 0});
-    drawMap(lib, data);
-    drawPlayers(lib, data);
-    drawEggs(lib, data);
-    drawMessages(lib, data);
-    drawTeamNames(lib, data);
+
+    // this->drawMap(lib, data);
+    // this->drawPlayers(lib, data);
+    // this->drawEggs(lib, data);
+    // this->drawMessages(lib, data);
+    // this->drawTeamNames(lib, data);
 }
