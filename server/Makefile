@@ -92,14 +92,24 @@ __SRC_UTILS := queue_buffer.c \
 __TEST_SRC	= \
 	$(__SRC) \
 	$(addprefix ../tests/server/test_, $(__SRC_ROOT_TEST)) \
-	$(addprefix ../tests/server/commands/test_, $(__SRC_COMMANDS_TEST)) \
 	$(addprefix ../tests/server/utils/test_, $(__SRC_UTILS_TEST)) \
+	$(addprefix ../tests/server/commands/test_, $(__SRC_COMMANDS_TEST)) \
+	$(addprefix ../tests/server/commands/ai/test_, $(__SRC_AI_TEST)) \
 
 __SRC_ROOT_TEST := utils.c \
 	client.c
 
 __SRC_COMMANDS_TEST := auth.c \
-	ai.c \
+
+__SRC_AI_TEST	:=	\
+	connect_nbr.c \
+	direction.c \
+	eject.c \
+	fork.c \
+	forward.c \
+	inventory.c \
+	look.c \
+	take.c \
 
 __SRC_UTILS_TEST := get_map.c \
 
