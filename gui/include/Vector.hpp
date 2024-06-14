@@ -66,6 +66,8 @@ namespace gui {
 
             bool operator==(const Vector2<T>& other) const { return std::size(*this - other) < 0.001; }
 
+            bool operator!=(const Vector2<T>& other) const { return !(*this == other); }
+
             bool operator<(const Vector2<T>& other) const { return this->_x < other._x && this->_y < other._y; }
 
         protected:
