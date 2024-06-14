@@ -99,8 +99,70 @@ class Bot():
                 continue
             # Returning to the main loop if the response is not a message or a death
             return
+        
+    def handle_forward(self) -> None:
+        pos = self.player_info.pos
+        self.map[pos[0]][pos[1]].nb_players -= 1
+        self.player_info.pos = add_tuples(self.player_info.pos, self.player_info.orientation.value)
+        self.map[pos[0]][pos[1]].nb_players += 1
+
+    def handle_look(self) -> None:
+        self.map.vision_update(
+            cmd.Look().interpret_result(self.results[-1]),
+            self.player_info.orientation,
+            self.player_info.pos
+        )
+    
+    def handle_eject(self) -> None:
+            try :
+                cmd.Eject().interpret_result(self.results[-1])
+                self.map[self.player_info.pos].nb_player = 1
+            except Exception:
+                pass
+
+    def handle_fork(self) -> None:
+        try:
+            cmd.Fork().interpret_result(self.results[-1])
+            self.general_info.nb_eggs += 1
+        except Exception as e:
+            self.log(e)
+            self.log("Failed to fork")
+
+    def handle_take(self, object : str) -> None:
+        try:
+            pos = self.player_info.pos
+            cmd.Set().interpret_result(self.results[-1])
+            self.player_info.inv.remove_object_by_name(object)
+            self.map.tiles[pos[0]][pos[1]].collectibles.add_object_by_name(object)
+        except Exception as e:
+            self.log(e)
+            self.log("Failed to take object")
+
+    def handle_set(self, object : str) -> None:
+        try:
+            pos = self.player_info.pos
+            cmd.Set().interpret_result(self.results[-1])
+            self.player_info.inv.remove_object_by_name(object)
+            self.map.tiles[pos[0]][pos[1]].collectibles.add_object_by_name(object)
+        except Exception as e:
+            self.log(e)
+            self.log("Failed to set object")
+
+    def handle_incantation(self) -> None:
+        try:
+            cmd.Incantation().interpret_result(self.results[-1])
+            self.base_funcs_loop()
+            cmd.Incantation().interpret_result(self.results[-1])
+            self.player_info.level += 1
+        except Exception as e:
+            self.log(e)
+            self.log("Failed to incant")
+
+    
 
     def handle_commands_sent(self) -> None:
+
+
         # Handle the command sent
         cmd_sent: str = self.cmd_sent[-1].split(" ")[0]
         try :
@@ -111,13 +173,9 @@ class Bot():
             case "Inventory":
                 self.player_info.inv = Collectibles(**(cmd.Inventory().interpret_result(self.results[-1])))
             case "Look":
-                self.map.vision_update(
-                    cmd.Look().interpret_result(self.results[-1]),
-                    self.player_info.orientation,
-                    self.player_info.pos
-                )
+                self.handle_look()
             case "Forward":
-                self.map[self.player_info.pos].nb_players -= 1
+                self.map[self.player_info.pos[0]][self.player_info.pos[1]].nb_players -= 1
                 self.player_info.pos = add_tuples(self.player_info.pos, self.player_info.orientation.value)
                 self.map[self.player_info.pos].nb_players += 1
             case "Right": 
@@ -129,47 +187,15 @@ class Bot():
             case "Connect_nbr":
                 cmd.ConnectNbr().interpret_result(self.results[-1])
             case "Eject":
-                try :
-                    cmd.Eject().interpret_result(self.results[-1])
-                    self.map[self.player_info.pos].nb_player = 1
-                except Exception:
-                    pass
+                self.handle_eject()
             case "Fork":
-                try:
-                    cmd.Fork().interpret_result(self.results[-1])
-                    self.general_info.nb_eggs += 1
-                except Exception as e:
-                    self.log(e)
-                    self.log("Failed to fork")
+                self.handle_fork()
             case "Take":
-                try:
-                    pos = self.player_info.pos
-                    cmd.Take().interpret_result(self.results[-1])
-                    self.player_info.inv.add_object_by_name(cmd_sup)
-                    if self.map.tiles[pos[0]][pos[1]].collectibles.get_nbr_object_by_name(cmd_sup) > 0:
-                        self.map.tiles[pos[0]][pos[1]].collectibles.remove_object_by_name(cmd_sup)
-                except Exception as e:
-                    self.log(e)
-                    self.log("Failed to take object")
+                self.handle_take()
             case "Set":
-                try:
-                    pos = self.player_info.pos
-                    cmd.Set().interpret_result(self.results[-1])
-                    self.player_info.inv.remove_object_by_name(cmd_sup)
-                    self.map.tiles[pos[0]][pos[1]].collectibles.add_object_by_name(cmd_sup)
-                except Exception as e:
-                    self.log(e)
-                    self.log("Failed to set object")
+                self.handle_set()
             case "Incantation":
-                try:
-                    cmd.Incantation().interpret_result(self.results[-1])
-                    self.base_funcs_loop()
-                    cmd.Incantation().interpret_result(self.results[-1])
-                    self.player_info.level += 1
-                except Exception as e:
-                    self.log(e)
-                    self.log("Failed to incant")
-            
+                self.handle_incantation()
             case _:
                 pass
 
