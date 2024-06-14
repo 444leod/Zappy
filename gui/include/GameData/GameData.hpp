@@ -155,11 +155,32 @@ namespace gui {
             */
             void displayUnknownCommand(const std::string &command) const { std::cerr << "Unknown command: " << command << std::endl; }
 
+            /**
+             * @brief set the team lose status
+             * @param isLose The team lose status
+             * @param teamName The team name
+            */
+            void teamLose(bool isLose, std::string teamName);
+
+            /**
+             * @brief Get the time unit
+             * @return std::uint32_t The time unit
+            */
+            std::uint32_t timeUnit() const { return this->_timeUnit; }
+
+            /**
+             * @brief Set the time unit
+             * @param timeUnit The time unit
+            */
+            void setTimeUnit(std::uint32_t timeUnit) { this->_timeUnit = timeUnit; }
+
         private:
             std::vector<std::string> _teamNames = {};
             Map _map;
             std::vector<std::shared_ptr<Character>> _players = {};
             std::vector<std::shared_ptr<Egg>> _eggs = {};
             std::vector<message> _messages = {};
+            bool _teamLose = false;
+            std::uint32_t _timeUnit = 0;
     };
 }

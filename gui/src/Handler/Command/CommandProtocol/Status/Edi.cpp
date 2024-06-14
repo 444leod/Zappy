@@ -28,6 +28,5 @@ void gui::Edi::receive(std::string command, GameData &gameData)
         throw std::invalid_argument("Egg does not exist");
     auto egg = gameData.getEggById(eggId);
     if (egg.has_value())
-        std::cout << "Egg " << eggId << " is dead" << std::endl;
-        // egg.value().kill(true);
+        egg.value()->kill(true);
 }

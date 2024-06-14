@@ -30,7 +30,14 @@ namespace gui {
             */
             void hatch(bool hatched) { this->_hatched = hatched; }
 
+            /**
+             * @brief Set the egg life status
+             * @param isDead The egg life status
+            */
+            void kill(bool isDead) { this->_isDead = isDead; }
+
         private:
             bool _hatched = false;
+            bool _isDead = false;
     };
 }

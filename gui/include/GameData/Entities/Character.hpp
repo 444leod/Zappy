@@ -131,6 +131,12 @@ namespace gui {
             */
             void incantationResult(UNUSED Vector2u position, UNUSED std::uint32_t level, bool result);
 
+            /**
+             * @brief set the player dead
+             * @param isDead The player dead
+            */
+            void kill(bool isDead) { this->_isDead = isDead; }
+
         private:
             std::uint32_t _food = 0;
             std::uint32_t _level = 0;
@@ -141,5 +147,6 @@ namespace gui {
             bool _isExpulsed = false;
             bool _isIncantating = false;
             bool _incantationResult = false;
+            bool _isDead = false;
     };
 }
