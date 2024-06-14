@@ -51,12 +51,14 @@ __SRC_AI := forward.c \
 	connect_nbr.c \
 	fork.c \
 	eject.c \
+	take.c \
 
 __SRC_GAME := \
 	create_map.c \
 	init_map.c \
 	manage_entities.c \
 	query_map.c \
+	player_pick_up.c \
 
 __SRC_GRAPHICAL := msz.c \
 
