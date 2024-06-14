@@ -28,6 +28,34 @@ static void handle_sigint(UNUSED int sig)
 }
 
 /**
+ * @brief Add the clients to the write and read fd_sets
+ * @details add the clients to the write and read fd_sets and update the
+ *   max_sd variable, also update the fork status of the clients
+ *
+ * @param clients the clients to add to the fd_sets
+ * @param readfds the read fd_set
+ * @param writefds the write fd_set
+ * @param max_sd the max_sd variable
+*/
+static void add_clients_to_set(
+    client_t *clients,
+    fd_set *readfds,
+    fd_set *writefds,
+    int *max_sd)
+{
+    client_t tmp = *clients;
+
+    while (tmp) {
+        if (tmp->packetQueue)
+            FD_SET(tmp->fd, writefds);
+        FD_SET(tmp->fd, readfds);
+        if (tmp->fd > *max_sd)
+            *max_sd = tmp->fd;
+        tmp = tmp->next;
+    }
+}
+
+/**
  * @brief Add a new client to the list of clients
  * @details add a new client to the list of clients by accepting a connexion
  *
@@ -37,13 +65,38 @@ static void add_new_client(int socketFd)
 {
     int new_socket = 0;
     struct sockaddr_in address;
-    unsigned int addrlen = sizeof(address);
+    int addrlen = sizeof(address);
+    client_t *clients = get_clients();
 
-    new_socket = accept(socketFd, (struct sockaddr *)&address, &addrlen);
+    new_socket = accept(socketFd, (struct sockaddr *)&address,
+        (socklen_t *)&addrlen);
     if (new_socket < 0)
         my_error("new client: accept failed");
-    add_client(create_client(new_socket));
-    DEBUG_PRINT("New client connected: %d\n", new_socket);
+    if (*clients == NULL)
+        *clients = create_client(new_socket);
+    else
+        add_client(create_client(new_socket));
+}
+
+/**
+ * @brief Wrapper for the select function
+ * @details wrapper for the select function, if the select function failed
+ *   the program exit, else the function updates the fd_sets each 100ms.
+ *
+ * @param max_sd the max_sd variable
+ * @param readfds the read fd_set
+ * @param writefds the write fd_set
+ * @param clients the list of clients
+*/
+static void select_wrapper(int max_sd, fd_set *readfds,
+    fd_set *writefds, UNUSED client_t *clients)
+{
+    struct timeval timeout = {0, 100};
+    int activity = 0;
+
+    activity = select(max_sd + 1, readfds, writefds, NULL, &timeout);
+    if (activity < 0)
+        my_error("select wrapper failed");
 }
 
 /**
@@ -68,11 +121,12 @@ void zappy_loop(int socketFd, server_info_t serverInfo)
         FD_ZERO(&writefds);
         FD_SET(socketFd, &readfds);
         max_sd = socketFd;
-        select_wrapper(&max_sd, &readfds, &writefds, clients);
+        add_clients_to_set(clients, &readfds, &writefds, &max_sd);
+        special_print(&readfds, &writefds);
+        select_wrapper(max_sd + 1, &readfds, &writefds, clients);
         if (FD_ISSET(socketFd, &readfds))
             add_new_client(socketFd);
         loop_clients(clients, &readfds, &writefds, serverInfo);
-        DEBUG_PRINT("Executed all actions.\n");
     }
 }
 

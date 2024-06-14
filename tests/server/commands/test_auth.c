@@ -27,7 +27,14 @@ void add_teams(server_info_t server_info, char **teams)
 
 server_info_t get_server_info()
 {
-    return init_server_info((const char *[]){"./zappy_server", "-p", "4242", "-x", "10", "-y", "10", "-n", "team1", "team2", "-c", "10", "-f", "100", NULL});
+    server_info_t server_info = malloc(sizeof(struct server_info_s));
+
+    add_teams(server_info, (char *[]){"team1", "team2", NULL});
+
+    server_info->height = 10;
+    server_info->width = 10;
+    server_info->clientsNb = 1;
+    return server_info;
 }
 
 void assert_packet_queue(client_t client, uint32_t packets_number, ...)
@@ -57,13 +64,12 @@ Test(auth, valid_ai_team_name)
     cr_assert(0 == 0);
 
     auth(args, client, server_info);
-    cr_assert_not_null(client->player);
-    cr_assert_not_null(client->player->team);
-    cr_assert(client->player->team->actualNumber == 1);
-    cr_assert(client->player->team->remainingSlots == 9);
+    cr_assert(client->team != NULL);
+    cr_assert(client->team->actualNumber == 1);
+    cr_assert(client->team->remainingSlots == 0);
     cr_assert(client->type == AI);
     cr_assert(client->clientNumber == 0);
-    assert_packet_queue(client, 2, "9", "10 10");
+    assert_packet_queue(client, 2, "0", "10 10");
     assert_stdout_eq_str("Client 0: Connected as team1\n");
 }
 
@@ -77,8 +83,8 @@ Test(auth, valid_graphical_team_name)
 
     auth(args, client, server_info);
     cr_assert(client->type == GRAPHICAL);
+    cr_assert(client->team == NULL);
     cr_assert(client->clientNumber == 0);
-    cr_assert_null(client->player);
     assert_packet_queue(client, 1, "ok");
     assert_stdout_eq_str("Client 0: Connected as GRAPHIC\n");
 }
@@ -92,7 +98,7 @@ Test(auth, invalid_team_name)
     char *args[] = {"team3", NULL};
 
     auth(args, client, server_info);
-    cr_assert_null(client->player);
+    cr_assert(client->team == NULL);
     cr_assert(client->type == NONE);
     assert_packet_queue(client, 1, "ko");
     assert_stdout_eq_str("Client 0: Invalid team name (team3)\n");
@@ -108,7 +114,7 @@ Test(auth, full_team)
 
     server_info->teams->team->remainingSlots = 0;
     auth(args, client, server_info);
-    cr_assert_null(client->player);
+    cr_assert(client->team == NULL);
     cr_assert(client->type == NONE);
     assert_packet_queue(client, 1, "ko");
     assert_stdout_eq_str("Client 0: Team team1 is full\n");
@@ -123,7 +129,7 @@ Test(auth, no_team_name)
     char *args[] = {NULL};
 
     auth(args, client, server_info);
-    cr_assert_null(client->player);
+    cr_assert(client->team == NULL);
     cr_assert(client->type == NONE);
     assert_packet_queue(client, 1, "ko");
     assert_stdout_eq_str("Client 0: Bad team name\n");
@@ -138,7 +144,7 @@ Test(auth, multiple_args)
     char *args[] = {"team1", "team2", NULL};
 
     auth(args, client, server_info);
-    cr_assert_null(client->player);
+    cr_assert(client->team == NULL);
     cr_assert(client->type == NONE);
     assert_packet_queue(client, 1, "ko");
     assert_stdout_eq_str("Client 0: Bad team name\n");

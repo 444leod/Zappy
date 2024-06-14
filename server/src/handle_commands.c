@@ -13,7 +13,6 @@
 #include "debug.h"
 #include <unistd.h>
 #include <stdio.h>
-#include <time.h>
 
 /**
  * @brief Execute the given command
@@ -45,17 +44,14 @@ static void execute_command(const client_command_t command,
 static bool should_be_handled(const client_command_t command,
     const client_t client)
 {
-    struct timespec now;
+    clock_t now;
     double elapsedTime;
 
     if (client->type == GRAPHICAL)
         return true;
-    clock_gettime(0, &now);
-    elapsedTime = (now.tv_sec - command->handledTime.tv_sec);
-    elapsedTime += (now.tv_nsec - command->handledTime.tv_nsec) / 1000000000.0;
-    command->waitDuration -= elapsedTime;
-    command->handledTime = now;
-    return command->waitDuration <= 0;
+    now = clock();
+    elapsedTime = (double)(now - command->handledTime) / CLOCKS_PER_SEC * 10;
+    return elapsedTime >= command->waitDuration;
 }
 
 /**

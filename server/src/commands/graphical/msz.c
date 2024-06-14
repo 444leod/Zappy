@@ -7,9 +7,6 @@
 
 #include "commands.h"
 #include "packet.h"
-#include "lib.h"
-#include "clients.h"
-#include "zappy.h"
 
 /**
  * @brief Msz command
@@ -19,9 +16,7 @@
  * @param client the client that executed the command
  * @param serverInfo the server info
  */
-void msz(UNUSED char **args, client_t client,
-    server_info_t serverInfo)
+void msz(UNUSED char **args, UNUSED client_t client,
+    UNUSED server_info_t serverInfo)
 {
-    queue_buffer(client, my_snprintf("msz %d %d\n",
-        serverInfo->width, serverInfo->height));
 }

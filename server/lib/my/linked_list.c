@@ -29,7 +29,6 @@ void add_to_list(void *newData, node_t *list)
     while (tmp->next)
         tmp = tmp->next;
     tmp->next = new_node;
-    new_node->prev = tmp;
 }
 
 /**
@@ -46,8 +45,6 @@ void remove_from_list(void *data, node_t *list)
 
     if (tmp && tmp->data == data) {
         *list = tmp->next;
-        if (tmp->next)
-            tmp->next->prev = NULL;
         my_free(tmp);
         return;
     }
@@ -58,8 +55,6 @@ void remove_from_list(void *data, node_t *list)
     if (!tmp)
         return;
     prev->next = tmp->next;
-    if (tmp->next)
-        tmp->next->prev = prev;
     my_free(tmp);
 }
 
@@ -77,8 +72,6 @@ node_t get_node_by_index(const int index, const node_t list)
     node_t tmp = list;
     int i = 0;
 
-    if (index < 0)
-        return (NULL);
     while (tmp && i < index) {
         tmp = tmp->next;
         i++;
@@ -105,35 +98,5 @@ uint32_t get_list_size(const node_t list)
         tmp = tmp->next;
         i++;
     }
-    return (i);
-}
-
-/**
- * @brief Get the index of a node in a list
- * @details Get the index of a node in a list
- *
- * @param data the pointer to the node to get the index of
- * @param list the list
- *
- * @return int the index of the node (-1 if not found)
-*/
-int get_node_index(void *data, node_t list)
-{
-    node_t tmp = list;
-    int i = 1;
-
-    if (!tmp)
-        return (-1);
-    if (tmp->next == list && tmp->data != data)
-        return (-1);
-    if (tmp->data == data)
-        return (0);
-    tmp = tmp->next;
-    while (tmp && tmp->data != data && tmp != list) {
-        tmp = tmp->next;
-        i++;
-    }
-    if (!tmp || tmp->data != data)
-        return (-1);
     return (i);
 }

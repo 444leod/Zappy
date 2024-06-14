@@ -16,7 +16,6 @@ typedef struct param_informations_s {
 
 typedef struct param_s {
     struct param_s *next;
-    struct param_s *prev;
     param_informations_t informations;
 } *param_t;
 
