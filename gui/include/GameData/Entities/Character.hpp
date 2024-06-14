@@ -104,11 +104,18 @@ namespace gui {
             */
             void dropRessource() { this->_dropRessource = true; };
 
+            /**
+             * @brief set the player expulsed
+             * @param isExpulsed The player expulsed
+            */
+            void expulsed(bool isExpulsed) { this->_isExpulsed = isExpulsed; }
+
         private:
             bool _isLayingAnEgg = false;
             std::uint32_t _food = 0;
             std::uint32_t _level = 0;
             Rocks _rocks;
             bool _dropRessource = false;
+            bool _isExpulsed = false;
     };
 }
