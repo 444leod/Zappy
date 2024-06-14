@@ -5,12 +5,23 @@ from ai_src.data import TileContent, Collectibles
 
 class ACommand:
     def __init__(self, name: str) -> None:
+        """
+        Abstract class representing a command
+        Initializes the command with its name
+        """
         self.name = name
     
     def dump(self) -> str:
+        """
+        Returns the command's name as a string
+        """
         return self.name
     
     def interpret_result(self, res: str) -> dict:
+        """
+        Interprets the result of the command
+        Raises an exception if the command failed
+        """
         if (res == "ok\n"):
             return {}
         if (res == "ko\n"):
@@ -19,27 +30,27 @@ class ACommand:
 class Forward(ACommand):
     def __init__(self) -> None:
         super().__init__("Forward")
-    
-    #TODO: interpret_result to change player pos
 
 class Right(ACommand):
     def __init__(self) -> None:
         super().__init__("Right")
 
-    #TODO: interpret_result to change player orientation
-
 class Left(ACommand):
     def __init__(self) -> None:
         super().__init__("Left")
-    
-    #TODO: interpret_result to change player orientation
 
 class Look(ACommand):
     def __init__(self) -> None:
         super().__init__("Look")
-    
+
     def interpret_result(self, res: str) -> dict:
+        """
+        Interprets the result of the Look command
+        """
         def str_to_tile(s: str) -> TileContent:
+            """
+            Converts a string to a TileContent object
+            """
             items = s.split()
             counter = Counter(items)
             
@@ -75,6 +86,10 @@ class Inventory(ACommand):
         super().__init__("Inventory")
     
     def interpret_result(self, res: str) -> dict:
+        """
+        Interprets the result of the Inventory command
+        Returns a serialized version of the inventory class
+        """
         super().interpret_result(res)
         items = re.findall(r'(\w+)\s+(\d+)', res)
         return {item: int(quantity) for item, quantity in items}
@@ -110,4 +125,3 @@ class Set(ACommand):
 class Incantation(ACommand):
     def __init__(self) -> None:
         super().__init__("Incantation")
-    

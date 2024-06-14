@@ -10,6 +10,9 @@ class HelpException(Exception):
 
 class Config:
     def __init__(self) -> None:
+        """
+        Parses the command line arguments
+        """
         argv = sys.argv
         if (len(argv) == 1):
             raise ArgError(USAGE)

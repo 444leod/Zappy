@@ -31,9 +31,9 @@ client_t *get_clients(void)
  *
  * @return the clients
 */
-clients_t get_clients_by_type(const enum CLIENT_TYPE type)
+client_list_t get_clients_by_type(const enum CLIENT_TYPE type)
 {
-    clients_t clients = NULL;
+    client_list_t clients = NULL;
     client_t *tmp = get_clients();
     client_t current = *tmp;
 

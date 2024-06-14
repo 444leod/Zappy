@@ -9,7 +9,13 @@ import ai_src.commands as cmd
 from ai.ai_src.utils import add_tuples, turn_left, turn_right
 
 class Bot():
-    def __init__(self, verbose=False, traced=False) -> None:
+    def __init__(self, verbose: bool=False, traced: bool=False) -> None:
+        """
+        Represents an instance of a bot playing the game
+        Attributes:
+            verbose: Whether to print debug messages
+            traced: Whether to log debug messages to a file
+        """
         try:
             self.conf: Config = Config()
             self.com_handler: ConnectionHandler = ConnectionHandler(
@@ -57,8 +63,26 @@ class Bot():
             "dead\n" : self.die,
             "message": self.receive_broadcast  
         }
+    
+    def run(self) -> None:
+        """
+        Main loop of the bot
+        The only function that should be called from the outside
+        """
+        while True:
+            # Behavior logic here, send one command at a time!!
+            cmd_to_send: cmd.ACommand = cmd.Incantation()
+            self.cmd_sent.append(cmd_to_send.dump())
+            self.com_handler.send_command(cmd_to_send.dump())
+
+            self.receive_commands()
+
+            self.handle_commands_sent()
 
     def log(self, *args, **kargs) -> None:
+        """
+        Logs the message to stdout and to a file if tracing is enabled
+        """
         if (self.verbose):
             print(*args, **kargs)
         if (self.traced):
@@ -66,27 +90,27 @@ class Bot():
                 print(*args, file=f)
 
     def die(self) -> None:
+        """
+        Handle the bot's death
+        """
         self.log("Bot died. Exiting.")
         sys.exit(0)
 
     def receive_broadcast(self) -> None:
+        """
+        Handle receiving a broadcast message
+        """
         tab: List[str] = self.results[-1].split(" ")
         if (len(tab) != 3) or not (tab[1][:-1].isdigit()):
             return
         self.messages_received.append((int(tab[1][:-1]), tab[2]))
 
-    def run(self) -> None:
-        while True:
-            # Behavior logic here, send one command at a time!!
-            cmd_to_send: cmd.ACommand = cmd.Incantation()
-            self.cmd_sent.append(cmd_to_send.dump())
-            self.com_handler.send_command(cmd_to_send.dump())
-
-            self.base_funcs_loop()
-
-            self.handle_commands_sent()
     
-    def base_funcs_loop(self) -> None:
+    def receive_commands(self) -> None:
+        """
+        Receive the commands sent by the bot
+        Loop that handles the base functions of the bot
+        """
         while True:
             # Wait for the response
             self.results.append(self.com_handler.receive_response())
@@ -101,12 +125,18 @@ class Bot():
             return
         
     def handle_forward(self) -> None:
+        """
+        Handle the forward command
+        """
         pos = self.player_info.pos
-        self.map[pos[0]][pos[1]].nb_players -= 1
+        self.map.tiles[pos[0]][pos[1]].nb_players -= 1
         self.player_info.pos = add_tuples(self.player_info.pos, self.player_info.orientation.value)
-        self.map[pos[0]][pos[1]].nb_players += 1
+        self.map.tiles[pos[0]][pos[1]].nb_players += 1
 
     def handle_look(self) -> None:
+        """
+        Handle the look command
+        """
         self.map.vision_update(
             cmd.Look().interpret_result(self.results[-1]),
             self.player_info.orientation,
@@ -114,13 +144,19 @@ class Bot():
         )
     
     def handle_eject(self) -> None:
-            try :
-                cmd.Eject().interpret_result(self.results[-1])
-                self.map[self.player_info.pos].nb_player = 1
-            except Exception:
-                pass
+        """
+        Handle the eject command
+        """
+        try :
+            cmd.Eject().interpret_result(self.results[-1])
+            self.map[self.player_info.pos].nb_player = 1
+        except Exception:
+            pass
 
     def handle_fork(self) -> None:
+        """
+        Handle the fork command
+        """
         try:
             cmd.Fork().interpret_result(self.results[-1])
             self.general_info.nb_eggs += 1
@@ -128,7 +164,10 @@ class Bot():
             self.log(e)
             self.log("Failed to fork")
 
-    def handle_take(self, object : str) -> None:
+    def handle_take(self, object: str) -> None:
+        """
+        Handle the take command
+        """
         try:
             pos = self.player_info.pos
             cmd.Set().interpret_result(self.results[-1])
@@ -138,7 +177,10 @@ class Bot():
             self.log(e)
             self.log("Failed to take object")
 
-    def handle_set(self, object : str) -> None:
+    def handle_set(self, object: str) -> None:
+        """
+        Handle the set command
+        """
         try:
             pos = self.player_info.pos
             cmd.Set().interpret_result(self.results[-1])
@@ -149,55 +191,41 @@ class Bot():
             self.log("Failed to set object")
 
     def handle_incantation(self) -> None:
+        """
+        Handle the incantation command
+        """
         try:
             cmd.Incantation().interpret_result(self.results[-1])
-            self.base_funcs_loop()
+            self.receive_commands()
             cmd.Incantation().interpret_result(self.results[-1])
             self.player_info.level += 1
         except Exception as e:
             self.log(e)
             self.log("Failed to incant")
 
-    
-
     def handle_commands_sent(self) -> None:
-
-
-        # Handle the command sent
+        """
+        Handle the commands sent by the bot
+        Loop that handles the commands sent by the bot
+        """
         cmd_sent: str = self.cmd_sent[-1].split(" ")[0]
         try :
             cmd_sup: str = self.cmd_sent[-1].split(" ")[1]
         except IndexError:
             cmd_sup = ""
         match cmd_sent:
-            case "Inventory":
-                self.player_info.inv = Collectibles(**(cmd.Inventory().interpret_result(self.results[-1])))
-            case "Look":
-                self.handle_look()
-            case "Forward":
-                self.map[self.player_info.pos[0]][self.player_info.pos[1]].nb_players -= 1
-                self.player_info.pos = add_tuples(self.player_info.pos, self.player_info.orientation.value)
-                self.map[self.player_info.pos].nb_players += 1
-            case "Right": 
-                self.player_info.orientation = turn_right(self.player_info.orientation)
-            case "Left":
-                self.player_info.orientation = turn_left(self.player_info.orientation)
-            case "Broadcast":
-                self.messages_sent.append(cmd.Broadcast().interpret_result(self.results[-1]))
-            case "Connect_nbr":
-                cmd.ConnectNbr().interpret_result(self.results[-1])
-            case "Eject":
-                self.handle_eject()
-            case "Fork":
-                self.handle_fork()
-            case "Take":
-                self.handle_take()
-            case "Set":
-                self.handle_set()
-            case "Incantation":
-                self.handle_incantation()
-            case _:
-                pass
+            case "Inventory": self.player_info.inv = Collectibles(**(cmd.Inventory().interpret_result(self.results[-1])))
+            case "Look": self.handle_look()
+            case "Forward": self.handle_forward()
+            case "Right": self.player_info.orientation = turn_right(self.player_info.orientation)
+            case "Left": self.player_info.orientation = turn_left(self.player_info.orientation)
+            case "Broadcast": self.messages_sent.append(cmd.Broadcast().interpret_result(self.results[-1]))
+            case "Connect_nbr": cmd.ConnectNbr().interpret_result(self.results[-1])
+            case "Eject": self.handle_eject()
+            case "Fork": self.handle_fork()
+            case "Take": self.handle_take(cmd_sup)
+            case "Set": self.handle_set(cmd_sup)
+            case "Incantation": self.handle_incantation()
 
 def main() -> None:
     bot = Bot(
