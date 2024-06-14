@@ -31,7 +31,7 @@ namespace gui {
             void receive(std::string command, GameData &gameData) override;
 
         private:
-            std::map<std::string, Orientation> _orientationMap = {
+            std::map<std::string, Orientation> _stringToOrientation = {
                 {"NORTH", Orientation::NORTH},
                 {"EAST", Orientation::EAST},
                 {"SOUTH", Orientation::SOUTH},

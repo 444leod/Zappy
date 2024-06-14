@@ -34,11 +34,9 @@ void gui::Ppo::receive(std::string command, GameData &gameData)
         throw std::invalid_argument("Player position is out of bounds.");
     gameData.players().at(playerId)->setPosition(Vector2u(x, y));
 
-    auto it = _orientationMap.find(orientation);
-    if (it != _orientationMap.end())
-        playerOrientation = it->second;
-    else
+    if (_stringToOrientation.find(orientation) == _stringToOrientation.end())
         throw std::invalid_argument("Invalid orientation: " + orientation);
+    playerOrientation = _stringToOrientation[orientation];
 
     auto player = gameData.getPlayerById(playerId);
     if (player.has_value())

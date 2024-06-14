@@ -27,11 +27,9 @@ void gui::Pnw::receive(std::string command, GameData &gameData)
     iss >> token >> playerId >> x >> y >> orientation >> level >> teamName;
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
-    auto it = _orientationMap.find(orientation);
-    if (it != _orientationMap.end())
-        playerOrientation = it->second;
-    else
+    if (_stringToOrientation.find(orientation) == _stringToOrientation.end())
         throw std::invalid_argument("Invalid orientation: " + orientation);
+    playerOrientation = _stringToOrientation[orientation];
     if (gameData.playerExists(playerId))
         throw std::invalid_argument("Player alreasy exist in the game data with this id.");
     if (level != 1)
