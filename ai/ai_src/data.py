@@ -53,8 +53,6 @@ class Collectibles():
         """
         Remove an object to the collectibles based on its name
         """
-        NORTH = "acab"
-        print(NORTH)
         if hasattr(self, str_to_take):
             setattr(self, str_to_take, getattr(self, str_to_take) - 1)
 
