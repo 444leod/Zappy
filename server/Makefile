@@ -36,8 +36,9 @@ __SRC	=	$(addprefix src/, $(__SRC_SRC)) \
 
 __SRC_SRC := server.c \
 	exit.c \
-	handle_clients.c \
+	handle_clients_actions.c \
 	handle_commands.c \
+	read_buffer.c \
 	select_wrapper.c \
 
 __SRC_COMMANDS := commands.c \
@@ -51,13 +52,9 @@ __SRC_GAME := \
 	init_map.c \
 	manage_entities.c \
 	query_map.c \
+	player_death.c \
 
 __SRC_GRAPHICAL := msz.c \
-
-__SRC_ARGS := params.c \
-	check_args.c \
-	init_server_info.c \
-	display_help.c \
 
 __SRC_ARGS := params.c \
 	check_args.c \
@@ -75,6 +72,7 @@ __SRC_CLIENT := add_client.c \
 	remove_client.c \
 
 __SRC_UTILS := queue_buffer.c \
+	time.c \
 
 
 # =============================================================================

@@ -76,11 +76,11 @@ static bool is_team_name_valid(const char *teamName,
  * @param server the serverInfo
  */
 static void spawn_player(const char *teamName, const client_t client,
-    server_info_t server)
+    const server_info_t server_info)
 {
-    const team_t team = get_team_by_name(teamName, server->teams);
-    egg_t egg = get_random_egg(team, server->map);
-    player_t player = egg_to_player(egg, server->map);
+    const team_t team = get_team_by_name(teamName, server_info->teams);
+    egg_t egg = get_random_egg(team, server_info->map);
+    player_t player = egg_to_player(egg, server_info->map);
 
     client->player = player;
     team->remainingSlots--;

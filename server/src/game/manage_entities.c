@@ -27,6 +27,20 @@ void add_player_at_position(const player_t player, const position_t position,
 }
 
 /**
+ * @brief Remove a player from its tile
+ * @details Remove a player from its tile
+ *
+ * @param player the player to remove
+ * @param map the map
+ */
+void remove_player(const player_t player, const map_t map)
+{
+    const tile_t tile = get_tile_at_position(player->position, map);
+
+    remove_from_list((void *)player, (node_t *)&tile->players);
+}
+
+/**
  * @brief Move a player to a given position
  * @details Move a player to a given position
  *
@@ -85,6 +99,8 @@ player_t egg_to_player(const egg_t egg, const map_t map)
     player->level = 1;
     player->team = egg->team;
     player->position = egg->pos;
+    player->death_remaining_time = 0;
+    clock_gettime(0, &player->last_eat_check_time);
     tile = get_tile_at_position(egg->pos, map);
     remove_from_list((void *)egg, (node_t *)tile->eggs);
     add_to_list((void *)player, (node_t *)&tile->players);
