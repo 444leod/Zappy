@@ -26,6 +26,16 @@ namespace gui {
             AEntity() = default;
 
             /**
+             * @brief Construct a new AEntity object
+             * @param id Id of the entity
+             * @param position Position of the entity
+             * @param orientation Orientation of the entity
+             * @param teamName Team name of the entity
+            */
+            AEntity(std::uint32_t id, Vector2u position, Orientation orientation, std::string teamName)
+                : _position(position), _orientation(orientation), _id(id), _teamName(teamName) {}
+
+            /**
              * @brief Destroy the AEntity object
             */
             ~AEntity() = default;

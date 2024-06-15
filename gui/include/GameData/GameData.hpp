@@ -11,6 +11,7 @@
 #include <iostream>
 #include <map>
 #include <memory>
+#include <optional>
 #include "Tiles/TileContent.hpp"
 #include "Entities/Character.hpp"
 #include "Entities/Egg.hpp"
@@ -101,6 +102,41 @@ namespace gui {
              * @return Map& The reference of the map
             */
             Map& mapRef() { return this->_map; }
+
+            /**
+             * @brief check if the given id corresponds to a player
+             * @param playerId The player id
+             * @return bool True if the player exists, false otherwise
+            */
+            bool playerExists(std::uint32_t playerId) const;
+
+            /**
+             * @brief check if the given team name exists
+             * @param teamName The team name
+             * @return bool True if the team exists, false otherwise
+            */
+            bool teamExists(const std::string &teamName) const;
+
+            /**
+             * @brief check if the given egg id exists
+             * @param eggId The egg id
+             * @return bool True if the egg exists, false otherwise
+            */
+            bool eggExists(std::uint32_t eggId) const;
+
+            /**
+             * @brief get the player by his id
+             * @param playerId The player id
+             * @return std::shared_ptr<Character> The player
+            */
+            std::optional<std::shared_ptr<Character>> getPlayerById(std::uint32_t playerId) const;
+
+            /**
+             * @brief get the egg by his id
+             * @param eggId The egg id
+             * @return std::shared_ptr<Egg> The egg
+            */
+            std::optional<std::shared_ptr<Egg>> getEggById(std::uint32_t eggId) const;
 
         private:
             std::vector<std::string> _teamNames = {};

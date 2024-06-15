@@ -25,6 +25,17 @@ namespace gui {
             Character() = default;
 
             /**
+             * @brief Construct a new Character object for new player
+             * @param id The id of the character
+             * @param position The position of the character
+             * @param orientation The orientation of the character
+             * @param level The level of the character
+             * @param teamName The team name of the character
+            */
+            Character(std::uint32_t id, Vector2u position, Orientation orientation, std::uint32_t level, std::string teamName)
+                : AEntity(id, position, orientation, teamName), _level(level) {}
+
+            /**
              * @brief Destroy the Character object
             */
             ~Character() = default;
