@@ -117,10 +117,10 @@ namespace gui {
             void pickingRessource() { this->_pickingRessource = true; }
 
             /**
-             * @brief set the player incantating
-             * @param isIncantating The player incantating
+             * @brief set the player incantation
+             * @param isincantation The player incantation
             */
-            void incantating(bool isIncantating) { this->_isIncantating = isIncantating; }
+            void incantation(bool isincantation) { this->_isincantation = isincantation; }
 
             /**
              * @brief set the player incantation result
@@ -145,7 +145,7 @@ namespace gui {
             bool _dropRessource = false;
             bool _pickingRessource = false;
             bool _isExpulsed = false;
-            bool _isIncantating = false;
+            bool _isincantation = false;
             bool _incantationResult = false;
             bool _isDead = false;
     };
