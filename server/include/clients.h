@@ -18,24 +18,24 @@
 
 typedef struct client_s {
     int fd;
-    team_t team;
-    uint16_t clientNumber;
+    player_t player;
+    uint16_t teamClientNumber;
     packet_queue_t packetQueue;
     enum CLIENT_TYPE type;
     client_command_list_t commands;
     char *buffer;
-    struct client_s *next;
 } *client_t;
 
-typedef struct clients_s {
-    struct clients_s *next;
+typedef struct client_list_s {
+    struct client_list_s *next;
+    struct client_list_s *prev;
     client_t client;
-} *clients_t;
+} *client_list_t;
 
 void add_client(client_t client);
 void remove_client(int fd);
 client_t create_client(int fd);
-client_t *get_clients(void);
+client_list_t *get_clients(void);
 client_t get_client_by_fd(int fd);
-clients_t get_clients_by_type(enum CLIENT_TYPE type);
+client_list_t get_clients_by_type(enum CLIENT_TYPE type);
 void clear_clients(void);

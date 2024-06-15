@@ -20,11 +20,14 @@
 void queue_packet_to_client_type(const enum CLIENT_TYPE type,
     packet_t *packet)
 {
-    clients_t clients = get_clients_by_type(type);
-    clients_t tmp = clients;
+    client_list_t clients = get_clients_by_type(type);
+    client_list_t tmp = clients;
+    packet_t *packetCopy;
 
     while (tmp) {
-        add_packet_to_queue(&tmp->client->packetQueue, packet);
+        packetCopy = my_malloc(sizeof(packet_t));
+        memcpy(packetCopy, packet, sizeof(packet_t));
+        add_packet_to_queue(&tmp->client->packetQueue, packetCopy);
         tmp = tmp->next;
     }
 }

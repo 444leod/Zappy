@@ -16,14 +16,16 @@
 */
 void clear_clients(void)
 {
-    client_t *clients = get_clients();
-    client_t tmp = *clients;
+    client_list_t *clients = get_clients();
+    client_list_t clientNode = *clients;
+    client_list_t next = NULL;
 
-    while (tmp) {
-        if (tmp->fd != -1) {
-            close(tmp->fd);
+    while (clientNode) {
+        if (clientNode->client->fd != -1) {
+            close(clientNode->client->fd);
         }
-        *clients = tmp->next;
-        tmp = *clients;
+        next = clientNode->next;
+        remove_from_list((node_t *)clientNode->client, (node_t *)clients);
+        clientNode = next;
     }
 }
