@@ -2,15 +2,26 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import List
 
-class Orientation(Enum):
-    """
-    Enum representing the orientation of a player
-    They are represented as tuples (x, y) to facilitate the computation of the new position
-    """
-    NORTH = (0, 1)
-    EAST = (1, 0)
-    SOUTH = (0, -1)
-    WEST = (-1, 0)
+# class Orientation(Enum):
+"""
+CONST VARIABLES representing the orientation of a player
+They are represented as tuples (x, y) to facilitate the computation of the new position
+"""
+NORTH: tuple[int, int] = (0, 1)
+EAST: tuple[int, int] = (1, 0)
+SOUTH: tuple[int, int] = (0, -1)
+WEST: tuple[int, int] = (-1, 0)
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
 @dataclass
 class Collectibles():
@@ -61,15 +72,7 @@ class PlayerInfo():
     level: int = 1
     inv: Collectibles = field(default_factory=lambda: Collectibles(food=10))
     pos: tuple[int, int] = (0, 0)
-    orientation: Orientation = Orientation.NORTH
-
-@dataclass
-class GeneralInfo():
-    """
-    Dataclass representing the general information
-    """
-    map_size: tuple[int, int] = (0, 0)
-    nb_eggs: int = 0
+    orientation: tuple[int, int] = NORTH
 
 @dataclass
 class TileContent():
@@ -91,11 +94,13 @@ class Map():
     Dataclass representing the map
     """
     tiles: List[List[TileContent]] = field(default_factory=list)
+    map_size: tuple[int, int] = (0, 0)
+    player_pos: tuple[int, int] = (0, 0)
 
     def vision_update(
         self,
         vision: dict[int, TileContent],
-        orientation: Orientation,
+        orientation: tuple[int, int],
         player_pos: tuple[int, int]
     ) -> None:
         """
@@ -111,20 +116,20 @@ class Map():
             row, col = pos
             self.tiles[row][col] = content
 
-        if orientation == Orientation.WEST or orientation == Orientation.EAST:
+        if orientation == WEST or orientation == EAST:
             for key, content in vision.items():
                 vision[key].reverse()
 
         for key, content in vision.items():
             distance = key
             for i, tile_content in enumerate(content):
-                if orientation == Orientation.NORTH:
+                if orientation == NORTH:
                     new_pos = (player_pos[0] - distance, player_pos[1] - (distance - i))
-                elif orientation == Orientation.SOUTH:
+                elif orientation == SOUTH:
                     new_pos = (player_pos[0] + distance, player_pos[1] + (distance - i))
-                elif orientation == Orientation.WEST:
+                elif orientation == WEST:
                     new_pos = (player_pos[0] - (distance - i), player_pos[1] - distance)
-                elif orientation == Orientation.EAST:
+                elif orientation == EAST:
                     new_pos = (player_pos[0] + (distance - i), player_pos[1] + distance)
                 new_pos = (new_pos[0] % max_row, new_pos[1] % max_col)
                 update_tile(new_pos, tile_content)
@@ -134,6 +139,8 @@ class Map():
         Returns a string representation of the map
         """
         res = ""
-        for row in self.tiles:
-            res += f"{row}\n"
+        for x, row in enumerate(self.tiles):
+            for y, tile in enumerate(row):
+                res += f"{bcolors.OKGREEN}{tile}{bcolors.ENDC}" if (x, y) == self.player_pos else f"{tile}"
+            res += "\n"
         return res

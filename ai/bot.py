@@ -4,7 +4,8 @@ import sys
 from typing import List
 from ai_src.connection_handler import ConnectionHandler
 from ai_src.config import Config, HelpException, ArgError
-from ai_src.data import PlayerInfo, GeneralInfo, Orientation, Collectibles, Map, TileContent
+from ai_src.data import PlayerInfo, Collectibles, Map, TileContent
+from ai_src.behaviors import LookingForward, TalkingWalker
 import ai_src.commands as cmd
 from ai.ai_src.utils import add_tuples, turn_left, turn_right
 
@@ -46,23 +47,22 @@ class Bot():
 
         self.verbose: bool = verbose
         self.traced: bool = traced
-
-        self.general_info: GeneralInfo = GeneralInfo()
-        self.general_info.map_size = tuple(map(int, self.results[-1].split()))
-        self.general_info.nb_eggs = int(self.results[-2])
+        self.nb_eggs = int(self.results[-2])
 
         self.player_info: PlayerInfo = PlayerInfo()
 
         self.map: Map = Map()
-        self.map.tiles = [[TileContent() for _ in range(self.general_info.map_size[0])] for _ in range(self.general_info.map_size[1])]
+        self.map.map_size = tuple(map(int, self.results[-1].split()))
+        self.map.tiles = [[TileContent() for _ in range(self.map.map_size[0])] for _ in range(self.map.map_size[1])]
 
-        self.messages_received: List[tuple[int, str]] = [] # [(playerID, message), ..]
+        self.messages_received: List[tuple[int, str]] = [] # [(player_direction, message), ..]
         self.messages_sent: List[str] = []
         self.cmd_sent: List[str] = []
         self.base_funcs = {
             "dead\n" : self.die,
             "message": self.receive_broadcast  
         }
+        self.current_behavior = LookingForward() 
     
     def run(self) -> None:
         """
@@ -70,13 +70,9 @@ class Bot():
         The only function that should be called from the outside
         """
         while True:
-            # Behavior logic here, send one command at a time!!
-            cmd_to_send: cmd.ACommand = cmd.Incantation()
-            self.cmd_sent.append(cmd_to_send.dump())
-            self.com_handler.send_command(cmd_to_send.dump())
-
-            self.receive_commands()
-
+            self.log(self.map)
+            self.behavior_logic()
+            self.receive_command()
             self.handle_commands_sent()
 
     def log(self, *args, **kargs) -> None:
@@ -104,12 +100,20 @@ class Bot():
         if (len(tab) != 3) or not (tab[1][:-1].isdigit()):
             return
         self.messages_received.append((int(tab[1][:-1]), tab[2]))
-
     
-    def receive_commands(self) -> None:
+    def behavior_logic(self) -> None:
         """
-        Receive the commands sent by the bot
-        Loop that handles the base functions of the bot
+        Handle the bot's behavior
+        """
+        cmd_to_send: cmd.ACommand = self.current_behavior.get_next_command(self.player_info, self.map)
+        self.log(cmd_to_send.dump())
+        self.cmd_sent.append(cmd_to_send.dump())
+        self.com_handler.send_command(cmd_to_send.dump())
+
+    def receive_command(self) -> None:
+        """
+        Receive a command from the server
+        Also handles death and broadcast messages
         """
         while True:
             # Wait for the response
@@ -128,10 +132,11 @@ class Bot():
         """
         Handle the forward command
         """
-        pos = self.player_info.pos
-        self.map.tiles[pos[0]][pos[1]].nb_players -= 1
-        self.player_info.pos = add_tuples(self.player_info.pos, self.player_info.orientation.value)
-        self.map.tiles[pos[0]][pos[1]].nb_players += 1
+        self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players -= 1
+        self.player_info.pos = add_tuples(self.player_info.pos, self.player_info.orientation)
+        self.player_info.pos = (self.player_info.pos[0] % self.map.map_size[0], self.player_info.pos[1] % self.map.map_size[1])
+        self.map.player_pos = self.player_info.pos
+        self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players += 1
 
     def handle_look(self) -> None:
         """
@@ -217,7 +222,7 @@ class Bot():
             case "Inventory": self.player_info.inv = Collectibles(**(cmd.Inventory().interpret_result(self.results[-1])))
             case "Look": self.handle_look()
             case "Forward": self.handle_forward()
-            case "Right": self.player_info.orientation = turn_right(self.player_info.orientation)
+            case "Right": self.player_info.orientation= turn_right(self.player_info.orientation)
             case "Left": self.player_info.orientation = turn_left(self.player_info.orientation)
             case "Broadcast": self.messages_sent.append(cmd.Broadcast().interpret_result(self.results[-1]))
             case "Connect_nbr": cmd.ConnectNbr().interpret_result(self.results[-1])
