@@ -137,18 +137,40 @@ Test(get_map, move_player)
     player->team = NULL;
 
     add_player_at_position(player, (position_t){1, 1}, map);
+    tile_t tile = get_tile_at_position((position_t){1, 1}, map);
+    cr_assert_not_null(tile);
+    cr_assert_not_null(tile->players);
+    cr_assert_eq(tile->players->player, player);
+    cr_assert_eq(get_list_size((node_t)tile->players), 1);
     cr_assert_eq(player->position.x, 1);
     cr_assert_eq(player->position.y, 1);
 
     move_player(player, (position_t){2, 2}, map);
+    cr_assert_null(tile->players);
+    tile = get_tile_at_position((position_t){2, 2}, map);
+    cr_assert_not_null(tile);
+    cr_assert_not_null(tile->players);
+    cr_assert_eq(tile->players->player, player);
+    cr_assert_eq(get_list_size((node_t)tile->players), 1);
     cr_assert_eq(player->position.x, 2);
     cr_assert_eq(player->position.y, 2);
 
     move_player(player, (position_t){2, 2}, map);
+    tile = get_tile_at_position((position_t){2, 2}, map);
+    cr_assert_not_null(tile);
+    cr_assert_not_null(tile->players);
+    cr_assert_eq(tile->players->player, player);
+    cr_assert_eq(get_list_size((node_t)tile->players), 1);
     cr_assert_eq(player->position.x, 2);
     cr_assert_eq(player->position.y, 2);
 
     move_player(player, (position_t){9, 9}, map);
+    cr_assert_null(tile->players);
+    tile = get_tile_at_position((position_t){9, 9}, map);
+    cr_assert_not_null(tile);
+    cr_assert_not_null(tile->players);
+    cr_assert_eq(tile->players->player, player);
+    cr_assert_eq(get_list_size((node_t)tile->players), 1);
     cr_assert_eq(player->position.x, 9);
     cr_assert_eq(player->position.y, 9);
 }

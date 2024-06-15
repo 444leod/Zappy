@@ -24,8 +24,24 @@ void add_player_at_position(const player_t player, const position_t position,
 {
     const tile_t tile = get_tile_at_position(position, map);
 
+    add_to_list((void *)player, (node_t *)&(tile->players));
     player->position = position;
-    add_to_list((void *)player, (node_t *)&tile->players);
+    player->position.x = position.x;
+    player->position.y = position.y;
+}
+
+/**
+ * @brief Remove a player from its tile
+ * @details Remove a player from its tile
+ *
+ * @param player the player to remove
+ * @param map the map
+ */
+void remove_player(const player_t player, const map_t map)
+{
+    const tile_t tile = get_tile_at_position(player->position, map);
+
+    remove_from_list((void *)player, (node_t *)&tile->players);
 }
 
 /**
@@ -42,10 +58,10 @@ void move_player(const player_t player, const position_t position,
     const position_t old_position = player->position;
     tile_t tile = get_tile_at_position(old_position, map);
 
-    player->position = position;
-    remove_from_list((void *)player, (node_t *)&tile->players);
+    remove_from_list((void *)player, (node_t *)&(tile->players));
     tile = get_tile_at_position(position, map);
-    add_to_list((void *)player, (node_t *)&tile->players);
+    add_to_list((void *)player, (node_t *)&(tile->players));
+    player->position = position;
 }
 
 /**
@@ -86,11 +102,12 @@ player_t egg_to_player(const egg_t egg, const map_t map)
         return NULL;
     player = my_malloc(sizeof(struct player_s));
     uuid_generate(player->id);
-    clock_gettime(CLOCK_REALTIME, &player->lastEaten);
     player->food = 10;
     player->level = 1;
     player->team = egg->team;
     player->position = egg->pos;
+    player->death_remaining_time = 0;
+    clock_gettime(0, &player->last_eat_check_time);
     player->orientation = (enum ORIENTATION)(rand() % 4) + 1;
     player->egg_number = egg->number;
     tile = get_tile_at_position(egg->pos, map);

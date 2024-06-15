@@ -39,3 +39,7 @@ void display_help(const char *str);
 void queue_buffer(const client_t client, const char *buffer);
 void select_wrapper(int *max_sd, fd_set *readfds,
     fd_set *writefds, client_list_t clients);
+void read_buffer(const client_t client);
+void check_player_death(const client_t client,
+    const map_t map, const uint32_t frequency);
+bool can_interact(client_t client);
