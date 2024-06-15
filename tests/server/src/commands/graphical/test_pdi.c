@@ -23,7 +23,7 @@ Test(pdi, player_death_to_graphical)
     client2->type = GRAPHICAL;
     client3->type = GRAPHICAL;
 
-    send_player_death_to_graphical(&player);
+    queue_to_graphical(get_player_death_string(&player));
 
     assert_packet_queue(client1->packetQueue, 1, "pdi 0");
     assert_packet_queue(client2->packetQueue, 1, "pdi 0");

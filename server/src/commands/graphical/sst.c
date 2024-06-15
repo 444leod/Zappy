@@ -8,6 +8,7 @@
 #include "commands.h"
 #include "lib.h"
 #include "zappy.h"
+#include "commands_utils.h"
 
 /**
  * @brief Get the time unit modification string
@@ -18,40 +19,6 @@
 char *get_time_unit_modification_string(int time_unit)
 {
     return my_snprintf("sst %d", time_unit);
-}
-
-/**
- * @brief Send the time unit modification to a client
- *
- * @param client the client that executed the command
- * @param time_unit the time unit
- */
-void send_time_unit_modification_to_client(const client_t client,
-    int time_unit)
-{
-    char *time_unit_string = get_time_unit_modification_string(time_unit);
-
-    queue_buffer(client, time_unit_string);
-    my_free(time_unit_string);
-}
-
-/**
- * @brief Send the time unit modification to all the clients in the list
- *
- * @param clients the list of clients
- * @param time_unit the time unit
- */
-void send_time_unit_modification_to_client_list(const client_list_t clients,
-    int time_unit)
-{
-    char *time_unit_string = get_time_unit_modification_string(time_unit);
-    client_list_t tmp = clients;
-
-    while (tmp) {
-        queue_buffer(tmp->client, time_unit_string);
-        tmp = tmp->next;
-    }
-    my_free(time_unit_string);
 }
 
 /**
@@ -79,6 +46,5 @@ void sst(char **args, const client_t client,
         return;
     }
     serverInfo->freq = time_unit;
-    send_time_unit_modification_to_client_list(get_clients_by_type(GRAPHICAL),
-        time_unit);
+    queue_to_graphical(get_time_unit_modification_string(time_unit));
 }

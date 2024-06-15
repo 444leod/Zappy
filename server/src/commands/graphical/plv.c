@@ -27,7 +27,8 @@ char *get_player_level_string(const player_t player)
  * @param client the client that executed the command
  * @param playerNumber the player number
 */
-void send_player_level_to_client(const client_t client, const int playerNumber)
+static void send_player_level_to_client(const client_t client,
+    const int playerNumber)
 {
     player_t player = get_player_by_player_number(playerNumber);
     char *player_level_string;
@@ -41,32 +42,6 @@ void send_player_level_to_client(const client_t client, const int playerNumber)
     player_level_string = get_player_level_string(player);
     queue_buffer(client, player_level_string);
     my_free(player_level_string);
-}
-
-/**
- * @brief Send the player level to a list of clients
- * @details Send the player level to a list of clients
- *
- * @param clients the list of clients
- * @param playerNumber the player number
-*/
-void send_player_level_to_client_list(const client_list_t clients,
-    const int playerNumber)
-{
-    client_list_t tmp = clients;
-    player_t player = get_player_by_player_number(playerNumber);
-    char *player_level_string = "sbp";
-
-    if (player)
-        player_level_string = get_player_level_string(player);
-    else
-        printf("GLOBAL: plv %d: player not found\n", playerNumber);
-    while (tmp) {
-        queue_buffer(tmp->client, player_level_string);
-        tmp = tmp->next;
-    }
-    if (player)
-        my_free(player_level_string);
 }
 
 /**

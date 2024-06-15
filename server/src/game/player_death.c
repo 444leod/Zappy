@@ -25,7 +25,7 @@ static void kill_player(const client_t client, const map_t map)
     client->player->isDead = true;
     remove_player(client->player, map);
     queue_buffer(client, "dead");
-    send_player_death_to_graphical(client->player);
+    queue_to_graphical(get_player_death_string(client->player));
     printf("Player %d died.\n", client->player->playerNumber);
 }
 

@@ -26,38 +26,14 @@ char *get_player_pos_string(const player_t player)
 }
 
 /**
- * @brief Send the position of a player
+ * @brief Send the player position to a client
+ * @details Send the player position to a client
  *
  * @param client the client that executed the command
- * @param playerNumber the player id
+ * @param playerNumber the player number
  */
-void send_player_pos_to_client_list(const client_list_t clients,
+static void send_player_pos_to_client(const client_t client,
     const int playerNumber)
-{
-    client_list_t tmp = clients;
-    player_t player = get_player_by_player_number(playerNumber);
-    char *player_pos_string = "sbp";
-
-    if (player)
-        player_pos_string = get_player_pos_string(player);
-    else
-        printf("GLOBAL: ppo %d: player not found\n", playerNumber);
-    while (tmp) {
-        queue_buffer(tmp->client, player_pos_string);
-        tmp = tmp->next;
-    }
-    if (player)
-        my_free(player_pos_string);
-}
-
-/**
- * @brief Send the position of a player to a client
- *
- * @param client the client that executed the command
- * @param server_info the server info
- * @param playerNumber the player id
- */
-void send_player_pos_to_client(const client_t client, const int playerNumber)
 {
     player_t player = get_player_by_player_number(playerNumber);
     char *player_pos_string = "sbp";

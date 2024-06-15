@@ -35,34 +35,13 @@ char *get_tile_content_string(const tile_t tile, const position_t position)
  * @param serverInfo The server info
  * @param position The position of the tile
  */
-void send_tile_content_to_client(const client_t client,
+static void send_tile_content_to_client(const client_t client,
     const server_info_t serverInfo, const position_t position)
 {
     const tile_t tile = get_tile_at_position(position, serverInfo->map);
     char *packet_string = get_tile_content_string(tile, position);
 
     queue_buffer(client, packet_string);
-    my_free(packet_string);
-}
-
-/**
- * @brief Send the content of a tile to a list of clients
- *
- * @param clients The list of clients to send the content to
- * @param serverInfo The server info
- * @param position The position of the tile
- */
-void sent_tile_content_to_client_list(const client_list_t clients,
-    const server_info_t serverInfo, const position_t position)
-{
-    client_list_t tmp = clients;
-    const tile_t tile = get_tile_at_position(position, serverInfo->map);
-    char *packet_string = get_tile_content_string(tile, position);
-
-    while (tmp) {
-        queue_buffer(tmp->client, packet_string);
-        tmp = tmp->next;
-    }
     my_free(packet_string);
 }
 

@@ -55,3 +55,20 @@ char get_char_by_orientation(int orientation)
     }
     return -1;
 }
+
+/**
+ * @brief Queue the given buffer to all the graphical clients
+ * @details Queue the given buffer to all the graphical clients
+ *
+ * @param buffer the buffer to queue
+ */
+void queue_to_graphical(char *buffer)
+{
+    client_list_t graphical_clients = get_clients_by_type(GRAPHICAL);
+
+    while (graphical_clients) {
+        queue_buffer(graphical_clients->client, buffer);
+        graphical_clients = graphical_clients->next;
+    }
+    my_free(buffer);
+}

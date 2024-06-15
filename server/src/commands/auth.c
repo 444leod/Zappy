@@ -149,5 +149,5 @@ void auth(char **args, const client_t client,
     client->type = AI;
     spawn_player(args[0], client, serverInfo);
     send_start_informations(client, serverInfo->width, serverInfo->height);
-    send_new_player_to_graphical(client->player);
+    queue_to_graphical(get_new_player_string(client->player));
 }

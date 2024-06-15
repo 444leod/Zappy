@@ -31,7 +31,7 @@ char *get_player_inventory_string(const player_t player)
  * @param client the client that executed the command
  * @param playerNumber the player number
 */
-void send_player_inventory_to_client(const client_t client,
+static void send_player_inventory_to_client(const client_t client,
     const int playerNumber)
 {
     player_t player = get_player_by_player_number(playerNumber);
@@ -46,32 +46,6 @@ void send_player_inventory_to_client(const client_t client,
     inventory = get_player_inventory_string(player);
     queue_buffer(client, inventory);
     my_free(inventory);
-}
-
-/**
- * @brief Send the player inventory to a list of clients
- * @details Send the player inventory to a list of clients
- *
- * @param clients the list of clients
- * @param playerNumber the player number
- */
-void send_player_inventory_to_client_list(const client_list_t clients,
-    const int playerNumber)
-{
-    client_list_t tmp = clients;
-    player_t player = get_player_by_player_number(playerNumber);
-    char *inventory = "sbp";
-
-    if (player)
-        inventory = get_player_inventory_string(player);
-    else
-        printf("GLOBAL: pin %d: player not found\n", playerNumber);
-    while (tmp) {
-        queue_buffer(tmp->client, inventory);
-        tmp = tmp->next;
-    }
-    if (player)
-        my_free(inventory);
 }
 
 /**

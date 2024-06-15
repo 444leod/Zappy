@@ -26,5 +26,5 @@ Test(tna, valid_command)
     server_info_t serverInfo = get_server_info();
 
     tna((char *[]){"tna", NULL}, client, serverInfo);
-    assert_packet_queue(client->packetQueue, 2, "tna teamName", "tna team2");
+    assert_packet_queue(client->packetQueue, 1, "tna teamName\ntna team2");
 }
