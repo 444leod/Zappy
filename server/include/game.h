@@ -106,11 +106,13 @@ typedef struct map_s {
     uint32_t height;
 } * map_t;
 
-map_t create_map(uint32_t width, uint32_t height);
-void init_map(map_t map, team_list_t teams);
-tile_t get_tile_at_position(position_t position, map_t map);
-void add_player_at_position(player_t player, position_t position, map_t map);
-void move_player(player_t player, position_t position, map_t map);
+map_t create_map(const uint32_t width, const uint32_t height);
+void init_map(const map_t map, const team_list_t teams);
+tile_t get_tile_at_position(const position_t position, const map_t map);
+void add_player_at_position(const player_t player, const position_t position,
+    const map_t map);
+void move_player(const player_t player, const position_t position,
+    const map_t map);
 void add_egg_at_position(const team_t, const position_t, map_t);
 egg_list_t get_team_eggs(const team_t team, const map_t map);
 egg_t get_random_egg(const team_t team, map_t map);
