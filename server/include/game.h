@@ -47,6 +47,8 @@ typedef struct rocks_s {
 typedef struct player_s {
     bool isDead;
     uuid_t id;
+    uint32_t playerNumber;
+    uint32_t egg_number;
     team_t team;
     position_t position;
     int level;
@@ -64,6 +66,7 @@ typedef struct player_list_s {
 } * player_list_t;
 
 typedef struct egg_s {
+    uint32_t number;
     position_t pos;
     team_t team;
 } * egg_t;

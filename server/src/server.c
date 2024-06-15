@@ -60,10 +60,10 @@ void zappy_loop(int socketFd, server_info_t serverInfo)
     fd_set readfds;
     fd_set writefds;
     int max_sd = 0;
-    client_t *clients = NULL;
+    client_list_t clients = NULL;
 
     while (1) {
-        clients = get_clients();
+        clients = (*get_clients());
         FD_ZERO(&readfds);
         FD_ZERO(&writefds);
         FD_SET(socketFd, &readfds);

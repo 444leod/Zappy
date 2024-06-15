@@ -40,7 +40,7 @@ MY_LIB_TESTS = \
 	lib/my/test_supercat.c \
 	lib/my/test_tablen.c \
 	lib/my/test_str_to_word_array.c \
-	test_utils.c \
+	test_global_utils.c \
 
 TEST_SRC = \
 	$(SRC_MY_LIB) \

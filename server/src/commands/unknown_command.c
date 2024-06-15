@@ -22,7 +22,13 @@
 void unknown_command(UNUSED char **args, client_t client,
     UNUSED server_info_t serverInfo)
 {
+    char *escaped_string = get_escaped_string(args[0]);
+
     printf("Client %d: Unknown command (%s)\n", client->fd,
-        get_escaped_string(args[0]));
-    queue_buffer(client, "ko");
+        escaped_string);
+    my_free(escaped_string);
+    if (client->type == GRAPHICAL)
+        queue_buffer(client, "suc");
+    else
+        queue_buffer(client, "ko");
 }

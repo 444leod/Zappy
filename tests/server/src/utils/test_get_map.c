@@ -5,7 +5,7 @@
 ** get_map
 */
 
-#include "testing.h"
+#include "source_header.h"
 #include "game.h"
 #include "linked_lists.h"
 #include "garbage_collector.h"

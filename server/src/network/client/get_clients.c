@@ -16,9 +16,9 @@
  *
  * @return the clients
 */
-client_t *get_clients(void)
+client_list_t *get_clients(void)
 {
-    static client_t clients = NULL;
+    static client_list_t clients = NULL;
 
     return &clients;
 }
@@ -34,13 +34,12 @@ client_t *get_clients(void)
 client_list_t get_clients_by_type(const enum CLIENT_TYPE type)
 {
     client_list_t clients = NULL;
-    client_t *tmp = get_clients();
-    client_t current = *tmp;
+    client_list_t clientNode = *get_clients();
 
-    while (current) {
-        if (current->type == type)
-            add_to_list((void *)current, (node_t *)&clients);
-        current = current->next;
+    while (clientNode) {
+        if (clientNode->client->type == type)
+            add_to_list((void *)clientNode->client, (node_t *)&clients);
+        clientNode = clientNode->next;
     }
     return clients;
 }
@@ -55,13 +54,12 @@ client_list_t get_clients_by_type(const enum CLIENT_TYPE type)
 */
 client_t get_client_by_fd(const int fd)
 {
-    client_t *clients = get_clients();
-    client_t tmp = *clients;
+    client_list_t clientNode = *get_clients();
 
-    while (tmp) {
-        if (tmp->fd == fd)
-            return tmp;
-        tmp = tmp->next;
+    while (clientNode) {
+        if (clientNode->client->fd == fd)
+            return clientNode->client;
+        clientNode = clientNode->next;
     }
     return NULL;
 }
