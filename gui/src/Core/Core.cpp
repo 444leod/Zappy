@@ -46,7 +46,6 @@ namespace gui {
             {
                 std::string title = this->_cur_lib->display().title();
                 uint32_t framerate = this->_cur_lib->display().framerate();
-                std::size_t tileSize = this->_cur_lib->display().tileSize();
                 std::size_t width = this->_cur_lib->display().width();
                 std::size_t height = this->_cur_lib->display().height();
 
@@ -63,12 +62,11 @@ namespace gui {
 
                 this->_cur_lib->display().setTitle(title);
                 this->_cur_lib->display().setFramerate(framerate);
-                this->_cur_lib->display().setTileSize(tileSize);
                 this->_cur_lib->display().setWidth(width);
                 this->_cur_lib->display().setHeight(height);
 
                 for (const auto& texture : textures)
-                    this->_cur_lib->textures().load(texture.first, texture.second, 0, 0);
+                    this->_cur_lib->textures().load(texture.first, texture.second);
 
                 for (const auto& font : fonts)
                     this->_cur_lib->fonts().load(font.first, font.second);
@@ -85,7 +83,7 @@ namespace gui {
                 auto lib_switch = false;
                 auto before = std::chrono::high_resolution_clock::now();
 
-                _gameDisplay.initialize(*_cur_lib, _gameData);
+                _gameDisplay.initialize(*_cur_lib);
                 while (this->_cur_lib->display().opened()) {
                     gui::Event event = {};
                     auto now = std::chrono::high_resolution_clock::now();
