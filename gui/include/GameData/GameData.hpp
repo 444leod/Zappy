@@ -125,14 +125,14 @@ namespace gui {
             bool eggExists(std::uint32_t eggId) const;
 
             /**
-             * @brief get the player vector by player id
+             * @brief get the player by player id
              * @param playerId The player id
              * @return std::shared_ptr<Character> The player
             */
             std::optional<std::shared_ptr<Character>> getPlayerById(std::uint32_t playerId) const;
 
             /**
-             * @brief get the egg vector by egg id
+             * @brief get the egg by egg id
              * @param eggId The egg id
              * @return std::shared_ptr<Egg> The egg
             */

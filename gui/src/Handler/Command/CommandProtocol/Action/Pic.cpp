@@ -28,8 +28,8 @@ void gui::Pic::receive(std::string command, GameData &gameData)
         throw std::invalid_argument("Invalid arguments");
     if (x >= gameData.mapRef().mapSize().x() || y >= gameData.mapRef().mapSize().y())
         throw std::invalid_argument("Invalid tile coordinates, out of map bounds.");
-    auto players = gameData.getPlayerById(playerId);
     while (iss >> playerId) {
+        auto players = gameData.getPlayerById(playerId);
         if (players.has_value()) {
             if (!gameData.playerExists(playerId))
                 throw std::invalid_argument("Player does not exist");

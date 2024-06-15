@@ -29,7 +29,7 @@ void gui::Plv::receive(std::string command, GameData &gameData)
         throw std::invalid_argument("Player does not exist in the game data.");
     auto player = gameData.getPlayerById(playerId);
     if (player.has_value()) {
-        if (player.value()->playerLevel() < level || level > 8 || player.value()->playerLevel() > level)
+        if (player.value()->playerLevel() < level || level > 8)
             throw std::invalid_argument("Player level received does not match the player level in the game data.");
         std::cout << "Player " << playerId << " level is now: " << level << std::endl;
         player.value()->setPlayerLevel(level);
