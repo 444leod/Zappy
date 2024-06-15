@@ -20,7 +20,7 @@ Test(plv, too_much_parameters)
     assert_stdout_eq_str("Client 0: plv: bad argument number\n");
 }
 
-Test(plv, no_enough_parameters)
+Test(plv, not_enough_parameters)
 {
     cr_redirect_stdout();
     client_t client = test_create_client(0);
