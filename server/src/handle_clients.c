@@ -50,6 +50,7 @@ static bool is_read_special_case(const client_t client,
     }
     if (valread == 0) {
         remove_client(client->fd);
+        client->fd = -1;
         return true;
     }
     return false;
@@ -185,20 +186,21 @@ static void trigger_action(const client_t client, const fd_set *readfds,
  * @param writefds the writefds to check
  * @param serverInfo the serverInfo
 */
-void loop_clients(const client_t *clients, const fd_set *readfds,
+void loop_clients(const client_list_t clients, const fd_set *readfds,
     const fd_set *writefds, const server_info_t serverInfo)
 {
-    client_t tmp = *clients;
+    client_list_t clientNode = clients;
     int tempFd = 0;
 
-    while (tmp) {
-        tempFd = tmp->fd;
-        if (tmp->fd == -1) {
-            tmp = tmp->next;
+    while (clientNode) {
+        tempFd = clientNode->client->fd;
+        if (clientNode->client->fd == -1) {
+            clientNode = clientNode->next;
             continue;
         }
-        trigger_action(tmp, readfds, writefds, serverInfo);
-        if (tmp && tmp->fd == tempFd)
-            tmp = tmp->next;
+        trigger_action(clientNode->client, readfds, writefds, serverInfo);
+        if (clientNode && clientNode->client &&
+            clientNode->client->fd == tempFd)
+            clientNode = clientNode->next;
     }
 }

@@ -61,20 +61,20 @@ static int timevalcmp(struct timeval *a, struct timeval *b)
  * @param max_sd the max_sd variable
 */
 static void add_clients_to_set(
-    client_t *clients,
+    client_list_t clients,
     fd_set *readfds,
     fd_set *writefds,
     int *max_sd)
 {
-    client_t tmp = *clients;
+    client_list_t clientNode = clients;
 
-    while (tmp) {
-        if (tmp->packetQueue)
-            FD_SET(tmp->fd, writefds);
-        FD_SET(tmp->fd, readfds);
-        if (tmp->fd > *max_sd)
-            *max_sd = tmp->fd;
-        tmp = tmp->next;
+    while (clientNode) {
+        if (clientNode->client->packetQueue)
+            FD_SET(clientNode->client->fd, writefds);
+        FD_SET(clientNode->client->fd, readfds);
+        if (clientNode->client->fd > *max_sd)
+            *max_sd = clientNode->client->fd;
+        clientNode = clientNode->next;
     }
 }
 
@@ -120,9 +120,9 @@ static bool try_update_timeval(struct timeval *timeout, client_t client)
  * @param clients the list of clients
  * @return struct timeval* the timeout
 */
-static struct timeval *get_timeout(client_t *clients)
+static struct timeval *get_timeout(client_list_t clients)
 {
-    client_t tmp = *clients;
+    client_list_t tmp = clients;
     struct timeval *timeout = my_malloc(sizeof(struct timeval));
 
     if (!tmp)
@@ -130,7 +130,7 @@ static struct timeval *get_timeout(client_t *clients)
     timeout->tv_sec = 10000000;
     timeout->tv_usec = 0;
     while (tmp) {
-        if (try_update_timeval(timeout, tmp))
+        if (try_update_timeval(timeout, tmp->client))
             return timeout;
         tmp = tmp->next;
     }
@@ -150,7 +150,7 @@ static struct timeval *get_timeout(client_t *clients)
  * @param clients the list of clients
 */
 void select_wrapper(int *max_sd, fd_set *readfds,
-    fd_set *writefds, client_t *clients)
+    fd_set *writefds, client_list_t clients)
 {
     struct timeval *timeout = get_timeout(clients);
     int activity = 0;
