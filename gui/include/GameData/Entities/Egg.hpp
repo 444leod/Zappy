@@ -28,13 +28,13 @@ namespace gui {
              * @brief set the hatched value
              * @param hatched The hatched value
             */
-            void hatch(bool hatched) { this->_hatched = hatched; }
+            void hatch() { this->_hatched = true; }
 
             /**
              * @brief Set the egg life status
              * @param isDead The egg life status
             */
-            void kill(bool isDead) { this->_isDead = isDead; }
+            void kill() { this->_isDead = true; }
 
         private:
             bool _hatched = false;

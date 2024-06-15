@@ -25,7 +25,7 @@ void gui::Seg::receive(std::string command, GameData &gameData)
         throw std::invalid_argument("Invalid arguments");
     for (std::size_t i = 0; i < gameData.teamNames().size(); i++) {
         if (gameData.teamNames()[i] == teamName) {
-            gameData.teamLose(true, teamName);
+            gameData.teamLose(teamName);
             break;
         } else
             throw std::invalid_argument("Team not found");

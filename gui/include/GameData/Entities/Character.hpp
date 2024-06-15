@@ -135,7 +135,7 @@ namespace gui {
              * @brief set the player dead
              * @param isDead The player dead
             */
-            void kill(bool isDead) { this->_isDead = isDead; }
+            void kill() { this->_isDead = true; }
 
         private:
             std::uint32_t _food = 0;

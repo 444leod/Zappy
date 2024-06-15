@@ -160,7 +160,7 @@ namespace gui {
              * @param isLose The team lose status
              * @param teamName The team name
             */
-            void teamLose(bool isLose, std::string teamName);
+            void teamLose(std::string teamName);
 
             /**
              * @brief Get the time unit
