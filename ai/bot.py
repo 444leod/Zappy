@@ -5,7 +5,7 @@ from typing import List
 from ai_src.connection_handler import ConnectionHandler
 from ai_src.config import Config, HelpException, ArgError
 from ai_src.data import PlayerInfo, Collectibles, Map, TileContent
-from ai_src.behaviors import LookingForward, TalkingWalker, Manual
+from ai_src.behaviors import LookingForward, TalkingWalker, Greg, Manual
 import ai_src.commands as cmd
 from ai.ai_src.utils import add_tuples, turn_left, turn_right
 
@@ -63,7 +63,7 @@ class Bot():
             "dead\n" : self.die,
             "message": self.receive_broadcast,
         }
-        self.current_behavior = Manual() if self.conf.manual else LookingForward()
+        self.current_behavior = Greg() 
     
     def run(self) -> None:
         """
