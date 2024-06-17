@@ -13,6 +13,11 @@
 #include "garbage_collector.h"
 #include "zappy.h"
 
+/**
+ * @brief Creates a packet formating the eject response
+ * @param orientation The orientation the eject has been done at.
+ * @return an allocated packet struct pointer (`packet_t *`).
+ */
 packet_t *get_eject_packet(enum ORIENTATION orientation)
 {
     char *tmp = my_snprintf("eject: %d", (uint8_t)orientation);
@@ -22,6 +27,14 @@ packet_t *get_eject_packet(enum ORIENTATION orientation)
     return packet;
 }
 
+/**
+ * @brief Moves the players of a tile in the direction of a source player
+ *
+ * @param source The player that ejects the others
+ * @param others The other players
+ * @param map The map
+ * @return `true` if a player was moved. `false` otherwise
+ */
 static bool eject_players(player_t source, player_list_t others, map_t map)
 {
     position_t newPos = source->position;
@@ -46,6 +59,10 @@ static bool eject_players(player_t source, player_list_t others, map_t map)
     return size > 1;
 }
 
+/**
+ * @brief Destroy a list of eggs
+ * @param eggs A pointer to the list of eggs to destroy
+ */
 void destroy_eggs(egg_list_t *eggs)
 {
     node_t list = *(node_t *)eggs;
