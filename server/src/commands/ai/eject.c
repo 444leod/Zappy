@@ -65,14 +65,18 @@ static bool eject_players(player_t source, player_list_t others, map_t map)
  */
 void destroy_eggs(egg_list_t *eggs)
 {
-    node_t list = *(node_t *)eggs;
-    uint32_t size = get_list_size(list);
+    egg_list_t node = *eggs;
+    egg_list_t next = NULL;
+    uint32_t size = get_list_size((node_t)node);
 
     if (size == 0)
         return;
     for (uint32_t i = 0; i < size; i++) {
-        my_free(list->data);
-        list = list->next;
+        next = node->next;
+        node->egg->team->remainingSlots--;
+        my_free(node->egg);
+        my_free(node);
+        node = next;
     }
     *eggs = NULL;
 }
