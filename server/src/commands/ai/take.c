@@ -11,8 +11,6 @@
 #include "clients.h"
 #include <string.h>
 
-#include <stdio.h>
-
 /**
  * @brief Gets the first argument if there is one
  * @param args the argument list

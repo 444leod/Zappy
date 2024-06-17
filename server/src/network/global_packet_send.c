@@ -41,12 +41,17 @@ void queue_packet_to_client_type(const enum CLIENT_TYPE type,
  */
 void queue_packet_to_player(player_t player, packet_t *packet)
 {
-    client_t *clients = get_clients();
-    client_t tmp = *clients;
+    client_list_t *clients = get_clients();
+    uint32_t size = 0;
+    client_list_t node = NULL;
 
-    while (tmp) {
-        if (uuid_compare(player->id, tmp->player->id) == 0)
-            add_packet_to_queue(&tmp->packetQueue, packet);
-        tmp = tmp->next;
+    if (clients == NULL || *clients == NULL)
+        return;
+    size = get_list_size((node_t)*clients);
+    node = *clients;
+    for (uint32_t i = 0; i < size; i++) {
+        if (uuid_compare(player->id, node->client->player->id) == 0)
+            add_packet_to_queue(&node->client->packetQueue, packet);
+        node = node->next;
     }
 }

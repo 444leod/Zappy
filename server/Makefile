@@ -105,10 +105,11 @@ __TEST_PATH := ../tests/server/src/
 
 __TEST_SRC	= \
 	$(__SRC) \
-	$(addprefix ../tests/server/test_, $(__SRC_ROOT_TEST)) \
-	$(addprefix ../tests/server/utils/test_, $(__SRC_UTILS_TEST)) \
-	$(addprefix ../tests/server/commands/test_, $(__SRC_COMMANDS_TEST)) \
-	$(addprefix ../tests/server/commands/ai/test_, $(__SRC_AI_TEST)) \
+	$(__TEST_PATH)../test_global_utils.c \
+	$(addprefix $(__TEST_PATH)test_, $(__SRC_ROOT_TEST)) \
+	$(addprefix $(__TEST_PATH)utils/test_, $(__SRC_UTILS_TEST)) \
+	$(addprefix $(__TEST_PATH)commands/test_, $(__SRC_COMMANDS_TEST)) \
+	$(addprefix $(__TEST_PATH)commands/ai/test_, $(__SRC_AI_TEST)) \
 	$(addprefix $(__TEST_PATH)commands/graphical/test_, $(__SRC_GFX_TEST)) \
 
 __SRC_ROOT_TEST := utils.c \
