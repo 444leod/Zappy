@@ -15,14 +15,5 @@
 */
 void add_client(const client_t newClient)
 {
-    client_t *clients = get_clients();
-    client_t tmp = *clients;
-
-    if (!*clients) {
-        *clients = newClient;
-        return;
-    }
-    while (tmp->next)
-        tmp = tmp->next;
-    tmp->next = newClient;
+    add_to_list((void *)newClient, (node_t *)get_clients());
 }

@@ -10,7 +10,10 @@
 #include <stdint.h>
 #include <time.h>
 #include <uuid/uuid.h>
+#include <stdbool.h>
 #include "teams.h"
+
+#define DEATH_TICKS 126
 
 #define D_FOOD 0.5
 #define D_LINEMATE 0.3
@@ -42,14 +45,18 @@ typedef struct rocks_s {
 } rocks_t;
 
 typedef struct player_s {
+    bool isDead;
     uuid_t id;
+    uint32_t playerNumber;
+    uint32_t egg_number;
     team_t team;
     position_t position;
     int level;
     rocks_t rocks;
     uint32_t food;
     enum ORIENTATION orientation;
-    clock_t lastFoodEatenTime;
+    struct timespec last_eat_check_time;
+    double death_remaining_time;
 } * player_t;
 
 typedef struct player_list_s {
@@ -59,6 +66,7 @@ typedef struct player_list_s {
 } * player_list_t;
 
 typedef struct egg_s {
+    uint32_t number;
     position_t pos;
     team_t team;
 } * egg_t;
@@ -98,12 +106,15 @@ typedef struct map_s {
     uint32_t height;
 } * map_t;
 
-map_t create_map(uint32_t width, uint32_t height);
-void init_map(map_t map, team_list_t teams);
-tile_t get_tile_at_position(position_t position, map_t map);
-void add_player_at_position(player_t player, position_t position, map_t map);
-void move_player(player_t player, position_t position, map_t map);
+map_t create_map(const uint32_t width, const uint32_t height);
+void init_map(const map_t map, const team_list_t teams);
+tile_t get_tile_at_position(const position_t position, const map_t map);
+void add_player_at_position(const player_t player, const position_t position,
+    const map_t map);
+void move_player(const player_t player, const position_t position,
+    const map_t map);
 void add_egg_at_position(const team_t, const position_t, map_t);
 egg_list_t get_team_eggs(const team_t team, const map_t map);
 egg_t get_random_egg(const team_t team, map_t map);
-player_t egg_to_player(egg_t egg, map_t map);
+player_t egg_to_player(const egg_t egg, const map_t map);
+void remove_player(const player_t player, const map_t map);
