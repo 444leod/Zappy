@@ -11,46 +11,25 @@
 #include "lib.h"
 #include "garbage_collector.h"
 
-static char *cleancat(char *a, char *b)
+/**
+ * @brief Format the player inventory inside a string.
+ * @details The inventory is presented as followed:
+ * `[food 10, linemate 1, deraumere 0, ... ]`
+ *
+ * @param food The amount of food of the player
+ * @param rocks The rocks structure of the player
+ */
+static char *format_inventory(uint32_t food, rocks_t rocks)
 {
-    char *result = supercat(2, a, b);
+    char *str = NULL;
 
-    free(a);
-    free(b);
-    return result;
-}
-
-static char *add_rock(char *str, const char *rock, uint32_t n)
-{
-    char *frock = NULL;
-    char *result = NULL;
-
-    if (n <= 0)
-        return str;
-    frock = my_snprintf("%s %d", rock, n);
-    result = supercat(3, str, (str[1] ? "," : ""), frock);
-    my_free(str);
-    my_free(frock);
-    return result;
-}
-
-static char *format_inventory(rocks_t rocks)
-{
-    char *str = my_strdup("[");
-
-    if (rocks.linemate > 0)
-        str = add_rock(str, "linemate", rocks.linemate);
-    if (rocks.deraumere > 0)
-        str = add_rock(str, "deraumere", rocks.deraumere);
-    if (rocks.sibur > 0)
-        str = add_rock(str, "sibur", rocks.sibur);
-    if (rocks.mendiane > 0)
-        str = add_rock(str, "mendiane", rocks.mendiane);
-    if (rocks.phiras > 0)
-        str = add_rock(str, "phiras", rocks.phiras);
-    if (rocks.thystame > 0)
-        str = add_rock(str, "thystame", rocks.thystame);
-    return cleancat(str, my_strdup("]"));
+    str = my_snprintf(
+        "[food %lu, linemate %lu, deraumere %lu, sibur %lu, " \
+        "mendiane %lu, phiras %lu, thystame %lu]",
+        food, rocks.linemate, rocks.deraumere, rocks.sibur,
+        rocks.mendiane, rocks.phiras, rocks.thystame
+    );
+    return str;
 }
 
 /**
@@ -64,7 +43,8 @@ static char *format_inventory(rocks_t rocks)
 void inventory(UNUSED char **args, client_t client,
     UNUSED server_info_t serverInfo)
 {
-    char *inv = format_inventory(client->player->rocks);
+    player_t player = client->player;
+    char *inv = format_inventory(player->food, player->rocks);
     packet_t *packet = build_packet(inv);
 
     my_free(inv);
