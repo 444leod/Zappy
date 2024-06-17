@@ -9,7 +9,23 @@
 #include "commands.h"
 #include "clients.h"
 
-Test(ai_commands, right_4_times)
+Test(right_suite, bad_arguments)
+{
+    struct client_s client = { 0 };
+    struct player_s player = { 0 };
+    char *args[] = { "Hey" };
+
+    client.player = &player;
+    right(args, &client, NULL);
+
+    cr_assert_not_null(client.packetQueue);
+    cr_assert_not_null(client.packetQueue->packet);
+    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(res);
+    cr_assert_str_eq(res, "ko");
+}
+
+Test(right_suite, repeat)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };
@@ -36,7 +52,23 @@ Test(ai_commands, right_4_times)
     cr_assert_eq(qsize, 4);
 }
 
-Test(ai_commands, left_4_times)
+Test(left_suite, bad_arguments)
+{
+    struct client_s client = { 0 };
+    struct player_s player = { 0 };
+    char *args[] = { "Hey" };
+
+    client.player = &player;
+    left(args, &client, NULL);
+
+    cr_assert_not_null(client.packetQueue);
+    cr_assert_not_null(client.packetQueue->packet);
+    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(res);
+    cr_assert_str_eq(res, "ko");
+}
+
+Test(left_suite, repeat)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };

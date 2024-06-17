@@ -42,13 +42,14 @@ void take(
     const server_info_t serverInfo)
 {
     player_t player = client->player;
-    tile_t tile = get_tile_at_position(player->position, serverInfo->map);
+    tile_t tile = NULL;
     const char *arg = get_content_arg(args);
 
     if (arg == NULL) {
         throw_ko(client);
         return;
     }
+    tile = get_tile_at_position(player->position, serverInfo->map);
     if (!player_pick_up(arg, player, tile, 1))
         throw_ko(client);
     else

@@ -9,7 +9,23 @@
 #include "commands.h"
 #include "clients.h"
 
-Test(ai_commands, vision_level0)
+Test(look_suite, bad_arguments)
+{
+    struct client_s client = { 0 };
+    struct player_s player = { 0 };
+    char *args[] = { "Hey" };
+
+    client.player = &player;
+    look(args, &client, NULL);
+
+    cr_assert_not_null(client.packetQueue);
+    cr_assert_not_null(client.packetQueue->packet);
+    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(res);
+    cr_assert_str_eq(res, "ko");
+}
+
+Test(look_suite, level_zero)
 {
     struct client_s client = { 0 };
     struct server_info_s server = { 0 };
@@ -28,7 +44,7 @@ Test(ai_commands, vision_level0)
     cr_assert_str_eq(result, "[player]");
 }
 
-Test(ai_commands, vision_level1)
+Test(look_suite, level_one)
 {
     struct client_s client = { 0 };
     struct server_info_s server = { 0 };

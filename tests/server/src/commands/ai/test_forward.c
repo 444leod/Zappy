@@ -9,7 +9,23 @@
 #include "commands.h"
 #include "clients.h"
 
-Test(ai_commands, forward_north)
+Test(forward_suite, bad_arguments)
+{
+    struct client_s client = { 0 };
+    struct player_s player = { 0 };
+    char *args[] = { "Hey" };
+
+    client.player = &player;
+    forward(args, &client, NULL);
+
+    cr_assert_not_null(client.packetQueue);
+    cr_assert_not_null(client.packetQueue->packet);
+    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(res);
+    cr_assert_str_eq(res, "ko");
+}
+
+Test(forward_suite, once_north)
 {
     struct client_s client = { 0 };
     struct server_info_s server = { 0 };
@@ -27,7 +43,7 @@ Test(ai_commands, forward_north)
     cr_assert_str_eq(client.packetQueue->packet->buffer, "ok");
 }
 
-Test(ai_commands, forward_east_bounds)
+Test(forward_suite, wrap_around_bounds)
 {
     struct client_s client = { 0 };
     struct server_info_s server = { 0 };

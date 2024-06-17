@@ -9,7 +9,23 @@
 #include "commands.h"
 #include "clients.h"
 
-Test(ai_commands, set_unknown)
+Test(set_suite, no_arguments)
+{
+    struct client_s client = { 0 };
+    struct player_s player = { 0 };
+    char *args[] = { NULL };
+
+    client.player = &player;
+    set(args, &client, NULL);
+
+    cr_assert_not_null(client.packetQueue);
+    cr_assert_not_null(client.packetQueue->packet);
+    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(res);
+    cr_assert_str_eq(res, "ko");
+}
+
+Test(set_suite, unknown)
 {
     position_t pos = { 2, 3 };
     struct server_info_s server = { 0 };
@@ -31,7 +47,7 @@ Test(ai_commands, set_unknown)
     cr_assert_str_eq(res, "ko");
 }
 
-Test(ai_commands, set_not_enough)
+Test(set_suite, not_enough)
 {
     position_t pos = { 2, 3 };
     struct server_info_s server = { 0 };
@@ -59,7 +75,7 @@ Test(ai_commands, set_not_enough)
     cr_assert_eq(tile->food, 0);
 }
 
-Test(ai_commands, set_food)
+Test(set_suite, food)
 {
     position_t pos = { 2, 3 };
     struct server_info_s server = { 0 };
@@ -88,7 +104,7 @@ Test(ai_commands, set_food)
     cr_assert_eq(tile->food, 1);
 }
 
-Test(ai_commands, set_rock)
+Test(set_suite, rock)
 {
     position_t pos = { 2, 3 };
     struct server_info_s server = { 0 };

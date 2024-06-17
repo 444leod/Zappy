@@ -161,13 +161,14 @@ void look(
     const client_t client,
     const server_info_t serverInfo)
 {
-    tile_list_t tiles = get_vision_tiles(client->player, serverInfo->map);
+    tile_list_t tiles = NULL;
     char *vision = NULL;
 
     if (!assert_argv_count(args, 0)) {
         throw_ko(client);
         return;
     }
+    tiles = get_vision_tiles(client->player, serverInfo->map);
     vision = format_vision(tiles);
     add_packet_to_queue(&client->packetQueue, build_packet(vision));
     my_free(vision);

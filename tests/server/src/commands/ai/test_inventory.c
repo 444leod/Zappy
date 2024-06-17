@@ -9,7 +9,23 @@
 #include "commands.h"
 #include "clients.h"
 
-Test(ai_commands, empty_inventory)
+Test(inventory_suite, bad_arguments)
+{
+    struct client_s client = { 0 };
+    struct player_s player = { 0 };
+    char *args[] = { "Hey" };
+
+    client.player = &player;
+    inventory(args, &client, NULL);
+
+    cr_assert_not_null(client.packetQueue);
+    cr_assert_not_null(client.packetQueue->packet);
+    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(res);
+    cr_assert_str_eq(res, "ko");
+}
+
+Test(inventory_suite, empty_inventory)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };
@@ -25,7 +41,7 @@ Test(ai_commands, empty_inventory)
         "[food 0, linemate 0, deraumere 0, sibur 0, mendiane 0, phiras 0, thystame 0]");
 }
 
-Test(ai_commands, inventory_single_rock)
+Test(inventory_suite, inventory_single_rock)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };
@@ -42,7 +58,7 @@ Test(ai_commands, inventory_single_rock)
         "[food 0, linemate 5, deraumere 0, sibur 0, mendiane 0, phiras 0, thystame 0]");
 }
 
-Test(ai_commands, inventory_single_food)
+Test(inventory_suite, inventory_single_food)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };
@@ -59,7 +75,7 @@ Test(ai_commands, inventory_single_food)
         "[food 9, linemate 0, deraumere 0, sibur 0, mendiane 0, phiras 0, thystame 0]");
 }
 
-Test(ai_commands, inventory_multiple)
+Test(inventory_suite, inventory_multiple)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };
