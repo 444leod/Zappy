@@ -18,7 +18,10 @@
  * @param client the client that executed the command
  * @param serverInfo the server info
  */
-void forward(UNUSED char **args, client_t client, server_info_t serverInfo)
+void forward(
+    char **args,
+    const client_t client,
+    const server_info_t serverInfo)
 {
     position_t pos = client->player->position;
 

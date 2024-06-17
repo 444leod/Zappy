@@ -19,7 +19,10 @@
  * @param client the client that executed the command
  * @param serverInfo the server info
  */
-void connect_nbr(char **args, client_t client, UNUSED server_info_t serverInfo)
+void connect_nbr(
+    char **args,
+    const client_t client,
+    UNUSED const server_info_t serverInfo)
 {
     team_t team = client->player->team;
     char *message = NULL;

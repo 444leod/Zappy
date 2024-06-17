@@ -5,7 +5,7 @@
 ** commands
 */
 
-#define ARGS char **args, const client_t client, const server_info_t serverInfo
+#define ARGS char **, const client_t, const server_info_t
 #pragma once
 
 #include "client_types.h"

@@ -40,7 +40,10 @@ static char *format_inventory(uint32_t food, rocks_t rocks)
  * @param client the client that executed the command
  * @param serverInfo the server info
  */
-void inventory(char **args, client_t client, UNUSED server_info_t serverInfo)
+void inventory(
+    char **args,
+    const client_t client,
+    UNUSED const server_info_t serverInfo)
 {
     player_t player = client->player;
     char *inv = NULL;

@@ -34,7 +34,10 @@ static const char *get_content_arg(char **args)
  * @param client the client that executed the command
  * @param serverInfo the server info
  */
-void set(char **args, client_t client, UNUSED server_info_t serverInfo)
+void set(
+    char **args,
+    const client_t client,
+    UNUSED const server_info_t serverInfo)
 {
     player_t player = client->player;
     tile_t tile = get_tile_at_position(player->position, serverInfo->map);

@@ -20,7 +20,7 @@
  */
 void incantation(
     UNUSED char **args,
-    UNUSED client_t client,
-    UNUSED server_info_t serverInfo)
+    UNUSED const client_t client,
+    UNUSED const server_info_t serverInfo)
 {
 }

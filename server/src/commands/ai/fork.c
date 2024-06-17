@@ -19,7 +19,10 @@
  * @param client the client that executed the command
  * @param serverInfo the server info
  */
-void fork_player(char **args, client_t client, server_info_t serverInfo)
+void fork_player(
+    char **args,
+    const client_t client,
+    const server_info_t serverInfo)
 {
     if (!assert_argv_count(args, 0)) {
         throw_ko(client);

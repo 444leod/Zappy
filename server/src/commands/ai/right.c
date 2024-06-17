@@ -17,7 +17,10 @@
  * @param client the client that executed the command
  * @param serverInfo the server info
  */
-void right(char **args, client_t client, UNUSED server_info_t serverInfo)
+void right(
+    char **args,
+    const client_t client,
+    UNUSED const server_info_t serverInfo)
 {
     if (!assert_argv_count(args, 0)) {
         throw_ko(client);

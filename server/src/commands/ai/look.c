@@ -156,7 +156,10 @@ static void free_list_holders(node_t list)
  * @param client the client that executed the command
  * @param serverInfo the server info
  */
-void look(char **args, client_t client, server_info_t serverInfo)
+void look(
+    char **args,
+    const client_t client,
+    const server_info_t serverInfo)
 {
     tile_list_t tiles = get_vision_tiles(client->player, serverInfo->map);
     char *vision = NULL;
