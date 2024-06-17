@@ -49,3 +49,5 @@ vgcore*
 *.gcno
 server_suite
 ai_src/**
+**/.vscode
+lib_suite

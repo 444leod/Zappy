@@ -36,13 +36,15 @@ __SRC	=	$(addprefix src/, $(__SRC_SRC)) \
 
 __SRC_SRC := server.c \
 	exit.c \
-	handle_clients.c \
+	handle_clients_actions.c \
 	handle_commands.c \
+	read_buffer.c \
 	select_wrapper.c \
 
 __SRC_COMMANDS := commands.c \
 	unknown_command.c \
 	auth.c \
+	utils.c \
 
 __SRC_AI := forward.c \
 	right.c \
@@ -55,21 +57,28 @@ __SRC_AI := forward.c \
 	take.c \
 	set.c \
 
+__SRC_GRAPHICAL := msz.c \
+	bct.c \
+	mct.c \
+	tna.c \
+	ppo.c \
+	plv.c \
+	pin.c \
+	sgt.c \
+	sst.c \
+	pnw.c \
+	ebo.c \
+
 __SRC_GAME := \
 	create_map.c \
 	init_map.c \
 	manage_entities.c \
 	query_map.c \
 	player_pick_up.c \
+	player_death.c \
 
-__SRC_GRAPHICAL := msz.c \
-
-__SRC_ARGS := params.c \
-	check_args.c \
-	init_server_info.c \
-	display_help.c \
-
-__SRC_ARGS := params.c \
+__SRC_ARGS := \
+	params.c \
 	check_args.c \
 	init_server_info.c \
 	display_help.c \
@@ -85,11 +94,14 @@ __SRC_CLIENT := add_client.c \
 	remove_client.c \
 
 __SRC_UTILS := queue_buffer.c \
+	time.c \
 
 
 # =============================================================================
 # Unit tests sources
 # =============================================================================
+
+__TEST_PATH := ../tests/server/src/
 
 __TEST_SRC	= \
 	$(__SRC) \
@@ -97,6 +109,7 @@ __TEST_SRC	= \
 	$(addprefix ../tests/server/utils/test_, $(__SRC_UTILS_TEST)) \
 	$(addprefix ../tests/server/commands/test_, $(__SRC_COMMANDS_TEST)) \
 	$(addprefix ../tests/server/commands/ai/test_, $(__SRC_AI_TEST)) \
+	$(addprefix $(__TEST_PATH)commands/graphical/test_, \ $(__SRC_GFX_TEST)) \
 
 __SRC_ROOT_TEST := utils.c \
 	client.c
@@ -113,6 +126,17 @@ __SRC_AI_TEST	:=	\
 	look.c \
 	take.c \
 	set.c \
+
+__SRC_GFX_TEST := msz.c \
+	bct.c \
+	mct.c \
+	tna.c \
+	ppo.c \
+	plv.c \
+	pin.c \
+	sgt.c \
+	sst.c \
+	pnw.c \
 
 __SRC_UTILS_TEST := get_map.c \
 
@@ -133,7 +157,8 @@ __TESTER_SRC := tests/tester.cpp \
 __CC = gcc
 __CFLAGS += -Wall -Wextra -Werror -Wpedantic
 __CFLAGS += -I./include -L. -lmy -lnetwork -luuid
-__TEST_FLAGS = $(__CFLAGS) --coverage -lcriterion -I../tests/server -I../tests
+__TEST_FLAGS = $(__CFLAGS) --coverage -lcriterion \
+	-I../tests/server -I../tests -I../tests/server/src
 
 %.o: %.c
 	@$(__CC) -c -o $@ $< $(__CFLAGS)

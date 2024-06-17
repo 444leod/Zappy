@@ -111,6 +111,28 @@ void *my_malloc(const size_t size)
 }
 
 /**
+ * @brief Try to free first or last node of the list (faster)
+ * @details Try to free first or last node of the list (faster)
+ *
+ * @param pointer the pointer to free
+ * @param gc the linked list
+ *
+ * @return bool true if the pointer was freed, false otherwise
+ */
+static bool try_free_special_cases(void *pointer, gc_node_t *gc)
+{
+    if ((*gc)->data == pointer) {
+        *gc = gc_delete_begin(*gc);
+        return true;
+    }
+    if ((*gc)->prev->data == pointer) {
+        *gc = gc_delete_begin((*gc)->prev)->next;
+        return true;
+    }
+    return false;
+}
+
+/**
  * @brief Free wrapper with garbage collector
  * @details Free wrapper with garbage collector, free the pointer and remove it
  * from the linked list
@@ -122,10 +144,10 @@ void my_free(void *pointer)
     gc_node_t *llist = gc_llist();
     gc_node_t temp;
 
-    if ((*llist)->data == pointer) {
-        *llist = gc_delete_begin(*llist);
+    if (!*llist)
         return;
-    }
+    if (try_free_special_cases(pointer, llist))
+        return;
     temp = (*llist)->next;
     while (temp != *llist) {
         if (temp->data == pointer) {

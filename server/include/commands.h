@@ -11,6 +11,7 @@
 #include "client_types.h"
 #include "server_info.h"
 #include "macros.h"
+#include "garbage_collector.h"
 #include <sys/select.h>
 #include <stdbool.h>
 
@@ -30,6 +31,14 @@ extern const command_t AUTHENTIFICATION_COMMAND;
 // GRAPHICAL COMMANDS
 
 void msz(ARGS);
+void bct(ARGS);
+void mct(ARGS);
+void tna(ARGS);
+void ppo(ARGS);
+void plv(ARGS);
+void pin(ARGS);
+void sgt(ARGS);
+void sst(ARGS);
 
 ///////////////////////////////////////////////////////////////////////////////
 // AI COMMANDS
@@ -50,3 +59,9 @@ void set(ARGS);
 
 void unknown_command(ARGS);
 void auth(ARGS);
+
+extern const command_t COMMANDS[];
+extern const command_t AUTHENTIFICATION_COMMAND;
+
+player_t get_player_by_player_number(const uint32_t playerNumber);
+char get_char_by_orientation(int orientation);

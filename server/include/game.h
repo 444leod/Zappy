@@ -13,6 +13,8 @@
 #include <stdbool.h>
 #include "teams.h"
 
+#define DEATH_TICKS 126
+
 #define D_FOOD 0.5
 #define D_LINEMATE 0.3
 #define D_DERAUMERE 0.15
@@ -43,14 +45,18 @@ typedef struct rocks_s {
 } rocks_t;
 
 typedef struct player_s {
+    bool isDead;
     uuid_t id;
+    uint32_t playerNumber;
+    uint32_t egg_number;
     team_t team;
     position_t position;
     int level;
     rocks_t rocks;
     uint32_t food;
     enum ORIENTATION orientation;
-    clock_t lastFoodEatenTime;
+    struct timespec last_eat_check_time;
+    double death_remaining_time;
 } * player_t;
 
 typedef struct player_list_s {
@@ -60,6 +66,7 @@ typedef struct player_list_s {
 } * player_list_t;
 
 typedef struct egg_s {
+    uint32_t number;
     position_t pos;
     team_t team;
 } * egg_t;
@@ -115,3 +122,4 @@ egg_t get_random_egg(const team_t team, map_t map);
 player_t egg_to_player(egg_t egg, map_t map);
 bool player_pick_up(
     const char *key, player_t player, tile_t tile, int8_t delta);
+void remove_player(const player_t player, const map_t map);
