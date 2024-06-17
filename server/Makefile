@@ -109,7 +109,7 @@ __TEST_SRC	= \
 	$(addprefix ../tests/server/utils/test_, $(__SRC_UTILS_TEST)) \
 	$(addprefix ../tests/server/commands/test_, $(__SRC_COMMANDS_TEST)) \
 	$(addprefix ../tests/server/commands/ai/test_, $(__SRC_AI_TEST)) \
-	$(addprefix $(__TEST_PATH)commands/graphical/test_, \ $(__SRC_GFX_TEST)) \
+	$(addprefix $(__TEST_PATH)commands/graphical/test_, $(__SRC_GFX_TEST)) \
 
 __SRC_ROOT_TEST := utils.c \
 	client.c
