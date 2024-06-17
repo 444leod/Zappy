@@ -22,10 +22,10 @@
 void connect_nbr(UNUSED char **args, client_t client,
     UNUSED server_info_t serverInfo)
 {
-    packet_t *packet = NULL;
+    team_t team = client->player->team;
+    char *message = my_snprintf("%d", team->remainingSlots);
+    packet_t *packet = build_packet(message);
 
-    packet = (client->player != NULL && client->player->team != NULL)
-        ? build_packet(my_snprintf("%d", client->player->team->remainingSlots))
-        : build_packet("ko");
+    my_free(message);
     add_packet_to_queue(&client->packetQueue, packet);
 }
