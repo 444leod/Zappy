@@ -133,7 +133,7 @@ static bool pick_thystame(player_t player, tile_t tile, int8_t delta)
 bool player_pick_up(
     const char *key, player_t player, tile_t tile, int8_t delta)
 {
-    pickup_command_t cmds[] = { {"food", &pick_food},
+    const pickup_command_t cmds[] = { {"food", &pick_food},
         {"linemate", &pick_linemate}, {"deraumere", &pick_deraumere},
         {"sibur", &pick_sibur}, {"mendiane", &pick_mendiane},
         {"phiras", &pick_phiras}, {"thystame", &pick_thystame},
@@ -141,7 +141,7 @@ bool player_pick_up(
 
     for (uint8_t i = 0; i < 7; i++) {
         if (strcmp(cmds[i].key, key) == 0)
-            return cmds[i].fun(player, tile, delta);
+            return cmds[i].pick_func(player, tile, delta);
     }
     return false;
 }

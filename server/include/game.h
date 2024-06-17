@@ -108,7 +108,7 @@ typedef struct map_s {
 
 typedef struct pickup_command_s {
     const char *key;
-    bool (*fun)(player_t, tile_t, int8_t);
+    bool (*pick_func)(player_t, tile_t, int8_t);
 } pickup_command_t;
 
 map_t create_map(uint32_t width, uint32_t height);
