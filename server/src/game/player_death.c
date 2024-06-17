@@ -22,11 +22,12 @@
 static void kill_player(const client_t client, const map_t map)
 {
     printf("killing player with fd %d\n", client->fd);
-    client->player->isDead = true;
+    client->end = true;
     remove_player(client->player, map);
     queue_buffer(client, "dead");
     queue_to_graphical(get_player_death_string(client->player));
     printf("Player %d died.\n", client->player->playerNumber);
+    remove_from_list((void *)client, (node_t *)&client->player->team->players);
 }
 
 /**
@@ -41,7 +42,7 @@ static void kill_player(const client_t client, const map_t map)
 void check_player_death(const client_t client, const map_t map,
     const uint32_t frequency)
 {
-    if (!client->player || client->player->isDead)
+    if (!client->player || client->end)
         return;
     update_remaining_time(&client->player->death_remaining_time,
         &client->player->last_eat_check_time);

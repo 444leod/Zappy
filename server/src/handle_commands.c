@@ -26,6 +26,13 @@
 static void execute_command(const client_command_t command,
     const client_t client, const server_info_t serverInfo)
 {
+    if (client->type == AI) {
+        DEBUG_PRINT("[DEBUG] Player %d executing command %s\n",
+            client->fd, command->command);
+    } else {
+        DEBUG_PRINT("[DEBUG] Client %d executing command %s\n",
+            client->fd, command->command);
+    }
     command->commandHandler.func(command->args, client, serverInfo);
     remove_from_list((void *)command, (node_t *)&client->commands);
 }
@@ -108,7 +115,5 @@ void handle_command(const client_t client, const server_info_t serverInfo)
         initialize_command(commandNode->command, client, serverInfo);
     } else if (should_be_handled(commandNode->command, client)) {
         execute_command(commandNode->command, client, serverInfo);
-    } else {
-        DEBUG_PRINT("Command not ready to be handled\n");
     }
 }

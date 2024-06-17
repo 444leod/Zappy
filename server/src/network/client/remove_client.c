@@ -2,15 +2,12 @@
 ** EPITECH PROJECT, 2024
 ** Zappy
 ** File description:
-** remove_client
+** remove_client_by_fd
 */
 
 #include "clients.h"
-#include "garbage_collector.h"
-
 #include "zappy.h"
-#include "lib.h"
-#include "packet.h"
+#include "debug.h"
 #include <unistd.h>
 
 /**
@@ -47,11 +44,12 @@ static void update_node(client_list_t clientNode)
  *
  * @param fd the fd of the client to remove
 */
-void remove_client(const int fd)
+void remove_client_by_fd(const int fd)
 {
     client_list_t *clients = get_clients();
     client_list_t clientNode = *clients;
 
+    DEBUG_PRINT("[DEBUG] Disconnecting fd %d\n", fd);
     if (clientNode && clientNode->client->fd == fd) {
         destroy_fds(clientNode->client);
         *clients = clientNode->next;

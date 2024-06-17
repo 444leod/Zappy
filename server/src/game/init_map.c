@@ -13,19 +13,25 @@
 
 /**
  * @brief Adds teams eggs to the map in a randomly distributed way.
+ *
  * @param map The map to add teams eggs to.
  * @param teams The list of teams.
+ * @param eggs_by_team The number of eggs to put for each team.
  */
-static void add_eggs(const map_t map, team_list_t teams)
+static void add_eggs(const map_t map, team_list_t teams,
+    const uint32_t eggs_by_team, uint32_t *remaining_eggs)
 {
     position_t pos = { 0, 0 };
     const uint32_t size = get_list_size((node_t)teams);
 
+    *remaining_eggs = size * eggs_by_team;
     for (uint32_t i = 0; i < size; i++) {
         DEBUG_PRINT("\tPutting egg for '%s'...", teams->team->name);
-        pos.x = rand() % map->width;
-        pos.y = rand() % map->height;
-        add_egg_at_position(teams->team, pos, map);
+        for (uint32_t j = 0; j < eggs_by_team; j++) {
+            pos.x = rand() % map->width;
+            pos.y = rand() % map->height;
+            add_egg_at_position(teams->team, pos, map);
+        }
         teams = teams->next;
         DEBUG_PRINT(" OK!\n");
     }
@@ -173,16 +179,21 @@ static void add_food(const map_t map)
 
 /**
  * @brief Sets up the map, puts all the ressources on the tiles.
+ *
  * @param map The map structure to setup.
+ * @param teams The list of teams.
+ * @param eggs_by_team The number of eggs to put for each team.
+ * @param remaining_eggs The number of eggs remaining pointer.
  *
  * @note Ressource are density based (always the same amount for a same size).
  * @note Ressources are scarsed randomly on the map.
  */
-void init_map(const map_t map, const team_list_t teams)
+void init_map(const map_t map, const team_list_t teams,
+    const uint32_t eggs_by_team, uint32_t *remaining_eggs)
 {
     if (map == NULL || teams == NULL)
         return;
-    DEBUG_PRINT("\nMap setup:\n");
+    DEBUG_PRINT("\n\n[ --------------- DEBUG --------------- ]\nMap setup:\n");
     add_food(map);
     add_linemate(map);
     add_deraumere(map);
@@ -190,5 +201,6 @@ void init_map(const map_t map, const team_list_t teams)
     add_mendiane(map);
     add_phiras(map);
     add_thystame(map);
-    add_eggs(map, teams);
+    add_eggs(map, teams, eggs_by_team, remaining_eggs);
+    DEBUG_PRINT("[ --------------- DEBUG --------------- ]\n\n");
 }

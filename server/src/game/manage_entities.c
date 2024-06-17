@@ -9,6 +9,7 @@
 #include "linked_lists.h"
 #include "garbage_collector.h"
 #include "commands_utils.h"
+#include "debug.h"
 #include <time.h>
 
 /**
@@ -82,6 +83,8 @@ void add_egg_at_position(const team_t team, const position_t pos, map_t map)
     egg->number = egg_number;
     egg_number++;
     add_to_list((void *)egg, (node_t *)&tile->eggs);
+    DEBUG_PRINT("[DEBUG] egg %d added at pos %d %d for team %s\n",
+        egg->number, pos.x, pos.y, team->name);
 }
 
 /**
@@ -111,7 +114,7 @@ player_t egg_to_player(const egg_t egg, const map_t map)
     player->orientation = (enum ORIENTATION)(rand() % 4) + 1;
     player->egg_number = egg->number;
     tile = get_tile_at_position(egg->pos, map);
-    remove_from_list((void *)egg, (node_t *)tile->eggs);
+    remove_from_list((void *)egg, (node_t *)&tile->eggs);
     add_to_list((void *)player, (node_t *)&tile->players);
     queue_to_graphical(get_egg_player_connexion_string(egg));
     return player;

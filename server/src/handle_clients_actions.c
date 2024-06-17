@@ -13,38 +13,14 @@
 #include <stdio.h>
 
 /**
- * @brief Send the correct reply code to the client
- * @details Send the correct reply code to the client
- * based on the current_code of the client
- * update the client status based on the next_commands
+ * @brief Send all the packets in the client's packet queue
+ * @details Send all the packets in the client's packet queue
  *
- * @param client the client to send the reply code to
+ * @param client The client to send the packets
 */
 static void send_buffer(client_t client)
 {
-    if (client->packetQueue)
-        send_packets(client);
-    if (client->player && client->player->isDead) {
-        printf("Removing player fd %d\n", client->fd);
-        remove_client(client->fd);
-        client->fd = -1;
-    }
-}
-
-/**
- * @brief Check if a client can interact
- * @details Check if a client can interact by checking if its a graphical
- *  client or if its player is not dead
- *
- * @param client the client to check
- *
- * @return true if the client can play, false otherwise
- */
-bool can_interact(client_t client)
-{
-    if (!client->player)
-        return true;
-    return !client->player->isDead;
+    send_packets(client);
 }
 
 /**
@@ -65,14 +41,18 @@ static void trigger_action(const client_t client, const fd_set *readfds,
     check_player_death(client, server_info->map, server_info->freq);
     if (client->fd == -1)
         return;
-    if (FD_ISSET(client->fd, readfds) && can_interact(client)) {
+    if (FD_ISSET(client->fd, readfds)) {
         read_buffer(client);
     }
-    if (client->commands && can_interact(client)) {
+    if (client->commands) {
         handle_command(client, server_info);
     }
-    if (FD_ISSET(client->fd, writefds)) {
+    if (FD_ISSET(client->fd, writefds) && client->packetQueue) {
         send_buffer(client);
+    }
+    if (client->end && !client->packetQueue) {
+        remove_client_by_fd(client->fd);
+        client->fd = -1;
     }
 }
 

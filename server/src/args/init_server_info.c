@@ -128,6 +128,7 @@ static void init_teams(param_t params, server_info_t serverInfo)
         team->name = teamNames->informations->content;
         team->actualNumber = 0;
         team->remainingSlots = 0;
+        team->players = NULL;
         add_to_list((void *)team, (node_t *)&serverInfo->teams);
         teamNames = teamNames->next;
     }
@@ -151,6 +152,29 @@ static void update_teams_max_clients(team_list_t teamsList, uint32_t clientsNb)
 }
 
 /**
+ * @brief Transform the arguments to a linked list
+ * @details transform the arguments to a linked list
+ *  of param_informations_t
+ *
+ * @param argv the arguments
+ *
+ * @return the linked list of param_informations_t
+*/
+param_t argv_to_list(const char *argv[])
+{
+    param_t params = NULL;
+    param_informations_t param = NULL;
+
+    for (uint16_t i = 1; argv[i]; i++) {
+        param = my_malloc(sizeof(struct param_informations_s));
+        param->content = my_strdup(argv[i]);
+        param->handled = false;
+        add_to_list((void *)param, (node_t *)&params);
+    }
+    return params;
+}
+
+/**
  * @brief Initialize the serverInfo struct
  * @details correctly initialize the serverInfo struct with the port and the
  *    path of the server
@@ -162,15 +186,8 @@ static void update_teams_max_clients(team_list_t teamsList, uint32_t clientsNb)
 server_info_t init_server_info(const char *argv[])
 {
     server_info_t serverInfo = my_malloc(sizeof(struct server_info_s));
-    param_t params = NULL;
-    param_informations_t param = NULL;
+    param_t params = argv_to_list(argv);
 
-    for (uint16_t i = 1; argv[i]; i++) {
-        param = my_malloc(sizeof(struct param_informations_s));
-        param->content = my_strdup(argv[i]);
-        param->handled = false;
-        add_to_list((void *)param, (node_t *)&params);
-    }
     init_teams(params, serverInfo);
     init_port(params, serverInfo);
     init_width(params, serverInfo);
@@ -179,6 +196,8 @@ server_info_t init_server_info(const char *argv[])
     init_freq(params, serverInfo);
     update_teams_max_clients(serverInfo->teams, serverInfo->clientsNb);
     serverInfo->map = create_map(serverInfo->width, serverInfo->height);
-    init_map(serverInfo->map, serverInfo->teams);
+    init_map(serverInfo->map, serverInfo->teams, serverInfo->clientsNb,
+        &(serverInfo->remaining_eggs));
+    serverInfo->end = false;
     return serverInfo;
 }

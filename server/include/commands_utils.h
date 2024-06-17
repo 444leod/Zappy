@@ -39,4 +39,6 @@ char *get_egg_player_connexion_string(const egg_t egg);
 
 char *get_player_death_string(const player_t player);
 
+char *get_game_end_string(team_t team);
+
 void queue_to_graphical(char *buffer);

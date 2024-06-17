@@ -11,6 +11,7 @@
 #include "macros.h"
 #include "garbage_collector.h"
 #include "debug.h"
+#include "commands_utils.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -43,7 +44,56 @@ static void add_new_client(int socketFd)
     if (new_socket < 0)
         my_error("new client: accept failed");
     add_client(create_client(new_socket));
-    DEBUG_PRINT("New client connected: %d\n", new_socket);
+    DEBUG_PRINT("[DEBUG] New client connected: %d\n", new_socket);
+}
+
+/**
+ * @brief End the game
+ * @details End the game by printing result and sending winner team to
+ *  graphical clients
+ *
+ * @param last_team the last team standing
+*/
+static void end_game(const team_t last_team)
+{
+    client_list_t clients = *get_clients();
+
+    if (last_team == NULL) {
+        printf("Tie !\n");
+    } else {
+        printf("Team \"%s\" won!\n", get_escaped_string(last_team->name));
+    }
+    queue_to_graphical(get_game_end_string(last_team));
+    while (clients) {
+        clients->client->end = true;
+        clients = clients->next;
+    }
+}
+
+/**
+ * @brief Check if the game is ended (if there is only 1 team left)
+ * @details Check if the game is ended, if so, end it.
+ *
+ * @param server_info the server informations.
+ */
+static void check_game_end(const server_info_t server_info)
+{
+    team_list_t teams = server_info->teams;
+    team_t remaining_team = NULL;
+
+    while (teams) {
+        if (get_list_size((node_t)teams->team->players) == 0 &&
+            teams->team->remainingSlots == 0) {
+            teams = teams->next;
+            continue;
+        }
+        if (remaining_team != NULL)
+            return;
+        remaining_team = teams->team;
+        teams = teams->next;
+    }
+    end_game(remaining_team);
+    server_info->end = true;
 }
 
 /**
@@ -64,15 +114,18 @@ void zappy_loop(int socketFd, server_info_t serverInfo)
 
     while (1) {
         clients = (*get_clients());
+        if (serverInfo->end && clients == NULL)
+            break;
         FD_ZERO(&readfds);
         FD_ZERO(&writefds);
         FD_SET(socketFd, &readfds);
         max_sd = socketFd;
         select_wrapper(&max_sd, &readfds, &writefds, clients);
-        if (FD_ISSET(socketFd, &readfds))
+        if (!serverInfo->end && FD_ISSET(socketFd, &readfds))
             add_new_client(socketFd);
         loop_clients(clients, &readfds, &writefds, serverInfo);
-        DEBUG_PRINT("Executed all actions.\n");
+        if (!serverInfo->end)
+            check_game_end(serverInfo);
     }
 }
 
@@ -86,7 +139,7 @@ static void print_server_info(server_info_t serverInfo)
 {
     team_list_t teams = serverInfo->teams;
 
-    DEBUG_PRINT("\nServer info:\n");
+    DEBUG_PRINT("\n[ --------------- DEBUG --------------- ]\nServer info:\n");
     DEBUG_PRINT("\tRunning on port %d\n", serverInfo->port);
     DEBUG_PRINT("\t%d ", serverInfo->clientsNb);
     if (serverInfo->clientsNb == 1)
@@ -102,7 +155,7 @@ static void print_server_info(server_info_t serverInfo)
         DEBUG_PRINT("\t  - %s\n", teams->team->name);
         teams = teams->next;
     }
-    DEBUG_PRINT("\n");
+    DEBUG_PRINT("\n[ --------------- DEBUG --------------- ]\n");
 }
 
 /**
@@ -133,6 +186,6 @@ int server(const int argc, const char *argv[])
     print_server_info(serverInfo);
     listen_socket(socketFd, 1024);
     zappy_loop(socketFd, serverInfo);
-    close(socketFd);
+    my_exit(0);
     return 0;
 }

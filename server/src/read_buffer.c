@@ -67,13 +67,13 @@ static bool is_read_special_case(const client_t client,
     const int valread)
 {
     if (valread == -1) {
-        remove_client(client->fd);
+        remove_client_by_fd(client->fd);
         client->fd = -1;
         printf("Read failed with fd %d: %s\n", client->fd, strerror(errno));
         return true;
     }
     if (valread == 0) {
-        remove_client(client->fd);
+        remove_client_by_fd(client->fd);
         client->fd = -1;
         return true;
     }

@@ -42,7 +42,7 @@ static void add_clients_to_set(
             *max_sd = (clientNode->client->fd > *max_sd) ?
                 clientNode->client->fd : *max_sd;
         }
-        if (!can_interact(clientNode->client)) {
+        if (clientNode->client->end) {
             clientNode = clientNode->next;
             continue;
         }
@@ -157,6 +157,22 @@ static struct timeval *get_timeout(client_list_t clients)
 }
 
 /**
+ * @brief Print the select timeout
+ * @details Print the select timeout
+ *
+ * @param timeout the timeout to print
+ */
+static void debug_print_select_timeout(struct timeval *timeout)
+{
+    if (!timeout) {
+        DEBUG_PRINT("[DEBUG] Next select is blocking\n");
+    } else {
+        DEBUG_PRINT("[DEBUG] Next select is blocking for %ld.%03ld\n",
+            timeout->tv_sec, timeout->tv_usec);
+    }
+}
+
+/**
  * @brief Wrapper for the select function
  * @details wrapper for the select function, if the select function failed
  *   the program exit, else the function updates the fd_sets each 100ms.
@@ -174,7 +190,9 @@ void select_wrapper(int *max_sd, fd_set *readfds,
 
     add_clients_to_set(clients, readfds, writefds, max_sd);
     special_print(readfds, writefds);
+    debug_print_select_timeout(timeout);
     activity = select(*max_sd + 1, readfds, writefds, NULL, timeout);
+    DEBUG_PRINT("[DEBUG] Select returned %d\n", activity);
     if (activity < 0)
         my_error("select wrapper failed");
     my_free(timeout);
