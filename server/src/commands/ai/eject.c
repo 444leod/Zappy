@@ -68,14 +68,16 @@ void destroy_eggs(egg_list_t *eggs)
  * @param client the client that executed the command
  * @param serverInfo the server info
  */
-void eject(UNUSED char **args, client_t client, server_info_t serverInfo)
+void eject(char **args, client_t client, server_info_t serverInfo)
 {
     packet_t *packet = NULL;
     tile_t tile = NULL;
     bool ejected = false;
 
-    if (client->player == NULL)
+    if (!assert_argv_count(args, 0)) {
+        throw_ko(client);
         return;
+    }
     tile = get_tile_at_position(client->player->position, serverInfo->map);
     ejected = eject_players(client->player, tile->players, serverInfo->map);
     packet = build_packet(ejected ? "ok" : "ko");

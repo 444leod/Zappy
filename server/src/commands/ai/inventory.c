@@ -40,13 +40,16 @@ static char *format_inventory(uint32_t food, rocks_t rocks)
  * @param client the client that executed the command
  * @param serverInfo the server info
  */
-void inventory(UNUSED char **args, client_t client,
-    UNUSED server_info_t serverInfo)
+void inventory(char **args, client_t client, UNUSED server_info_t serverInfo)
 {
     player_t player = client->player;
-    char *inv = format_inventory(player->food, player->rocks);
-    packet_t *packet = build_packet(inv);
+    char *inv = NULL;
 
+    if (!assert_argv_count(args, 0)) {
+        throw_ko(client);
+        return;
+    }
+    inv = format_inventory(player->food, player->rocks);
+    add_packet_to_queue(&client->packetQueue, build_packet(inv));
     my_free(inv);
-    add_packet_to_queue(&client->packetQueue, packet);
 }

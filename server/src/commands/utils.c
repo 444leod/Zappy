@@ -55,3 +55,28 @@ char get_char_by_orientation(int orientation)
     }
     return -1;
 }
+
+/**
+ * @brief Checks the amount of argument values.
+ *
+ * @param args The argument values as an array of string
+ * @param excpected The amount expected
+ * @return `true` if correct, `false` otherwise.
+ */
+bool assert_argv_count(char **args, uint32_t expected)
+{
+    uint32_t count = 0;
+
+    for (; args && args[count]; count++)
+        ;
+    return count == expected;
+}
+
+/**
+ * @brief Adds a KO packet to queue
+ * @param client the client
+ */
+void throw_ko(client_t client)
+{
+    add_packet_to_queue(&client->packetQueue, build_packet("ko"));
+}

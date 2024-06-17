@@ -19,13 +19,16 @@
  * @param client the client that executed the command
  * @param serverInfo the server info
  */
-void connect_nbr(UNUSED char **args, client_t client,
-    UNUSED server_info_t serverInfo)
+void connect_nbr(char **args, client_t client, UNUSED server_info_t serverInfo)
 {
     team_t team = client->player->team;
-    char *message = my_snprintf("%d", team->remainingSlots);
-    packet_t *packet = build_packet(message);
+    char *message = NULL;
 
+    if (!assert_argv_count(args, 0)) {
+        throw_ko(client);
+        return;
+    }
+    message = my_snprintf("%d", team->remainingSlots);
+    add_packet_to_queue(&client->packetQueue, build_packet(message));
     my_free(message);
-    add_packet_to_queue(&client->packetQueue, packet);
 }

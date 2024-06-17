@@ -27,15 +27,6 @@ static const char *get_content_arg(char **args)
 }
 
 /**
- * @brief Adds a KO packet to queue
- * @param packet_queue the packet queue
- */
-static void throw_ko(packet_queue_t *packet_queue)
-{
-    add_packet_to_queue(packet_queue, build_packet("ko"));
-}
-
-/**
  * @brief Set command
  * @details Sets down an item from a player's inventory
  *
@@ -43,18 +34,18 @@ static void throw_ko(packet_queue_t *packet_queue)
  * @param client the client that executed the command
  * @param serverInfo the server info
  */
-void set(UNUSED char **args, client_t client, UNUSED server_info_t serverInfo)
+void set(char **args, client_t client, UNUSED server_info_t serverInfo)
 {
     player_t player = client->player;
     tile_t tile = get_tile_at_position(player->position, serverInfo->map);
     const char *arg = get_content_arg(args);
 
     if (arg == NULL) {
-        throw_ko(&client->packetQueue);
+        throw_ko(client);
         return;
     }
     if (!player_pick_up(arg, player, tile, -1))
-        throw_ko(&client->packetQueue);
+        throw_ko(client);
     else
         add_packet_to_queue(&client->packetQueue, build_packet("ok"));
 }

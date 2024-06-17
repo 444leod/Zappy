@@ -18,6 +18,9 @@
  * @param client the client that executed the command
  * @param serverInfo the server info
  */
-void incantation(char **args, client_t client, server_info_t serverInfo)
+void incantation(
+    UNUSED char **args,
+    UNUSED client_t client,
+    UNUSED server_info_t serverInfo)
 {
 }

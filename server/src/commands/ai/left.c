@@ -17,12 +17,12 @@
  * @param client the client that executed the command
  * @param serverInfo the server info
  */
-void left(UNUSED char **args, client_t client,
-    UNUSED server_info_t serverInfo)
+void left(char **args, client_t client, UNUSED server_info_t serverInfo)
 {
-    const char *msg = "ok";
-    packet_t *packet = build_packet(msg);
-
+    if (!assert_argv_count(args, 0)) {
+        throw_ko(client);
+        return;
+    }
     client->player->orientation = ((client->player->orientation - 2) % 4) + 1;
-    add_packet_to_queue(&client->packetQueue, packet);
+    add_packet_to_queue(&client->packetQueue, build_packet("ok"));
 }

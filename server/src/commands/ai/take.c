@@ -29,15 +29,6 @@ static const char *get_content_arg(char **args)
 }
 
 /**
- * @brief Adds a KO packet to queue
- * @param packet_queue the packet queue
- */
-static void throw_ko(packet_queue_t *packet_queue)
-{
-    add_packet_to_queue(packet_queue, build_packet("ko"));
-}
-
-/**
  * @brief Take command
  * @details Let a user pick up an object from the tile it's on.
  *
@@ -52,11 +43,11 @@ void take(char **args, client_t client, server_info_t serverInfo)
     const char *arg = get_content_arg(args);
 
     if (arg == NULL) {
-        throw_ko(&client->packetQueue);
+        throw_ko(client);
         return;
     }
     if (!player_pick_up(arg, player, tile, 1))
-        throw_ko(&client->packetQueue);
+        throw_ko(client);
     else
         add_packet_to_queue(&client->packetQueue, build_packet("ok"));
 }

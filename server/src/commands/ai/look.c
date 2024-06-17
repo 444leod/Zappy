@@ -64,6 +64,14 @@ static tile_list_t get_vision_tiles(const player_t player, const map_t map)
     return list;
 }
 
+/**
+ * @brief Replaces a string with a new one.
+ * @note Frees old.
+ *
+ * @param old A pointer to the old string
+ * @param new The new string
+ * @return A pointer to the modified old string
+ */
 static char *replace(char **old, char *new)
 {
     my_free(*old);
@@ -124,6 +132,23 @@ static char *format_vision(tile_list_t tiles)
 }
 
 /**
+ * @brief Frees all the nodes of a list without freeing the content.
+ * @param list The list
+ */
+static void free_list_holders(node_t list)
+{
+    node_t next = NULL;
+    node_t node = list;
+    uint32_t size = get_list_size(list);
+
+    for (uint32_t i = 0; i < size; i++) {
+        next = node->next;
+        my_free(node);
+        node = next;
+    }
+}
+
+/**
  * @brief Look command
  * @details Gets the player their vision
  *
@@ -131,13 +156,17 @@ static char *format_vision(tile_list_t tiles)
  * @param client the client that executed the command
  * @param serverInfo the server info
  */
-void look(UNUSED char **args, client_t client, server_info_t serverInfo)
+void look(char **args, client_t client, server_info_t serverInfo)
 {
     tile_list_t tiles = get_vision_tiles(client->player, serverInfo->map);
-    char *vision = format_vision(tiles);
-    packet_t *packet = build_packet(vision);
+    char *vision = NULL;
 
+    if (!assert_argv_count(args, 0)) {
+        throw_ko(client);
+        return;
+    }
+    vision = format_vision(tiles);
+    add_packet_to_queue(&client->packetQueue, build_packet(vision));
     my_free(vision);
-    my_free((void *)tiles);
-    add_packet_to_queue(&client->packetQueue, packet);
+    free_list_holders((node_t)tiles);
 }

@@ -19,15 +19,17 @@
  * @param client the client that executed the command
  * @param serverInfo the server info
  */
-void fork_player(UNUSED char **args, client_t client, server_info_t serverInfo)
+void fork_player(char **args, client_t client, server_info_t serverInfo)
 {
-    packet_t *packet = build_packet("ok");
-
+    if (!assert_argv_count(args, 0)) {
+        throw_ko(client);
+        return;
+    }
     add_egg_at_position(
         client->player->team,
         client->player->position,
         serverInfo->map
     );
     client->player->team->remainingSlots++;
-    add_packet_to_queue(&client->packetQueue, packet);
+    add_packet_to_queue(&client->packetQueue, build_packet("ok"));
 }
