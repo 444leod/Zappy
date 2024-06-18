@@ -21,10 +21,10 @@
  */
 void send_packets(client_t client)
 {
-    packet_t *packet = pop_packet_from_queue(&client->packetQueue);
-    const int socketFd = client->fd;
+    packet_t *packet = pop_packet_from_queue(&client->packet_queue);
+    const int socket_fd = client->fd;
 
     if (packet->buffer[strlen(packet->buffer) - 1] != '\n')
         packet->buffer = supercat(2, packet->buffer, "\n");
-    send_packet(socketFd, packet);
+    send_packet(socket_fd, packet);
 }

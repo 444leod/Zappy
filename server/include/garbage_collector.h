@@ -22,4 +22,4 @@ gc_node_t *gc_llist(void);
 void my_free_all(void);
 void my_free(void *pointer);
 void *my_malloc(size_t size);
-void *my_realloc(void *ptr, size_t size, size_t oldSize);
+void *my_realloc(void *ptr, size_t size, size_t old_size);

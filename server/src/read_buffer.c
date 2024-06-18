@@ -26,12 +26,12 @@
 static client_command_t create_command(const char *command,
     const struct timespec *time)
 {
-    client_command_t newCommand = my_malloc(sizeof(struct client_command_s));
+    client_command_t new_command = my_malloc(sizeof(struct client_command_s));
 
-    newCommand->command = my_strdup(command);
-    newCommand->handledTime = *time;
-    newCommand->initialized = false;
-    return newCommand;
+    new_command->command = my_strdup(command);
+    new_command->handled_time = *time;
+    new_command->initialized = false;
+    return new_command;
 }
 
 /**
@@ -43,14 +43,14 @@ static client_command_t create_command(const char *command,
 */
 static void clear_ai_buffer_overflow(client_t client)
 {
-    uint32_t commandsSize = get_list_size((node_t)client->commands);
+    uint32_t commands_size = get_list_size((node_t)client->commands);
 
-    if (commandsSize < 10)
+    if (commands_size < 10)
         return;
-    while (commandsSize > 10) {
+    while (commands_size > 10) {
         remove_from_list(get_node_by_index(11, (node_t)client->commands)->data,
             (node_t *)&client->commands);
-        commandsSize--;
+        commands_size--;
     }
 }
 
@@ -90,17 +90,17 @@ static bool is_read_special_case(const client_t client,
 */
 static void queue_command(const client_t client)
 {
-    char *afterLineBreak = NULL;
+    char *after_line_break = NULL;
     int i = 0;
     struct timespec now;
     char *buffer = NULL;
 
     clock_gettime(0, &now);
     while (client->buffer && strlen(client->buffer) > 0) {
-        afterLineBreak = strstr(client->buffer, "\n");
-        if (!afterLineBreak)
+        after_line_break = strstr(client->buffer, "\n");
+        if (!after_line_break)
             break;
-        i = afterLineBreak - client->buffer;
+        i = after_line_break - client->buffer;
         buffer = my_strndup(client->buffer, i);
         add_to_list((void *)create_command(buffer, &now),
             (void *)&client->commands);

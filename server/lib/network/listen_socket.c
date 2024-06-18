@@ -10,15 +10,15 @@
 
 /**
  * @brief Listen a socket
- * @details Listen a socket with a given maxClients
+ * @details Listen a socket with a given max_clients
  *
- * @param socketFd the socket to listen
- * @param maxClients the maxClients to listen
+ * @param socket_fd the socket to listen
+ * @param max_clients the max_clients to listen
 */
-void listen_socket(const int socketFd, const int maxClients)
+void listen_socket(const int socket_fd, const int max_clients)
 {
-    const int listenRes = listen(socketFd, maxClients);
+    const int listen_result = listen(socket_fd, max_clients);
 
-    if (listenRes == -1)
+    if (listen_result == -1)
         my_error(supercat(2, "listen failed: ", strerror(errno)));
 }

@@ -12,9 +12,9 @@
 
 char *get_tile_content_string(const tile_t tile, const position_t position);
 void send_tile_content_to_client(const client_t client,
-    const server_info_t serverInfo, const position_t position);
+    const server_info_t server_info, const position_t position);
 void sent_tile_content_to_client_list(const client_list_t clients,
-    const server_info_t serverInfo, const position_t position);
+    const server_info_t server_info, const position_t position);
 
 char *get_map_content_string(const server_info_t server_info);
 void send_map_content_to_client(const client_t client,
@@ -24,15 +24,15 @@ void send_map_content_to_client_list(const client_list_t clients,
 
 char *get_player_inventory_string(const player_t player);
 void send_player_inventory_to_client(const client_t client,
-    const int playerNumber);
+    const int player_number);
 void send_player_inventory_to_client_list(const client_list_t clients,
-    const int playerNumber);
+    const int player_number);
 
 char *get_player_level_string(const player_t player);
 void send_player_level_to_client(const client_t client,
-    const int playerNumber);
+    const int player_number);
 void send_player_level_to_client_list(const client_list_t clients,
-    const int playerNumber);
+    const int player_number);
 
 char *get_map_size_string(const server_info_t server_info);
 void send_map_size_to_client(const client_t client,
@@ -42,8 +42,8 @@ void send_map_size_to_client_list(const client_list_t clients,
 
 char *get_player_pos_string(const player_t player);
 void send_player_pos_to_client_list(const client_list_t clients,
-    const int playerNumber);
-void send_player_pos_to_client(const client_t client, const int playerNumber);
+    const int player_number);
+void send_player_pos_to_client(const client_t client, const int player_number);
 
 char *get_time_unit_string(const server_info_t server_info);
 void send_time_unit_to_client(const client_t client,

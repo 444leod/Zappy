@@ -21,12 +21,12 @@
  *
  * @param command the command to execute;
  * @param client the client to execute the command for
- * @param serverInfo the server info
+ * @param server_info the server info
 */
 static void execute_command(const client_command_t command,
-    const client_t client, const server_info_t serverInfo)
+    const client_t client, const server_info_t server_info)
 {
-    command->commandHandler.func(command->args, client, serverInfo);
+    command->command_handler.func(command->args, client, server_info);
     remove_from_list((void *)command, (node_t *)&client->commands);
 }
 
@@ -46,16 +46,17 @@ static bool should_be_handled(const client_command_t command,
     const client_t client)
 {
     struct timespec now;
-    double elapsedTime;
+    double elapsed_time;
 
     if (client->type == GRAPHICAL)
         return true;
     clock_gettime(0, &now);
-    elapsedTime = (now.tv_sec - command->handledTime.tv_sec);
-    elapsedTime += (now.tv_nsec - command->handledTime.tv_nsec) / 1000000000.0;
-    command->waitDuration -= elapsedTime;
-    command->handledTime = now;
-    return command->waitDuration <= 0;
+    elapsed_time = (now.tv_sec - command->handled_time.tv_sec);
+    elapsed_time += (now.tv_nsec - command->handled_time.tv_nsec)
+        / 1000000000.0;
+    command->wait_duration -= elapsed_time;
+    command->handled_time = now;
+    return command->wait_duration <= 0;
 }
 
 /**
@@ -65,31 +66,31 @@ static bool should_be_handled(const client_command_t command,
  *
  * @param command the command to initialize
  * @param client the client to initialize the command for
- * @param serverInfo the server info
+ * @param server_info the server info
 */
 static void initialize_command(const client_command_t command,
-    const client_t client, const server_info_t serverInfo)
+    const client_t client, const server_info_t server_info)
 {
     size_t i = 0;
 
     command->initialized = true;
     command->args = str_to_word_array(command->command, " ");
     if (client->type == NONE) {
-        command->commandHandler = AUTHENTIFICATION_COMMAND;
-        command->waitDuration = 0;
+        command->command_handler = AUTHENTIFICATION_COMMAND;
+        command->wait_duration = 0;
         return;
     }
     for (; COMMANDS[i].command; i++) {
         if (strcmp(COMMANDS[i].command, command->args[0]) == 0 &&
-            COMMANDS[i].ClientType == client->type) {
-            command->commandHandler = COMMANDS[i];
-            command->waitDuration = COMMANDS[i].waitUnits == 0 ? 0 :
-                COMMANDS[i].waitUnits / serverInfo->freq;
+            COMMANDS[i].client_type == client->type) {
+            command->command_handler = COMMANDS[i];
+            command->wait_duration = COMMANDS[i].execution_ticks == 0 ? 0 :
+                COMMANDS[i].execution_ticks / server_info->freq;
             return;
         }
     }
-    command->commandHandler = COMMANDS[i];
-    command->waitDuration = 0;
+    command->command_handler = COMMANDS[i];
+    command->wait_duration = 0;
 }
 
 /**
@@ -98,16 +99,16 @@ static void initialize_command(const client_command_t command,
  * by parsing it and executing it
  *
  * @param client the client to handle the command of
- * @param serverInfo the server info
+ * @param server_info the server info
 */
-void handle_command(const client_t client, const server_info_t serverInfo)
+void handle_command(const client_t client, const server_info_t server_info)
 {
-    const client_command_list_t commandNode = client->commands;
+    const client_command_list_t command_node = client->commands;
 
-    if (commandNode->command->initialized == false) {
-        initialize_command(commandNode->command, client, serverInfo);
-    } else if (should_be_handled(commandNode->command, client)) {
-        execute_command(commandNode->command, client, serverInfo);
+    if (command_node->command->initialized == false) {
+        initialize_command(command_node->command, client, server_info);
+    } else if (should_be_handled(command_node->command, client)) {
+        execute_command(command_node->command, client, server_info);
     } else {
         DEBUG_PRINT("Command not ready to be handled\n");
     }

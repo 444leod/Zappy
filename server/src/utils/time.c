@@ -48,16 +48,16 @@ void update_remaining_time(double *remaining_time,
  * @brief Get the timeval by a double
  * @details Get the timeval by a double
  *
- * @param waitDuration the double to convert to timeval
+ * @param wait_duration the double to convert to timeval
  *
  * @return struct timeval the timeval
  */
-struct timeval get_timeval_by_double(double waitDuration)
+struct timeval get_timeval_by_double(double wait_duration)
 {
     struct timeval timeout;
 
-    timeout.tv_sec = (time_t)waitDuration;
-    timeout.tv_usec = (suseconds_t)((waitDuration - timeout.tv_sec) * 1e6);
+    timeout.tv_sec = (time_t)wait_duration;
+    timeout.tv_usec = (suseconds_t)((wait_duration - timeout.tv_sec) * 1e6);
     return timeout;
 }
 

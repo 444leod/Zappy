@@ -16,9 +16,9 @@
 */
 int get_socket(void)
 {
-    const int socketFd = socket(AF_INET, SOCK_STREAM, 0);
+    const int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 
-    if (socketFd == -1)
+    if (socket_fd == -1)
         my_error(supercat(2, "get socket failed: ", strerror(errno)));
-    return socketFd;
+    return socket_fd;
 }

@@ -34,12 +34,12 @@ client_list_t *get_clients(void)
 client_list_t get_clients_by_type(const enum CLIENT_TYPE type)
 {
     client_list_t clients = NULL;
-    client_list_t clientNode = *get_clients();
+    client_list_t client_node = *get_clients();
 
-    while (clientNode) {
-        if (clientNode->client->type == type)
-            add_to_list((void *)clientNode->client, (node_t *)&clients);
-        clientNode = clientNode->next;
+    while (client_node) {
+        if (client_node->client->type == type)
+            add_to_list((void *)client_node->client, (node_t *)&clients);
+        client_node = client_node->next;
     }
     return clients;
 }
@@ -54,12 +54,12 @@ client_list_t get_clients_by_type(const enum CLIENT_TYPE type)
 */
 client_t get_client_by_fd(const int fd)
 {
-    client_list_t clientNode = *get_clients();
+    client_list_t client_node = *get_clients();
 
-    while (clientNode) {
-        if (clientNode->client->fd == fd)
-            return clientNode->client;
-        clientNode = clientNode->next;
+    while (client_node) {
+        if (client_node->client->fd == fd)
+            return client_node->client;
+        client_node = client_node->next;
     }
     return NULL;
 }
