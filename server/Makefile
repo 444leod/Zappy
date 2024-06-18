@@ -66,6 +66,7 @@ __SRC_GAME := \
 	manage_entities.c \
 	query_map.c \
 	player_death.c \
+	refill_map.c \
 
 __SRC_ARGS := \
 	params.c \

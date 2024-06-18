@@ -19,6 +19,7 @@
 #include "lib.h"
 #include "server_info.h"
 #include "clients.h"
+#include "select_wrapper.h"
 
 int server(const int argc, const char *argv[]);
 void check_args(const int argc, const char *argv[]);
@@ -37,9 +38,10 @@ void queue_packet_to_client_type(const enum CLIENT_TYPE type,
 server_info_t init_server_info(const char *argv[]);
 void display_help(const char *str);
 void queue_buffer(const client_t client, const char *buffer);
-void select_wrapper(int *max_sd, fd_set *readfds,
-    fd_set *writefds, client_list_t clients);
+void select_wrapper(select_data_t *select_data, client_list_t clients,
+    const server_info_t server_info);
 void read_buffer(const client_t client);
 void check_player_death(const client_t client,
     const map_t map, const uint32_t frequency);
 bool can_interact(client_t client);
+void refill_map(const server_info_t server_info);

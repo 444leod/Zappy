@@ -19,4 +19,8 @@ typedef struct server_info_s {
     uint32_t height;
     team_list_t teams;
     map_t map;
+    struct timespec last_refill_check;
+    double refill_wait;
+    rocks_t actual_rocks;
+    uint32_t actual_foods;
 } *server_info_t;
