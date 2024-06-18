@@ -6,10 +6,10 @@ from typing import List
 CONST VARIABLES representing the orientation of a player
 They are represented as tuples (x, y) to facilitate the computation of the new position
 """
-NORTH: tuple[int, int] = (0, 1)
-EAST: tuple[int, int] = (1, 0)
-SOUTH: tuple[int, int] = (0, -1)
-WEST: tuple[int, int] = (-1, 0)
+NORTH: tuple[int, int] = (-1, 0)
+EAST: tuple[int, int] = (0, -1)
+SOUTH: tuple[int, int] = (1, 0)
+WEST: tuple[int, int] = (0, 1)
 
 
 class bcolors:
@@ -138,9 +138,9 @@ class Map():
                     new_pos = (player_pos[0] - distance, player_pos[1] - (distance - i))
                 elif orientation == SOUTH:
                     new_pos = (player_pos[0] + distance, player_pos[1] + (distance - i))
-                elif orientation == WEST:
-                    new_pos = (player_pos[0] - (distance - i), player_pos[1] - distance)
                 elif orientation == EAST:
+                    new_pos = (player_pos[0] - (distance - i), player_pos[1] - distance)
+                elif orientation == WEST:
                     new_pos = (player_pos[0] + (distance - i), player_pos[1] + distance)
                 new_pos = (new_pos[0] % max_row, new_pos[1] % max_col)
                 update_tile(new_pos, tile_content)
