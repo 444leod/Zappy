@@ -164,7 +164,7 @@ void look(
     tile_list_t tiles = NULL;
     char *vision = NULL;
 
-    if (!assert_argv_count(args, 0)) {
+    if (tablen((const void **)args) != 1) {
         throw_ko(client);
         return;
     }

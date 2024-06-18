@@ -13,7 +13,7 @@ Test(inventory_suite, bad_arguments)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };
-    char *args[] = { "Hey" };
+    char *args[] = { "inventory", "azerty" };
 
     client.player = &player;
     inventory(args, &client, NULL);
@@ -29,9 +29,10 @@ Test(inventory_suite, empty_inventory)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };
+    char *args[] = { "", NULL };
 
     client.player = &player;
-    inventory(NULL, &client, NULL);
+    inventory(args, &client, NULL);
     cr_assert_not_null(client.packetQueue);
     cr_assert_not_null(client.packetQueue->packet);
     char *res = client.packetQueue->packet->buffer;
@@ -45,10 +46,11 @@ Test(inventory_suite, inventory_single_rock)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };
+    char *args[] = { "", NULL };
 
     client.player = &player;
     player.rocks.linemate = 5;
-    inventory(NULL, &client, NULL);
+    inventory(args, &client, NULL);
     cr_assert_not_null(client.packetQueue);
     cr_assert_not_null(client.packetQueue->packet);
     char *res = client.packetQueue->packet->buffer;
@@ -62,10 +64,11 @@ Test(inventory_suite, inventory_single_food)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };
+    char *args[] = { "", NULL };
 
     client.player = &player;
     player.food = 9;
-    inventory(NULL, &client, NULL);
+    inventory(args, &client, NULL);
     cr_assert_not_null(client.packetQueue);
     cr_assert_not_null(client.packetQueue->packet);
     char *res = client.packetQueue->packet->buffer;
@@ -79,12 +82,13 @@ Test(inventory_suite, inventory_multiple)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };
+    char *args[] = { "", NULL };
 
     client.player = &player;
     player.food = 65;
     player.rocks.linemate = 5;
     player.rocks.phiras = 2;
-    inventory(NULL, &client, NULL);
+    inventory(args, &client, NULL);
     cr_assert_not_null(client.packetQueue);
     cr_assert_not_null(client.packetQueue->packet);
     char *res = client.packetQueue->packet->buffer;

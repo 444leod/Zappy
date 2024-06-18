@@ -8,6 +8,7 @@
 #include "commands.h"
 #include "packet.h"
 #include "clients.h"
+#include "lib.h"
 
 /**
  * @brief Left command
@@ -22,7 +23,7 @@ void left(
     const client_t client,
     UNUSED const server_info_t serverInfo)
 {
-    if (!assert_argv_count(args, 0)) {
+    if (tablen((const void **)args) != 1) {
         throw_ko(client);
         return;
     }

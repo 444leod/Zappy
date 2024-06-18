@@ -13,7 +13,7 @@ Test(fork_suite, bad_arguments)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };
-    char *args[] = { "Hey" };
+    char *args[] = { "fork", "azerty" };
 
     client.player = &player;
     fork_player(args, &client, NULL);
@@ -33,12 +33,13 @@ Test(fork_suite, player_fork)
     struct team_s team = { "Team", 0, 15 };
     struct server_info_s server = { 0 };
     map_t map = create_map(5, 5);
+    char *args[] = { "", NULL };
 
     player.team = &team;
     client.player = &player;
     server.map = map;
     add_player_at_position(&player, pos, map);
-    fork_player(NULL, &client, &server);
+    fork_player(args, &client, &server);
 
     cr_assert_not_null(client.packetQueue);
     cr_assert_not_null(client.packetQueue->packet);
@@ -59,6 +60,7 @@ Test(fork_suite, two_player_fork)
     position_t pos = { 0, 0 };
     struct server_info_s server = { 0 };
     map_t map = create_map(1, 1);
+    char *args[] = { "", NULL };
 
     struct client_s clientA = { 0 };
     struct client_s clientB = { 0 };
@@ -75,8 +77,8 @@ Test(fork_suite, two_player_fork)
     add_player_at_position(&playerA, pos, map);
     add_player_at_position(&playerB, pos, map);
 
-    fork_player(NULL, &clientA, &server);
-    fork_player(NULL, &clientB, &server);
+    fork_player(args, &clientA, &server);
+    fork_player(args, &clientB, &server);
 
     cr_assert_not_null(clientA.packetQueue);
     cr_assert_not_null(clientA.packetQueue->packet);

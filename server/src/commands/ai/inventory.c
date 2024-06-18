@@ -48,7 +48,7 @@ void inventory(
     player_t player = client->player;
     char *inv = NULL;
 
-    if (!assert_argv_count(args, 0)) {
+    if (tablen((const void **)args) != 1) {
         throw_ko(client);
         return;
     }

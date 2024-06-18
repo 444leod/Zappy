@@ -13,7 +13,7 @@ Test(right_suite, bad_arguments)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };
-    char *args[] = { "Hey" };
+    char *args[] = { "right", "azerty" };
 
     client.player = &player;
     right(args, &client, NULL);
@@ -29,17 +29,18 @@ Test(right_suite, repeat)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };
+    char *args[] = { "", NULL };
 
     player.orientation = NORTH;
     client.player = &player;
 
-    right(NULL, &client, NULL);
+    right(args, &client, NULL);
     cr_assert(player.orientation == EAST);
-    right(NULL, &client, NULL);
+    right(args, &client, NULL);
     cr_assert(player.orientation == SOUTH);
-    right(NULL, &client, NULL);
+    right(args, &client, NULL);
     cr_assert(player.orientation == WEST);
-    right(NULL, &client, NULL);
+    right(args, &client, NULL);
     cr_assert(player.orientation == NORTH);
 
     packet_queue_t queue = client.packetQueue;
@@ -56,7 +57,7 @@ Test(left_suite, bad_arguments)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };
-    char *args[] = { "Hey" };
+    char *args[] = { "left", "azerty" };
 
     client.player = &player;
     left(args, &client, NULL);
@@ -72,17 +73,18 @@ Test(left_suite, repeat)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };
+    char *args[] = { "", NULL };
 
     player.orientation = NORTH;
     client.player = &player;
 
-    left(NULL, &client, NULL);
+    left(args, &client, NULL);
     cr_assert(player.orientation == WEST);
-    left(NULL, &client, NULL);
+    left(args, &client, NULL);
     cr_assert(player.orientation == SOUTH);
-    left(NULL, &client, NULL);
+    left(args, &client, NULL);
     cr_assert(player.orientation == EAST);
-    left(NULL, &client, NULL);
+    left(args, &client, NULL);
     cr_assert(player.orientation == NORTH);
 
     packet_queue_t queue = client.packetQueue;

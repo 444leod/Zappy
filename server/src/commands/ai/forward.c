@@ -9,6 +9,7 @@
 #include "packet.h"
 #include "macros.h"
 #include "clients.h"
+#include "lib.h"
 
 /**
  * @brief Forward command
@@ -25,7 +26,7 @@ void forward(
 {
     position_t pos = client->player->position;
 
-    if (!assert_argv_count(args, 0)) {
+    if (tablen((const void **)args) != 1) {
         throw_ko(client);
         return;
     }

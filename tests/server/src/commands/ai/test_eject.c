@@ -13,7 +13,7 @@ Test(eject_suite, bad_arguments)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };
-    char *args[] = { "Hey" };
+    char *args[] = { "eject", "azerty" };
 
     client.player = &player;
     eject(args, &client, NULL);
@@ -33,12 +33,13 @@ Test(eject_suite, alone)
     struct team_s team = { "Team", 0, 15 };
     struct server_info_s server = { 0 };
     map_t map = create_map(5, 5);
+    char *args[] = { "", NULL };
 
     player.team = &team;
     client.player = &player;
     server.map = map;
     add_player_at_position(&player, pos, map);
-    eject(NULL, &client, &server);
+    eject(args, &client, &server);
 
     cr_assert_not_null(client.packetQueue);
     cr_assert_not_null(client.packetQueue->packet);
@@ -52,6 +53,7 @@ Test(eject_suite, normal)
     position_t pos = { 2, 3 };
     struct server_info_s server = { 0 };
     map_t map = create_map(5, 5);
+    char *args[] = { "", NULL };
 
     struct player_s playerA = { 0 };
     struct player_s playerB = { 0 };
@@ -79,7 +81,7 @@ Test(eject_suite, normal)
     cr_assert_eq(get_list_size((node_t)tile->players), 2);
     cr_assert_eq(get_list_size((node_t)tile->eggs), 1);
 
-    eject(NULL, &clientA, &server);
+    eject(args, &clientA, &server);
 
     cr_assert_not_null(clientA.packetQueue);
     cr_assert_not_null(clientA.packetQueue->packet);

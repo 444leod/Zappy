@@ -14,7 +14,7 @@ Test(connect_suite, bad_arguments)
     struct client_s client = { 0 };
     struct player_s player = { 0 };
     struct team_s team = { "Team", 1, 0 };
-    char *args[] = { "Hey" };
+    char *args[] = { "connect", "azerty" };
 
     player.team = &team;
     client.player = &player;
@@ -32,10 +32,11 @@ Test(connect_suite, full)
     struct client_s client = { 0 };
     struct player_s player = { 0 };
     struct team_s team = { "Team", 1, 0 };
+    char *args[] = { "", NULL };
 
     player.team = &team;
     client.player = &player;
-    connect_nbr(NULL, &client, NULL);
+    connect_nbr(args, &client, NULL);
 
     cr_assert_not_null(client.packetQueue);
     cr_assert_not_null(client.packetQueue->packet);
@@ -49,10 +50,11 @@ Test(connect_suite, normal)
     struct client_s client = { 0 };
     struct player_s player = { 0 };
     struct team_s team = { "Team", 0, 15 };
+    char *args[] = { "", NULL };
 
     player.team = &team;
     client.player = &player;
-    connect_nbr(NULL, &client, NULL);
+    connect_nbr(args, &client, NULL);
 
     cr_assert_not_null(client.packetQueue);
     cr_assert_not_null(client.packetQueue->packet);
