@@ -7,11 +7,17 @@
 
 #include "GraphicalLibraryLoader.hpp"
 #include "../GameDisplay/GameDisplay.hpp"
-#include "GameData.hpp"
-#include "ILibrary.hpp"
-#include "GameDataManager.hpp"
-#include "ArgumentChecking.hpp"
-#include "Client.hpp"
+//#include "GameData.hpp"
+//#include "ILibrary.hpp"
+//#include "GameDataManager.hpp"
+//#include "ArgumentChecking.hpp"
+//#include "Client.hpp"
+//#include "GameDataManager.hpp"
+#include "../../include/Handler/Command/GameDataManager.hpp"
+#include "../network/Client.hpp"
+#include "../../include/Handler/ArgumentChecking.hpp"
+#include "../../include/GameData/GameData.hpp"
+#include "../../include/Graphics/ILibrary.hpp"
 #include <cstring>
 #include <iostream>
 #include <vector>
@@ -84,12 +90,14 @@ namespace gui {
                     this->_cur_lib->musics().load(music.first, music.second);
             }
 
-            void run()
+            void run(std::uint32_t port)
             {
                 auto lib_switch = false;
                 auto before = std::chrono::high_resolution_clock::now();
+                gui::GameDataManager gameDataManager(port);
 
                 while (this->_cur_lib->display().opened()) {
+                    gameDataManager.handleRequests();
                     gui::Event event = {};
                     auto now = std::chrono::high_resolution_clock::now();
                     float deltaTime = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(now - before).count() / 1000.0;
@@ -100,13 +108,13 @@ namespace gui {
                         lib_switch = false;
                         continue;
                     }
+                    while (_cur_lib->display().pollEvent(event)) {
+                        if (event.key.code == gui::KeyCode::J || event.key.code == gui::KeyCode::L)
+                            lib_switch = true;
+                    }
 
                     this->_cur_lib->display().update(deltaTime);
-
-                    while (_cur_lib->display().pollEvent(event)) {
-                        // Event handling
-                    }
-                   _gameDisplay.draw(*_cur_lib, _gameData);
+                    this->_gameDisplay.draw(*_cur_lib, _gameData);
                 }
             }
 
@@ -125,9 +133,8 @@ int main(int ac, char **av)
         std::shared_ptr<gui::ArgumentChecking> argCheck = std::make_shared<gui::ArgumentChecking>();
         argCheck->checkArgs(ac, av);
         std::uint32_t port = std::atoi(av[2]);
-        gui::GameDataManager gameDataManager(port);
         gui::Core core;
-        core.run();
+        core.run(port);
     }
     catch (const std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;

@@ -17,13 +17,12 @@ INC_DIR = $(DIR)/include
 
 __NAME = zappy_gui
 
-__SRC = src/main.cpp \
-	src/ArgumentChecking.cpp \
+__SRC = src/ArgumentChecking.cpp \
+  	$(addprefix ./src/Core/, $(__SRC_CORE)) \
 	$(addprefix ./src/network/, $(__SRC_NETWORK)) \
   	$(addprefix ./src/GameData/, $(__SRC_GAME_DATA)) \
   	$(addprefix ./src/Handler/Command/, $(__SRC_GAME_DATA_MANAGER)) \
   	$(addprefix ./src/Handler/Command/CommandProtocol/, $(__SRC_CMD_HANDLE)) \
-  	$(addprefix ./src/Core/, $(__SRC_CORE)) \
   	$(addprefix ./src/GameDisplay/, $(__SRC_GAME_DISPLAY)) \
 
 __SRC_CORE := Core.cpp \
