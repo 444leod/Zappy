@@ -33,7 +33,7 @@ gui::LibraryObject::~LibraryObject()
         dlclose(_handle);
 }
 
-gui::LibraryLoader::LibraryLoader(const std::string &path, bool restrict_tty)
+gui::LibraryLoader::LibraryLoader(const std::string &path)
 {
     if (!std::filesystem::exists(path))
         return;
@@ -41,11 +41,10 @@ gui::LibraryLoader::LibraryLoader(const std::string &path, bool restrict_tty)
     for (const auto &entry : std::filesystem::directory_iterator(path))
     {
         auto object = std::make_shared<LibraryObject>(entry.path().string());
-        if (restrict_tty && object->type() == gui::SharedLibraryType::LIBRARY)
-            continue;
         if (object->loaded())
             this->_libs.push_back(object);
     }
+    std::cout << "Loaded " << _libs.size() << " libraries from path: " << path << std::endl;
 }
 
 gui::LibraryLoader::~LibraryLoader()
@@ -62,9 +61,10 @@ bool gui::LibraryLoader::contains(const std::string &lib, gui::SharedLibraryType
 
 bool gui::LibraryLoader::contains(const std::string &lib) const
 {
-    for (auto l : this->_libs)
+    for (auto l : this->_libs) {
         if (path_cmp(lib, l->path()))
             return true;
+    }
     return false;
 }
 
@@ -84,22 +84,21 @@ std::shared_ptr<gui::LibraryObject> gui::LibraryLoader::nextLib()
     return this->_libs[this->_libIndex];
 }
 
-std::shared_ptr<gui::LibraryObject> gui::LibraryLoader::load(const std::string &path, gui::SharedLibraryType type)
-{
+std::shared_ptr<gui::LibraryObject> gui::LibraryLoader::load(const std::string &path, gui::SharedLibraryType type) {
     if (this->_libIndex < 0)
         this->_libIndex = 0;
     auto l = this->_libs[this->_libIndex];
 
     while (!path_cmp(l->path(), path))
-        l = this->nextLib();
+        l = type == gui::SharedLibraryType::LIBRARY ? this->nextLib() : nullptr;
     return l;
 }
 
 bool gui::LibraryLoader::path_cmp(const std::string &a, const std::string& b) const
 {
-    std::string _a = a.compare(0, 1, ".") == 0 || a.compare(0, 1, "/") == 0 ? a : "./" + a;
-    std::string _b = b.compare(0, 1, ".") == 0 || b.compare(0, 1, "/") == 0 ? b : "./" + b;
-    _a = _a.compare(0, 1, "/") == 0 ? "." + _a.substr(std::filesystem::current_path().string().size()) : _a;
-    _b = _b.compare(0, 1, "/") == 0 ? "." + _b.substr(std::filesystem::current_path().string().size()) : _b;
+    std::string _a = a.starts_with(".") || a.starts_with("/") ? a : "./" + a;
+    std::string _b = b.starts_with(".") || b.starts_with("/") ? b : "./" + b;
+    _a = _a.starts_with("/") ? "." + _a.substr(std::filesystem::current_path().string().size()) : _a;
+    _b = _b.starts_with("/") ? "." + _b.substr(std::filesystem::current_path().string().size()) : _b;
     return _a == _b;
 }

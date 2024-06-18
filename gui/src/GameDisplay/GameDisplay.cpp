@@ -5,11 +5,10 @@
 ** GameDisplay
 */
 
-#pragma once
-
 #include "GameDisplay.hpp"
 #include "GameConstants.hpp"
-#include "TileContent.hpp"
+#include "../../include/GameData/Tiles/TileContent.hpp"
+//#include "GameData/Tiles/Rocks/TileContent.hpp"
 
 void gui::GameDisplay::initialize(ILibrary& lib)
 {
@@ -19,35 +18,35 @@ void gui::GameDisplay::initialize(ILibrary& lib)
     lib.display().setHeight(1080);
 
     // Textures
-    gui::TextureSpecification spec;
-    spec.graphical = gui::TextureImage{MAP_TILE_PATH};
-    lib.textures().load("map_tile", spec);
-    spec.graphical = gui::TextureImage{PLAYER_PATH};
-    lib.textures().load("player", spec);
-    spec.graphical = gui::TextureImage{EGG_PATH};
-    lib.textures().load("egg", spec);
-    spec.graphical = gui::TextureImage{FOOD_PATH};
-    lib.textures().load("food", spec);
-    spec.graphical = gui::TextureImage{LINEMATE_PATH};
-    lib.textures().load("linemate", spec);
-    spec.graphical = gui::TextureImage{DERAUMERE_PATH};
-    lib.textures().load("deraumere", spec);
-    spec.graphical = gui::TextureImage{SIBUR_PATH};
-    lib.textures().load("sibur", spec);
-    spec.graphical = gui::TextureImage{MENDIANE_PATH};
-    lib.textures().load("mendiane", spec);
-    spec.graphical = gui::TextureImage{PHIRAS_PATH};
-    lib.textures().load("phiras", spec);
-    spec.graphical = gui::TextureImage{THYSTAME_PATH};
-    lib.textures().load("thystame", spec);
+//    gui::TextureSpecification spec;
+//    spec.graphical = gui::TextureImage{MAP_TILE_PATH};
+//    lib.textures().load("map_tile", spec);
+//    spec.graphical = gui::TextureImage{PLAYER_PATH};
+//    lib.textures().load("player", spec);
+//    spec.graphical = gui::TextureImage{EGG_PATH};
+//    lib.textures().load("egg", spec);
+//    spec.graphical = gui::TextureImage{FOOD_PATH};
+//    lib.textures().load("food", spec);
+//    spec.graphical = gui::TextureImage{LINEMATE_PATH};
+//    lib.textures().load("linemate", spec);
+//    spec.graphical = gui::TextureImage{DERAUMERE_PATH};
+//    lib.textures().load("deraumere", spec);
+//    spec.graphical = gui::TextureImage{SIBUR_PATH};
+//    lib.textures().load("sibur", spec);
+//    spec.graphical = gui::TextureImage{MENDIANE_PATH};
+//    lib.textures().load("mendiane", spec);
+//    spec.graphical = gui::TextureImage{PHIRAS_PATH};
+//    lib.textures().load("phiras", spec);
+//    spec.graphical = gui::TextureImage{THYSTAME_PATH};
+//    lib.textures().load("thystame", spec);
 
     // Fonts
-    gui::FontSpecification text {
-            .color = gui::Color {200, 200, 200, 255},
-            .size = 32,
-            .path = FONT_PATH
-        };
-    lib.fonts().load("font", text);
+//    gui::FontSpecification text {
+//            .color = gui::Color {200, 200, 200, 255},
+//            .size = 32,
+//            .path = FONT_PATH
+//        };
+//    lib.fonts().load("font", text);
 }
 
 std::vector<std::uint32_t> generateRange(std::uint32_t start, std::uint32_t end)

@@ -11,6 +11,10 @@ __BOLD=\033[1m
 __NC=\033[0m
 __NC=\033[0m
 
+DIR = $(shell pwd)
+LIB_DIR = $(DIR)/lib
+INC_DIR = $(DIR)/include
+
 __NAME = zappy_gui
 
 __SRC = src/main.cpp \
@@ -19,6 +23,13 @@ __SRC = src/main.cpp \
   	$(addprefix ./src/GameData/, $(__SRC_GAME_DATA)) \
   	$(addprefix ./src/Handler/Command/, $(__SRC_GAME_DATA_MANAGER)) \
   	$(addprefix ./src/Handler/Command/CommandProtocol/, $(__SRC_CMD_HANDLE)) \
+  	$(addprefix ./src/Core/, $(__SRC_CORE)) \
+  	$(addprefix ./src/GameDisplay/, $(__SRC_GAME_DISPLAY)) \
+
+__SRC_CORE := Core.cpp \
+	GraphicalLibraryLoader.cpp \
+
+__SRC_GAME_DISPLAY := GameDisplay.cpp \
 
 __SRC_NETWORK := Client.cpp \
 
@@ -65,7 +76,7 @@ __OBJ = $(__SRC:.cpp=.o)
 __CC = g++
 __CC = g++
 
-__CXXFLAGS += -Wall -Wextra -Werror -Wpedantic
+__CXXFLAGS += -Wall -Wextra -Werror -Wpedantic -std=c++20
 __CXXFLAGS += -lsfml-network -lsfml-system
 __CXXFLAGS += -I./include -I./src/network -I./include/GameData
 __CXXFLAGS += -I./include/Handler/Command/CommandProtocol
@@ -75,22 +86,26 @@ __CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Action
 __CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Server
 __CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Status
 __CXXFLAGS += -I./include/Handler/Command/ -I./include/Handler/
+__CXXFLAGS += -I./include/Graphics
 
 all: $(__NAME)
 
 $(__NAME): $(__OBJ)
+	make -s -C src/Graphics/SFML2d 		 LIB_DIR=$(LIB_DIR) INC_DIR=$(INC_DIR)
 	@$(__CC) -o $(__NAME) $(__OBJ) $(__CXXFLAGS)
 	@$(__CC) -o $(__NAME) $(__OBJ) $(__CXXFLAGS)
 	@echo -ne "${__GREEN}$(__BOLD)Compilation of $(__NAME)$(__NC)"
 	@echo -e " ${__GREEN}completed successfully.${__NC}"
 	@echo -e " ${__GREEN}completed successfully.${__NC}"
 clean:
+	make -s -C src/Graphics/SFML2d clean LIB_DIR=$(LIB_DIR) INC_DIR=$(INC_DIR)
 	@rm -f $(__OBJ)
 	@echo -ne "${__GREEN}$(__BOLD)Clean of $(__NAME)$(__NC)"
 	@echo -e " ${__GREEN}completed successfully.${__NC}"
 	@echo -e " ${__GREEN}completed successfully.${__NC}"
 
 fclean: clean
+	make -s -C src/Graphics/SFML2d fclean LIB_DIR=$(LIB_DIR) INC_DIR=$(INC_DIR)
 	@rm -f $(__NAME)
 	@echo -ne "${__GREEN}$(__BOLD)Fclean of $(__NAME)$(__NC)"
 	@echo -e " ${__GREEN}completed successfully.${__NC}"

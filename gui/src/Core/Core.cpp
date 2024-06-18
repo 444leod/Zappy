@@ -6,12 +6,15 @@
 */
 
 #include "GraphicalLibraryLoader.hpp"
+#include "../GameDisplay/GameDisplay.hpp"
 #include "GameData.hpp"
-#include "GameDisplay.hpp"
 #include "ILibrary.hpp"
+#include "GameDataManager.hpp"
+#include "ArgumentChecking.hpp"
+#include "Client.hpp"
+#include <cstring>
 #include <iostream>
 #include <vector>
-#include <fstream>
 
 namespace gui {
 
@@ -28,7 +31,7 @@ namespace gui {
     class Core
     {
         public:
-            Core(bool tty) : _loader(LibraryLoader("./lib", tty))
+            Core() : _loader(LibraryLoader("./lib"))
             {
                 std::string path = "./lib/zappy_sfml2d.so";
 
@@ -38,6 +41,9 @@ namespace gui {
                 if (!this->_lib_handler)
                     throw CoreException("Could not open " + path + ".");
                 this->_cur_lib = this->_lib_handler->get<gui::ILibrary>();
+                if (this->_cur_lib == nullptr)
+                    throw CoreException("Object failed to load library");
+                this->_gameDisplay.initialize(*_cur_lib);
             }
 
             ~Core() {}
@@ -83,7 +89,6 @@ namespace gui {
                 auto lib_switch = false;
                 auto before = std::chrono::high_resolution_clock::now();
 
-                _gameDisplay.initialize(*_cur_lib);
                 while (this->_cur_lib->display().opened()) {
                     gui::Event event = {};
                     auto now = std::chrono::high_resolution_clock::now();
@@ -101,7 +106,7 @@ namespace gui {
                     while (_cur_lib->display().pollEvent(event)) {
                         // Event handling
                     }
-                    _gameDisplay.draw(*_cur_lib, _gameData);
+                   _gameDisplay.draw(*_cur_lib, _gameData);
                 }
             }
 
@@ -114,22 +119,26 @@ namespace gui {
     };
 }
 
-int main(int ac, char **av, char **env)
+int main(int ac, char **av)
 {
-    bool tty = true;
-
-    for (int i = 0; env[i]; i++) {
-        if (std::string(env[i]).find("DISPLAY") != 0)
-            continue;
-        tty = false;
-        break;
-    }
-
     try {
-        gui::Core core(tty);
+        std::shared_ptr<gui::ArgumentChecking> argCheck = std::make_shared<gui::ArgumentChecking>();
+        argCheck->checkArgs(ac, av);
+        std::uint32_t port = std::atoi(av[2]);
+        gui::GameDataManager gameDataManager(port);
+        gui::Core core;
         core.run();
     }
-    catch (const std::exception& e) {
+    catch (const std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
+    } catch (const gui::ntw::Client::ClientTimeoutException& e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
+    } catch (const gui::ntw::Client::ClientNotConnectedException& e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
+    } catch (const gui::ntw::Client::ClientException& e) {
         std::cerr << e.what() << std::endl;
         return 84;
     }
