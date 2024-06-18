@@ -34,7 +34,9 @@ server_info_t get_server_info()
 {
     server_info_t servInfo = init_server_info((const char *[]){"./zappy_server", "-p", "4242", "-f", "1", "-c", "10", "-x", "10", "-y", "10", "-n", "teamName", "team2", NULL});
     servInfo->map = create_map(10, 10);
-    init_map(servInfo->map, servInfo->teams);
+    rocks_t rocks = {0, 0, 0, 0, 0, 0};
+    uint32_t foods = 0;
+    fill_map(servInfo->map, &rocks, &foods, servInfo->teams);
 
     return servInfo;
 }

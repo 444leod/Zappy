@@ -32,7 +32,9 @@ Test(mct, valid_command_random_map)
     serverInfo->height = 3;
     serverInfo->map = create_map(3, 3);
     srand(time(NULL));
-    init_map(serverInfo->map, serverInfo->teams);
+    rocks_t rocks = {0, 0, 0, 0, 0, 0};
+    uint32_t foods = 0;
+    fill_map(serverInfo->map, &rocks, &foods, serverInfo->teams);
 
     mct((char *[]){"mct", NULL}, client, serverInfo);
     if (!client->packetQueue || !client->packetQueue->packet || !client->packetQueue->packet->buffer)
