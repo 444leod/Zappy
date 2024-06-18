@@ -67,11 +67,8 @@ void destroy_eggs(egg_list_t *eggs)
 {
     egg_list_t node = *eggs;
     egg_list_t next = NULL;
-    uint32_t size = get_list_size((node_t)node);
 
-    if (size == 0)
-        return;
-    for (uint32_t i = 0; i < size; i++) {
+    while (node) {
         next = node->next;
         node->egg->team->remainingSlots--;
         my_free(node->egg);
