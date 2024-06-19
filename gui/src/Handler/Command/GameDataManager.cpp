@@ -22,9 +22,8 @@ void gui::GameDataManager::handleRequests()
     //     _client.queueRequest(input);
     // }
 
-    _client.receive();
-
     try {
+        _client.receive();
         if (_client.hasRequests())
             _client.sendRequests(std::chrono::milliseconds(1));
         while (_client.hasResponses()) {
