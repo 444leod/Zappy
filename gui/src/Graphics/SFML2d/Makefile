@@ -8,7 +8,8 @@
 
 NAME = $(LIB_DIR)/zappy_sfml2d.so
 
-CPPFLAGS = -fPIC -iquote -std=c++20 -Wall -Wextra -Werror -I../../../include/Graphics
+CPPFLAGS = -fPIC -iquote -std=c++20 -Wall -Wextra -Werror
+CPPFLAGS += -I../../../include/Graphics
 SHARED_FLAGS = -shared
 SFML_FLAGS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
