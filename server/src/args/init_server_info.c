@@ -9,6 +9,8 @@
 #include "garbage_collector.h"
 #include "params.h"
 #include "teams.h"
+#include "time_utils.h"
+#include "game.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -152,6 +154,23 @@ static void update_teams_max_clients(const team_list_t teamsList,
 }
 
 /**
+ * @brief Initialize the map
+ * @details correctly initialize the map in the serverInfo struct
+ *
+ * @param server_info the serverInfo struct
+*/
+static void init_map(const server_info_t server_info)
+{
+    server_info->actual_rocks = (rocks_t){0, 0, 0, 0, 0, 0};
+    server_info->actual_foods = 0;
+    server_info->refill_wait = REFILL_TICKS / server_info->freq;
+    server_info->last_refill_check = get_actual_time();
+    server_info->map = create_map(server_info->width, server_info->height);
+    fill_map(server_info->map, &server_info->actual_rocks,
+        &server_info->actual_foods, server_info->teams);
+}
+
+/**
  * @brief Initialize the server_info struct
  * @details correctly initialize the server_info struct with the port and the
  *    path of the server
@@ -180,6 +199,6 @@ server_info_t init_server_info(const char *argv[])
     init_freq(params, server_info);
     update_teams_max_clients(server_info->teams, server_info->clients_nb);
     server_info->map = create_map(server_info->width, server_info->height);
-    init_map(server_info->map, server_info->teams);
+    init_map(server_info);
     return server_info;
 }

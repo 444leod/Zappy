@@ -35,7 +35,9 @@ Test(bct, valid_command_random_tile1)
     server_info_t server_info = get_server_info();
     server_info->map = create_map(10, 10);
     srand(time(NULL));
-    init_map(server_info->map, server_info->teams);
+    rocks_t rocks = {0, 0, 0, 0, 0, 0};
+    uint32_t foods = 0;
+    fill_map(server_info->map, &rocks, &foods, server_info->teams);
 
     tile_t tile = get_tile_at_position((position_t){5, 3}, server_info->map);
     bct((char *[]){"bct", "5", "3", NULL}, client, server_info);
@@ -51,7 +53,9 @@ Test(bct, valid_command_random_tile2)
     server_info_t server_info = get_server_info();
     server_info->map = create_map(10, 10);
     srand(time(NULL));
-    init_map(server_info->map, server_info->teams);
+    rocks_t rocks = {0, 0, 0, 0, 0, 0};
+    uint32_t foods = 0;
+    fill_map(server_info->map, &rocks, &foods, server_info->teams);
 
     tile_t tile = get_tile_at_position((position_t){5, 3}, server_info->map);
     bct((char *[]){"bct", "5", "3", NULL}, client, server_info);
