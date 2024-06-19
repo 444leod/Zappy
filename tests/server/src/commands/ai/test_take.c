@@ -13,7 +13,7 @@ Test(take_suite, no_arguments)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };
-    char *args[] = { NULL };
+    char *args[] = { "take", NULL };
 
     client.player = &player;
     take(args, &client, NULL);
@@ -37,7 +37,7 @@ Test(take_suite, unknown)
     server.map = map;
     add_player_at_position(&player, pos, map);
 
-    char *args[2] = { "zorglub's sword", NULL };
+    char *args[2] = { "take", "zorglub's sword", NULL };
     take(args, &client, &server);
 
     cr_assert_not_null(client.packet_queue);
@@ -62,7 +62,7 @@ Test(take_suite, not_enough)
     server.map = map;
     add_player_at_position(&player, pos, map);
 
-    char *args[2] = { "food", NULL };
+    char *args[2] = { "take", "food", NULL };
     take(args, &client, &server);
 
     cr_assert_not_null(client.packet_queue);
@@ -91,7 +91,7 @@ Test(take_suite, food)
     server.map = map;
     add_player_at_position(&player, pos, map);
 
-    char *args[2] = { "food", NULL };
+    char *args[2] = { "take", "food", NULL };
     take(args, &client, &server);
 
     cr_assert_not_null(client.packet_queue);
@@ -123,7 +123,7 @@ Test(take_suite, rock)
     server.map = map;
     add_player_at_position(&player, pos, map);
 
-    char *args[2] = { "sibur", NULL };
+    char *args[2] = { "take", "sibur", NULL };
     take(args, &client, &server);
 
     cr_assert_not_null(client.packet_queue);

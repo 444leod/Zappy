@@ -17,14 +17,11 @@
  */
 static const char *get_content_arg(char **args)
 {
-    uint32_t count = 0;
+    uint32_t count = tablen((const void **)args);
 
-    if (args == NULL)
+    if (count != 2)
         return NULL;
-    for (; args[count] != NULL; count++);
-    if (count != 1)
-        return NULL;
-    return args[0];
+    return args[1];
 }
 
 /**
