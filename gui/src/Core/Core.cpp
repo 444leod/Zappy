@@ -7,17 +7,12 @@
 
 #include "GraphicalLibraryLoader.hpp"
 #include "../GameDisplay/GameDisplay.hpp"
-//#include "GameData.hpp"
-//#include "ILibrary.hpp"
-//#include "GameDataManager.hpp"
-//#include "ArgumentChecking.hpp"
-//#include "Client.hpp"
-//#include "GameDataManager.hpp"
-#include "../../include/Handler/Command/GameDataManager.hpp"
-#include "../network/Client.hpp"
-#include "../../include/Handler/ArgumentChecking.hpp"
-#include "../../include/GameData/GameData.hpp"
-#include "../../include/Graphics/ILibrary.hpp"
+#include "GameData.hpp"
+#include "ILibrary.hpp"
+#include "GameDataManager.hpp"
+#include "ArgumentChecking.hpp"
+#include "Client.hpp"
+#include "GameDataManager.hpp"
 #include <cstring>
 #include <iostream>
 #include <vector>
@@ -97,7 +92,7 @@ namespace gui {
                 gui::GameDataManager gameDataManager(port);
 
                 while (this->_cur_lib->display().opened()) {
-                    gameDataManager.handleRequests();
+//                    gameDataManager.handleRequests();
                     gui::Event event = {};
                     auto now = std::chrono::high_resolution_clock::now();
                     float deltaTime = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(now - before).count() / 1000.0;

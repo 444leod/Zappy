@@ -7,8 +7,7 @@
 
 #include "GameDisplay.hpp"
 #include "GameConstants.hpp"
-#include "../../include/GameData/Tiles/TileContent.hpp"
-//#include "GameData/Tiles/Rocks/TileContent.hpp"
+#include "GameData/Tiles/TileContent.hpp"
 
 void gui::GameDisplay::initialize(ILibrary& lib)
 {
