@@ -148,13 +148,13 @@ void my_free(void *pointer)
         return;
     if (try_free_special_cases(pointer, llist))
         return;
-    temp = (*llist)->next;
+    temp = (*llist)->prev;
     while (temp != *llist) {
         if (temp->data == pointer) {
             temp = gc_delete_begin(temp);
             return;
         }
-        temp = temp->next;
+        temp = temp->prev;
     }
     free(pointer);
 }
