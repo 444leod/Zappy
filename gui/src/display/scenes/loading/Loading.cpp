@@ -7,6 +7,7 @@
 
 #include "Loading.hpp"
 #include "Tna.hpp"
+#include "Msz.hpp"
 
 void gui::scenes::Loading::initialize(UNUSED gui::ILibrary& lib)
 {
@@ -24,7 +25,7 @@ void gui::scenes::Loading::update(UNUSED gui::ILibrary& lib, UNUSED float deltaT
 {
     static float passedTime = 0;
     passedTime += deltaTime;
-    if (passedTime > 1) {
+    if (passedTime > 0.6) {
         if (_loadingText.size() == 11)
             _loadingText = "Loading";
         else
@@ -32,7 +33,20 @@ void gui::scenes::Loading::update(UNUSED gui::ILibrary& lib, UNUSED float deltaT
         passedTime -= 1;
     }
 
-    if (!_teamNames.first && _gameData->teamNames().size() == 0) {
+    if (_gameData->mapRef().mapSize() == Vector2u(0, 0)) {
+        static float mapSizePassedTime = 0;
+        static uint8_t mapSizeTries = 0;
+        mapSizePassedTime += deltaTime;
+        if (mapSizeTries == 0 || mapSizePassedTime > 5) {
+            mapSizeTries++;
+            if (mapSizeTries > 3)
+                throw gui::ntw::Client::ClientException("Server took too long to respond");
+            Msz().stage(_serverCli);
+            mapSizePassedTime = 0;
+        }
+    }
+
+    if (_gameData->teamNames().size() == 0) {
         static float teamNamesPassedTime = 0;
         static uint8_t teamNameTries = 0;
         teamNamesPassedTime += deltaTime;
@@ -40,12 +54,9 @@ void gui::scenes::Loading::update(UNUSED gui::ILibrary& lib, UNUSED float deltaT
             teamNameTries++;
             if (teamNameTries > 3)
                 throw gui::ntw::Client::ClientException("Server took too long to respond");
-            Tna().stage(_serverCli, "");
+            Tna().stage(_serverCli);
             teamNamesPassedTime = 0;
         }
-    } else if (!_teamNames.first) {
-        _teamNames.first = true;
-        _teamNames.second = _gameData->teamNames();
     }
 }
 
@@ -55,10 +66,17 @@ void gui::scenes::Loading::draw(UNUSED gui::ILibrary& lib)
     float center = lib.display().width() / 2 - size / 2;
     lib.display().print(_loadingText, lib.fonts().get("ClashRoyale"), center, lib.display().height() / 2);
 
-    if (_teamNames.first) {
-        std::cerr << "Loading draw team names" << std::endl;
-        float y = 0;
-        for (auto &teamName : _teamNames.second) {
+    auto teamNames = _gameData->teamNames();
+
+    float y = 0;
+    auto mapSize = _gameData->mapRef().mapSize();
+
+    if (mapSize != Vector2u(0, 0)) {
+        lib.display().print("Map size: " + std::to_string(mapSize.x()) + "x" + std::to_string(mapSize.y()), lib.fonts().get("ClashRoyale"), 0, y);
+        y += 50;
+    }
+    if (teamNames.size() != 0) {
+        for (auto &teamName : _gameData->teamNames()) {
             lib.display().print(teamName, lib.fonts().get("ClashRoyale"), 0, y);
             y += 50;
         }

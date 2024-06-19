@@ -11,8 +11,8 @@ void gui::SceneManager::initialize(gui::ILibrary& lib)
 {
     lib.display().setTitle("Zappy GUI");
     lib.display().setFramerate(60);
-    lib.display().setWidth(1920);
-    lib.display().setHeight(1080);
+    lib.display().setWidth(1600);
+    lib.display().setHeight(900);
 
     gui::FontSpecification text {
            .color = gui::Color {200, 200, 200, 255},
@@ -20,7 +20,6 @@ void gui::SceneManager::initialize(gui::ILibrary& lib)
            .path = "gui/ressources/fonts/ClashRoyale.ttf"
        };
    lib.fonts().load("ClashRoyale", text);
-   std::cout << "Loaded ClashRoyale font" << std::endl;
 
     for (auto& scene : _scenes)
         scene.second->initialize(lib);
