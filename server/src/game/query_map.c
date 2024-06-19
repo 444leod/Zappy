@@ -11,6 +11,30 @@
 #include "garbage_collector.h"
 
 /**
+ * @brief Get the optimized position
+ * @details Get the optimized position with the map size:
+ * on a map of 10x10
+ * {11, 17} -> {1, 7}
+ * {-1, 17} -> {9, 7}
+ * {11, -17} -> {1, 3}
+ *
+ * @param position the position
+ * @param map the map
+ *
+ * @return position_t the optimized position
+ */
+static position_t get_optimized_pos(const position_t position, const map_t map)
+{
+    position_t pos;
+
+    pos.x = ((position.x % (int)map->width) + (int)map->width) %
+        (int)map->width;
+    pos.y = ((position.y % (int)map->height) + (int)map->height) %
+        (int)map->height;
+    return pos;
+}
+
+/**
  * @brief Get the tile at a given position
  * @details Get the tile at a given position
  *
@@ -20,13 +44,14 @@
  */
 tile_t get_tile_at_position(const position_t position, const map_t map)
 {
-    const line_list_t line = (line_list_t)get_node_by_index(position.y,
+    const position_t optimized_pos = get_optimized_pos(position, map);
+    const line_list_t line = (line_list_t)get_node_by_index(optimized_pos.y,
         (node_t)map->line_list);
     tile_list_t tile;
 
     if (!line)
         return NULL;
-    tile = (tile_list_t)get_node_by_index(position.x,
+    tile = (tile_list_t)get_node_by_index(optimized_pos.x,
         (node_t)line->line->tile_list);
     if (!tile)
         return NULL;

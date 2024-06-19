@@ -111,6 +111,15 @@ Test(get_map, get_tile_at_out_of_bounds)
     cr_assert_eq(tileA, tileB);
 }
 
+Test(get_map, get_tile_at_position_negative)
+{
+    map_t map = create_map(10, 10);
+    tile_t tile = get_tile_at_position((position_t){-1, -1}, map);
+
+    cr_assert_not_null(tile);
+    cr_assert_eq(get_tile_at_position((position_t){9, 9}, map), tile);
+}
+
 Test(get_map, add_player_at_position)
 {
     map_t map = create_map(10, 10);
