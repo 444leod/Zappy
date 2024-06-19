@@ -24,3 +24,6 @@ typedef struct client_command_list_s {
     struct client_command_list_s *prev;
     client_command_t command;
 } *client_command_list_t;
+
+client_command_t create_command(const char *command,
+    const struct timespec *time);

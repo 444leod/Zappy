@@ -23,7 +23,7 @@
  *
  * @return the created command
 */
-static client_command_t create_command(const char *command,
+client_command_t create_command(const char *command,
     const struct timespec *time)
 {
     client_command_t new_command = my_malloc(sizeof(struct client_command_s));
