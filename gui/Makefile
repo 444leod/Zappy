@@ -16,8 +16,7 @@ LIB_DIR = $(DIR)/lib
 
 __NAME = zappy_gui
 
-__SRC = src/ArgumentChecking.cpp \
-  	$(addprefix ./src/Core/, $(__SRC_CORE)) \
+__SRC = $(addprefix ./src/Core/, $(__SRC_CORE)) \
 	$(addprefix ./src/network/, $(__SRC_NETWORK)) \
   	$(addprefix ./src/GameData/, $(__SRC_GAME_DATA)) \
   	$(addprefix ./src/Handler/Command/CommandProtocol/, $(__SRC_CMD_HANDLE)) \
@@ -27,6 +26,8 @@ __SRC = src/ArgumentChecking.cpp \
 
 __SRC_CORE := Core.cpp \
 	GraphicalLibraryLoader.cpp \
+	CommandHandler.cpp \
+	ArgumentParser.cpp \
 
 __SRC_GAME_DISPLAY := GameDisplay.cpp \
 
@@ -36,8 +37,6 @@ __SRC_GAME_DATA := GameData.cpp \
 	Tiles/Map.cpp \
 	Tiles/TileContent.cpp \
 	Entities/Character.cpp \
-
-# __SRC_GAME_DATA_MANAGER := GameDataManager.cpp \
 
 __SRC_CMD_HANDLE := Map/Bct.cpp \
 	Map/Msz.cpp \
