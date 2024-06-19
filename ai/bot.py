@@ -62,6 +62,9 @@ class Bot():
         self.base_funcs = {
             "dead\n" : self.die,
             "message": self.receive_broadcast,
+            "Elevation": lambda: self.log("HANDLE ELEVATION"),
+            "Current": self.level_up,
+            "ko\n": lambda: self.log("FAILED ELEVATION"),
         }
         self.current_behavior = Greg() 
     
@@ -101,7 +104,7 @@ class Bot():
         if (len(tab) != 3) or not (tab[1][:-1].isdigit()):
             return
         self.messages_received.append((int(tab[1][:-1]), tab[2]))
-    
+
     def level_up(self) -> None:
         """
         Handle the bot's level up via incantation
@@ -131,6 +134,7 @@ class Bot():
             key: str = self.results[-1].split(" ")[0]
             if (key in self.base_funcs):
                 self.base_funcs[key]()
+                if key in ["ko\n", "Current"]: return
                 continue
             # Returning to the main loop if the response is not a message or a death
             return
@@ -210,9 +214,6 @@ class Bot():
         """
         try:
             cmd.Incantation().interpret_result(self.results[-1])
-            self.receive_command()
-            cmd.Incantation().interpret_result(self.results[-1])
-            self.player_info.level += 1
         except Exception as e:
             self.log(e)
             self.log("Failed to incant")
