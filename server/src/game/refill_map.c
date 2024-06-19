@@ -22,6 +22,6 @@ void refill_map(const server_info_t server_info)
         return;
     server_info->last_refill_check = get_actual_time();
     fill_map(server_info->map, &server_info->actual_rocks,
-        &server_info->actual_foods, NULL);
+        &server_info->actual_food, NULL);
     server_info->refill_wait = REFILL_TICKS / server_info->freq;
 }

@@ -8,6 +8,7 @@
 #include "commands.h"
 #include "packet.h"
 #include "clients.h"
+#include "zappy.h"
 
 /**
  * @brief Gets the first argument if there is one
@@ -48,8 +49,10 @@ void set(
         return;
     }
     tile = get_tile_at_position(player->position, server_info->map);
-    if (!player_pick_up(arg, player, tile, -1))
+    if (!player_pick_up(arg, player, tile, -1)) {
         throw_ko(client);
-    else
-        add_packet_to_queue(&client->packet_queue, build_packet("ok"));
+        return;
+    }
+    add_packet_to_queue(&client->packet_queue, build_packet("ok"));
+    change_map_ressource(arg, server_info, 1);
 }

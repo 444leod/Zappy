@@ -22,5 +22,5 @@ typedef struct server_info_s {
     struct timespec last_refill_check;
     double refill_wait;
     rocks_t actual_rocks;
-    uint32_t actual_foods;
+    uint32_t actual_food;
 } *server_info_t;

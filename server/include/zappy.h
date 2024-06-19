@@ -47,3 +47,5 @@ void check_player_death(const client_t client,
     const map_t map, const uint32_t frequency);
 bool can_interact(client_t client);
 void refill_map(const server_info_t server_info);
+void change_map_ressource(
+    const char *key, const server_info_t server_info, int8_t delta);

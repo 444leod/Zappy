@@ -78,6 +78,7 @@ __SRC_GAME := \
 	player_pick_up.c \
 	player_death.c \
 	refill_map.c \
+	change_map_ressource.c \
 
 __SRC_ARGS := \
 	params.c \
