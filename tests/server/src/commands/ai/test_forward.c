@@ -18,9 +18,9 @@ Test(forward_suite, bad_arguments)
     client.player = &player;
     forward(args, &client, NULL);
 
-    cr_assert_not_null(client.packetQueue);
-    cr_assert_not_null(client.packetQueue->packet);
-    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(client.packet_queue);
+    cr_assert_not_null(client.packet_queue->packet);
+    char *res = client.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "ko");
 }
@@ -41,7 +41,7 @@ Test(forward_suite, once_north)
     forward(args, &client, &server);
     cr_assert(player.position.x == 2);
     cr_assert(player.position.y == 1);
-    cr_assert_str_eq(client.packetQueue->packet->buffer, "ok");
+    cr_assert_str_eq(client.packet_queue->packet->buffer, "ok");
 }
 
 Test(forward_suite, wrap_around_bounds)
@@ -60,5 +60,5 @@ Test(forward_suite, wrap_around_bounds)
     forward(args, &client, &server);
     cr_assert(player.position.x == 0);
     cr_assert(player.position.y == 4);
-    cr_assert_str_eq(client.packetQueue->packet->buffer, "ok");
+    cr_assert_str_eq(client.packet_queue->packet->buffer, "ok");
 }

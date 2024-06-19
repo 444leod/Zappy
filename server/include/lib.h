@@ -15,7 +15,7 @@
 #include "escaped.h"
 
 void my_error(const char *str);
-void prepare_exit(const int socketFd);
+void prepare_exit(const int socket_fd);
 void my_exit(const int status);
 char *my_strdup(const char *src);
 char **str_to_word_array(const char *str, const char *delim);

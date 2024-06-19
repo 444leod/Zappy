@@ -18,9 +18,9 @@ Test(take_suite, no_arguments)
     client.player = &player;
     take(args, &client, NULL);
 
-    cr_assert_not_null(client.packetQueue);
-    cr_assert_not_null(client.packetQueue->packet);
-    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(client.packet_queue);
+    cr_assert_not_null(client.packet_queue->packet);
+    char *res = client.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "ko");
 }
@@ -40,9 +40,9 @@ Test(take_suite, unknown)
     char *args[2] = { "zorglub's sword", NULL };
     take(args, &client, &server);
 
-    cr_assert_not_null(client.packetQueue);
-    cr_assert_not_null(client.packetQueue->packet);
-    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(client.packet_queue);
+    cr_assert_not_null(client.packet_queue->packet);
+    char *res = client.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "ko");
 }
@@ -65,9 +65,9 @@ Test(take_suite, not_enough)
     char *args[2] = { "food", NULL };
     take(args, &client, &server);
 
-    cr_assert_not_null(client.packetQueue);
-    cr_assert_not_null(client.packetQueue->packet);
-    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(client.packet_queue);
+    cr_assert_not_null(client.packet_queue->packet);
+    char *res = client.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "ko");
 
@@ -93,9 +93,9 @@ Test(take_suite, food)
     char *args[2] = { "food", NULL };
     take(args, &client, &server);
 
-    cr_assert_not_null(client.packetQueue);
-    cr_assert_not_null(client.packetQueue->packet);
-    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(client.packet_queue);
+    cr_assert_not_null(client.packet_queue->packet);
+    char *res = client.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "ok");
 
@@ -122,9 +122,9 @@ Test(take_suite, rock)
     char *args[2] = { "sibur", NULL };
     take(args, &client, &server);
 
-    cr_assert_not_null(client.packetQueue);
-    cr_assert_not_null(client.packetQueue->packet);
-    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(client.packet_queue);
+    cr_assert_not_null(client.packet_queue->packet);
+    char *res = client.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "ok");
 

@@ -48,7 +48,7 @@ typedef struct player_s {
     bool isDead;
     bool in_ritual;
     uuid_t id;
-    uint32_t playerNumber;
+    uint32_t player_number;
     uint32_t egg_number;
     team_t team;
     position_t position;

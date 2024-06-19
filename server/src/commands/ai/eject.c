@@ -70,7 +70,7 @@ void destroy_eggs(egg_list_t *eggs)
 
     while (node) {
         next = node->next;
-        node->egg->team->remainingSlots--;
+        node->egg->team->remaining_slots--;
         my_free(node->egg);
         my_free(node);
         node = next;
@@ -103,5 +103,5 @@ void eject(
     ejected = eject_players(client->player, tile->players, serverInfo->map);
     packet = build_packet(ejected ? "ok" : "ko");
     destroy_eggs(&tile->eggs);
-    add_packet_to_queue(&client->packetQueue, packet);
+    add_packet_to_queue(&client->packet_queue, packet);
 }

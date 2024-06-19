@@ -20,9 +20,9 @@ Test(connect_suite, bad_arguments)
     client.player = &player;
     connect_nbr(args, &client, NULL);
 
-    cr_assert_not_null(client.packetQueue);
-    cr_assert_not_null(client.packetQueue->packet);
-    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(client.packet_queue);
+    cr_assert_not_null(client.packet_queue->packet);
+    char *res = client.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "ko");
 }
@@ -38,9 +38,9 @@ Test(connect_suite, full)
     client.player = &player;
     connect_nbr(args, &client, NULL);
 
-    cr_assert_not_null(client.packetQueue);
-    cr_assert_not_null(client.packetQueue->packet);
-    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(client.packet_queue);
+    cr_assert_not_null(client.packet_queue->packet);
+    char *res = client.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "0");
 }
@@ -56,9 +56,9 @@ Test(connect_suite, normal)
     client.player = &player;
     connect_nbr(args, &client, NULL);
 
-    cr_assert_not_null(client.packetQueue);
-    cr_assert_not_null(client.packetQueue->packet);
-    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(client.packet_queue);
+    cr_assert_not_null(client.packet_queue->packet);
+    char *res = client.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "15");
 }

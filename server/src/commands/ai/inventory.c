@@ -53,6 +53,6 @@ void inventory(
         return;
     }
     inv = format_inventory(player->food, player->rocks);
-    add_packet_to_queue(&client->packetQueue, build_packet(inv));
+    add_packet_to_queue(&client->packet_queue, build_packet(inv));
     my_free(inv);
 }

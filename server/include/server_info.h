@@ -13,7 +13,7 @@
 
 typedef struct server_info_s {
     uint16_t port;
-    uint32_t clientsNb;
+    uint32_t clients_nb;
     uint32_t freq;
     uint32_t width;
     uint32_t height;

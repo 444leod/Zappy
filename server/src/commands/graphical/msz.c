@@ -61,10 +61,10 @@ void send_map_size_to_client_list(const client_list_t clients,
  *
  * @param args the arguments of the command
  * @param client the client that executed the command
- * @param serverInfo the server info
+ * @param server_info the server info
  */
 void msz(char **args, client_t client,
-    server_info_t serverInfo)
+    server_info_t server_info)
 {
     char *packet_string;
 
@@ -73,7 +73,7 @@ void msz(char **args, client_t client,
         return;
     }
     packet_string = my_snprintf("msz %d %d",
-        serverInfo->width, serverInfo->height);
+        server_info->width, server_info->height);
     queue_buffer(client, packet_string);
     my_free(packet_string);
 }

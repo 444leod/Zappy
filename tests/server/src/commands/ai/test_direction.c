@@ -18,9 +18,9 @@ Test(right_suite, bad_arguments)
     client.player = &player;
     right(args, &client, NULL);
 
-    cr_assert_not_null(client.packetQueue);
-    cr_assert_not_null(client.packetQueue->packet);
-    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(client.packet_queue);
+    cr_assert_not_null(client.packet_queue->packet);
+    char *res = client.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "ko");
 }
@@ -43,7 +43,7 @@ Test(right_suite, repeat)
     right(args, &client, NULL);
     cr_assert(player.orientation == NORTH);
 
-    packet_queue_t queue = client.packetQueue;
+    packet_queue_t queue = client.packet_queue;
     uint32_t qsize = 0;
     while (queue != NULL) {
         cr_assert_str_eq(queue->packet->buffer, "ok");
@@ -62,9 +62,9 @@ Test(left_suite, bad_arguments)
     client.player = &player;
     left(args, &client, NULL);
 
-    cr_assert_not_null(client.packetQueue);
-    cr_assert_not_null(client.packetQueue->packet);
-    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(client.packet_queue);
+    cr_assert_not_null(client.packet_queue->packet);
+    char *res = client.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "ko");
 }
@@ -87,7 +87,7 @@ Test(left_suite, repeat)
     left(args, &client, NULL);
     cr_assert(player.orientation == NORTH);
 
-    packet_queue_t queue = client.packetQueue;
+    packet_queue_t queue = client.packet_queue;
     uint32_t qsize = 0;
     while (queue != NULL) {
         cr_assert_str_eq(queue->packet->buffer, "ok");

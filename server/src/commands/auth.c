@@ -44,18 +44,18 @@ static team_t get_team_by_name(const char *name, team_list_t teams)
  *        and if the team is not full
  *        will print an error message if the team is invalid
  *
- * @param teamName the team name
- * @param serverInfo the server informations
+ * @param team_name the team name
+ * @param server_info the server informations
  * @param client the client that executed the command
  *
  * @return true if the team name is valid, false otherwise
  */
-static bool is_team_name_valid(const char *teamName,
-    const server_info_t serverInfo, const client_t client)
+static bool is_team_name_valid(const char *team_name,
+    const server_info_t server_info, const client_t client)
 {
-    team_list_t teams = serverInfo->teams;
-    const team_t team = get_team_by_name(teamName, teams);
-    char *escaped_string = get_escaped_string(teamName);
+    team_list_t teams = server_info->teams;
+    const team_t team = get_team_by_name(team_name, teams);
+    char *escaped_string = get_escaped_string(team_name);
 
     if (team == NULL) {
         printf("Client %d: Invalid team name (%s)\n", client->fd,
@@ -63,7 +63,7 @@ static bool is_team_name_valid(const char *teamName,
         my_free(escaped_string);
         return false;
     }
-    if (team->remainingSlots == 0) {
+    if (team->remaining_slots == 0) {
         printf("Client %d: Team %s is full\n", client->fd, escaped_string);
         my_free(escaped_string);
         return false;
@@ -75,27 +75,27 @@ static bool is_team_name_valid(const char *teamName,
 /**
  * @brief Spawn the player in its given team
  *
- * @param teamName the team name
+ * @param team_name the team name
  * @param client the client that will spawn a player
- * @param server the serverInfo
+ * @param server the server_info
  */
-static void spawn_player(const char *teamName, const client_t client,
+static void spawn_player(const char *team_name, const client_t client,
     const server_info_t server_info)
 {
-    const team_t team = get_team_by_name(teamName, server_info->teams);
+    const team_t team = get_team_by_name(team_name, server_info->teams);
     egg_t egg = get_random_egg(team, server_info->map);
     player_t player = egg_to_player(egg, server_info->map);
-    static uint32_t actualNumber = 0;
+    static uint32_t actual_number = 0;
 
     client->player = player;
     client->player->rocks = (rocks_t){0, 0, 0, 0, 0, 0};
-    team->remainingSlots--;
-    client->teamClientNumber = team->actualNumber;
-    client->player->playerNumber = actualNumber;
-    team->actualNumber++;
-    actualNumber++;
+    team->remaining_slots--;
+    client->team_client_number = team->actual_number;
+    client->player->player_number = actual_number;
+    team->actual_number++;
+    actual_number++;
     printf("Client %d: Connected as %s\n", client->fd,
-        get_escaped_string(teamName));
+        get_escaped_string(team_name));
 }
 
 /**
@@ -110,7 +110,7 @@ static void send_start_informations(const client_t client,
     const uint32_t width, const uint32_t height)
 {
     char *packet_string =
-        my_snprintf("%d", client->player->team->remainingSlots);
+        my_snprintf("%d", client->player->team->remaining_slots);
 
     queue_buffer(client, packet_string);
     my_free(packet_string);
@@ -125,10 +125,10 @@ static void send_start_informations(const client_t client,
  *
  * @param args the arguments of the command
  * @param client the client that executed the command
- * @param serverInfo the server informations
+ * @param server_info the server informations
  */
 void auth(char **args, const client_t client,
-    const server_info_t serverInfo)
+    const server_info_t server_info)
 {
     DEBUG_PRINT("Authentificating %d\n", client->fd);
     if (tablen((const void **)args) != 1) {
@@ -142,12 +142,12 @@ void auth(char **args, const client_t client,
         queue_buffer(client, "ok");
         return;
     }
-    if (!is_team_name_valid(args[0], serverInfo, client)) {
+    if (!is_team_name_valid(args[0], server_info, client)) {
         queue_buffer(client, "ko");
         return;
     }
     client->type = AI;
-    spawn_player(args[0], client, serverInfo);
-    send_start_informations(client, serverInfo->width, serverInfo->height);
+    spawn_player(args[0], client, server_info);
+    send_start_informations(client, server_info->width, server_info->height);
     send_new_player_to_graphical(client->player);
 }

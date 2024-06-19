@@ -12,34 +12,34 @@ Test(bct, too_much_parameters)
 {
     cr_redirect_stdout();
     client_t client = test_create_client(0);
-    server_info_t serverInfo = get_server_info();
+    server_info_t server_info = get_server_info();
 
-    bct((char *[]){"bct", "1", "1", "1", "1", NULL}, client, serverInfo);
-    assert_packet_queue(client->packetQueue, 1, "sbp");
+    bct((char *[]){"bct", "1", "1", "1", "1", NULL}, client, server_info);
+    assert_packet_queue(client->packet_queue, 1, "sbp");
     assert_stdout_eq_str("Client 0: bct: bad argument number\n");
 }
 
 Test(bct, valid_command_empty_tile)
 {
     client_t client = test_create_client(0);
-    server_info_t serverInfo = get_server_info();
-    serverInfo->map = create_map(10, 10);
+    server_info_t server_info = get_server_info();
+    server_info->map = create_map(10, 10);
 
-    bct((char *[]){"bct", "5", "3", NULL}, client, serverInfo);
-    assert_packet_queue(client->packetQueue, 1, "bct 5 3 0 0 0 0 0 0 0");
+    bct((char *[]){"bct", "5", "3", NULL}, client, server_info);
+    assert_packet_queue(client->packet_queue, 1, "bct 5 3 0 0 0 0 0 0 0");
 }
 
 Test(bct, valid_command_random_tile1)
 {
     client_t client = test_create_client(0);
-    server_info_t serverInfo = get_server_info();
-    serverInfo->map = create_map(10, 10);
+    server_info_t server_info = get_server_info();
+    server_info->map = create_map(10, 10);
     srand(time(NULL));
-    init_map(serverInfo->map, serverInfo->teams);
+    init_map(server_info->map, server_info->teams);
 
-    tile_t tile = get_tile_at_position((position_t){5, 3}, serverInfo->map);
-    bct((char *[]){"bct", "5", "3", NULL}, client, serverInfo);
-    assert_packet_queue(client->packetQueue, 1, my_snprintf("bct 5 3 %d %d %d %d %d %d %d",
+    tile_t tile = get_tile_at_position((position_t){5, 3}, server_info->map);
+    bct((char *[]){"bct", "5", "3", NULL}, client, server_info);
+    assert_packet_queue(client->packet_queue, 1, my_snprintf("bct 5 3 %d %d %d %d %d %d %d",
         tile->food, tile->rocks.linemate, tile->rocks.deraumere,
         tile->rocks.sibur, tile->rocks.mendiane, tile->rocks.phiras,
         tile->rocks.thystame));
@@ -48,14 +48,14 @@ Test(bct, valid_command_random_tile1)
 Test(bct, valid_command_random_tile2)
 {
     client_t client = test_create_client(0);
-    server_info_t serverInfo = get_server_info();
-    serverInfo->map = create_map(10, 10);
+    server_info_t server_info = get_server_info();
+    server_info->map = create_map(10, 10);
     srand(time(NULL));
-    init_map(serverInfo->map, serverInfo->teams);
+    init_map(server_info->map, server_info->teams);
 
-    tile_t tile = get_tile_at_position((position_t){5, 3}, serverInfo->map);
-    bct((char *[]){"bct", "5", "3", NULL}, client, serverInfo);
-    assert_packet_queue(client->packetQueue, 1, my_snprintf("bct 5 3 %d %d %d %d %d %d %d",
+    tile_t tile = get_tile_at_position((position_t){5, 3}, server_info->map);
+    bct((char *[]){"bct", "5", "3", NULL}, client, server_info);
+    assert_packet_queue(client->packet_queue, 1, my_snprintf("bct 5 3 %d %d %d %d %d %d %d",
         tile->food, tile->rocks.linemate, tile->rocks.deraumere,
         tile->rocks.sibur, tile->rocks.mendiane, tile->rocks.phiras,
         tile->rocks.thystame));

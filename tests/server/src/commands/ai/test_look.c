@@ -18,9 +18,9 @@ Test(look_suite, bad_arguments)
     client.player = &player;
     look(args, &client, NULL);
 
-    cr_assert_not_null(client.packetQueue);
-    cr_assert_not_null(client.packetQueue->packet);
-    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(client.packet_queue);
+    cr_assert_not_null(client.packet_queue->packet);
+    char *res = client.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "ko");
 }
@@ -40,7 +40,7 @@ Test(look_suite, level_zero)
     client.player = &player;
     add_player_at_position(&player, pos, map);
     look(args, &client, &server);
-    char *result = client.packetQueue->packet->buffer;
+    char *result = client.packet_queue->packet->buffer;
     cr_assert(result != NULL);
     cr_assert_str_eq(result, "[player]");
 }
@@ -63,7 +63,7 @@ Test(look_suite, level_one)
     tile->food = 1;
     tile->rocks.linemate = 1;
     look(args, &client, &server);
-    char *result = client.packetQueue->packet->buffer;
+    char *result = client.packet_queue->packet->buffer;
     cr_assert(result != NULL);
     cr_assert_str_eq(result, "[player,,food linemate,]");
 }

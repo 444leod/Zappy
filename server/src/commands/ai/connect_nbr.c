@@ -31,7 +31,7 @@ void connect_nbr(
         throw_ko(client);
         return;
     }
-    message = my_snprintf("%d", team->remainingSlots);
-    add_packet_to_queue(&client->packetQueue, build_packet(message));
+    message = my_snprintf("%d", team->remaining_slots);
+    add_packet_to_queue(&client->packet_queue, build_packet(message));
     my_free(message);
 }

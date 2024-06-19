@@ -13,4 +13,4 @@ struct timespec get_actual_time(void);
 void update_remaining_time(double *remaining_time,
     struct timespec *last_update);
 int timevalcmp(struct timeval *a, struct timeval *b);
-struct timeval get_timeval_by_double(double waitDuration);
+struct timeval get_timeval_by_double(double wait_duration);

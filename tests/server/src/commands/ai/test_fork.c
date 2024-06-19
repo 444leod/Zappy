@@ -18,9 +18,9 @@ Test(fork_suite, bad_arguments)
     client.player = &player;
     fork_player(args, &client, NULL);
 
-    cr_assert_not_null(client.packetQueue);
-    cr_assert_not_null(client.packetQueue->packet);
-    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(client.packet_queue);
+    cr_assert_not_null(client.packet_queue->packet);
+    char *res = client.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "ko");
 }
@@ -41,9 +41,9 @@ Test(fork_suite, player_fork)
     add_player_at_position(&player, pos, map);
     fork_player(args, &client, &server);
 
-    cr_assert_not_null(client.packetQueue);
-    cr_assert_not_null(client.packetQueue->packet);
-    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(client.packet_queue);
+    cr_assert_not_null(client.packet_queue->packet);
+    char *res = client.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "ok");
 
@@ -80,15 +80,15 @@ Test(fork_suite, two_player_fork)
     fork_player(args, &clientA, &server);
     fork_player(args, &clientB, &server);
 
-    cr_assert_not_null(clientA.packetQueue);
-    cr_assert_not_null(clientA.packetQueue->packet);
-    res = clientA.packetQueue->packet->buffer;
+    cr_assert_not_null(clientA.packet_queue);
+    cr_assert_not_null(clientA.packet_queue->packet);
+    res = clientA.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "ok");
 
-    cr_assert_not_null(clientB.packetQueue);
-    cr_assert_not_null(clientB.packetQueue->packet);
-    res = clientB.packetQueue->packet->buffer;
+    cr_assert_not_null(clientB.packet_queue);
+    cr_assert_not_null(clientB.packet_queue->packet);
+    res = clientB.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "ok");
 

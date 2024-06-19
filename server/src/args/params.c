@@ -22,20 +22,20 @@
 param_t get_param(const char *flag, param_t params)
 {
     param_t tmp = params;
-    param_t flagNode;
-    param_t flagContent;
+    param_t flag_node;
+    param_t flag_content;
 
     while (tmp) {
         if (strcmp(tmp->informations->content, flag) == 0 &&
             tmp->informations->handled == false) {
-            flagNode = tmp;
+            flag_node = tmp;
             break;
         }
         tmp = tmp->next;
     }
-    if (flagNode == NULL)
+    if (flag_node == NULL)
         display_help(supercat(2, flag, " is missing\n"));
-    flagNode->informations->handled = true;
-    flagContent = flagNode->next;
-    return flagContent;
+    flag_node->informations->handled = true;
+    flag_content = flag_node->next;
+    return flag_content;
 }

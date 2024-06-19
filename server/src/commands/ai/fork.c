@@ -33,6 +33,6 @@ void fork_player(
         client->player->position,
         serverInfo->map
     );
-    client->player->team->remainingSlots++;
-    add_packet_to_queue(&client->packetQueue, build_packet("ok"));
+    client->player->team->remaining_slots++;
+    add_packet_to_queue(&client->packet_queue, build_packet("ok"));
 }

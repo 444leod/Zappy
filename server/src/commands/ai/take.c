@@ -53,5 +53,5 @@ void take(
     if (!player_pick_up(arg, player, tile, 1))
         throw_ko(client);
     else
-        add_packet_to_queue(&client->packetQueue, build_packet("ok"));
+        add_packet_to_queue(&client->packet_queue, build_packet("ok"));
 }

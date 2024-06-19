@@ -31,14 +31,14 @@ static void destroy_fds(client_t tmp)
  * @brief Update the client linked list on remove
  * @details Update the client linked list on remove
  *
- * @param clientNode the client to remove
+ * @param client_node the client to remove
 */
-static void update_node(client_list_t clientNode)
+static void update_node(client_list_t client_node)
 {
-    if (clientNode->prev)
-        clientNode->prev->next = clientNode->next;
-    if (clientNode->next)
-        clientNode->next->prev = clientNode->prev;
+    if (client_node->prev)
+        client_node->prev->next = client_node->next;
+    if (client_node->next)
+        client_node->next->prev = client_node->prev;
 }
 
 /**
@@ -50,21 +50,21 @@ static void update_node(client_list_t clientNode)
 void remove_client(const int fd)
 {
     client_list_t *clients = get_clients();
-    client_list_t clientNode = *clients;
+    client_list_t client_node = *clients;
 
-    if (clientNode && clientNode->client->fd == fd) {
-        destroy_fds(clientNode->client);
-        *clients = clientNode->next;
-        if (clientNode->next)
-            clientNode->next->prev = NULL;
+    if (client_node && client_node->client->fd == fd) {
+        destroy_fds(client_node->client);
+        *clients = client_node->next;
+        if (client_node->next)
+            client_node->next->prev = NULL;
         return;
     }
-    while (clientNode) {
-        if (clientNode->client->fd == fd) {
-            destroy_fds(clientNode->client);
-            update_node(clientNode);
+    while (client_node) {
+        if (client_node->client->fd == fd) {
+            destroy_fds(client_node->client);
+            update_node(client_node);
             return;
         }
-        clientNode = clientNode->next;
+        client_node = client_node->next;
     }
 }

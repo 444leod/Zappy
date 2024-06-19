@@ -18,9 +18,9 @@ Test(eject_suite, bad_arguments)
     client.player = &player;
     eject(args, &client, NULL);
 
-    cr_assert_not_null(client.packetQueue);
-    cr_assert_not_null(client.packetQueue->packet);
-    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(client.packet_queue);
+    cr_assert_not_null(client.packet_queue->packet);
+    char *res = client.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "ko");
 }
@@ -41,9 +41,9 @@ Test(eject_suite, alone)
     add_player_at_position(&player, pos, map);
     eject(args, &client, &server);
 
-    cr_assert_not_null(client.packetQueue);
-    cr_assert_not_null(client.packetQueue->packet);
-    char *res = client.packetQueue->packet->buffer;
+    cr_assert_not_null(client.packet_queue);
+    cr_assert_not_null(client.packet_queue->packet);
+    char *res = client.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "ko");
 }
@@ -83,18 +83,18 @@ Test(eject_suite, normal)
 
     eject(args, &clientA, &server);
 
-    cr_assert_not_null(clientA.packetQueue);
-    cr_assert_not_null(clientA.packetQueue->packet);
-    char *res = clientA.packetQueue->packet->buffer;
+    cr_assert_not_null(clientA.packet_queue);
+    cr_assert_not_null(clientA.packet_queue->packet);
+    char *res = clientA.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "ok");
 
     cr_assert_eq(clientB.player->position.x, 1);
     cr_assert_eq(clientB.player->position.y, 3);
 
-    cr_assert_not_null(clientB.packetQueue);
-    cr_assert_not_null(clientB.packetQueue->packet);
-    res = clientB.packetQueue->packet->buffer;
+    cr_assert_not_null(clientB.packet_queue);
+    cr_assert_not_null(clientB.packet_queue->packet);
+    res = clientB.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "eject: 2");
 

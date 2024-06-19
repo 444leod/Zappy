@@ -13,10 +13,10 @@
 typedef struct client_command_s {
     char *command;
     char **args;
-    struct timespec handledTime;
+    struct timespec handled_time;
     bool initialized;
-    double waitDuration;
-    command_t commandHandler;
+    double wait_duration;
+    command_t command_handler;
 } *client_command_t;
 
 typedef struct client_command_list_s {

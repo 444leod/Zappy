@@ -170,7 +170,7 @@ void look(
     }
     tiles = get_vision_tiles(client->player, serverInfo->map);
     vision = format_vision(tiles);
-    add_packet_to_queue(&client->packetQueue, build_packet(vision));
+    add_packet_to_queue(&client->packet_queue, build_packet(vision));
     my_free(vision);
     free_list_holders((node_t)tiles);
 }

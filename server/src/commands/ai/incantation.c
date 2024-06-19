@@ -115,5 +115,5 @@ void start_incantation(
     if (check_tile_ressources(player->level, players, tile->rocks))
         start_players_ritual(players);
     else
-        add_packet_to_queue(&client->packetQueue, build_packet("ko"));
+        add_packet_to_queue(&client->packet_queue, build_packet("ko"));
 }

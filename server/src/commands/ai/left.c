@@ -28,5 +28,5 @@ void left(
         return;
     }
     client->player->orientation = ((client->player->orientation - 2) % 4) + 1;
-    add_packet_to_queue(&client->packetQueue, build_packet("ok"));
+    add_packet_to_queue(&client->packet_queue, build_packet("ok"));
 }

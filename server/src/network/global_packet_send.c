@@ -22,12 +22,12 @@ void queue_packet_to_client_type(const enum CLIENT_TYPE type,
 {
     client_list_t clients = get_clients_by_type(type);
     client_list_t tmp = clients;
-    packet_t *packetCopy;
+    packet_t *packet_copy;
 
     while (tmp) {
-        packetCopy = my_malloc(sizeof(packet_t));
-        memcpy(packetCopy, packet, sizeof(packet_t));
-        add_packet_to_queue(&tmp->client->packetQueue, packetCopy);
+        packet_copy = my_malloc(sizeof(packet_t));
+        memcpy(packet_copy, packet, sizeof(packet_t));
+        add_packet_to_queue(&tmp->client->packet_queue, packet_copy);
         tmp = tmp->next;
     }
 }
@@ -49,7 +49,7 @@ void queue_packet_to_player(player_t player, packet_t *packet)
     node = *clients;
     while (node) {
         if (uuid_compare(player->id, node->client->player->id) == 0)
-            add_packet_to_queue(&node->client->packetQueue, packet);
+            add_packet_to_queue(&node->client->packet_queue, packet);
         node = node->next;
     }
 }

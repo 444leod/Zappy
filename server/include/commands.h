@@ -20,8 +20,8 @@ typedef struct client_s *client_t;
 typedef struct command_s {
     char *command;
     void (*func)(ARGS);
-    uint32_t waitUnits;
-    enum CLIENT_TYPE ClientType;
+    uint32_t execution_ticks;
+    enum CLIENT_TYPE client_type;
 } command_t;
 
 extern const command_t COMMANDS[];

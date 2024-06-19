@@ -248,8 +248,8 @@ Test(get_map, adding_eggs)
     tile_t tile = get_tile_at_position(pos, map);
     struct team_s team = {
         .name = "Example Team",
-        .actualNumber = 0,
-        .remainingSlots = 1
+        .actual_number = 0,
+        .remaining_slots = 1
     };
     uint32_t eggCount = 0;
 

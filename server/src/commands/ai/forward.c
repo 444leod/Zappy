@@ -17,7 +17,7 @@
  *
  * @param args the arguments of the command
  * @param client the client that executed the command
- * @param serverInfo the server info
+ * @param server_info the server info
  */
 void forward(
     char **args,
@@ -37,5 +37,5 @@ void forward(
     pos.x %= serverInfo->map->width;
     pos.y %= serverInfo->map->height;
     move_player(client->player, pos, serverInfo->map);
-    add_packet_to_queue(&client->packetQueue, build_packet("ok"));
+    add_packet_to_queue(&client->packet_queue, build_packet("ok"));
 }
