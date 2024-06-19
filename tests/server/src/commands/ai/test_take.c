@@ -86,6 +86,7 @@ Test(take_suite, food)
     client.player = &player;
     tile_t tile = get_tile_at_position(pos, map);
     tile->food = 50;
+    server.actual_food = 50;
 
     server.map = map;
     add_player_at_position(&player, pos, map);
@@ -101,6 +102,7 @@ Test(take_suite, food)
 
     cr_assert_eq(player.food, 1);
     cr_assert_eq(tile->food, 49);
+    cr_assert_eq(server.actual_food, 49);
 }
 
 Test(take_suite, rock)
@@ -114,7 +116,9 @@ Test(take_suite, rock)
     client.player = &player;
     tile_t tile = get_tile_at_position(pos, map);
     tile->food = 50;
+    server.actual_food = 50;
     tile->rocks.sibur = 3;
+    server.actual_rocks.sibur = 3;
 
     server.map = map;
     add_player_at_position(&player, pos, map);
@@ -132,4 +136,5 @@ Test(take_suite, rock)
     cr_assert_eq(tile->food, 50);
     cr_assert_eq(player.rocks.sibur, 1);
     cr_assert_eq(tile->rocks.sibur, 2);
+    cr_assert_eq(server.actual_rocks.sibur, 2);
 }
