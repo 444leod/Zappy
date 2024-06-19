@@ -42,7 +42,7 @@ namespace gui {
     class GameDataManager {
         public:
             GameDataManager(std::uint32_t port) : _port(port), _client(port) { _client.connectToServer(); }
-            ~GameDataManager() = default;
+            ~GameDataManager() { _client.disconnect();}
 
             void handleRequests();
 

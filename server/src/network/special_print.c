@@ -61,7 +61,7 @@ UNUSED static void dev_print_fd_set(const fd_set *readfds,
     int rcount = 0;
     int wcount = 0;
     char *buffer;
-    UNUSED static TIMER printTimer = -1;
+    UNUSED static TIMER print_timer = -1;
 
     for (int i = 0; i < FD_SETSIZE; ++i) {
         if (FD_ISSET(i, readfds)) {
@@ -74,7 +74,7 @@ UNUSED static void dev_print_fd_set(const fd_set *readfds,
         }
     }
     buffer = dev_get_full_buffer(rfds, rcount, wfds, wcount);
-    TIMED_DEBUG_PRINT(&printTimer, 2, "%s", buffer);
+    TIMED_DEBUG_PRINT(&print_timer, 2, "%s", buffer);
     my_free(buffer);
 }
 

@@ -23,5 +23,5 @@ void gui::Sgt::receive(std::string command, GameData &gameData)
     iss >> token >> timeUnit;
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
-    // gameData.setUnitTime(timeUnit);
+    gameData.setTimeUnit(timeUnit);
 }

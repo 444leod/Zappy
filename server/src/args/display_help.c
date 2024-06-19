@@ -19,6 +19,6 @@ void display_help(const char *str)
     if (str)
         dprintf(2, "%s\n", str);
     dprintf(2, "./zappy_server -p port -x width "
-        "-y height -n name1 name2 ... -c clientsNb -f freq\n");
+        "-y height -n name1 name2 ... -c clients_nb -f freq\n");
     my_exit(84);
 }

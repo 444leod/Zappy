@@ -80,6 +80,14 @@ namespace gui {
                 void sendRequests(std::optional<std::chrono::milliseconds> timeout = std::nullopt);
 
                 /**
+                 * @brief Checks if there are requests in the request queue
+                 * @details Checks if there are requests in the request queue
+                 *
+                 * @return bool true if there are requests in the queue, false otherwise
+                */
+                bool hasRequests() const noexcept { return !_requests.empty(); }
+
+                /**
                  * @brief Receives messages from the server
                  * @details Receives messages from the server and stores them in the message queue
                  *

@@ -19,14 +19,14 @@
 */
 static gc_node_t gc_create(void *data)
 {
-    gc_node_t newNode = malloc(sizeof(struct gc_node_s));
+    gc_node_t new_node = malloc(sizeof(struct gc_node_s));
 
-    if (newNode == NULL)
+    if (new_node == NULL)
         return NULL;
-    newNode->data = data;
-    newNode->next = NULL;
-    newNode->prev = NULL;
-    return newNode;
+    new_node->data = data;
+    new_node->next = NULL;
+    new_node->prev = NULL;
+    return new_node;
 }
 
 /**
@@ -40,20 +40,20 @@ static gc_node_t gc_create(void *data)
 */
 static gc_node_t gc_insert_end(void *data, gc_node_t list)
 {
-    gc_node_t newNode = gc_create(data);
+    gc_node_t new_node = gc_create(data);
 
-    if (newNode == NULL)
+    if (new_node == NULL)
         return NULL;
     if (list == NULL) {
-        newNode->next = newNode;
-        newNode->prev = newNode;
-        list = newNode;
+        new_node->next = new_node;
+        new_node->prev = new_node;
+        list = new_node;
         return list;
     }
-    list->prev->next = newNode;
-    newNode->prev = list->prev;
-    newNode->next = list;
-    list->prev = newNode;
+    list->prev->next = new_node;
+    new_node->prev = list->prev;
+    new_node->next = list;
+    list->prev = new_node;
     return list;
 }
 
@@ -148,13 +148,13 @@ void my_free(void *pointer)
         return;
     if (try_free_special_cases(pointer, llist))
         return;
-    temp = (*llist)->next;
+    temp = (*llist)->prev;
     while (temp != *llist) {
         if (temp->data == pointer) {
             temp = gc_delete_begin(temp);
             return;
         }
-        temp = temp->next;
+        temp = temp->prev;
     }
     free(pointer);
 }
@@ -195,15 +195,15 @@ void *force_malloc(const size_t size)
  *
  * @param ptr the pointer to realloc
  * @param size the size of the memory to allocate
- * @param oldSize the old size of the memory
+ * @param old_size the old size of the memory
  *
  * @return void* the pointer to the allocated memory
 */
-void *my_realloc(void *ptr, const size_t size, const size_t oldSize)
+void *my_realloc(void *ptr, const size_t size, const size_t old_size)
 {
     void *variable = my_malloc(size);
 
-    memcpy(variable, ptr, oldSize);
+    memcpy(variable, ptr, old_size);
     my_free(ptr);
     return variable;
 }

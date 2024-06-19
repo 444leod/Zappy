@@ -50,9 +50,9 @@ int main(int argc, char const *argv[])
     tester.addTest("Invalid team name (non alphanum)", {"-p", "4242", "-x", "10", "-y", "10", "-n", "team1!", "team2ééé", "-c", "1", "-f", "100"}, "", "Invalid team name.\n", 84, std::chrono::seconds(1));
     tester.addTest("Invalid team name (duplicate)", {"-p", "4242", "-x", "10", "-y", "10", "-n", "team1", "team1", "-c", "1", "-f", "100"}, "", "Duplicate team names.\n", 84, std::chrono::seconds(1));
 
-    tester.addTest("Invalid client number (string)", {"-p", "4242", "-x", "10", "-y", "10", "-n", "team1", "team2", "-c", "client", "-f", "100"}, "", "Invalid clientsNb.\n", 84, std::chrono::seconds(1));
-    tester.addTest("Invalid client number (negative)", {"-p", "4242", "-x", "10", "-y", "10", "-n", "team1", "team2", "-c", "-1", "-f", "100"}, "", "Invalid clientsNb (min 1).\n", 84, std::chrono::seconds(1));
-    tester.addTest("Invalid client number (0)", {"-p", "4242", "-x", "10", "-y", "10", "-n", "team1", "team2", "-c", "0", "-f", "100"}, "", "Invalid clientsNb (min 1).\n", 84, std::chrono::seconds(1));
+    tester.addTest("Invalid client number (string)", {"-p", "4242", "-x", "10", "-y", "10", "-n", "team1", "team2", "-c", "client", "-f", "100"}, "", "Invalid clients_nb.\n", 84, std::chrono::seconds(1));
+    tester.addTest("Invalid client number (negative)", {"-p", "4242", "-x", "10", "-y", "10", "-n", "team1", "team2", "-c", "-1", "-f", "100"}, "", "Invalid clients_nb (min 1).\n", 84, std::chrono::seconds(1));
+    tester.addTest("Invalid client number (0)", {"-p", "4242", "-x", "10", "-y", "10", "-n", "team1", "team2", "-c", "0", "-f", "100"}, "", "Invalid clients_nb (min 1).\n", 84, std::chrono::seconds(1));
 
     tester.addTest("Invalid frequency (string)", {"-p", "4242", "-x", "10", "-y", "10", "-n", "team1", "team2", "-c", "1", "-f", "freq"}, "", "Invalid freq.\n", 84, std::chrono::seconds(1));
     tester.addTest("Invalid frequency (negative)", {"-p", "4242", "-x", "10", "-y", "10", "-n", "team1", "team2", "-c", "1", "-f", "-1"}, "", "Invalid freq (min 1).\n", 84, std::chrono::seconds(1));

@@ -14,4 +14,4 @@
 
 server_info_t get_server_info();
 client_t test_create_client(uint32_t id);
-void assert_packet_queue(packet_queue_t packetQueue, uint32_t packets_number, ...);
+void assert_packet_queue(packet_queue_t packet_queue, uint32_t packets_number, ...);

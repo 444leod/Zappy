@@ -20,7 +20,7 @@ char *get_new_player_string(const player_t player)
     char orientation = get_char_by_orientation(player->orientation);
 
     return my_snprintf("pnw %d %d %d %c %d %s",
-        player->playerNumber, player->position.x, player->position.y,
+        player->player_number, player->position.x, player->position.y,
         orientation, player->level, player->team->name);
 }
 

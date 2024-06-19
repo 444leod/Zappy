@@ -34,6 +34,7 @@ __SRC_NETWORK := Client.cpp \
 __SRC_GAME_DATA := GameData.cpp \
 	Tiles/Map.cpp \
 	Tiles/TileContent.cpp \
+	Entities/Character.cpp \
 
 __SRC_GAME_DATA_MANAGER := GameDataManager.cpp \
 
@@ -85,6 +86,7 @@ __CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Server
 __CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Status
 __CXXFLAGS += -I./include/Handler/Command/ -I./include/Handler/
 __CXXFLAGS += -I./include/Graphics
+__CXXFLAGS += -I./include/GameData/Entities/
 
 all: $(__NAME)
 
