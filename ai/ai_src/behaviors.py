@@ -29,6 +29,23 @@ class ABehavior:
         """
         raise NotImplementedError("You are not supposed to override this method")
 
+    def collect_food(self, player_info: PlayerInfo, map: Map) -> None:
+        """
+        Collect food from the tile
+        """
+        for _ in range(map.tiles[player_info.pos[0]][player_info.pos[1]].collectibles.food):
+            self.command_stack.append(cmd.Take("food"))
+    
+    def collect_all_rocks(self, player_info: PlayerInfo, map: Map) -> None:
+        """
+        Collect all rocks from the tile
+        """
+        tmp: dict[str, int] = map.tiles[player_info.pos[0]][player_info.pos[1]].collectibles.__dict__
+        tmp.pop("food")
+        for rock, amount in tmp.items():
+            for _ in range(amount):
+                self.command_stack.append(cmd.Take(rock))
+
 class LookingForward(ABehavior):
     def __init__(self):
         """
@@ -40,6 +57,8 @@ class LookingForward(ABehavior):
         """
         Generate the command stack for the LookingForward behavior
         """
+        super().collect_food(player_info, map)
+        super().collect_all_rocks(player_info, map)
         self.command_stack.append(cmd.Look())
         self.command_stack.append(cmd.Forward())
 
