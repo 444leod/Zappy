@@ -32,9 +32,10 @@ void gui::Pie::receive(std::string command, GameData &gameData)
     auto players = gameData.getPlayerById(result);
     if (players.has_value()) {
         std::cout << "Incantation result: " << result << std::endl;
-        if (result == 1)
-            players.value()->updateEvolutionStatus(Vector2u(x, y), players.value()->playerLevel(), true);
-        else
-            players.value()->updateEvolutionStatus(Vector2u(x, y), players.value()->playerLevel(), false);
+        if (result == 1) {
+            players.value()->increasePlayerLevel();
+            players.value()->updateEvolutionStatus(true);
+        } else
+            players.value()->updateEvolutionStatus(false);
     }
 }

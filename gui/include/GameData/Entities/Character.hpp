@@ -129,7 +129,7 @@ namespace gui {
              * @param result The result of the incantation
              * @note The result can be true or false
             */
-            void updateEvolutionStatus(UNUSED Vector2u position, UNUSED std::uint32_t level, bool result);
+            void updateEvolutionStatus(bool result);
 
             /**
              * @brief set the player dead
