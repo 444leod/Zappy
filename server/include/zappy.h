@@ -36,7 +36,7 @@ void get_port(const int fd, const int *port);
 void queue_packet_to_client_type(const enum CLIENT_TYPE type,
     packet_t *packet);
 void queue_packet_to_player(player_t player, packet_t *packet);
-void prepend_player_command(player_t player, client_command_t command);
+void prepend_client_command(client_t client, client_command_t command);
 server_info_t init_server_info(const char *argv[]);
 void display_help(const char *str);
 void queue_buffer(const client_t client, const char *buffer);

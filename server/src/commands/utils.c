@@ -67,27 +67,23 @@ void throw_ko(client_t client)
 
 /**
  * @brief Prepends a command to a player
- * @param player The player
+ * @param client The client
  * @param command The command
  */
-void prepend_player_command(player_t player, client_command_t command)
+void prepend_client_command(client_t client, client_command_t command)
 {
-    client_list_t *clients = get_clients();
-    client_list_t client = *clients;
-    client_command_list_t commands = NULL;
     client_command_list_t new_cmd = NULL;
 
-    for (; client; client = client->next)
-        if (uuid_compare(client->client->player->id, player->id) == 0)
-            break;
-    if (!client || !client->client->commands)
-        return;
-    commands = client->client->commands;
     new_cmd = my_malloc(sizeof(struct client_command_list_s));
-    while (commands->next)
-        commands = commands->next;
     new_cmd->command = command;
-    new_cmd->prev = commands->prev;
-    new_cmd->next = commands;
-    new_cmd->prev = new_cmd;
+    if (client->commands != NULL) {
+        new_cmd->prev = client->commands;
+        new_cmd->next = client->commands->next;
+        client->commands->next = new_cmd;
+    } else {
+        new_cmd->next = NULL;
+        new_cmd->prev = NULL;
+        client->commands = new_cmd;
+    }
+    printf("preprend: success!\n");
 }
