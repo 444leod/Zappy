@@ -32,9 +32,9 @@ namespace gui {
     class Core
     {
         public:
-            Core() : _loader(LibraryLoader("./lib"))
+            Core() : _loader(LibraryLoader("./gui/lib"))
             {
-                std::string path = "./lib/zappy_sfml2d.so";
+                std::string path = "./gui/lib/zappy_sfml2d.so";
 
                 if (!this->_loader.contains(path, gui::SharedLibraryType::LIBRARY))
                     throw CoreException("File " + path + " is not a valid graphical library.");
