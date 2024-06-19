@@ -42,7 +42,7 @@ $(__NAME): .init_done
 	@printf "$(__GREEN)completed successfully.$(__NC)\n"
 
 dev: .init_done
-	@make -s -C server
+	@make dev -s -C server
 	@make -s -C gui
 	@make -s -C ai
 	@mv server/zappy_server .
