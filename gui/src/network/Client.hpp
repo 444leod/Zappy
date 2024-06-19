@@ -110,11 +110,11 @@ namespace gui {
                  *        with the message "No message to pop"
                  *  else, pops the first message from the queue and returns it
                  *
-                 * @return const std::string&
+                 * @return const std::string
                  *
                  * @throw ClientException if the queue is empty
                 */
-                const std::string& popResponse();
+                const std::string popResponse();
 
                 /**
                  * @brief Checks if there are messages in the message queue
