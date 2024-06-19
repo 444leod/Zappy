@@ -22,7 +22,7 @@ void gui::Seg::receive(std::string command, std::shared_ptr<GameData> gameData)
 
     iss >> token >> teamName;
     if (teamName == "")
-        gameData.teamDraw();
+        gameData->teamDraw();
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
     for (std::size_t i = 0; i < gameData->teamNames().size(); i++) {

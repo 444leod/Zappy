@@ -22,8 +22,5 @@ void gui::Tna::receive(std::string command, std::shared_ptr<GameData> gameData)
     iss >> token >> teamName;
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
-    if (gameData->teamNames().size() != 0)
-        throw std::invalid_argument("Team names already set.");
-    for (std::size_t i = 0; i < gameData->teamNames().size(); i++)
-        gameData->teamNames().push_back(teamName);
+    gameData->addTeamName(teamName);
 }
