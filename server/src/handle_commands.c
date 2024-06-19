@@ -31,6 +31,25 @@ static void execute_command(const client_command_t command,
 }
 
 /**
+ * @brief Checks if the player can act, or decrease the stun.
+ */
+static bool check_player_stun(player_t player)
+{
+    struct timespec now;
+    double elapsed_time;
+
+    if (player->stun_time > 0)
+        return false;
+    clock_gettime(0, &now);
+    elapsed_time = (now.tv_sec - player->last_stuck_check.tv_sec);
+    elapsed_time += (now.tv_nsec - player->last_stuck_check.tv_nsec)
+        / 1000000000.0;
+    player->stun_time -= elapsed_time;
+    player->last_stuck_check = now;
+    return true;
+}
+
+/**
  * @brief Check if the command should be handled
  * @details Check if the command should be handled
  *      by checking if the time elapsed since the last time the command was
@@ -51,11 +70,13 @@ static bool should_be_handled(const client_command_t command,
     if (client->type == GRAPHICAL)
         return true;
     clock_gettime(0, &now);
+    command->handled_time = now;
+    if (check_player_stun(client->player))
+        return false;
     elapsed_time = (now.tv_sec - command->handled_time.tv_sec);
     elapsed_time += (now.tv_nsec - command->handled_time.tv_nsec)
         / 1000000000.0;
     command->wait_duration -= elapsed_time;
-    command->handled_time = now;
     return command->wait_duration <= 0;
 }
 

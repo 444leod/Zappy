@@ -58,6 +58,8 @@ typedef struct player_s {
     enum ORIENTATION orientation;
     struct timespec last_eat_check_time;
     double death_remaining_time;
+    struct timespec last_stuck_check;
+    double stun_time;
 } * player_t;
 
 typedef struct player_list_s {
