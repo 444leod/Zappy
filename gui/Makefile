@@ -13,7 +13,6 @@ __NC=\033[0m
 
 DIR = $(shell pwd)
 LIB_DIR = $(DIR)/lib
-INC_DIR = $(DIR)/include
 
 __NAME = zappy_gui
 
@@ -90,21 +89,21 @@ __CXXFLAGS += -I./include/Graphics
 all: $(__NAME)
 
 $(__NAME): $(__OBJ)
-	make -s -C src/Graphics/SFML2d 		 LIB_DIR=$(LIB_DIR) INC_DIR=$(INC_DIR)
+	make -s -C src/Graphics/SFML2d 		 LIB_DIR=$(LIB_DIR)
 	@$(__CC) -o $(__NAME) $(__OBJ) $(__CXXFLAGS)
 	@$(__CC) -o $(__NAME) $(__OBJ) $(__CXXFLAGS)
 	@echo -ne "${__GREEN}$(__BOLD)Compilation of $(__NAME)$(__NC)"
 	@echo -e " ${__GREEN}completed successfully.${__NC}"
 	@echo -e " ${__GREEN}completed successfully.${__NC}"
 clean:
-	make -s -C src/Graphics/SFML2d clean LIB_DIR=$(LIB_DIR) INC_DIR=$(INC_DIR)
+	make -s -C src/Graphics/SFML2d clean LIB_DIR=$(LIB_DIR)
 	@rm -f $(__OBJ)
 	@echo -ne "${__GREEN}$(__BOLD)Clean of $(__NAME)$(__NC)"
 	@echo -e " ${__GREEN}completed successfully.${__NC}"
 	@echo -e " ${__GREEN}completed successfully.${__NC}"
 
 fclean: clean
-	make -s -C src/Graphics/SFML2d fclean LIB_DIR=$(LIB_DIR) INC_DIR=$(INC_DIR)
+	make -s -C src/Graphics/SFML2d fclean LIB_DIR=$(LIB_DIR)
 	@rm -f $(__NAME)
 	@echo -ne "${__GREEN}$(__BOLD)Fclean of $(__NAME)$(__NC)"
 	@echo -e " ${__GREEN}completed successfully.${__NC}"

@@ -5,9 +5,8 @@
 ** SFML.cpp
 */
 
-#include "../../../include/Graphics/ILibrary.hpp"
-#include "../../../include/Graphics/SharedLibraryType.hpp"
-
+#include "ILibrary.hpp"
+#include "SharedLibraryType.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <deque>
