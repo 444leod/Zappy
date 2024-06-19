@@ -86,7 +86,8 @@ void prepend_player_command(player_t player, client_command_t command)
     new_cmd = my_malloc(sizeof(struct client_command_list_s));
     while (commands->next)
         commands = commands->next;
-    new_cmd->prev = commands;
     new_cmd->command = command;
-    commands->next = new_cmd;
+    new_cmd->prev = commands->prev;
+    new_cmd->next = commands;
+    new_cmd->prev = new_cmd;
 }

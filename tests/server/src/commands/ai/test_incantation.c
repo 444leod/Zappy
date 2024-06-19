@@ -17,7 +17,7 @@ Test(incantation_suite, start_bad_arguments)
     char *args[] = { "incantation", "azerty" };
 
     client.player = &player;
-    start_incantation(args, &client, NULL);
+    incantation(args, &client, NULL);
 
     cr_assert_not_null(client.packet_queue);
     cr_assert_not_null(client.packet_queue->packet);
@@ -42,7 +42,7 @@ Test(incantation_suite, start_bad_level)
     server.map = map;
     add_player_at_position(&player, pos, map);
 
-    start_incantation(args, &client, &server);
+    incantation(args, &client, &server);
     cr_assert_not_null(client.packet_queue);
     cr_assert_not_null(client.packet_queue->packet);
     res = client.packet_queue->packet->buffer;
@@ -54,7 +54,7 @@ Test(incantation_suite, start_bad_level)
     server.map = map;
     add_player_at_position(&player, pos, map);
 
-    start_incantation(args, &client, &server);
+    incantation(args, &client, &server);
     cr_assert_not_null(client.packet_queue);
     cr_assert_not_null(client.packet_queue->packet);
     res = client.packet_queue->packet->buffer;
@@ -79,7 +79,7 @@ Test(incantation_suite, start_no_ressources)
     tile->rocks = (rocks_t){ 0, 9, 9, 9, 9, 9 };
     add_player_at_position(&player, pos, map);
 
-    start_incantation(args, &client, &server);
+    incantation(args, &client, &server);
     cr_assert_not_null(client.packet_queue);
     cr_assert_not_null(client.packet_queue->packet);
     char *res = client.packet_queue->packet->buffer;
@@ -102,14 +102,17 @@ Test(incantation_suite, start_enough_ressources)
     player.level = 1;
     client.player = &player;
     server.map = map;
+    server.freq = 10;
     tile->food = 0;
     tile->rocks = (rocks_t){ 1, 0, 0, 0, 0, 0 };
     add_player_at_position(&player, pos, map);
 
-    start_incantation(args, &client, &server);
+    incantation(args, &client, &server);
     cr_assert_not_null(client.packet_queue);
     cr_assert_not_null(client.packet_queue->packet);
     char *res = client.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "Elevation underway");
+
+    cr_assert_eq(client.player->stun_time, 30.0);
 }

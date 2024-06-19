@@ -47,7 +47,6 @@ typedef struct rocks_s {
 
 typedef struct player_s {
     bool isDead;
-    bool in_ritual;
     uuid_t id;
     uint32_t player_number;
     uint32_t egg_number;
@@ -61,6 +60,7 @@ typedef struct player_s {
     double death_remaining_time;
     struct timespec last_stuck_check;
     double stun_time;
+    uint32_t ritual_id;
 } * player_t;
 
 typedef struct player_list_s {

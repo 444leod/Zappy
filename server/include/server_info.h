@@ -21,6 +21,7 @@ typedef struct server_info_s {
     map_t map;
     struct timespec last_refill_check;
     double refill_wait;
+    uint32_t ritual_id;
     rocks_t actual_rocks;
     uint32_t actual_food;
 } *server_info_t;
