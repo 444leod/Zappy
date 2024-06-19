@@ -46,12 +46,13 @@ typedef struct rocks_s {
 
 typedef struct player_s {
     bool isDead;
+    bool in_ritual;
     uuid_t id;
     uint32_t playerNumber;
     uint32_t egg_number;
     team_t team;
     position_t position;
-    int level;
+    uint8_t level;
     rocks_t rocks;
     uint32_t food;
     enum ORIENTATION orientation;

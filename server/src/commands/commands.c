@@ -37,6 +37,7 @@ const command_t COMMANDS[] = {
     {"Eject", &eject, 7, AI},
     {"Take", &take, 7, AI},
     {"Set", &set, 7, AI},
+    {"Incantation", &start_incantation, 0, AI},
 
     {NULL, &unknown_command, 0, NONE}
 };

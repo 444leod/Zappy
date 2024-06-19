@@ -53,6 +53,7 @@ void fork_player(ARGS);
 void eject(ARGS);
 void take(ARGS);
 void set(ARGS);
+void start_incantation(ARGS);
 
 ///////////////////////////////////////////////////////////////////////////////
 // OTHER COMMANDS

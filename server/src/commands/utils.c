@@ -64,3 +64,29 @@ void throw_ko(client_t client)
 {
     add_packet_to_queue(&client->packetQueue, build_packet("ko"));
 }
+
+/**
+ * @brief Prepends a command to a player
+ * @param player The player
+ * @param command The command
+ */
+void prepend_player_command(player_t player, client_command_t command)
+{
+    client_list_t *clients = get_clients();
+    client_list_t client = *clients;
+    client_command_list_t commands = NULL;
+    client_command_list_t new_cmd = NULL;
+
+    for (; client; client = client->next)
+        if (uuid_compare(client->client->player->id, player->id) == 0)
+            break;
+    if (!client || !client->client->commands)
+        return;
+    commands = client->client->commands;
+    new_cmd = my_malloc(sizeof(struct client_command_list_s));
+    while (commands->next)
+        commands = commands->next;
+    new_cmd->prev = commands;
+    new_cmd->command = command;
+    commands->next = new_cmd;
+}

@@ -56,6 +56,7 @@ __SRC_AI := forward.c \
 	eject.c \
 	take.c \
 	set.c \
+	incantation.c \
 
 __SRC_GRAPHICAL := msz.c \
 	bct.c \
@@ -127,6 +128,7 @@ __SRC_AI_TEST	:=	\
 	look.c \
 	take.c \
 	set.c \
+	incantation.c \
 
 __SRC_GFX_TEST := msz.c \
 	bct.c \
