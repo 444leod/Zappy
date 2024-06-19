@@ -38,51 +38,51 @@ namespace gui {
 
                 if (!this->_loader.contains(path, gui::SharedLibraryType::LIBRARY))
                     throw CoreException("File " + path + " is not a valid graphical library.");
-                this->_lib_handler = this->_loader.load(path);
-                if (!this->_lib_handler)
+                this->_libHandler = this->_loader.load(path);
+                if (!this->_libHandler)
                     throw CoreException("Could not open " + path + ".");
-                this->_cur_lib = this->_lib_handler->get<gui::ILibrary>();
-                if (this->_cur_lib == nullptr)
+                this->_curLib = this->_libHandler->get<gui::ILibrary>();
+                if (this->_curLib == nullptr)
                     throw CoreException("Object failed to load library");
-                this->_gameDisplay.initialize(*_cur_lib);
+                this->_gameDisplay.initialize(*_curLib);
             }
 
             ~Core() {}
 
             void switch_graphic_lib()
             {
-                std::string title = this->_cur_lib->display().title();
-                uint32_t framerate = this->_cur_lib->display().framerate();
-                std::size_t width = this->_cur_lib->display().width();
-                std::size_t height = this->_cur_lib->display().height();
+                std::string title = this->_curLib->display().title();
+                uint32_t framerate = this->_curLib->display().framerate();
+                std::size_t width = this->_curLib->display().width();
+                std::size_t height = this->_curLib->display().height();
 
-                auto textures = this->_cur_lib->textures().dump();
-                auto fonts = this->_cur_lib->fonts().dump();
-                auto sounds = this->_cur_lib->sounds().dump();
-                auto musics = this->_cur_lib->musics().dump();
+                auto textures = this->_curLib->textures().dump();
+                auto fonts = this->_curLib->fonts().dump();
+                auto sounds = this->_curLib->sounds().dump();
+                auto musics = this->_curLib->musics().dump();
 
-                this->_lib_handler.reset();
-                this->_cur_lib.reset();
-                this->_cur_lib = this->_lib_handler->get<gui::ILibrary>();
-                if (this->_cur_lib == nullptr)
+                this->_libHandler.reset();
+                this->_curLib.reset();
+                this->_curLib = this->_libHandler->get<gui::ILibrary>();
+                if (this->_curLib == nullptr)
                     throw CoreException("Object failed to load library");
 
-                this->_cur_lib->display().setTitle(title);
-                this->_cur_lib->display().setFramerate(framerate);
-                this->_cur_lib->display().setWidth(width);
-                this->_cur_lib->display().setHeight(height);
+                this->_curLib->display().setTitle(title);
+                this->_curLib->display().setFramerate(framerate);
+                this->_curLib->display().setWidth(width);
+                this->_curLib->display().setHeight(height);
 
                 for (const auto& texture : textures)
-                    this->_cur_lib->textures().load(texture.first, texture.second);
+                    this->_curLib->textures().load(texture.first, texture.second);
 
                 for (const auto& font : fonts)
-                    this->_cur_lib->fonts().load(font.first, font.second);
+                    this->_curLib->fonts().load(font.first, font.second);
 
                 for (const auto& sound : sounds)
-                    this->_cur_lib->sounds().load(sound.first, sound.second);
+                    this->_curLib->sounds().load(sound.first, sound.second);
 
                 for (const auto& music : musics)
-                    this->_cur_lib->musics().load(music.first, music.second);
+                    this->_curLib->musics().load(music.first, music.second);
             }
 
             void run(std::uint32_t port)
@@ -91,7 +91,7 @@ namespace gui {
                 auto before = std::chrono::high_resolution_clock::now();
                 gui::GameDataManager gameDataManager(port);
 
-                while (this->_cur_lib->display().opened()) {
+                while (this->_curLib->display().opened()) {
 //                    gameDataManager.handleRequests();
                     gui::Event event = {};
                     auto now = std::chrono::high_resolution_clock::now();
@@ -103,21 +103,21 @@ namespace gui {
                         lib_switch = false;
                         continue;
                     }
-                    while (_cur_lib->display().pollEvent(event)) {
+                    while (_curLib->display().pollEvent(event)) {
                         if (event.key.code == gui::KeyCode::J || event.key.code == gui::KeyCode::L)
                             lib_switch = true;
                     }
 
-                    this->_cur_lib->display().update(deltaTime);
-                    this->_gameDisplay.draw(*_cur_lib, _gameData);
+                    this->_curLib->display().update(deltaTime);
+                    this->_gameDisplay.draw(*_curLib, _gameData);
                 }
             }
 
         private:
             GameData _gameData;
             GameDisplay _gameDisplay;
-            std::shared_ptr<gui::ILibrary> _cur_lib = nullptr;
-            std::shared_ptr<LibraryObject> _lib_handler = nullptr;
+            std::shared_ptr<gui::ILibrary> _curLib = nullptr;
+            std::shared_ptr<LibraryObject> _libHandler = nullptr;
             LibraryLoader _loader;
     };
 }
