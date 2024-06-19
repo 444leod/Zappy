@@ -32,12 +32,12 @@ static const char *get_content_arg(char **args)
  *
  * @param args the arguments of the command
  * @param client the client that executed the command
- * @param serverInfo the server info
+ * @param server_info the server info
  */
 void set(
     char **args,
     const client_t client,
-    UNUSED const server_info_t serverInfo)
+    UNUSED const server_info_t server_info)
 {
     player_t player = client->player;
     tile_t tile = NULL;
@@ -47,7 +47,7 @@ void set(
         throw_ko(client);
         return;
     }
-    tile = get_tile_at_position(player->position, serverInfo->map);
+    tile = get_tile_at_position(player->position, server_info->map);
     if (!player_pick_up(arg, player, tile, -1))
         throw_ko(client);
     else

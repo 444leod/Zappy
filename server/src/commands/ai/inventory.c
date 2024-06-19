@@ -38,12 +38,12 @@ static char *format_inventory(uint32_t food, rocks_t rocks)
  *
  * @param args the arguments of the command
  * @param client the client that executed the command
- * @param serverInfo the server info
+ * @param server_info the server info
  */
 void inventory(
     char **args,
     const client_t client,
-    UNUSED const server_info_t serverInfo)
+    UNUSED const server_info_t server_info)
 {
     player_t player = client->player;
     char *inv = NULL;

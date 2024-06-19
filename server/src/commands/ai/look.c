@@ -154,12 +154,12 @@ static void free_list_holders(node_t list)
  *
  * @param args the arguments of the command
  * @param client the client that executed the command
- * @param serverInfo the server info
+ * @param server_info the server info
  */
 void look(
     char **args,
     const client_t client,
-    const server_info_t serverInfo)
+    const server_info_t server_info)
 {
     tile_list_t tiles = NULL;
     char *vision = NULL;
@@ -168,7 +168,7 @@ void look(
         throw_ko(client);
         return;
     }
-    tiles = get_vision_tiles(client->player, serverInfo->map);
+    tiles = get_vision_tiles(client->player, server_info->map);
     vision = format_vision(tiles);
     add_packet_to_queue(&client->packet_queue, build_packet(vision));
     my_free(vision);

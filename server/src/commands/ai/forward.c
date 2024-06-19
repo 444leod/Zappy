@@ -22,7 +22,7 @@
 void forward(
     char **args,
     const client_t client,
-    const server_info_t serverInfo)
+    const server_info_t server_info)
 {
     position_t pos = client->player->position;
 
@@ -34,8 +34,8 @@ void forward(
     pos.y += client->player->orientation == SOUTH;
     pos.x += client->player->orientation == EAST;
     pos.x -= client->player->orientation == WEST;
-    pos.x %= serverInfo->map->width;
-    pos.y %= serverInfo->map->height;
-    move_player(client->player, pos, serverInfo->map);
+    pos.x %= server_info->map->width;
+    pos.y %= server_info->map->height;
+    move_player(client->player, pos, server_info->map);
     add_packet_to_queue(&client->packet_queue, build_packet("ok"));
 }

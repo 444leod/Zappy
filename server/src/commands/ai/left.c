@@ -16,12 +16,12 @@
  *
  * @param args the arguments of the command
  * @param client the client that executed the command
- * @param serverInfo the server info
+ * @param server_info the server info
  */
 void left(
     char **args,
     const client_t client,
-    UNUSED const server_info_t serverInfo)
+    UNUSED const server_info_t server_info)
 {
     if (tablen((const void **)args) != 1) {
         throw_ko(client);

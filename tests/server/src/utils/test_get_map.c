@@ -98,6 +98,19 @@ Test(get_map, get_tile_at_position_special)
     cr_assert(uuid_compare(tile->players->next->player->id, id2) == 0);
 }
 
+Test(get_map, get_tile_at_out_of_bounds)
+{
+    position_t a = { 2, 2 };
+    position_t b = { 7, 7 };
+    map_t map = create_map(5, 5);
+    tile_t tileA = get_tile_at_position(a, map);
+    tile_t tileB = get_tile_at_position(b, map);
+
+    cr_assert_not_null(tileA);
+    cr_assert_not_null(tileB);
+    cr_assert_eq(tileA, tileB);
+}
+
 Test(get_map, add_player_at_position)
 {
     map_t map = create_map(10, 10);

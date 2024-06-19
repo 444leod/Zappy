@@ -84,12 +84,12 @@ void destroy_eggs(egg_list_t *eggs)
  *
  * @param args the arguments of the command
  * @param client the client that executed the command
- * @param serverInfo the server info
+ * @param server_info the server info
  */
 void eject(
     char **args,
     const client_t client,
-    const server_info_t serverInfo)
+    const server_info_t server_info)
 {
     packet_t *packet = NULL;
     tile_t tile = NULL;
@@ -99,8 +99,8 @@ void eject(
         throw_ko(client);
         return;
     }
-    tile = get_tile_at_position(client->player->position, serverInfo->map);
-    ejected = eject_players(client->player, tile->players, serverInfo->map);
+    tile = get_tile_at_position(client->player->position, server_info->map);
+    ejected = eject_players(client->player, tile->players, server_info->map);
     packet = build_packet(ejected ? "ok" : "ko");
     destroy_eggs(&tile->eggs);
     add_packet_to_queue(&client->packet_queue, packet);
