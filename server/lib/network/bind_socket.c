@@ -12,19 +12,19 @@
  * @brief Bind a socket
  * @details Bind a socket to a given port
  *
- * @param socketFd the socket to bind
+ * @param socket_fd the socket to bind
  * @param port the port to bind to
 */
-void bind_socket(const int socketFd, const uint16_t port)
+void bind_socket(const int socket_fd, const uint16_t port)
 {
-    struct sockaddr_in serverAddress;
-    int bindRes = 0;
+    struct sockaddr_in server_address;
+    int bind_result = 0;
 
-    serverAddress.sin_family = AF_INET;
-    serverAddress.sin_port = htons(port);
-    serverAddress.sin_addr.s_addr = htons(INADDR_ANY);
-    bindRes = bind(socketFd, (const struct sockaddr *)&serverAddress,
-        sizeof(serverAddress));
-    if (bindRes == -1)
+    server_address.sin_family = AF_INET;
+    server_address.sin_port = htons(port);
+    server_address.sin_addr.s_addr = htons(INADDR_ANY);
+    bind_result = bind(socket_fd, (const struct sockaddr *)&server_address,
+        sizeof(server_address));
+    if (bind_result == -1)
         my_error(supercat(2, "bind failed: ", strerror(errno)));
 }

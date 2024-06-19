@@ -17,5 +17,5 @@
  */
 void queue_buffer(const client_t client, const char *buffer)
 {
-    add_packet_to_queue(&client->packetQueue, build_packet(buffer));
+    add_packet_to_queue(&client->packet_queue, build_packet(buffer));
 }

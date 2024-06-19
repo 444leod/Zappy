@@ -14,20 +14,20 @@
 #include "zappy.h"
 #include "packet.h"
 
-void assert_packet_queue(packet_queue_t packetQueue, uint32_t packets_number, ...)
+void assert_packet_queue(packet_queue_t packet_queue, uint32_t packets_number, ...)
 {
     va_list args;
 
     va_start(args, packets_number);
     for (uint32_t i = 0; i < packets_number; i++) {
-        cr_assert_not_null(packetQueue);
-        cr_assert_not_null(packetQueue->packet);
-        cr_assert_not_null(packetQueue->packet->buffer);
-        cr_assert_str_eq(packetQueue->packet->buffer, va_arg(args, char *));
-        packetQueue = packetQueue->next;
+        cr_assert_not_null(packet_queue);
+        cr_assert_not_null(packet_queue->packet);
+        cr_assert_not_null(packet_queue->packet->buffer);
+        cr_assert_str_eq(packet_queue->packet->buffer, va_arg(args, char *));
+        packet_queue = packet_queue->next;
     }
     va_end(args);
-    cr_assert_null(packetQueue);
+    cr_assert_null(packet_queue);
 }
 
 server_info_t get_server_info()
@@ -45,7 +45,7 @@ client_t test_create_client(uint32_t id)
 {
     client_t client = create_client(id);
 
-    client->packetQueue = NULL;
+    client->packet_queue = NULL;
     add_client(client);
     return client;
 }

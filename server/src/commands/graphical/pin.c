@@ -18,28 +18,28 @@
 char *get_player_inventory_string(const player_t player)
 {
     return my_snprintf("pin %d %d %d %d %d %d %d %d",
-        player->playerNumber, player->food,
+        player->player_number, player->food,
         player->rocks.linemate, player->rocks.deraumere,
         player->rocks.sibur, player->rocks.mendiane,
         player->rocks.phiras, player->rocks.thystame);
 }
 
 /**
- * @brief Send the player inventory to a client by the playerNumber
- * @details Send the player inventory to a client by the playerNumber
+ * @brief Send the player inventory to a client by the player_number
+ * @details Send the player inventory to a client by the player_number
  *
  * @param client the client that executed the command
- * @param playerNumber the player number
+ * @param player_number the player number
 */
 void send_player_inventory_to_client(const client_t client,
-    const int playerNumber)
+    const int player_number)
 {
-    player_t player = get_player_by_player_number(playerNumber);
+    player_t player = get_player_by_player_number(player_number);
     char *inventory;
 
     if (!player) {
         printf("Client %d: pin %d: player not found\n",
-            client->fd, playerNumber);
+            client->fd, player_number);
         queue_buffer(client, "sbp");
         return;
     }
@@ -53,19 +53,19 @@ void send_player_inventory_to_client(const client_t client,
  * @details Send the player inventory to a list of clients
  *
  * @param clients the list of clients
- * @param playerNumber the player number
+ * @param player_number the player number
  */
 void send_player_inventory_to_client_list(const client_list_t clients,
-    const int playerNumber)
+    const int player_number)
 {
     client_list_t tmp = clients;
-    player_t player = get_player_by_player_number(playerNumber);
+    player_t player = get_player_by_player_number(player_number);
     char *inventory = "sbp";
 
     if (player)
         inventory = get_player_inventory_string(player);
     else
-        printf("GLOBAL: pin %d: player not found\n", playerNumber);
+        printf("GLOBAL: pin %d: player not found\n", player_number);
     while (tmp) {
         queue_buffer(tmp->client, inventory);
         tmp = tmp->next;
@@ -80,23 +80,23 @@ void send_player_inventory_to_client_list(const client_list_t clients,
  *
  * @param args the arguments of the command
  * @param client the client that executed the command
- * @param serverInfo the server info
+ * @param server_info the server info
  */
 void pin(char **args, const client_t client,
-    UNUSED const server_info_t serverInfo)
+    UNUSED const server_info_t server_info)
 {
-    int playerNumber;
+    int player_number;
 
     if (tablen((const void **)args) != 2) {
         printf("Client %d: pin: bad argument number\n", client->fd);
         queue_buffer(client, "sbp");
         return;
     }
-    playerNumber = atoi(args[1]);
-    if (!is_number(args[1]) || playerNumber < 0) {
+    player_number = atoi(args[1]);
+    if (!is_number(args[1]) || player_number < 0) {
         printf("Client %d: pin: argument is not a valid number\n", client->fd);
         queue_buffer(client, "sbp");
         return;
     }
-    send_player_inventory_to_client(client, playerNumber);
+    send_player_inventory_to_client(client, player_number);
 }

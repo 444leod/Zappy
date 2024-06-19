@@ -31,22 +31,22 @@
 */
 static void add_clients_to_set(client_list_t clients, select_data_t *sd)
 {
-    client_list_t clientNode = clients;
+    client_list_t client_node = clients;
 
-    while (clientNode) {
-        if (clientNode->client->packetQueue) {
-            FD_SET(clientNode->client->fd, sd->writefds);
-            sd->max_sd = (clientNode->client->fd > sd->max_sd) ?
-                clientNode->client->fd : sd->max_sd;
+    while (client_node) {
+        if (client_node->client->packet_queue) {
+            FD_SET(client_node->client->fd, sd->writefds);
+            sd->max_sd = (client_node->client->fd > sd->max_sd) ?
+                client_node->client->fd : sd->max_sd;
         }
-        if (!can_interact(clientNode->client)) {
-            clientNode = clientNode->next;
+        if (!can_interact(client_node->client)) {
+            client_node = client_node->next;
             continue;
         }
-        FD_SET(clientNode->client->fd, sd->readfds);
-        sd->max_sd = (clientNode->client->fd > sd->max_sd) ?
-            clientNode->client->fd : sd->max_sd;
-        clientNode = clientNode->next;
+        FD_SET(client_node->client->fd, sd->readfds);
+        sd->max_sd = (client_node->client->fd > sd->max_sd) ?
+            client_node->client->fd : sd->max_sd;
+        client_node = client_node->next;
     }
 }
 
@@ -66,13 +66,13 @@ static void try_command(client_t client, struct timeval **timeout)
     if (!client->commands)
         return;
     tmp_timeout = get_timeval_by_double(
-        client->commands->command->waitDuration);
+        client->commands->command->wait_duration);
     if ((*timeout)->tv_sec == -1) {
         **timeout = tmp_timeout;
         return;
     }
     tmp_timeout = get_timeval_by_double(
-        client->commands->command->waitDuration);
+        client->commands->command->wait_duration);
     if (timevalcmp(&tmp_timeout, *timeout) < 0)
         **timeout = tmp_timeout;
 }
@@ -110,7 +110,7 @@ static void try_death(const client_t client, struct timeval **timeout)
  * @param timeout the timeout to update
  * @param client the client to check
  *
- * @return true if the timeout has been updated with a packetQueue not empty
+ * @return true if the timeout has been updated with a packet_queue not empty
  * (special case), false otherwise
  */
 static bool try_update_timeval(struct timeval **timeout, client_t client)
@@ -123,7 +123,7 @@ static bool try_update_timeval(struct timeval **timeout, client_t client)
 /**
  * @brief Get the timeout for the select function
  * @details Get the timeout for the select function by checking the
- *   clients commands and packetQueue
+ *   clients commands and packet_queue
  *
  * @param clients the list of clients
  * @return struct timeval* the timeout

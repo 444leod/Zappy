@@ -17,19 +17,19 @@
 */
 void add_packet_to_queue(packet_queue_t *queue, packet_t *packet)
 {
-    packet_queue_t newPacket = my_malloc(sizeof(struct packet_queue_s));
+    packet_queue_t new_packet = my_malloc(sizeof(struct packet_queue_s));
     packet_queue_t tmp;
 
-    newPacket->packet = packet;
-    newPacket->next = NULL;
+    new_packet->packet = packet;
+    new_packet->next = NULL;
     if (!*queue) {
-        *queue = newPacket;
+        *queue = new_packet;
         return;
     }
     tmp = *queue;
     while (tmp->next)
         tmp = tmp->next;
-    tmp->next = newPacket;
+    tmp->next = new_packet;
 }
 
 /**

@@ -63,7 +63,7 @@ void send_time_unit_modification_to_client_list(const client_list_t clients,
  * @param server_info the server info
  */
 void sst(char **args, const client_t client,
-    const server_info_t serverInfo)
+    const server_info_t server_info)
 {
     int time_unit = 0;
 
@@ -78,7 +78,7 @@ void sst(char **args, const client_t client,
         queue_buffer(client, "sbp");
         return;
     }
-    serverInfo->freq = time_unit;
+    server_info->freq = time_unit;
     send_time_unit_modification_to_client_list(get_clients_by_type(GRAPHICAL),
         time_unit);
 }

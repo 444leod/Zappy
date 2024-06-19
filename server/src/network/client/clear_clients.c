@@ -17,15 +17,15 @@
 void clear_clients(void)
 {
     client_list_t *clients = get_clients();
-    client_list_t clientNode = *clients;
+    client_list_t client_node = *clients;
     client_list_t next = NULL;
 
-    while (clientNode) {
-        if (clientNode->client->fd != -1) {
-            close(clientNode->client->fd);
+    while (client_node) {
+        if (client_node->client->fd != -1) {
+            close(client_node->client->fd);
         }
-        next = clientNode->next;
-        remove_from_list((node_t *)clientNode->client, (node_t *)clients);
-        clientNode = next;
+        next = client_node->next;
+        remove_from_list((node_t *)client_node->client, (node_t *)clients);
+        client_node = next;
     }
 }

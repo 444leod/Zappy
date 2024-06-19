@@ -50,7 +50,7 @@ void debug_print_timer(TIMER *timer, const double elapsed,
 {
     va_list args;
     const TIMER now = clock();
-    double elapsedCpuTime;
+    double elapsed_cpu_time;
 
     if (*timer == -1) {
         *timer = clock();
@@ -59,8 +59,8 @@ void debug_print_timer(TIMER *timer, const double elapsed,
         va_end(args);
         return;
     }
-    elapsedCpuTime = ((double) (now - *timer)) / CLOCKS_PER_SEC * 10;
-    if (elapsedCpuTime > elapsed) {
+    elapsed_cpu_time = ((double) (now - *timer)) / CLOCKS_PER_SEC * 10;
+    if (elapsed_cpu_time > elapsed) {
         va_start(args, fmt);
         debug_print_va(fmt, args);
         va_end(args);

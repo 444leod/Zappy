@@ -71,13 +71,13 @@ static void check_height(param_t params)
 */
 static void check_clients_nb(param_t params)
 {
-    param_t clientsNb = get_param("-c", params);
+    param_t clients_nb = get_param("-c", params);
 
-    if (clientsNb == NULL || !is_number(clientsNb->informations->content))
-        display_help("Invalid clientsNb.\n");
-    if (atoi(clientsNb->informations->content) < 1)
-        display_help("Invalid clientsNb (min 1).\n");
-    clientsNb->informations->handled = true;
+    if (clients_nb == NULL || !is_number(clients_nb->informations->content))
+        display_help("Invalid clients_nb.\n");
+    if (atoi(clients_nb->informations->content) < 1)
+        display_help("Invalid clients_nb (min 1).\n");
+    clients_nb->informations->handled = true;
 }
 
 /**
@@ -101,15 +101,15 @@ static void check_freq(param_t params)
  * @brief Check the team names
  * @details Check if the team names are valid (not duplicate)
  *
- * @param actualName the name to check
- * @param otherParams the other team names
+ * @param actual_name the name to check
+ * @param other_params the other team names
 */
-static void check_name(char *actualName, param_t otherParams)
+static void check_name(char *actual_name, param_t other_params)
 {
-    while (otherParams) {
-        if (strcmp(actualName, otherParams->informations->content) == 0)
+    while (other_params) {
+        if (strcmp(actual_name, other_params->informations->content) == 0)
             display_help("Duplicate team names.\n");
-        otherParams = otherParams->next;
+        other_params = other_params->next;
     }
 }
 

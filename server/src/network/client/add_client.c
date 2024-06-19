@@ -11,9 +11,9 @@
  * @brief Add a client to the linked list
  * @details Add a client to the linked list
  *
- * @param newClient the client to add
+ * @param new_client the client to add
 */
-void add_client(const client_t newClient)
+void add_client(const client_t new_client)
 {
-    add_to_list((void *)newClient, (node_t *)get_clients());
+    add_to_list((void *)new_client, (node_t *)get_clients());
 }
