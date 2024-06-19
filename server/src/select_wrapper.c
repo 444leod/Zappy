@@ -12,6 +12,7 @@
 #include "garbage_collector.h"
 #include "debug.h"
 #include "time_utils.h"
+#include "select_wrapper.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -28,27 +29,23 @@
  * @param writefds the write fd_set
  * @param max_sd the max_sd variable
 */
-static void add_clients_to_set(
-    client_list_t clients,
-    fd_set *readfds,
-    fd_set *writefds,
-    int *max_sd)
+static void add_clients_to_set(client_list_t clients, select_data_t *sd)
 {
     client_list_t client_node = clients;
 
     while (client_node) {
         if (client_node->client->packet_queue) {
-            FD_SET(client_node->client->fd, writefds);
-            *max_sd = (client_node->client->fd > *max_sd) ?
-                client_node->client->fd : *max_sd;
+            FD_SET(client_node->client->fd, sd->writefds);
+            sd->max_sd = (client_node->client->fd > sd->max_sd) ?
+                client_node->client->fd : sd->max_sd;
         }
         if (!can_interact(client_node->client)) {
             client_node = client_node->next;
             continue;
         }
-        FD_SET(client_node->client->fd, readfds);
-        *max_sd = (client_node->client->fd > *max_sd) ?
-            client_node->client->fd : *max_sd;
+        FD_SET(client_node->client->fd, sd->readfds);
+        sd->max_sd = (client_node->client->fd > sd->max_sd) ?
+            client_node->client->fd : sd->max_sd;
         client_node = client_node->next;
     }
 }
@@ -118,11 +115,6 @@ static void try_death(const client_t client, struct timeval **timeout)
  */
 static bool try_update_timeval(struct timeval **timeout, client_t client)
 {
-    if (client->packet_queue) {
-        (*timeout)->tv_sec = 0;
-        (*timeout)->tv_usec = 0;
-        return true;
-    }
     try_command(client, timeout);
     try_death(client, timeout);
     return false;
@@ -136,16 +128,14 @@ static bool try_update_timeval(struct timeval **timeout, client_t client)
  * @param clients the list of clients
  * @return struct timeval* the timeout
 */
-static struct timeval *get_timeout(client_list_t clients)
+static struct timeval *get_timeout(client_list_t clients,
+    server_info_t serverInfo)
 {
     client_list_t tmp = clients;
     struct timeval *timeout = NULL;
 
-    if (!tmp)
-        return NULL;
     timeout = my_malloc(sizeof(struct timeval));
-    timeout->tv_sec = -1;
-    timeout->tv_sec = -1;
+    *timeout = get_timeval_by_double(serverInfo->refill_wait);
     while (tmp) {
         if (try_update_timeval(&timeout, tmp->client))
             return timeout;
@@ -166,15 +156,17 @@ static struct timeval *get_timeout(client_list_t clients)
  * @param writefds the write fd_set
  * @param clients the list of clients
 */
-void select_wrapper(int *max_sd, fd_set *readfds,
-    fd_set *writefds, client_list_t clients)
+void select_wrapper(select_data_t *sd, const client_list_t clients,
+    const server_info_t serverInfo)
 {
-    struct timeval *timeout = get_timeout(clients);
+    struct timeval *timeout = get_timeout(clients, serverInfo);
     int activity = 0;
 
-    add_clients_to_set(clients, readfds, writefds, max_sd);
-    special_print(readfds, writefds);
-    activity = select(*max_sd + 1, readfds, writefds, NULL, timeout);
+    add_clients_to_set(clients, sd);
+    sd->max_sd++;
+    special_print(sd->readfds, sd->writefds);
+    DEBUG_PRINT("Timeout: %ld %03ld\n", timeout->tv_sec, timeout->tv_usec);
+    activity = select(sd->max_sd, sd->readfds, sd->writefds, NULL, timeout);
     if (activity < 0)
         my_error("select wrapper failed");
     my_free(timeout);

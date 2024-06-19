@@ -66,6 +66,7 @@ __SRC_GAME := \
 	manage_entities.c \
 	query_map.c \
 	player_death.c \
+	refill_map.c \
 
 __SRC_ARGS := \
 	params.c \
@@ -103,7 +104,8 @@ __TEST_SRC	= \
 	$(addprefix $(__TEST_PATH)utils/test_, $(__SRC_UTILS_TEST)) \
 
 __SRC_ROOT_TEST := utils.c \
-	client.c
+	client.c \
+	refill_map.c \
 
 __SRC_COMMANDS_TEST := auth.c \
 

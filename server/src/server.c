@@ -11,6 +11,7 @@
 #include "macros.h"
 #include "garbage_collector.h"
 #include "debug.h"
+#include "select_wrapper.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -47,6 +48,25 @@ static void add_new_client(int socket_fd)
 }
 
 /**
+ * @brief Initialize the select_data struct
+ * @details initialize the select_data struct with the read and write fd_sets
+ *  and the max_sd variable
+ *
+ * @return the select_data struct
+*/
+static select_data_t init_select_data(void)
+{
+    select_data_t select_data;
+
+    select_data.readfds = my_malloc(sizeof(fd_set));
+    select_data.writefds = my_malloc(sizeof(fd_set));
+    select_data.max_sd = 0;
+    FD_ZERO(select_data.readfds);
+    FD_ZERO(select_data.writefds);
+    return select_data;
+}
+
+/**
  * @brief Main Zappy loop
  * @details the main loop of the Zappy server, it accepts new clients and
  *  updates the clients status, also it calls the loop_clients function
@@ -57,21 +77,21 @@ static void add_new_client(int socket_fd)
 */
 void zappy_loop(int socket_fd, server_info_t server_info)
 {
-    fd_set readfds;
-    fd_set writefds;
-    int max_sd = 0;
+    select_data_t select_data = init_select_data();
     client_list_t clients = NULL;
 
     while (1) {
+        refill_map(server_info);
         clients = (*get_clients());
-        FD_ZERO(&readfds);
-        FD_ZERO(&writefds);
-        FD_SET(socket_fd, &readfds);
-        max_sd = socket_fd;
-        select_wrapper(&max_sd, &readfds, &writefds, clients);
-        if (FD_ISSET(socket_fd, &readfds))
+        FD_ZERO(select_data.readfds);
+        FD_ZERO(select_data.writefds);
+        FD_SET(socket_fd, select_data.readfds);
+        select_data.max_sd = socket_fd;
+        select_wrapper(&select_data, clients, server_info);
+        if (FD_ISSET(socket_fd, select_data.readfds))
             add_new_client(socket_fd);
-        loop_clients(clients, &readfds, &writefds, server_info);
+        loop_clients(clients, select_data.readfds,
+            select_data.writefds, server_info);
         DEBUG_PRINT("Executed all actions.\n");
     }
 }

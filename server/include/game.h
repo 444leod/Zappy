@@ -14,6 +14,7 @@
 #include "teams.h"
 
 #define DEATH_TICKS 126
+#define REFILL_TICKS 10
 
 #define D_FOOD 0.5
 #define D_LINEMATE 0.3
@@ -107,7 +108,8 @@ typedef struct map_s {
 } * map_t;
 
 map_t create_map(const uint32_t width, const uint32_t height);
-void init_map(const map_t map, const team_list_t teams);
+void fill_map(const map_t map, rocks_t *current_rocks,
+    uint32_t *current_food, const team_list_t teams);
 tile_t get_tile_at_position(const position_t position, const map_t map);
 void add_player_at_position(const player_t player, const position_t position,
     const map_t map);
