@@ -11,6 +11,7 @@
 #include "clients.h"
 #include "lib.h"
 #include "zappy.h"
+#include "time_utils.h"
 #include <time.h>
 
 /**
@@ -39,13 +40,13 @@ static bool check_tile_ressources(
         return false;
     mask = incantation_masks[level - 1];
     return (
-        (mask >> 12 & 7) >= count &&
-        (mask >> 10 & 3) >= rocks.linemate &&
-        (mask >> 8 & 3) >= rocks.deraumere &&
-        (mask >> 6 & 3) >= rocks.sibur &&
-        (mask >> 4 & 3) >= rocks.mendiane &&
-        (mask >> 2 & 3) >= rocks.phiras &&
-        (mask >> 0 & 3) >= rocks.thystame
+        (mask >> 12 & 7) <= count &&
+        (mask >> 10 & 3) <= rocks.linemate &&
+        (mask >> 8 & 3) <= rocks.deraumere &&
+        (mask >> 6 & 3) <= rocks.sibur &&
+        (mask >> 4 & 3) <= rocks.mendiane &&
+        (mask >> 2 & 3) <= rocks.phiras &&
+        (mask >> 0 & 3) <= rocks.thystame
     );
 }
 
@@ -118,22 +119,20 @@ static void start_incantation(
 {
     packet_t *packet = NULL;
     uint32_t ritual = server_info->ritual_id + 1;
-    struct timespec now;
-    client_command_t command = my_malloc(sizeof(struct client_command_s));
+    struct timespec now = get_actual_time();
 
     server_info->ritual_id++;
-    clock_gettime(0, &now);
     while (players) {
         packet = build_packet("Elevation underway");
         queue_packet_to_player(players->player, packet);
         players->player->ritual_id = ritual;
-        players->player->stun_time = 300.0 / server_info->freq;
-        players->player->last_stuck_check = now;
+        if (players->player != client->player) {
+            players->player->stun_time = 300.0 / (double)server_info->freq;
+            players->player->last_stuck_check = now;
+        }
         players = players->next;
     }
-    command->command = "EndIncantation";
-    command->initialized = false;
-    prepend_player_command(client->player, command);
+    prepend_client_command(client, create_command("EndIncantation", &now));
 }
 
 static void evolve(player_t player)
@@ -166,11 +165,13 @@ void end_incantation(
     uint8_t level = player->level;
     bool success = check_tile_ressources(level, players, tile->rocks);
 
+    printf("Incantation %d succeded? %d\n", player->ritual_id, success);
     while (players) {
         if (success)
             evolve(players->player);
         else
             queue_packet_to_player(players->player, build_packet("ko"));
+        players = players->next;
     }
     if (!success)
         return;

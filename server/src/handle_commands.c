@@ -31,14 +31,14 @@ static void execute_command(const client_command_t command,
 }
 
 /**
- * @brief Checks if the player can act, or decrease the stun.
+ * @brief Checks if the player IS STUNNED
  */
 static bool check_player_stun(player_t player)
 {
     struct timespec now;
     double elapsed_time;
 
-    if (player->stun_time > 0)
+    if (player->stun_time <= 0)
         return false;
     clock_gettime(0, &now);
     elapsed_time = (now.tv_sec - player->last_stuck_check.tv_sec);
@@ -46,7 +46,7 @@ static bool check_player_stun(player_t player)
         / 1000000000.0;
     player->stun_time -= elapsed_time;
     player->last_stuck_check = now;
-    return true;
+    return player->stun_time >= 0;
 }
 
 /**
@@ -67,15 +67,15 @@ static bool should_be_handled(const client_command_t command,
     struct timespec now;
     double elapsed_time;
 
-    if (client->type == GRAPHICAL)
+    if (client->type != AI)
         return true;
     clock_gettime(0, &now);
-    command->handled_time = now;
-    if (check_player_stun(client->player))
-        return false;
     elapsed_time = (now.tv_sec - command->handled_time.tv_sec);
     elapsed_time += (now.tv_nsec - command->handled_time.tv_nsec)
         / 1000000000.0;
+    command->handled_time = now;
+    if (check_player_stun(client->player))
+        return false;
     command->wait_duration -= elapsed_time;
     return command->wait_duration <= 0;
 }
@@ -106,7 +106,7 @@ static void initialize_command(const client_command_t command,
             COMMANDS[i].client_type == client->type) {
             command->command_handler = COMMANDS[i];
             command->wait_duration = COMMANDS[i].execution_ticks == 0 ? 0 :
-                COMMANDS[i].execution_ticks / server_info->freq;
+                COMMANDS[i].execution_ticks / (double)server_info->freq;
             return;
         }
     }
