@@ -49,7 +49,7 @@ namespace gui {
 
             ~Core() {}
 
-            void switch_graphic_lib()
+            void switchGraphicLib()
             {
                 std::string title = this->_curLib->display().title();
                 uint32_t framerate = this->_curLib->display().framerate();
@@ -87,7 +87,7 @@ namespace gui {
 
             void run(std::uint32_t port)
             {
-                auto lib_switch = false;
+                auto libSwitch = false;
                 auto before = std::chrono::high_resolution_clock::now();
                 gui::GameDataManager gameDataManager(port);
 
@@ -98,14 +98,14 @@ namespace gui {
                     float deltaTime = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(now - before).count() / 1000.0;
                     before = now;
 
-                    if (lib_switch) {
-                        this->switch_graphic_lib();
-                        lib_switch = false;
+                    if (libSwitch) {
+                        this->switchGraphicLib();
+                        libSwitch = false;
                         continue;
                     }
                     while (_curLib->display().pollEvent(event)) {
                         if (event.key.code == gui::KeyCode::J || event.key.code == gui::KeyCode::L)
-                            lib_switch = true;
+                            libSwitch = true;
                     }
 
                     this->_curLib->display().update(deltaTime);
