@@ -89,9 +89,9 @@ namespace gui {
 
             /**
              * @brief Set the is laying an egg
-             * @param isLayingAnEgg The is laying an egg
+             * @param layEgg The is laying an egg
             */
-            void isLayingAnEgg(bool isLayingAnEgg) { this->_isLayingAnEgg = isLayingAnEgg; }
+            void layEgg(bool layEgg) { this->_isLayingAnEgg = layEgg; }
 
             /**
              * @brief Broadcast a message
@@ -108,13 +108,13 @@ namespace gui {
              * @brief set the player expulsed
              * @param isExpulsed The player expulsed
             */
-            void expulsed(bool isExpulsed) { this->_isExpulsed = isExpulsed; }
+            void expulse(bool isExpulsed) { this->_isExpulsed = isExpulsed; }
 
             /**
              * @brief set the player picking ressource
-             * @param pickingRessource The player picking ressource
+             * @param pickRessource The player picking ressource
             */
-            void pickingRessource() { this->_pickingRessource = true; }
+            void pickRessource() { this->_pickingRessource = true; }
 
             /**
              * @brief set the player incantation

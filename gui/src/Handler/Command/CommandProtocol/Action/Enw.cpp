@@ -35,6 +35,6 @@ void gui::Enw::receive(std::string command, GameData &gameData)
     if (player.has_value()) {
         std::cout << "Player " << playerId << " laid an egg with id " << eggId << std::endl;
         std::shared_ptr<gui::Egg> egg = std::make_shared<gui::Egg>(eggId, Vector2u(x, y), player.value()->teamName());
-        player.value()->isLayingAnEgg(false);
+        player.value()->layEgg(false);
     }
 }

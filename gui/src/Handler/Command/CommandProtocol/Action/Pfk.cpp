@@ -27,5 +27,5 @@ void gui::Pfk::receive(std::string command, GameData &gameData)
         throw std::invalid_argument("Player does not exist");
     auto player = gameData.getPlayerById(playerId);
     if (player.has_value())
-        player.value()->isLayingAnEgg(true);
+        player.value()->layEgg(true);
 }

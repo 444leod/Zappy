@@ -29,5 +29,5 @@ void gui::Pgt::receive(std::string command, GameData &gameData)
     auto player = gameData.getPlayerById(playerId);
     for (std::uint32_t i = 0; i < ressourceNbr; i++)
         if (player.has_value())
-            player.value()->pickingRessource();
+            player.value()->pickRessource();
 }

@@ -27,5 +27,5 @@ void gui::Pex::receive(std::string command, GameData &gameData)
         throw std::invalid_argument("Player does not exist");
     auto player = gameData.getPlayerById(playerId);
     if (player.has_value())
-        player.value()->expulsed(true);
+        player.value()->expulse(true);
 }
