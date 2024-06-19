@@ -163,7 +163,7 @@ static void init_map(const server_info_t server_info)
 {
     server_info->actual_rocks = (rocks_t){0, 0, 0, 0, 0, 0};
     server_info->actual_food = 0;
-    server_info->refill_wait = REFILL_TICKS / server_info->freq;
+    server_info->refill_wait = REFILL_TICKS / (double)server_info->freq;
     server_info->last_refill_check = get_actual_time();
     server_info->map = create_map(server_info->width, server_info->height);
     fill_map(server_info->map, &server_info->actual_rocks,

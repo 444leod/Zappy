@@ -136,6 +136,7 @@ static struct timeval *get_timeout(client_list_t clients,
 
     timeout = my_malloc(sizeof(struct timeval));
     *timeout = get_timeval_by_double(serverInfo->refill_wait);
+    DEBUG_PRINT("Refill: %ld %03ld\n", timeout->tv_sec, timeout->tv_usec);
     while (tmp) {
         if (try_update_timeval(&timeout, tmp->client))
             return timeout;
