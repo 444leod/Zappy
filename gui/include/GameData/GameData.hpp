@@ -157,10 +157,9 @@ namespace gui {
 
             /**
              * @brief set the team lose status
-             * @param isLose The team lose status
              * @param teamName The team name
             */
-            void teamLost(std::string teamName);
+            void teamWin(std::string teamName);
 
             /**
              * @brief Get the time unit
@@ -174,6 +173,11 @@ namespace gui {
             */
             void setTimeUnit(std::uint32_t timeUnit) { this->_timeUnit = timeUnit; }
 
+            /**
+             * @brief Set the game draw status
+            */
+            void teamDraw();
+
         private:
             std::vector<std::string> _teamNames = {};
             Map _map;
@@ -182,5 +186,6 @@ namespace gui {
             std::vector<message_t> _messages = {};
             bool _teamLose = false;
             std::uint32_t _timeUnit = 0;
+            bool _isDraw = false;
     };
 }

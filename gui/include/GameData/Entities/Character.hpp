@@ -79,7 +79,7 @@ namespace gui {
              * @brief Set the player level
              * @param level The player level
             */
-            void setPlayerLevel(std::uint32_t level) { this->_level = level; }
+            void setLevel(std::uint32_t level) { this->_level = level; }
 
             /**
              * @brief Get the is laying an egg
