@@ -30,11 +30,12 @@ void gui::Pbc::receive(std::string command, GameData &gameData)
 
     auto player = gameData.getPlayerById(playerId);
     if (player.has_value()) {
-        message message;
-        message.senderId = playerId;
-        message.message = msg;
-        message.teamName = player.value()->teamName();
-        message.time = std::chrono::system_clock::now();
+        message_t message = {
+            .senderId = playerId,
+            .message = msg,
+            .teamName = player.value()->teamName(),
+            .time = std::chrono::system_clock::now()
+        };
         std::cout << "Player broadcasted: " << msg << std::endl;
         gameData.addMessage(message);
         player.value()->broadcast(message);

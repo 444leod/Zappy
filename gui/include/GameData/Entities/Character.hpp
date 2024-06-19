@@ -97,7 +97,7 @@ namespace gui {
              * @brief Broadcast a message
              * @param message The message to broadcast
             */
-            void broadcast(UNUSED message message) const { /* TO DO */};
+            void broadcast(UNUSED message_t message) const { /* TO DO */};
 
             /**
              * @brief drop the ressource on the tile
@@ -129,7 +129,7 @@ namespace gui {
              * @param result The result of the incantation
              * @note The result can be true or false
             */
-            void incantationResult(UNUSED Vector2u position, UNUSED std::uint32_t level, bool result);
+            void updateEvolutionStatus(UNUSED Vector2u position, UNUSED std::uint32_t level, bool result);
 
             /**
              * @brief set the player dead

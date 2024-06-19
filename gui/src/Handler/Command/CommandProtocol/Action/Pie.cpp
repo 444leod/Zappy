@@ -33,8 +33,8 @@ void gui::Pie::receive(std::string command, GameData &gameData)
     if (players.has_value()) {
         std::cout << "Incantation result: " << result << std::endl;
         if (result == 1)
-            players.value()->incantationResult(Vector2u(x, y), players.value()->playerLevel(), true);
+            players.value()->updateEvolutionStatus(Vector2u(x, y), players.value()->playerLevel(), true);
         else
-            players.value()->incantationResult(Vector2u(x, y), players.value()->playerLevel(), false);
+            players.value()->updateEvolutionStatus(Vector2u(x, y), players.value()->playerLevel(), false);
     }
 }

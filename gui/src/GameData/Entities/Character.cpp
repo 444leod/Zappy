@@ -7,7 +7,7 @@
 
 #include "Character.hpp"
 
-void gui::Character::incantationResult(UNUSED Vector2u position, UNUSED std::uint32_t level, bool result)
+void gui::Character::updateEvolutionStatus(UNUSED Vector2u position, UNUSED std::uint32_t level, bool result)
 {
     if (result) {
         increasePlayerLevel();

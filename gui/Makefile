@@ -66,7 +66,7 @@ __OBJ = $(__SRC:.cpp=.o)
 __CC = g++
 __CC = g++
 
-__CXXFLAGS += -Wall -Wextra -Werror -Wpedantic
+__CXXFLAGS += -Wall -Wextra -Werror -Wpedantic -std=c++20
 __CXXFLAGS += -lsfml-network -lsfml-system
 __CXXFLAGS += -I./include -I./src/network -I./include/GameData
 __CXXFLAGS += -I./include/Handler/Command/CommandProtocol

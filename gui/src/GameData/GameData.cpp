@@ -85,7 +85,7 @@ namespace gui {
         return std::nullopt;
     }
 
-    void GameData::teamLose(std::string teamName)
+    void GameData::teamLost(std::string teamName)
     {
         _teamLose = true;
         std::cout << "Team " << teamName << " lose" << std::endl;

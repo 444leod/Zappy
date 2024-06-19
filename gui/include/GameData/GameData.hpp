@@ -89,13 +89,13 @@ namespace gui {
              * @brief Get the messages
              * @return std::vector<message> The messages
             */
-            std::vector<message> messages() const { return this->_messages; }
+            std::vector<message_t> messages() const { return this->_messages; }
 
             /**
              * @brief Add a message
              * @param message The message
             */
-            void addMessage(message message) { this->_messages.push_back(message); }
+            void addMessage(message_t message) { this->_messages.push_back(message); }
 
             /**
              * @brief Get the REFERENCE of the map
@@ -160,7 +160,7 @@ namespace gui {
              * @param isLose The team lose status
              * @param teamName The team name
             */
-            void teamLose(std::string teamName);
+            void teamLost(std::string teamName);
 
             /**
              * @brief Get the time unit
@@ -179,7 +179,7 @@ namespace gui {
             Map _map;
             std::vector<std::shared_ptr<Character>> _players = {};
             std::vector<std::shared_ptr<Egg>> _eggs = {};
-            std::vector<message> _messages = {};
+            std::vector<message_t> _messages = {};
             bool _teamLose = false;
             std::uint32_t _timeUnit = 0;
     };
