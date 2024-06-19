@@ -77,6 +77,7 @@ __SRC_GAME := \
 	query_map.c \
 	player_pick_up.c \
 	player_death.c \
+	refill_map.c \
 
 __SRC_ARGS := \
 	params.c \
@@ -114,7 +115,8 @@ __TEST_SRC	= \
 	$(addprefix $(__TEST_PATH)commands/graphical/test_, $(__SRC_GFX_TEST)) \
 
 __SRC_ROOT_TEST := utils.c \
-	client.c
+	client.c \
+	refill_map.c \
 
 __SRC_COMMANDS_TEST := auth.c \
 
