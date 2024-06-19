@@ -20,19 +20,29 @@ namespace gui {
 
         virtual ~SFML2dTexture() = default;
 
-        void load(
-            const gui::TextureSpecification &spec,
-            const std::shared_ptr<sf::Texture> &texture
-        ) {
+        void load(const gui::TextureSpecification &spec,
+                  const std::shared_ptr<sf::Texture> &texture,
+                  std::optional<gui::Rect<uint32_t>> rect
+        )
+        {
             this->_spec = spec;
             this->_texture = texture;
 
-            this->_rect = sf::IntRect(
-                0,
-                0,
-                texture->getSize().x,
-                texture->getSize().y
-            );
+            if (rect.has_value()) {
+                this->_rect = sf::IntRect(
+                    rect.value().x,
+                    rect.value().y,
+                    rect.value().width,
+                    rect.value().height
+                );
+            } else {
+                this->_rect = sf::IntRect(
+                    0,
+                    0,
+                    texture->getSize().x,
+                    texture->getSize().y
+                );
+            }
         }
 
         virtual const gui::TextureSpecification &specification() const {
@@ -59,27 +69,27 @@ namespace gui {
 
         virtual ~SFML2dTextureManager() = default;
 
-        virtual bool load(const std::string &name,
-                          const gui::TextureSpecification &specification) {
-            auto cachedTexture = this->_cache.find(
-                specification.graphical.path);
-            if (cachedTexture != this->_cache.end()) {
-                auto texture = std::make_shared<SFML2dTexture>();
-                texture->load(specification, cachedTexture->second);
-                this->_textures[name] = texture;
-                return true;
-            }
+        virtual bool load(const std::string &name, const gui::TextureSpecification &specification)
+        {
+           auto cachedTexture = this->_cache.find(
+               specification.graphical.path);
+           if (cachedTexture != this->_cache.end()) {
+               auto texture = std::make_shared<SFML2dTexture>();
+               texture->load(specification, cachedTexture->second, specification.graphical.subrect);
+               this->_textures[name] = texture;
+               return true;
+           }
 
-            auto newTexture = std::make_shared<sf::Texture>();
-            if (!newTexture->loadFromFile(specification.graphical.path)) {
-                return false;
-            }
+           auto newTexture = std::make_shared<sf::Texture>();
+           if (!newTexture->loadFromFile(specification.graphical.path)) {
+               return false;
+           }
 
-            this->_cache[specification.graphical.path] = newTexture;
-            auto texture = std::make_shared<SFML2dTexture>();
-            texture->load(specification, newTexture);
-            this->_textures[name] = texture;
-            return true;
+           this->_cache[specification.graphical.path] = newTexture;
+           auto texture = std::make_shared<SFML2dTexture>();
+           texture->load(specification, newTexture, specification.graphical.subrect);
+           this->_textures[name] = texture;
+           return true;
         }
 
         virtual std::shared_ptr<gui::ITexture> get(const std::string &name) {

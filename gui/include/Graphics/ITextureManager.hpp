@@ -32,6 +32,7 @@ namespace gui {
      */
     struct TextureImage {
         std::string path;
+        std::optional<Rect<uint32_t>> subrect = std::nullopt;
     };
 
     /**
