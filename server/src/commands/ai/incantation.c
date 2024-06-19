@@ -117,10 +117,11 @@ static void start_incantation(
     client_t client, player_list_t players, server_info_t server_info)
 {
     packet_t *packet = NULL;
-    uint32_t ritual = ++server_info->ritual_id;
+    uint32_t ritual = server_info->ritual_id + 1;
     struct timespec now;
     client_command_t command = my_malloc(sizeof(struct client_command_s));
 
+    server_info->ritual_id++;
     clock_gettime(0, &now);
     while (players) {
         packet = build_packet("Elevation underway");
