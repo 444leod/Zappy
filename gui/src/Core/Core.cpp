@@ -6,13 +6,14 @@
 */
 
 #include "GraphicalLibraryLoader.hpp"
-#include "../GameDisplay/GameDisplay.hpp"
 #include "GameData.hpp"
 #include "ILibrary.hpp"
 #include "GameDataManager.hpp"
-#include "ArgumentChecking.hpp"
 #include "Client.hpp"
 #include "GameDataManager.hpp"
+#include "../display/scenes/SceneManager.hpp"
+#include "CommandHandler.hpp"
+#include "ArgumentParser.hpp"
 #include <cstring>
 #include <iostream>
 #include <vector>
@@ -44,7 +45,6 @@ namespace gui {
                 this->_curLib = this->_libHandler->get<gui::ILibrary>();
                 if (this->_curLib == nullptr)
                     throw CoreException("Object failed to load library");
-                this->_gameDisplay.initialize(*_curLib);
             }
 
             ~Core() {}
@@ -85,37 +85,72 @@ namespace gui {
                     this->_curLib->musics().load(music.first, music.second);
             }
 
-            void run(std::uint32_t port)
+            void run(std::uint16_t port)
             {
                 auto libSwitch = false;
                 auto before = std::chrono::high_resolution_clock::now();
-                gui::GameDataManager gameDataManager(port);
+
+                _serverCli = std::make_shared<ntw::Client>(port);
+                _sceneManager = std::make_shared<gui::SceneManager>(_gameData, _serverCli);
+                _sceneManager->initialize(*_curLib);
+                _serverCli->connectToServer();
+
+                gui::CommandHandler commandHandler(_serverCli, _gameData);
 
                 while (this->_curLib->display().opened()) {
+
+                    this->handleNetwork(commandHandler);
+
 //                    gameDataManager.handleRequests();
                     gui::Event event = {};
                     auto now = std::chrono::high_resolution_clock::now();
                     float deltaTime = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(now - before).count() / 1000.0;
                     before = now;
 
+                    this->_curLib->display().update(deltaTime);
                     if (libSwitch) {
                         this->switchGraphicLib();
                         libSwitch = false;
                         continue;
                     }
                     while (_curLib->display().pollEvent(event)) {
+                        if (event.type == gui::EventType::MOUSE_BUTTON_PRESSED) {
+                            _sceneManager->onMouseButtonPressed(*_curLib, event.mouse.button, event.mouse.x, event.mouse.y);
+                            continue;
+                        }
+                        _sceneManager->onKeyPressed(*_curLib, event.key.code, event.key.shift);
                         if (event.key.code == gui::KeyCode::J || event.key.code == gui::KeyCode::L)
                             libSwitch = true;
                     }
 
-                    this->_curLib->display().update(deltaTime);
-                    this->_gameDisplay.draw(*_curLib, _gameData);
+                    _sceneManager->update(*_curLib, deltaTime);
+                    _sceneManager->draw(*_curLib);
+                }
+            }
+
+            void handleNetwork(gui::CommandHandler& commandHandler)
+            {
+                try {
+                    _serverCli->receive();
+                    if (_serverCli->hasRequests()) {
+                        _serverCli->sendRequests(std::chrono::milliseconds(10));
+                    }
+
+                    while (_serverCli->hasResponses()) {
+                        auto response = _serverCli->popResponse();
+                        commandHandler.handleCommand(response);
+                    }
+                } catch (const ntw::Client::ClientTimeoutException& e) {
+                    std::cerr << e.what() << std::endl;
+                } catch (const std::invalid_argument& e) {
+                    std::cerr << e.what() << std::endl;
                 }
             }
 
         private:
-            GameData _gameData;
-            GameDisplay _gameDisplay;
+            std::shared_ptr<gui::GameData> _gameData = std::make_shared<gui::GameData>();
+            std::shared_ptr<gui::SceneManager> _sceneManager = nullptr;
+            std::shared_ptr<ntw::Client> _serverCli = nullptr;
             std::shared_ptr<gui::ILibrary> _curLib = nullptr;
             std::shared_ptr<LibraryObject> _libHandler = nullptr;
             LibraryLoader _loader;
@@ -125,11 +160,38 @@ namespace gui {
 int main(int ac, char **av)
 {
     try {
-        std::shared_ptr<gui::ArgumentChecking> argCheck = std::make_shared<gui::ArgumentChecking>();
-        argCheck->checkArgs(ac, av);
-        std::uint32_t port = std::atoi(av[2]);
-        gui::Core core;
-        core.run(port);
+        std::map<std::string, std::vector<std::string>> args = gui::ArgumentParser::parseArgs(ac, av);
+
+        for (const auto& arg : args) {
+            std::cout << arg.first << ": ";
+            for (const auto& val : arg.second)
+                std::cout << val << " ";
+            std::cout << std::endl;
+        }
+
+        if (args.find("help") != args.end()) {
+            std::cout << "USAGE: ./zappy_gui -p port -h host" << std::endl;
+            return 0;
+        }
+        if (args.find("p") == args.end())
+            throw std::invalid_argument("Port is required");
+        if (args.find("h") == args.end())
+            throw std::invalid_argument("Host is required");
+
+        if (args.size() != 2)
+            throw std::invalid_argument("Invalid arguments");
+
+        if (args["p"].size() != 1)
+            throw std::invalid_argument("Port is required");
+
+        int port = std::stoi(args["p"][0]);
+        if (port < 0 || port > 65535)
+            throw std::invalid_argument("Invalid port number");
+
+        if (args["h"].size() != 1)
+            throw std::invalid_argument("Invalid host");
+
+        gui::Core().run(static_cast<uint16_t>(port));
     }
     catch (const std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;

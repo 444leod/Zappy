@@ -7,15 +7,15 @@
 
 #include "Pin.hpp"
 
-void gui::Pin::stage(ntw::Client &client, std::string parameters)
+void gui::Pin::stage(std::shared_ptr<ntw::Client> client, std::string parameters)
 {
     if (parameters.empty())
         throw std::invalid_argument("Invalid pin arguments");
 
-    client.queueRequest("pin " + parameters);
+    client->queueRequest("pin " + parameters);
 }
 
-void gui::Pin::receive(std::string command, GameData &gameData)
+void gui::Pin::receive(std::string command, std::shared_ptr<GameData> gameData)
 {
     std::istringstream iss(command);
     std::string token;
@@ -26,7 +26,7 @@ void gui::Pin::receive(std::string command, GameData &gameData)
     iss >> token >> playerId >> x >> y >> food >> linemate >> deraumere >> sibur >> mendiane >> phiras >> thystame;
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
-    if (x >= gameData.mapRef().mapSize().x() || y >= gameData.mapRef().mapSize().y())
+    if (x >= gameData->mapRef().mapSize().x() || y >= gameData->mapRef().mapSize().y())
         throw std::invalid_argument("Invalid tile coordinates, out of map bounds.");
     Vector2u pos(x, y);
     Character player;
@@ -39,10 +39,10 @@ void gui::Pin::receive(std::string command, GameData &gameData)
     rocks.phiras.setQuantity(phiras);
     rocks.thystame.setQuantity(thystame);
 
-    if (!gameData.playerExists(playerId))
+    if (!gameData->playerExists(playerId))
         throw std::invalid_argument("Player does not exist in the game data.");
 
-    auto players = gameData.getPlayerById(playerId);
+    auto players = gameData->getPlayerById(playerId);
     if (players.has_value()) {
         players.value()->setFood(food);
         players.value()->setRocks(rocks);

@@ -7,14 +7,14 @@
 
 #include "Seg.hpp"
 
-void gui::Seg::stage(ntw::Client &client, std::string parameters)
+void gui::Seg::stage(std::shared_ptr<ntw::Client> client, std::string parameters)
 {
     (void)parameters;
     (void)client;
     std::cerr << "Command seg: can't be staged." << std::endl;
 }
 
-void gui::Seg::receive(std::string command, GameData &gameData)
+void gui::Seg::receive(std::string command, std::shared_ptr<GameData> gameData)
 {
     std::istringstream iss(command);
     std::string token;
@@ -25,9 +25,9 @@ void gui::Seg::receive(std::string command, GameData &gameData)
         gameData.teamDraw();
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
-    for (std::size_t i = 0; i < gameData.teamNames().size(); i++) {
-        if (gameData.teamNames()[i] == teamName) {
-            gameData.teamWin(teamName);
+    for (std::size_t i = 0; i < gameData->teamNames().size(); i++) {
+        if (gameData->teamNames()[i] == teamName) {
+            gameData->teamWin(teamName);
             break;
         } else
             throw std::invalid_argument("Team not found");

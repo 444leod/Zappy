@@ -7,13 +7,13 @@
 
 #include "Msz.hpp"
 
-void gui::Msz::stage(ntw::Client &client, std::string parameters)
+void gui::Msz::stage(std::shared_ptr<ntw::Client> client, std::string parameters)
 {
     (void)parameters;
-    client.queueRequest("msz");
+    client->queueRequest("msz");
 }
 
-void gui::Msz::receive(std::string command, GameData &gameData)
+void gui::Msz::receive(std::string command, std::shared_ptr<GameData> gameData)
 {
     std::istringstream iss(command);
     std::string token;
@@ -24,8 +24,8 @@ void gui::Msz::receive(std::string command, GameData &gameData)
         throw std::invalid_argument("Invalid arguments");
     Vector2u mapSize(x, y);
 
-    if (gameData.mapRef().mapSize() != Vector2u(0, 0))
+    if (gameData->mapRef().mapSize() != Vector2u(0, 0))
         throw std::invalid_argument("Map size already set.");
-    gameData.mapRef().setMapSize(mapSize);
-    gameData.mapRef().initMapContent(mapSize);
+    gameData->mapRef().setMapSize(mapSize);
+    gameData->mapRef().initMapContent(mapSize);
 }

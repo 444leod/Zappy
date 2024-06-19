@@ -19,6 +19,8 @@
 #include "Message.hpp"
 #include "Tiles/Map.hpp"
 
+#define UNUSED [[maybe_unused]]
+
 namespace gui {
     /**
      * @brief Class representing the game data

@@ -7,14 +7,14 @@
 
 #include "Pbc.hpp"
 
-void gui::Pbc::stage(ntw::Client &client, std::string parameters)
+void gui::Pbc::stage(std::shared_ptr<ntw::Client> client, std::string parameters)
 {
     (void)parameters;
     (void)client;
     std::cerr << "Command pbc: can't be staged." << std::endl;
 }
 
-void gui::Pbc::receive(std::string command, GameData &gameData)
+void gui::Pbc::receive(std::string command, std::shared_ptr<GameData> gameData)
 {
     std::istringstream iss(command);
     std::string token;
@@ -24,11 +24,11 @@ void gui::Pbc::receive(std::string command, GameData &gameData)
     iss >> token >> playerId >> msg;
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
-    if (!gameData.playerExists(playerId))
+    if (!gameData->playerExists(playerId))
         throw std::invalid_argument("Player does not exist");
     std::cout << "Player " << playerId << " broadcasted: " << msg << std::endl;
 
-    auto player = gameData.getPlayerById(playerId);
+    auto player = gameData->getPlayerById(playerId);
     if (player.has_value()) {
         message_t message = {
             .senderId = playerId,
@@ -37,7 +37,7 @@ void gui::Pbc::receive(std::string command, GameData &gameData)
             .time = std::chrono::system_clock::now()
         };
         std::cout << "Player broadcasted: " << msg << std::endl;
-        gameData.addMessage(message);
+        gameData->addMessage(message);
         player.value()->broadcast(message);
     }
 }

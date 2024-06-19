@@ -7,14 +7,14 @@
 
 #include "Smg.hpp"
 
-void gui::Smg::stage(ntw::Client &client, std::string parameters)
+void gui::Smg::stage(std::shared_ptr<ntw::Client> client, std::string parameters)
 {
     (void)client;
     (void)parameters;
     std::cerr << "Command smg: can't be staged." << std::endl;
 }
 
-void gui::Smg::receive(std::string command, GameData &gameData)
+void gui::Smg::receive(std::string command, std::shared_ptr<GameData> gameData)
 {
     (void)gameData;
     std::istringstream iss(command);
@@ -24,5 +24,5 @@ void gui::Smg::receive(std::string command, GameData &gameData)
     iss >> token >> message;
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
-    gameData.displayServerMessage(message);
+    gameData->displayServerMessage(message);
 }
