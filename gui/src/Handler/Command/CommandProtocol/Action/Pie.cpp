@@ -30,7 +30,12 @@ void gui::Pie::receive(std::string command, GameData &gameData)
     if (result != 1 || result != 0)
         throw std::invalid_argument("Invalid incantation result.");
     auto players = gameData.getPlayerById(result);
-    if (players.has_value())
+    if (players.has_value()) {
         std::cout << "Incantation result: " << result << std::endl;
-        // players.value().setIncantationResult(Vetcor2u(x, y), result);
+        if (result == 1) {
+            players.value()->increasePlayerLevel();
+            players.value()->updateEvolutionStatus(true);
+        } else
+            players.value()->updateEvolutionStatus(false);
+    }
 }

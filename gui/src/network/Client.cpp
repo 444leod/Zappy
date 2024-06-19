@@ -52,26 +52,27 @@ void gui::ntw::Client::sendRequests(std::optional<std::chrono::milliseconds> tim
     for (const std::string& request : _requests)
         fullRequest += request;
 
-    std::size_t totalSent = 0;
     std::size_t messageLength = fullRequest.size();
     sf::Socket::Status status;
     auto now = std::chrono::system_clock::now();
     std::chrono::milliseconds duration;
 
-    while (totalSent < messageLength) {
+    while (!_requests.empty()) {
         std::size_t sent;
-        status = _socket.send(fullRequest.c_str() + totalSent, messageLength - totalSent, sent);
+        const std::string& request = _requests.front();
+        status = _socket.send(request.c_str(), messageLength, sent);
         duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - now);
         if (status == sf::Socket::Done) {
-            totalSent += sent;
+            _requests.erase(_requests.begin());
         } else if (status == sf::Socket::NotReady && timeout.has_value() && duration < timeout.value()) {
-            sf::sleep(sf::milliseconds(10));
+            sf::sleep(sf::milliseconds(1));
         } else {
             if (status == sf::Socket::NotReady)
                 throw ClientTimeoutException("Failed to send message to server (timeout)");
             throw ClientException("Failed to send message to server");
         }
     }
+    _requests.clear();
 }
 
 void gui::ntw::Client::queueRequest(const std::string& request)
