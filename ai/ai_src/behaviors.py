@@ -8,6 +8,16 @@ class ABehavior:
         Abstract class for behaviors
         """
         self.command_stack: List[cmd.ACommand] = []
+        self.inv_count: int = 0
+
+    def mandatory_inventory(self, nb_calls) -> None:
+        """
+        Add an inventory command every x call
+        """
+        self.inv_count += 1
+        if self.inv_count == nb_calls:
+            self.command_stack.append(cmd.Inventory())
+            self.inv_count = 0
 
     def get_next_command(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> cmd.ACommand:
         """
@@ -132,17 +142,7 @@ class IncantationLeader(ABehavior):
         """
         super().__init__()
         self.players_ready_to_level_up: int = 1
-        self.inv_count: int = 0
         self.reset: bool = False
-
-    def mandatory_inventory(self) -> None:
-        """
-        Add an inventory command every 10 commands
-        """
-        self.inv_count += 1
-        if self.inv_count == 10:
-            self.command_stack.append(cmd.Inventory())
-            self.inv_count = 0
 
     def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> ABehavior:
         if player_info.inv.food < 4 or self.reset:
@@ -153,7 +153,7 @@ class IncantationLeader(ABehavior):
         """
         Generate the command stack for the IncantationLeader behavior
         """
-        self.mandatory_inventory()
+        super().mandatory_inventory(10)
         if self.players_ready_to_level_up >= LEVEL_UP_REQ[player_info.level].nb_players:
             self.reset = True
             self.command_stack.append(cmd.Incantation())
