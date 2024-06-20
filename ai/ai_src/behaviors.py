@@ -15,21 +15,21 @@ class ABehavior:
         """
         self.command_stack: List[cmd.ACommand] = []
 
-    def get_next_command(self, player_info: PlayerInfo, map: Map) -> cmd.ACommand:
+    def get_next_command(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> cmd.ACommand:
         """
         Get the next command to execute from the stack
         """
         if not self.command_stack:
-            self.generate_command_stack(player_info, map)
+            self.generate_command_stack(player_info, map, messages)
         return self.command_stack.pop(0)
     
-    def new_behavior(self, player_info: PlayerInfo, map: Map) -> str | None:
+    def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> str | None:
         """
         Get the name of the new behavior to switch to or None if no switch is needed
         """
         return None
 
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map) -> None:
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
         """
         Generate the command stack, should be overriden by the child class
         """
@@ -150,9 +150,9 @@ class ABehavior:
         """
         Collect all rocks from the tile
         """
-        tmp: dict[str, int] = map.tiles[player_info.pos[0]][player_info.pos[1]].collectibles.__dict__
-        tmp.pop("food")
-        for rock, amount in tmp.items():
+        to_collect: dict[str, int] = map.tiles[player_info.pos[0]][player_info.pos[1]].collectibles.__dict__
+        to_collect.pop("food")
+        for rock, amount in to_collect.items():
             for _ in range(amount):
                 self.command_stack.append(cmd.Take(rock))
     
@@ -181,7 +181,7 @@ class LookingForward(ABehavior):
         """
         super().__init__()
 
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map) -> None:
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
         """
         Generate the command stack for the LookingForward behavior
         """
@@ -198,7 +198,7 @@ class TalkingWalker(ABehavior):
         """
         super().__init__()
 
-    def generate_command_stack(self,  player_info: PlayerInfo, map: Map) -> None:
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
         """
         Generate the command stack for the TalkingWalker behavior
         """
@@ -289,9 +289,9 @@ class Manual(ABehavior):
         Manual behavior, the player is controlled by the user
         """
         super().__init__()
-        print("r for right, l for left, f for forward, i for inventory, t>item for take, s>item for set, I for incantation, L for look")
+        print("r for right, l for left, f for forward, i for inventory, t>item for take, s>item for set, I for incantation, L for look, b for broadcast")
 
-    def generate_command_stack(self,  player_info: PlayerInfo, map: Map) -> None:
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
         """
         Generate a command by the user
         """
@@ -314,5 +314,6 @@ class Manual(ABehavior):
                 case "s": cmd_to_send = cmd.Set(rest); break
                 case "I": cmd_to_send = cmd.Incantation(); break
                 case "L": cmd_to_send = cmd.Look(); break
+                case "b": cmd_to_send = cmd.Broadcast(rest); break
         
         self.command_stack.append(cmd_to_send)

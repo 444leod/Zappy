@@ -115,7 +115,7 @@ class Bot():
         """
         Handle the bot's behavior
         """
-        cmd_to_send: cmd.ACommand = self.current_behavior.get_next_command(self.player_info, self.map)
+        cmd_to_send: cmd.ACommand = self.current_behavior.get_next_command(self.player_info, self.map, self.messages_received)
         self.log(cmd_to_send.dump())
         self.cmd_sent.append(cmd_to_send.dump())
         self.com_handler.send_command(cmd_to_send.dump())
