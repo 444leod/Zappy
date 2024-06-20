@@ -57,6 +57,7 @@ __SRC_AI := forward.c \
 	take.c \
 	set.c \
 	incantation.c \
+	broadcast.c \
 
 __SRC_GRAPHICAL := msz.c \
 	bct.c \
@@ -133,6 +134,7 @@ __SRC_AI_TEST	:=	\
 	take.c \
 	set.c \
 	incantation.c \
+	broadcast.c \
 
 __SRC_GFX_TEST := msz.c \
 	bct.c \

@@ -39,6 +39,7 @@ const command_t COMMANDS[] = {
     {"Set", &set, 7, AI},
     {"Incantation", &incantation, 0, AI},
     {"EndIncantation", &end_incantation, 300, AI},
+    {"Broadcast", &broadcast, 7, AI},
 
     {NULL, &unknown_command, 0, NONE}
 };

@@ -55,6 +55,7 @@ void take(ARGS);
 void set(ARGS);
 void incantation(ARGS);
 void end_incantation(ARGS);
+void broadcast(ARGS);
 
 ///////////////////////////////////////////////////////////////////////////////
 // OTHER COMMANDS
@@ -72,3 +73,7 @@ bool assert_argv_count(char **args, uint32_t expected);
 void throw_ko(client_t client);
 player_t get_player_by_player_number(const uint32_t playerNumber);
 char get_char_by_orientation(int orientation);
+
+// For testing
+position_t get_hearing_square(
+    const player_t player, uint8_t square, map_t map);
