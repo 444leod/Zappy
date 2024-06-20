@@ -35,6 +35,9 @@ class ABehavior:
             except:
                 return False
 
+        if player_info.inv.food < 4:
+            return None
+
         if self.enough_ressources_to_incant(player_info, map):
             return IncantationLeader()
         if analyse_message(messages):
