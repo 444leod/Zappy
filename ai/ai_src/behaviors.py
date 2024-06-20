@@ -23,7 +23,6 @@ class ABehavior:
         """
         if self.enough_ressources_to_incant(player_info, map):
             return IncantationLeader()
-
         return None
 
     def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
@@ -86,10 +85,10 @@ class LookingForward(ABehavior):
         Generate the command stack for the LookingForward behavior
         """
         super().collect_food(player_info, map)
-        # super().easy_evolve(player_info, map)
         super().collect_all_rocks(player_info, map)
         self.command_stack.append(cmd.Look())
         self.command_stack.append(cmd.Forward())
+        self.command_stack.append(cmd.Inventory())
 
 class Manual(ABehavior):
     def __init__(self):
@@ -132,13 +131,32 @@ class IncantationLeader(ABehavior):
         IncantationLeader behavior, the player is the leader of the incantation
         """
         super().__init__()
-        self.players_ready_to_level_up = 1
+        self.players_ready_to_level_up: int = 1
+        self.inv_count: int = 0
+        self.reset: bool = False
+
+    def mandatory_inventory(self) -> None:
+        """
+        Add an inventory command every 10 commands
+        """
+        self.inv_count += 1
+        if self.inv_count == 10:
+            self.command_stack.append(cmd.Inventory())
+            self.inv_count = 0
+
+    def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> ABehavior:
+        if player_info.inv.food < 4 or self.reset:
+            print("I dont want to die")
+            return player_info.old_behavior
+        return None
 
     def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
         """
         Generate the command stack for the IncantationLeader behavior
         """
+        self.mandatory_inventory()
         if self.players_ready_to_level_up >= LEVEL_UP_REQ[player_info.level].nb_players:
+            self.reset = True
             self.command_stack.append(cmd.Incantation())
         else:
             self.command_stack.append(cmd.Broadcast(f"level-{player_info.level}"))

@@ -150,6 +150,7 @@ class PlayerInfo():
     inv: Collectibles = field(default_factory=lambda: Collectibles(food=10))
     pos: tuple[int, int] = (0, 0)
     orientation: tuple[int, int] = NORTH
+    old_behavior = None # ABehavior | None 
 
 @dataclass
 class TileContent():

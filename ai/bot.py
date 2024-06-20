@@ -67,6 +67,7 @@ class Bot():
             "ko\n": lambda: self.log("FAILED ELEVATION"),
         }
         self.current_behavior = Manual() if self.conf.manual else LookingForward()
+        self.player_info.old_behavior = self.current_behavior
     
     def run(self) -> None:
         """
@@ -74,10 +75,10 @@ class Bot():
         The only function that should be called from the outside
         """
         while True:
-            self.log(self.map)
             self.behavior_logic()
             self.receive_command()
             self.handle_commands_sent()
+            self.log(self.player_info.inv)
 
     def log(self, *args, **kargs) -> None:
         """
