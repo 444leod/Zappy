@@ -99,7 +99,36 @@ class ABehavior:
                     self.command_stack.append(cmd.Set(rock))
             self.command_stack.append(cmd.Incantation())
 
-    def 
+    def go_to_direction(self, direction: int) -> None:
+        """
+        Go to a certain direction
+        Note: the direction is 0 to 8
+        Exemple when the player's orientation is East:
+            x x x       4 3 2
+            x > x ----> 5 0 1
+            x x x       6 7 8
+        """
+        if direction == 0:
+            print("ALERT: The player is already at the right position")
+            self.command_stack.append(cmd.ConnectNbr()) # Instant Command, useful for waiting
+            return
+        
+        if not (1 < direction < 8):
+            print("ALERT: somethin went really wrong with the direction")
+            self.command_stack.append(cmd.ConnectNbr()) # Instant Command, useful for waiting
+            return
+                    
+        if direction in [3, 4]:
+            self.command_stack.append(cmd.Left())
+        
+        if direction in [6, 7]:
+            self.command_stack.append(cmd.Right())
+        
+        if direction == 5:
+            self.command_stack.append(cmd.Right())
+            self.command_stack.append(cmd.Right())
+
+        self.command_stack.append(cmd.Forward())
 
 class LookingForward(ABehavior):
     def __init__(self):
@@ -191,6 +220,7 @@ class IncantationFollower(ABehavior):
         """
         super().__init__()
         self.state: IncantationFollower.State = IncantationFollower.State.MOVING
+        self.destination_direction: int = 0
 
     def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> ABehavior:
         return None
@@ -205,11 +235,11 @@ class IncantationFollower(ABehavior):
             """
             try:
                 message: tuple[int, str] = messages[-1]
-                direction, msg = message
+                self.destination_direction, msg = message
                 message, level = msg.split("-")
                 if message != "level" or int(level) != player_info.level:
                     return False
-                if direction == 0:
+                if self.destination_direction == 0:
                     return True
             except:
                 return False
@@ -220,12 +250,8 @@ class IncantationFollower(ABehavior):
             self.state = IncantationFollower.State.ABANDONED
 
         match self.state:
-            case IncantationFollower.State.MOVING:
-                # Move towards the player
-                self.command_stack.append(cmd.Forward())
-            case IncantationFollower.State.WAITING:
-                # Do nothing while waiting ig
-                self.command_stack.append(cmd.ConnectNbr())
+            case IncantationFollower.State.MOVING: super().go_to_direction(self.destination_direction)
+            case IncantationFollower.State.WAITING: self.command_stack.append(cmd.ConnectNbr())
             case IncantationFollower.State.ARRIVED:
                 # Say that the player is here using unique ID
                 self.command_stack.append(cmd.Broadcast("Imhere"))
