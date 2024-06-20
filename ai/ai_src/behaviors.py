@@ -45,7 +45,16 @@ class ABehavior:
         for rock, amount in to_collect.items():
             for _ in range(amount):
                 self.command_stack.append(cmd.Take(rock))
-    
+
+    def enough_ressources_to_incant(self, player_info: PlayerInfo, map: Map) -> bool:
+        """
+        Check if the player is ready to incant in terms of ressources in his inv and on the tile
+        """
+        current_tile: TileContent = map.tiles[player_info.pos[0]][player_info.pos[1]]
+        total_rocks: Collectibles = current_tile.collectibles + player_info.inv
+        enough_rocks: bool = total_rocks >= LEVEL_UP_REQ[player_info.level].collectibles
+        return enough_rocks and player_info.inv.food >= 4
+
     def easy_evolve(self, player_info: PlayerInfo, map: Map) -> None:
         """
         Try to evolve to the next level if the requirements are met
@@ -53,10 +62,8 @@ class ABehavior:
         """
         current_tile: TileContent = map.tiles[player_info.pos[0]][player_info.pos[1]]
         enough_players: bool = current_tile.nb_players >= LEVEL_UP_REQ[player_info.level].nb_players
-        total_rocks: Collectibles = current_tile.collectibles + player_info.inv
-        enough_rocks: bool = total_rocks >= LEVEL_UP_REQ[player_info.level].collectibles
 
-        if enough_players and enough_rocks and player_info.inv.food >= 4:
+        if enough_players and self.generate_command_stack():
             rocks_to_set: Collectibles = LEVEL_UP_REQ[player_info.level].collectibles - current_tile.collectibles
             rocks_to_set.neg_to_zero()
             for rock, amount in rocks_to_set.__dict__.items():
@@ -131,3 +138,25 @@ class Manual(ABehavior):
                 case "b": cmd_to_send = cmd.Broadcast(rest); break
         
         self.command_stack.append(cmd_to_send)
+
+class IncantationLeader(ABehavior):
+    def __init__(self):
+        """
+        IncantationLeader behavior, the player is the leader of the incantation
+        """
+        super().__init__()
+
+    def broadcast_ready_to_incant(self, player_info: PlayerInfo) -> None:
+        """
+        Broadcast the player's readiness to incant
+        """
+        self.command_stack.append(cmd.Broadcast(f"level-{player_info.level}"))
+
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
+        """
+        Generate the command stack for the IncantationLeader behavior
+        """
+        super().collect_food(player_info, map)
+        super().collect_all_rocks(player_info, map)
+        if super().enough_ressources_to_incant(player_info, map):
+            self.command_stack.append(cmd.Incantation())
