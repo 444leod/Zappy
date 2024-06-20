@@ -18,5 +18,5 @@ void gui::Sbp::receive(std::string command, GameData &gameData)
 {
     (void)command;
     (void)gameData;
-    // gameData.displayCommandParameter();
+    gameData.displayCommandParameter();
 }

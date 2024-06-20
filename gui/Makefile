@@ -25,6 +25,7 @@ __SRC_NETWORK := Client.cpp \
 __SRC_GAME_DATA := GameData.cpp \
 	Tiles/Map.cpp \
 	Tiles/TileContent.cpp \
+	Entities/Character.cpp \
 
 __SRC_GAME_DATA_MANAGER := GameDataManager.cpp \
 
@@ -65,7 +66,7 @@ __OBJ = $(__SRC:.cpp=.o)
 __CC = g++
 __CC = g++
 
-__CXXFLAGS += -Wall -Wextra -Werror -Wpedantic
+__CXXFLAGS += -Wall -Wextra -Werror -Wpedantic -std=c++20
 __CXXFLAGS += -lsfml-network -lsfml-system
 __CXXFLAGS += -I./include -I./src/network -I./include/GameData
 __CXXFLAGS += -I./include/Handler/Command/CommandProtocol
@@ -75,6 +76,7 @@ __CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Action
 __CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Server
 __CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Status
 __CXXFLAGS += -I./include/Handler/Command/ -I./include/Handler/
+__CXXFLAGS += -I./include/GameData/Entities/
 
 all: $(__NAME)
 

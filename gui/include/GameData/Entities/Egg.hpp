@@ -18,6 +18,26 @@ namespace gui {
     class Egg : public AEntity {
         public:
             Egg() = default;
+
+            Egg(std::uint32_t id, Vector2u position, std::string teamName)
+                : AEntity(id, position, teamName) {}
+
             ~Egg() = default;
+
+            /**
+             * @brief set the hatched value
+             * @param hatched The hatched value
+            */
+            void hatch() { this->_hatched = true; }
+
+            /**
+             * @brief Set the egg life status
+             * @param isDead The egg life status
+            */
+            void kill() { this->_isDead = true; }
+
+        private:
+            bool _hatched = false;
+            bool _isDead = false;
     };
 }

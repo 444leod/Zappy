@@ -87,15 +87,15 @@ namespace gui {
 
             /**
              * @brief Get the messages
-             * @return std::vector<Message> The messages
+             * @return std::vector<message> The messages
             */
-            std::vector<Message> messages() const { return this->_messages; }
+            std::vector<message_t> messages() const { return this->_messages; }
 
             /**
              * @brief Add a message
              * @param message The message
             */
-            void addMessage(Message message) { this->_messages.push_back(message); }
+            void addMessage(message_t message) { this->_messages.push_back(message); }
 
             /**
              * @brief Get the REFERENCE of the map
@@ -138,11 +138,54 @@ namespace gui {
             */
             std::optional<std::shared_ptr<Egg>> getEggById(std::uint32_t eggId) const;
 
+            /**
+             * @brief display the command error parameters
+            */
+            void displayCommandParameter() const { std::cerr << "Command error: invalid parameters" << std::endl; }
+
+            /**
+             * @brief display the the server message
+             * @param message The message
+            */
+            void displayServerMessage(const std::string &message) const { std::cerr << message << std::endl; }
+
+            /**
+             * @brief display unknown command
+             * @param command The command
+            */
+            void displayUnknownCommand(const std::string &command) const { std::cerr << "Unknown command: " << command << std::endl; }
+
+            /**
+             * @brief set the team lose status
+             * @param teamName The team name
+            */
+            void teamWin(std::string teamName);
+
+            /**
+             * @brief Get the time unit
+             * @return std::uint32_t The time unit
+            */
+            std::uint32_t timeUnit() const { return this->_timeUnit; }
+
+            /**
+             * @brief Set the time unit
+             * @param timeUnit The time unit
+            */
+            void setTimeUnit(std::uint32_t timeUnit) { this->_timeUnit = timeUnit; }
+
+            /**
+             * @brief Set the game draw status
+            */
+            void teamDraw();
+
         private:
             std::vector<std::string> _teamNames = {};
             Map _map;
             std::vector<std::shared_ptr<Character>> _players = {};
             std::vector<std::shared_ptr<Egg>> _eggs = {};
-            std::vector<Message> _messages = {};
+            std::vector<message_t> _messages = {};
+            bool _teamLose = false;
+            std::uint32_t _timeUnit = 0;
+            bool _isDraw = false;
     };
 }

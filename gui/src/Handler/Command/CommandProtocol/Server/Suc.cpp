@@ -16,7 +16,5 @@ void gui::Suc::stage(ntw::Client &client, std::string parameters)
 
 void gui::Suc::receive(std::string command, GameData &gameData)
 {
-    (void)command;
-    (void)gameData;
-    // gameData.displayUnknownCommand();
+    gameData.displayUnknownCommand(command);
 }
