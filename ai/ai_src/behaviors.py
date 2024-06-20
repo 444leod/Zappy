@@ -108,12 +108,13 @@ class ABehavior:
             x > x ----> 5 0 1
             x x x       6 7 8
         """
+        print(f"Going to direction {direction}")
         if direction == 0:
             print("ALERT: The player is already at the right position")
             self.command_stack.append(cmd.ConnectNbr()) # Instant Command, useful for waiting
             return
         
-        if not (1 < direction < 8):
+        if not (0 < direction < 8):
             print("ALERT: somethin went really wrong with the direction")
             self.command_stack.append(cmd.ConnectNbr()) # Instant Command, useful for waiting
             return
@@ -221,8 +222,11 @@ class IncantationFollower(ABehavior):
         super().__init__()
         self.state: IncantationFollower.State = IncantationFollower.State.MOVING
         self.destination_direction: int = 0
+        self.starting_level: int = 0
 
     def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> ABehavior:
+        if self.state == IncantationFollower.State.ABANDONED:
+            return player_info.old_behavior
         return None
 
     def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
@@ -244,9 +248,13 @@ class IncantationFollower(ABehavior):
             except:
                 return False
 
+        self.starting_level = player_info.level if self.starting_level == 0 else self.starting_level
+
         if check_position():
             self.state = IncantationFollower.State.ARRIVED
         if player_info.inv.food < 4:
+            self.state = IncantationFollower.State.ABANDONED
+        if self.starting_level != player_info.level:
             self.state = IncantationFollower.State.ABANDONED
 
         match self.state:
@@ -260,4 +268,3 @@ class IncantationFollower(ABehavior):
                 # Say that the player is not here using unique ID
                 self.command_stack.append(cmd.Broadcast("Im2old4this"))
         self.command_stack.append(cmd.Inventory())
-

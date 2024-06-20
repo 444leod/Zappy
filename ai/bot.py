@@ -149,7 +149,6 @@ class Bot():
         self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players -= 1
         self.player_info.pos = add_tuples(self.player_info.pos, self.player_info.orientation)
         self.player_info.pos = (self.player_info.pos[0] % self.map.map_size[0], self.player_info.pos[1] % self.map.map_size[1])
-        self.log(self.player_info.pos)
         self.map.player_pos = self.player_info.pos
         self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players += 1
 
