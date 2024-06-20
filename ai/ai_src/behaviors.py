@@ -255,11 +255,8 @@ class Greg(ABehavior):
         if str_to_take != "":
             self.command_stack.append(cmd.Take(str_to_take))
         else:
-            print("no ressources to take")
             str_to_take, position = find_nearest_resource(player_info.pos, map.tiles)
             if position:
-                print("position:", position)
-                print("nearest ressource:", str_to_take)
                 self.go_to_a_point( player_info, position, map.map_size)
                 self.collect_all_on_tiles(position, map)
             else:
