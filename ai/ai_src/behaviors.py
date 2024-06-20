@@ -1,5 +1,6 @@
-import ai_src.commands as cmd
 from typing import List
+from enum import Enum
+import ai_src.commands as cmd
 from ai_src.data import PlayerInfo, Map, Collectibles, TileContent, LEVEL_UP_REQ
 
 class ABehavior:
@@ -174,11 +175,19 @@ class IncantationLeader(ABehavior):
             self.command_stack.append(cmd.Broadcast(f"level-{player_info.level}"))
 
 class IncantationFollower(ABehavior):
+    class State(Enum):
+        MOVING = 0
+        WAITING = 1
+        ARRIVED = 2
+        ABANDONED = 3
+
     def __init__(self):
         """
         IncantationFollower behavior, the player is a follower of the incantation
         """
         super().__init__()
+        self.state: IncantationFollower.State = IncantationFollower.State.MOVING
+
 
     def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> ABehavior:
         return None
@@ -188,4 +197,8 @@ class IncantationFollower(ABehavior):
         Generate the command stack for the IncantationFollower behavior
         """
         print("this is a follower")
+        if player_info.inv.food < 4:
+            self.command_stack.append(cmd.Inventory())
+            return
+        self.command_stack.append(cmd.Inventory())
 
