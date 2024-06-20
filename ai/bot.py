@@ -5,7 +5,7 @@ from typing import List
 from ai_src.connection_handler import ConnectionHandler
 from ai_src.config import Config, HelpException, ArgError
 from ai_src.data import PlayerInfo, Collectibles, Map, TileContent
-from ai_src.behaviors import LookingForward, TalkingWalker, Manual
+from ai_src.behaviors import LookingForward, Manual, ABehavior
 import ai_src.commands as cmd
 from ai.ai_src.utils import add_tuples, turn_left, turn_right
 
@@ -115,8 +115,9 @@ class Bot():
         """
         Handle the bot's behavior
         """
-        if self.current_behavior.new_behavior() and not self.conf.manual():
-            self.current_behavior = self.current_behavior.new_behavior()
+        new_behavior: ABehavior | None = self.current_behavior.new_behavior(self.player_info, self.map, self.messages_received)
+        if new_behavior is not None and not self.conf.manual:
+            self.current_behavior = new_behavior
         cmd_to_send: cmd.ACommand = self.current_behavior.get_next_command(self.player_info, self.map, self.messages_received)
         self.log(cmd_to_send.dump())
         self.cmd_sent.append(cmd_to_send.dump())

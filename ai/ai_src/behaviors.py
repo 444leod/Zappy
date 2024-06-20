@@ -17,10 +17,13 @@ class ABehavior:
             self.generate_command_stack(player_info, map, messages)
         return self.command_stack.pop(0)
     
-    def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> str | None:
+    def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> 'ABehavior': # None | ABehavior:
         """
         Get the name of the new behavior to switch to or None if no switch is needed
         """
+        if self.enough_ressources_to_incant(player_info, map):
+            return IncantationLeader()
+
         return None
 
     def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
@@ -83,26 +86,10 @@ class LookingForward(ABehavior):
         Generate the command stack for the LookingForward behavior
         """
         super().collect_food(player_info, map)
-        super().easy_evolve(player_info, map)
+        # super().easy_evolve(player_info, map)
         super().collect_all_rocks(player_info, map)
         self.command_stack.append(cmd.Look())
         self.command_stack.append(cmd.Forward())
-
-class TalkingWalker(ABehavior):
-    def __init__(self):
-        """
-        TalkingWalker behavior, dummy behavior that talks and moves
-        """
-        super().__init__()
-
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
-        """
-        Generate the command stack for the TalkingWalker behavior
-        """
-        self.command_stack.append(cmd.Broadcast("Hello"))
-        self.command_stack.append(cmd.Forward())
-        self.command_stack.append(cmd.Forward())
-        self.command_stack.append(cmd.Right())
 
 class Manual(ABehavior):
     def __init__(self):
@@ -145,18 +132,17 @@ class IncantationLeader(ABehavior):
         IncantationLeader behavior, the player is the leader of the incantation
         """
         super().__init__()
-
-    def broadcast_ready_to_incant(self, player_info: PlayerInfo) -> None:
-        """
-        Broadcast the player's readiness to incant
-        """
-        self.command_stack.append(cmd.Broadcast(f"level-{player_info.level}"))
+        self.players_ready_to_level_up = 1
 
     def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
         """
         Generate the command stack for the IncantationLeader behavior
         """
-        super().collect_food(player_info, map)
-        super().collect_all_rocks(player_info, map)
-        if super().enough_ressources_to_incant(player_info, map):
+        if self.players_ready_to_level_up >= LEVEL_UP_REQ[player_info.level].nb_players:
             self.command_stack.append(cmd.Incantation())
+        else:
+            self.command_stack.append(cmd.Broadcast(f"level-{player_info.level}"))
+
+        # self.command_stack.append(cmd.Incantation()
+        #     if self.players_ready_to_level_up >= LEVEL_UP_REQ[player_info.level].nb_players
+        #     else cmd.Broadcast(f"level-{player_info.level}"))
