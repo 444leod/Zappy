@@ -115,7 +115,7 @@ class Bot():
         """
         Handle the bot's behavior
         """
-        if self.current_behavior.new_behavior():
+        if self.current_behavior.new_behavior() and not self.conf.manual():
             self.current_behavior = self.current_behavior.new_behavior()
         cmd_to_send: cmd.ACommand = self.current_behavior.get_next_command(self.player_info, self.map, self.messages_received)
         self.log(cmd_to_send.dump())
