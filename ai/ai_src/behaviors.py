@@ -196,6 +196,9 @@ class IncantationFollower(ABehavior):
         Generate the command stack for the IncantationFollower behavior
         """
         def check_position() -> bool:
+            """
+            Check if the player is at the right position (on top of the IncantationLeader)
+            """
             try:
                 message: tuple[int, str] = messages[-1]
                 direction, msg = message
@@ -219,10 +222,10 @@ class IncantationFollower(ABehavior):
             case IncantationFollower.State.WAITING:
                 # Do nothing while waiting ig
                 self.command_stack.append(cmd.ConnectNbr())
-                pass
             case IncantationFollower.State.ARRIVED:
                 # Say that the player is here using unique ID
                 self.command_stack.append(cmd.Broadcast("Imhere"))
+                self.state = IncantationFollower.State.WAITING
             case IncantationFollower.State.ABANDONED:
                 # Say that the player is not here using unique ID
                 self.command_stack.append(cmd.Broadcast("Im2old4this"))
