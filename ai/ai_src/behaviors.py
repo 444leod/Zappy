@@ -1,6 +1,6 @@
 import ai_src.commands as cmd
 from typing import List
-from ai_src.data import PlayerInfo, Map
+from ai_src.data import PlayerInfo, Map, Collectibles, TileContent, LEVEL_UP_REQ
 
 class ABehavior:
     def __init__(self):
@@ -45,6 +45,24 @@ class ABehavior:
         for rock, amount in tmp.items():
             for _ in range(amount):
                 self.command_stack.append(cmd.Take(rock))
+    
+    def easy_evolve(self, player_info: PlayerInfo, map: Map) -> None:
+        """
+        Try to evolve to the next level if the requirements are met
+        !!! ASSUMES THAT THE PLAYERS ARE THE SAME LEVEL !!!
+        """
+        current_tile: TileContent = map.tiles[player_info.pos[0]][player_info.pos[1]]
+        enough_players: bool = current_tile.nb_players >= LEVEL_UP_REQ[player_info.level].nb_players
+        total_rocks: Collectibles = current_tile.collectibles + player_info.inv
+        enough_rocks: bool = total_rocks >= LEVEL_UP_REQ[player_info.level].collectibles
+
+        if enough_players and enough_rocks and player_info.inv.food >= 4:
+            rocks_to_set: Collectibles = LEVEL_UP_REQ[player_info.level].collectibles - current_tile.collectibles
+            rocks_to_set.neg_to_zero()
+            for rock, amount in rocks_to_set.__dict__.items():
+                for _ in range(amount):
+                    self.command_stack.append(cmd.Set(rock))
+            self.command_stack.append(cmd.Incantation())
 
 class LookingForward(ABehavior):
     def __init__(self):
@@ -58,6 +76,7 @@ class LookingForward(ABehavior):
         Generate the command stack for the LookingForward behavior
         """
         super().collect_food(player_info, map)
+        super().easy_evolve(player_info, map)
         super().collect_all_rocks(player_info, map)
         self.command_stack.append(cmd.Look())
         self.command_stack.append(cmd.Forward())
