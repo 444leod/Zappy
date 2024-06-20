@@ -46,7 +46,6 @@ typedef struct rocks_s {
 } rocks_t;
 
 typedef struct player_s {
-    bool isDead;
     uuid_t id;
     uint32_t player_number;
     uint32_t egg_number;
@@ -116,8 +115,7 @@ typedef struct pickup_command_s {
 } pickup_command_t;
 
 map_t create_map(const uint32_t width, const uint32_t height);
-void fill_map(const map_t map, rocks_t *current_rocks,
-    uint32_t *current_food, team_list_t teams);
+void fill_map(const map_t map, rocks_t *current_rocks, uint32_t *current_food);
 tile_t get_tile_at_position(const position_t position, const map_t map);
 void add_player_at_position(const player_t player, const position_t position,
     const map_t map);
@@ -130,3 +128,4 @@ player_t egg_to_player(egg_t egg, map_t map);
 bool player_pick_up(
     const char *key, player_t player, tile_t tile, int8_t delta);
 void remove_player(const player_t player, const map_t map);
+void init_eggs(map_t map, const team_list_t teams, uint32_t egg_count);

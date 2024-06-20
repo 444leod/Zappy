@@ -70,6 +70,8 @@ __SRC_GRAPHICAL := msz.c \
 	sst.c \
 	pnw.c \
 	ebo.c \
+	pdi.c \
+	seg.c \
 
 __SRC_GAME := \
 	create_map.c \
@@ -80,6 +82,7 @@ __SRC_GAME := \
 	player_death.c \
 	refill_map.c \
 	change_map_ressource.c \
+	init_eggs.c \
 
 __SRC_ARGS := \
 	params.c \
@@ -146,6 +149,7 @@ __SRC_GFX_TEST := msz.c \
 	sgt.c \
 	sst.c \
 	pnw.c \
+	pdi.c \
 
 __SRC_UTILS_TEST := get_map.c \
 	parser.c \

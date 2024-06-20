@@ -76,7 +76,7 @@ static void accumulate_tile_eggs(
     list = tile->eggs;
     size = get_list_size((node_t)list);
     for (uint32_t i = 0; i < size; i++) {
-        if (list->egg->team == team)
+        if (list->egg->team == team || list->egg->team == NULL)
             add_to_list((void *)list->egg, (node_t *)eggs);
         list = list->next;
     }

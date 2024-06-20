@@ -13,7 +13,7 @@ Test(connect_suite, bad_arguments)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };
-    struct team_s team = { "Team", 1, 0 };
+    struct team_s team = { "Team", 1, 0, NULL };
     char *args[] = { "connect", "azerty" };
 
     player.team = &team;
@@ -31,7 +31,7 @@ Test(connect_suite, full)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };
-    struct team_s team = { "Team", 1, 0 };
+    struct team_s team = { "Team", 1, 0, NULL };
     char *args[] = { "", NULL };
 
     player.team = &team;
@@ -49,7 +49,7 @@ Test(connect_suite, normal)
 {
     struct client_s client = { 0 };
     struct player_s player = { 0 };
-    struct team_s team = { "Team", 0, 15 };
+    struct team_s team = { "Team", 0, 15, NULL };
     char *args[] = { "", NULL };
 
     player.team = &team;

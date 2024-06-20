@@ -30,7 +30,7 @@ Test(fork_suite, player_fork)
     position_t pos = { 2, 3 };
     struct client_s client = { 0 };
     struct player_s player = { 0 };
-    struct team_s team = { "Team", 0, 15 };
+    struct team_s team = { "Team", 0, 15, NULL };
     struct server_info_s server = { 0 };
     map_t map = create_map(5, 5);
     char *args[] = { "", NULL };
@@ -66,8 +66,8 @@ Test(fork_suite, two_player_fork)
     struct client_s clientB = { 0 };
     struct player_s playerA = { 0 };
     struct player_s playerB = { 0 };
-    struct team_s teamA = { "TeamA", 0, 15 };
-    struct team_s teamB = { "TeamB", 0, 15 };
+    struct team_s teamA = { "TeamA", 0, 15, NULL };
+    struct team_s teamB = { "TeamB", 0, 15, NULL };
 
     playerA.team = &teamA;
     clientA.player = &playerA;

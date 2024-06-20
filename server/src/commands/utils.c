@@ -86,3 +86,20 @@ void prepend_client_command(client_t client, client_command_t command)
         client->commands = new_cmd;
     }
 }
+
+/**
+ * @brief Queue the given buffer to all the graphical clients
+ * @details Queue the given buffer to all the graphical clients
+ *
+ * @param buffer the buffer to queue
+ */
+void queue_to_graphical(char *buffer)
+{
+    client_list_t graphical_clients = get_clients_by_type(GRAPHICAL);
+
+    while (graphical_clients) {
+        queue_buffer(graphical_clients->client, buffer);
+        graphical_clients = graphical_clients->next;
+    }
+    my_free(buffer);
+}

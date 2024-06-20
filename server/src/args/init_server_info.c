@@ -130,6 +130,7 @@ static void init_teams(param_t params, server_info_t server_info)
         team->name = teamNames->informations->content;
         team->actual_number = 0;
         team->remaining_slots = 0;
+        team->players = NULL;
         add_to_list((void *)team, (node_t *)&server_info->teams);
         teamNames = teamNames->next;
     }
@@ -154,34 +155,15 @@ static void update_teams_max_clients(const team_list_t teamsList,
 }
 
 /**
- * @brief Initialize the map
- * @details correctly initialize the map in the serverInfo struct
+ * @brief Transform the arguments to a linked list
+ * @details transform the arguments to a linked list
+ *  of param_informations_t
  *
- * @param server_info the serverInfo struct
+ * @param argv the arguments
+ * @return the linked list of param_informations_t
 */
-static void init_map(const server_info_t server_info)
+param_t argv_to_list(const char *argv[])
 {
-    server_info->actual_rocks = (rocks_t){0, 0, 0, 0, 0, 0};
-    server_info->actual_food = 0;
-    server_info->refill_wait = REFILL_TICKS / (double)server_info->freq;
-    server_info->last_refill_check = get_actual_time();
-    server_info->map = create_map(server_info->width, server_info->height);
-    fill_map(server_info->map, &server_info->actual_rocks,
-        &server_info->actual_food, server_info->teams);
-}
-
-/**
- * @brief Initialize the server_info struct
- * @details correctly initialize the server_info struct with the port and the
- *    path of the server
- *
- * @param argv the arguments of the program
- *
- * @return the server_info struct
-*/
-server_info_t init_server_info(const char *argv[])
-{
-    server_info_t server_info = my_malloc(sizeof(struct server_info_s));
     param_t params = NULL;
     param_informations_t param = NULL;
 
@@ -191,6 +173,22 @@ server_info_t init_server_info(const char *argv[])
         param->handled = false;
         add_to_list((void *)param, (node_t *)&params);
     }
+    return params;
+}
+
+/**
+ * @brief Initialize the serverInfo struct
+ * @details correctly initialize the serverInfo struct with the port and the
+ *    path of the server
+ *
+ * @param argv the arguments of the program
+ * @return the server_info struct
+*/
+server_info_t init_server_info(const char *argv[])
+{
+    server_info_t server_info = my_malloc(sizeof(struct server_info_s));
+    param_t params = argv_to_list(argv);
+
     init_teams(params, server_info);
     init_port(params, server_info);
     init_width(params, server_info);
@@ -200,5 +198,6 @@ server_info_t init_server_info(const char *argv[])
     update_teams_max_clients(server_info->teams, server_info->clients_nb);
     server_info->map = create_map(server_info->width, server_info->height);
     init_map(server_info);
+    server_info->end = false;
     return server_info;
 }

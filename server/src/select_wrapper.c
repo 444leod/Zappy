@@ -39,7 +39,7 @@ static void add_clients_to_set(client_list_t clients, select_data_t *sd)
             sd->max_sd = (client_node->client->fd > sd->max_sd) ?
                 client_node->client->fd : sd->max_sd;
         }
-        if (!can_interact(client_node->client)) {
+        if (client_node->client->end) {
             client_node = client_node->next;
             continue;
         }

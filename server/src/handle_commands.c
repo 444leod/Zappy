@@ -26,6 +26,13 @@
 static void execute_command(const client_command_t command,
     const client_t client, const server_info_t server_info)
 {
+    if (client->type == AI) {
+        DEBUG_PRINT("[DEBUG] Player %d executing command %s\n",
+            client->fd, command->command);
+    } else {
+        DEBUG_PRINT("[DEBUG] Client %d executing command %s\n",
+            client->fd, command->command);
+    }
     command->command_handler.func(command->args, client, server_info);
     remove_from_list((void *)command, (node_t *)&client->commands);
 }

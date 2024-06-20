@@ -71,7 +71,7 @@ extern const command_t AUTHENTIFICATION_COMMAND;
 
 bool assert_argv_count(char **args, uint32_t expected);
 void throw_ko(client_t client);
-player_t get_player_by_player_number(const uint32_t playerNumber);
+player_t get_player_by_player_number(const uint32_t player_number);
 char get_char_by_orientation(int orientation);
 
 // For testing
