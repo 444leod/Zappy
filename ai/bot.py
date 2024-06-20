@@ -5,7 +5,7 @@ from typing import List
 from ai_src.connection_handler import ConnectionHandler
 from ai_src.config import Config, HelpException, ArgError
 from ai_src.data import PlayerInfo, Collectibles, Map, TileContent
-from ai_src.behaviors import LookingForward, TalkingWalker, Greg, Manual
+from ai_src.behaviors import LookingForward, TalkingWalker, Greg, Manual, Eric
 import ai_src.commands as cmd
 from ai.ai_src.utils import add_tuples, turn_left, turn_right
 
@@ -66,7 +66,7 @@ class Bot():
             "Current": self.level_up,
             "ko\n": lambda: self.log("FAILED ELEVATION"),
         }
-        self.current_behavior = Greg() 
+        self.current_behavior = Eric()
     
     def run(self) -> None:
         """

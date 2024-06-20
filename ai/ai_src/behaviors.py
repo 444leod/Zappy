@@ -283,6 +283,44 @@ class Greg(ABehavior):
         """
         self.go_to_ressources(player_info, map)
 
+class Eric(ABehavior):
+    def __init__(self):
+        """
+        Eric behavior, Crazy villagers that want to disturb other team
+        """
+        super().__init__()
+        self.messages_received: List[str] = []
+        self.team_message: List[str] = ["HOGRIDAAAA", "HELLO"]
+
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
+        """
+        Generate the command stack for the Eric behavior
+        """
+        def is_team_message(message: str) -> bool:
+            """
+            Ignore the team message
+            """
+            message = message.strip()
+            return message in self.team_message
+        def sort_messages(messages: List[tuple[int, str]]) -> None:
+            """
+            Sort the messages so eric don't always say the same
+            """
+            if len(messages) == 0:
+                return
+            for message in messages:
+                if message[1] not in self.messages_received and not is_team_message(message[1]):
+                    self.messages_received.append(message[1])
+                    return
+        sort_messages(messages)
+        if len(self.messages_received) != 0:
+            self.command_stack.append(cmd.Broadcast(self.messages_received[0]))
+            self.messages_received.remove(self.messages_received[0])
+        super().collect_food(player_info, map)
+        self.command_stack.append(cmd.Forward())
+        self.command_stack.append(cmd.Forward())
+        self.command_stack.append(cmd.Right())
+
 class Manual(ABehavior):
     def __init__(self):
         """
