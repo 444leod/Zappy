@@ -31,8 +31,21 @@ class ABehavior:
         """
         Get the name of the new behavior to switch to or None if no switch is needed
         """
+        def analyse_message(messages: List[tuple[int, str]]) -> bool:
+            try:
+                message = messages[-1]
+                player_dir, msg = message
+                message, level = msg.split("-")
+                if message != "level":
+                    return False
+                return int(level) == player_info.level
+            except:
+                return False
+
         if self.enough_ressources_to_incant(player_info, map):
             return IncantationLeader()
+        if analyse_message(messages):
+            return IncantationFollower()
         return None
 
     def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
@@ -159,3 +172,20 @@ class IncantationLeader(ABehavior):
             self.command_stack.append(cmd.Incantation())
         else:
             self.command_stack.append(cmd.Broadcast(f"level-{player_info.level}"))
+
+class IncantationFollower(ABehavior):
+    def __init__(self):
+        """
+        IncantationFollower behavior, the player is a follower of the incantation
+        """
+        super().__init__()
+
+    def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> ABehavior:
+        return None
+
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
+        """
+        Generate the command stack for the IncantationFollower behavior
+        """
+        print("this is a follower")
+
