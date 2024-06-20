@@ -146,7 +146,6 @@ class IncantationLeader(ABehavior):
 
     def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> ABehavior:
         if player_info.inv.food < 4 or self.reset:
-            print("I dont want to die")
             return player_info.old_behavior
         return None
 
