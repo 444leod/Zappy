@@ -81,6 +81,25 @@ class ABehavior:
                 return ((pos + 1) + max - dest < dest - pos)
             else :
                 return (max - (pos-1) + dest <  pos - dest)
+            
+        def find_path(pos: int, dest: int, max: int, crossed: bool, sup: bool) -> None:
+            """
+            Find the path to go from pos to dest
+            """
+            while (pos != dest):
+                self.command_stack.append(cmd.Forward())
+                if crossed:
+                    if sup:
+                        pos = (pos + 1) % max
+                    else:
+                        pos = (pos - 1) % max
+                if not crossed:
+                    if sup:
+                        pos = (pos - 1) % max
+                    else:
+                        pos = (pos + 1) % max
+
+
 
             
         pos_copy = player_info.pos
@@ -101,22 +120,7 @@ class ABehavior:
                 self.turn(player_info.orientation, SOUTH)
                 orientiation_copy = SOUTH
             
-            while pos_copy [0] != point[0]:
-                self.command_stack.append(cmd.Forward())
-                if crossed:
-                    if sup:
-                        pos_copy = (pos_copy[0] + 1, pos_copy[1])
-                        if pos_copy[0] >= map_size[0]:
-                            pos_copy = (0, pos_copy[1])
-                    else:
-                        pos_copy = (pos_copy[0] - 1, pos_copy[1])
-                        if pos_copy[0] < 0:
-                            pos_copy = (map_size[0] - 1, pos_copy[1])
-                if not crossed:
-                    if sup:
-                        pos_copy = (pos_copy[0] - 1, pos_copy[1])
-                    else:
-                        pos_copy = (pos_copy[0] + 1, pos_copy[1])
+            find_path(pos_copy[0], point[0], map_size[0], crossed, sup)
             
         sup: bool | None = None
         if player_info.pos[1] < point[1]:
@@ -130,22 +134,7 @@ class ABehavior:
             else:
                 self.turn(orientiation_copy, WEST)
                 orientiation_copy = WEST
-            while pos_copy [1] != point[1]:
-                self.command_stack.append(cmd.Forward())
-                if crossed:
-                    if sup:
-                        pos_copy = (pos_copy[0], pos_copy[1] + 1)
-                        if pos_copy[1] >= map_size[1]:
-                            pos_copy = (pos_copy[0], 0)
-                    else:
-                        pos_copy = (pos_copy[0], pos_copy[1] - 1)
-                        if pos_copy[1] < 0:
-                            pos_copy = (pos_copy[0], map_size[1] - 1)
-                if not crossed:
-                    if sup:
-                        pos_copy = (pos_copy[0], pos_copy[1] - 1)
-                    else:
-                        pos_copy = (pos_copy[0], pos_copy[1] + 1)
+            find_path(pos_copy[1], point[1], map_size[1], crossed, sup)
         
 
     
