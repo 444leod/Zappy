@@ -35,6 +35,16 @@ class ABehavior:
         """
         raise NotImplementedError("You are not supposed to override this method")
     
+    
+    def collect_all_on_tiles(self, pos :tuple[int,int], map: Map) -> None:
+        """
+        Collect all rocks from the tile
+        """
+        tmp: dict[str, int] = map.tiles[pos[0]][pos[1]].collectibles.__dict__
+        for collectibles, amount in tmp.items():
+            for _ in range(amount):
+                self.command_stack.append(cmd.Take(collectibles))
+    
     def turn(self, current_rotation: tuple[int, int], new_rotation: tuple[int, int]) -> None:
         """
         Turn the player to a specific orientation
@@ -55,9 +65,9 @@ class ABehavior:
 
         # If diff is negative or greater than 2, choose the shorter rotation path
         if diff == 1 or diff == -3:
-            self.command_stack.append(cmd.Right())
-        elif diff == -1 or diff == 3:
             self.command_stack.append(cmd.Left())
+        elif diff == -1 or diff == 3:
+            self.command_stack.append(cmd.Right())
         elif abs(diff) == 2:
             self.command_stack.append(cmd.Right())
             self.command_stack.append(cmd.Right())
@@ -66,7 +76,7 @@ class ABehavior:
         """
         Go to a specific point
         """
-        def cross_the_map(pos: int, dest: int, max: int, sup: bool) -> int:
+        def cross_the_map(pos: int, dest: int, max: int, sup: bool) -> bool:
             if (not sup):
                 return ((pos + 1) + max - dest < dest - pos)
             else :
@@ -74,23 +84,31 @@ class ABehavior:
 
             
         pos_copy = player_info.pos
+        orientiation_copy = player_info.orientation
         print("pos_copy before:", pos_copy)
         print("player info pos before:", player_info.pos)
+        print("point:", point)
         if player_info.pos == point:
             return
-        sup = None
+        sup: bool | None = None
         if player_info.pos[0] < point[0]:
             sup = False
         if player_info.pos[0] > point[0]:
             sup = True
         if sup != None:
             crossed = cross_the_map(pos_copy[0], point[0], map_size[0], sup)
-            if crossed or sup:
-                self.turn(player_info.orientation, SOUTH)
-            elif crossed and sup:
+            print("crossed:", crossed)
+            print("sup:", sup)
+            print("map_size[0]:", map_size[0])
+            if bool(crossed) != bool(sup):
                 self.turn(player_info.orientation, NORTH)
+                orientiation_copy = NORTH
+                print("turn north")
             else:
-                self.turn(player_info.orientation, NORTH)
+                self.turn(player_info.orientation, SOUTH)
+                orientiation_copy = SOUTH
+                print("turn south")
+            
             while pos_copy [0] != point[0]:
                 print("move on y")
                 self.command_stack.append(cmd.Forward())
@@ -109,26 +127,28 @@ class ABehavior:
                     else:
                         pos_copy = (pos_copy[0] + 1, pos_copy[1])
             
-        sup = None
+        sup: bool | None = None
         if player_info.pos[1] < point[1]:
             sup = False
         if player_info.pos[1] > point[1]:
             sup = True
+        print("sup:", sup)
         if sup != None:
             crossed = cross_the_map(pos_copy[1], point[1], map_size[1], sup)
-            if crossed or sup:
-                self.turn(player_info.orientation, WEST)
-            elif crossed and sup:
-                self.turn(player_info.orientation, EAST)
+            if bool(crossed) != bool(sup):
+                self.turn(orientiation_copy, EAST)
+                print("turn east")
             else:
-                self.turn(player_info.orientation, EAST)
+                self.turn(orientiation_copy, WEST)
+                orientiation_copy = WEST
+                print("turn west")
             while pos_copy [1] != point[1]:
                 self.command_stack.append(cmd.Forward())
                 print("move on x")
                 if crossed:
                     if sup:
                         pos_copy = (pos_copy[0], pos_copy[1] + 1)
-                        if pos_copy[1] > map_size[1]:
+                        if pos_copy[1] >= map_size[1]:
                             pos_copy = (pos_copy[0], 0)
                     else:
                         pos_copy = (pos_copy[0], pos_copy[1] - 1)
@@ -139,8 +159,7 @@ class ABehavior:
                         pos_copy = (pos_copy[0], pos_copy[1] - 1)
                     else:
                         pos_copy = (pos_copy[0], pos_copy[1] + 1)
-        print("player info pos after:", player_info.pos)
-        print("pos_copy after:", pos_copy)
+        
 
     
 
@@ -196,22 +215,27 @@ class Greg(ABehavior):
             max_row = len(tiles)
             max_col = len(tiles[0]) if max_row > 0 else 0
 
-            def distance(pos1: tuple[int, int], pos2: tuple[int, int]) -> int:
-                return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
+            def distance(pos1: tuple[int, int], pos2: tuple[int, int], max_row: int, max_col: int) -> int:
+                dx = abs(pos1[0] - pos2[0])
+                dy = abs(pos1[1] - pos2[1])
+
+                dx = min(dx, max_row - dx)  # Take into account wrapping on the x-axis
+                dy = min(dy, max_col - dy)  # Take into account wrapping on the y-axis
+
+                return dx + dy
 
             nearest_resource = ""
             nearest_position = None
             min_distance = float('inf')
             nearest_resource = ""
             nearest_position = None
-            x = player_pos[0]
-            y = player_pos[1]
-            for _ in range(max_row):
-                for _ in range(max_col):
+            for x in range(max_row):
+                for y in range(max_col):
                     tile = tiles[x][y]
                     for attr, value in tile.collectibles.__dict__.items():
                         if value > 0:
-                            dist = distance(player_pos, (x, y))
+                            print("value:", value)
+                            dist = distance(player_pos, (x, y), max_row, max_col)
                             if dist < min_distance:
                                 min_distance = dist
                                 nearest_resource = attr
@@ -228,7 +252,6 @@ class Greg(ABehavior):
                 str_to_take = attr
                 break
 
-        print("str_to_take:", str_to_take)
         if str_to_take != "":
             self.command_stack.append(cmd.Take(str_to_take))
         else:
@@ -238,6 +261,7 @@ class Greg(ABehavior):
                 print("position:", position)
                 print("nearest ressource:", str_to_take)
                 self.go_to_a_point( player_info, position, map.map_size)
+                self.collect_all_on_tiles(position, map)
             else:
                 self.command_stack.append(cmd.Forward())
                 self.command_stack.append(cmd.Look())
@@ -248,7 +272,7 @@ class Greg(ABehavior):
         """
         Generate the command stack for the Greg behavior
         """
-        time.sleep(3)
+        print("\nplayer info pos:", player_info.pos)
         self.go_to_ressources(player_info, map)
 
 class Manual(ABehavior):

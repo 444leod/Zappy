@@ -71,7 +71,7 @@ class Bot():
         The only function that should be called from the outside
         """
         while True:
-            self.log(self.map)
+            # self.log(self.map)
             self.behavior_logic()
             self.receive_command()
             self.handle_commands_sent()
