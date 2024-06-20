@@ -35,7 +35,7 @@ class ABehavior:
         def analyse_message(messages: List[tuple[int, str]]) -> bool:
             try:
                 message = messages[-1]
-                player_dir, msg = message
+                _, msg = message
                 message, level = msg.split("-")
                 if message != "level":
                     return False
@@ -188,7 +188,6 @@ class IncantationFollower(ABehavior):
         super().__init__()
         self.state: IncantationFollower.State = IncantationFollower.State.MOVING
 
-
     def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> ABehavior:
         return None
 
@@ -196,9 +195,36 @@ class IncantationFollower(ABehavior):
         """
         Generate the command stack for the IncantationFollower behavior
         """
-        print("this is a follower")
+        def check_position() -> bool:
+            try:
+                message: tuple[int, str] = messages[-1]
+                direction, msg = message
+                message, level = msg.split("-")
+                if message != "level" or int(level) != player_info.level:
+                    return False
+                if direction == 0:
+                    return True
+            except:
+                return False
+
+        if check_position():
+            self.state = IncantationFollower.State.ARRIVED
         if player_info.inv.food < 4:
-            self.command_stack.append(cmd.Inventory())
-            return
+            self.state = IncantationFollower.State.ABANDONED
+
+        match self.state:
+            case IncantationFollower.State.MOVING:
+                # Move towards the player
+                self.command_stack.append(cmd.Forward())
+            case IncantationFollower.State.WAITING:
+                # Do nothing while waiting ig
+                self.command_stack.append(cmd.ConnectNbr())
+                pass
+            case IncantationFollower.State.ARRIVED:
+                # Say that the player is here using unique ID
+                self.command_stack.append(cmd.Broadcast("Imhere"))
+            case IncantationFollower.State.ABANDONED:
+                # Say that the player is not here using unique ID
+                self.command_stack.append(cmd.Broadcast("Im2old4this"))
         self.command_stack.append(cmd.Inventory())
 
