@@ -63,6 +63,84 @@ class Collectibles():
             return getattr(self, str_to_take)
         return 0
 
+    def neg_to_zero(self):
+        """
+        Set all negative values to zero
+        """
+        for key in self.__dict__:
+            if getattr(self, key) < 0:
+                setattr(self, key, 0)
+
+    def __add__(self, other: 'Collectibles') -> 'Collectibles':
+        """
+        Adds two Collectibles together
+        """
+        if not isinstance(other, Collectibles):
+            return NotImplemented
+        return Collectibles(
+            food=self.food + other.food,
+            linemate=self.linemate + other.linemate,
+            sibur=self.sibur + other.sibur,
+            mendiane=self.mendiane + other.mendiane,
+              deraumere=self.deraumere + other.deraumere,
+          phiras=self.phiras + other.phiras,
+            thystame=self.thystame + other.thystame
+        )
+
+    def __sub__(self, other: 'Collectibles') -> 'Collectibles':
+        """
+        Subtracts two Collectibles
+        """
+        if not isinstance(other, Collectibles):
+            return NotImplemented
+        return Collectibles(
+            food=self.food - other.food,
+            linemate=self.linemate - other.linemate,
+            deraumere=self.deraumere - other.deraumere,
+            sibur=self.sibur - other.sibur,
+            mendiane=self.mendiane - other.mendiane,
+            phiras=self.phiras - other.phiras,
+            thystame=self.thystame - other.thystame
+        )
+
+    def __radd__(self, other: 'Collectibles') -> 'Collectibles':
+        """
+        Adds two Collectibles together
+        """
+        return self.__add__(other)
+
+    def __gt__(self, other: 'Collectibles') -> bool:
+        """
+        Compares two Collectibles and return True if self is greater than other
+        """
+        if not isinstance(other, Collectibles):
+            return NotImplemented
+        return all(getattr(self, attr) > getattr(other, attr) for attr in self.__annotations__)
+    
+    def __ge__(self, other: 'Collectibles') -> bool:
+        """
+        Compares two Collectibles and return True if self is greater or equal to other
+        """
+        if not isinstance(other, Collectibles):
+            return NotImplemented
+        return all(getattr(self, attr) >= getattr(other, attr) for attr in self.__annotations__)
+    
+    def __lt__(self, other: 'Collectibles') -> bool:
+        """
+        Compares two Collectibles and return True if self is less than other
+        """
+        if not isinstance(other, Collectibles):
+            return NotImplemented
+        return all(getattr(self, attr) < getattr(other, attr) for attr in self.__annotations__)
+    
+    def __le__(self, other: 'Collectibles') -> bool:
+        """
+        Compares two Collectibles and return True if self is less or equal to other
+        """
+        if not isinstance(other, Collectibles):
+            return NotImplemented
+        return all(getattr(self, attr) <= getattr(other, attr) for attr in self.__annotations__)
+
 @dataclass
 class PlayerInfo():
     """
