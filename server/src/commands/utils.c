@@ -85,5 +85,4 @@ void prepend_client_command(client_t client, client_command_t command)
         new_cmd->prev = NULL;
         client->commands = new_cmd;
     }
-    printf("preprend: success!\n");
 }

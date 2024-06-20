@@ -37,7 +37,7 @@ Test(take_suite, unknown)
     server.map = map;
     add_player_at_position(&player, pos, map);
 
-    char *args[2] = { "take", "zorglub's sword", NULL };
+    char *args[] = { "take", "zorglub's sword", NULL };
     take(args, &client, &server);
 
     cr_assert_not_null(client.packet_queue);
@@ -62,7 +62,7 @@ Test(take_suite, not_enough)
     server.map = map;
     add_player_at_position(&player, pos, map);
 
-    char *args[2] = { "take", "food", NULL };
+    char *args[] = { "take", "food", NULL };
     take(args, &client, &server);
 
     cr_assert_not_null(client.packet_queue);
@@ -91,7 +91,7 @@ Test(take_suite, food)
     server.map = map;
     add_player_at_position(&player, pos, map);
 
-    char *args[2] = { "take", "food", NULL };
+    char *args[] = { "take", "food", NULL };
     take(args, &client, &server);
 
     cr_assert_not_null(client.packet_queue);
@@ -123,7 +123,7 @@ Test(take_suite, rock)
     server.map = map;
     add_player_at_position(&player, pos, map);
 
-    char *args[2] = { "take", "sibur", NULL };
+    char *args[] = { "take", "sibur", NULL };
     take(args, &client, &server);
 
     cr_assert_not_null(client.packet_queue);

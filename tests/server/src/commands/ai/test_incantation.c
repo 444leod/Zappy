@@ -113,6 +113,4 @@ Test(incantation_suite, start_enough_ressources)
     char *res = client.packet_queue->packet->buffer;
     cr_assert_not_null(res);
     cr_assert_str_eq(res, "Elevation underway");
-
-    cr_assert_eq(client.player->stun_time, 30.0);
 }

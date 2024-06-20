@@ -165,7 +165,6 @@ void end_incantation(
     uint8_t level = player->level;
     bool success = check_tile_ressources(level, players, tile->rocks);
 
-    printf("Incantation %d succeded? %d\n", player->ritual_id, success);
     while (players) {
         if (success)
             evolve(players->player);
