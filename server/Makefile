@@ -98,6 +98,7 @@ __SRC_CLIENT := add_client.c \
 
 __SRC_UTILS := queue_buffer.c \
 	time.c \
+	parse_args.c \
 
 
 # =============================================================================
@@ -145,6 +146,7 @@ __SRC_GFX_TEST := msz.c \
 	pnw.c \
 
 __SRC_UTILS_TEST := get_map.c \
+	parser.c \
 
 # =============================================================================
 # Functionnal tests sources

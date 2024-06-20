@@ -49,3 +49,4 @@ bool can_interact(client_t client);
 void refill_map(const server_info_t server_info);
 void change_map_ressource(
     const char *key, const server_info_t server_info, int8_t delta);
+char **parse_command_args(const char *command);

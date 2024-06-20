@@ -95,7 +95,7 @@ static void initialize_command(const client_command_t command,
     size_t i = 0;
 
     command->initialized = true;
-    command->args = str_to_word_array(command->command, " ");
+    command->args = parse_command_args(command->command);
     if (client->type == NONE) {
         command->command_handler = AUTHENTIFICATION_COMMAND;
         command->wait_duration = 0;
