@@ -78,7 +78,6 @@ class Bot():
             self.behavior_logic()
             self.receive_command()
             self.handle_commands_sent()
-            self.log(self.player_info.inv)
 
     def log(self, *args, **kargs) -> None:
         """

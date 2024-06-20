@@ -160,7 +160,3 @@ class IncantationLeader(ABehavior):
             self.command_stack.append(cmd.Incantation())
         else:
             self.command_stack.append(cmd.Broadcast(f"level-{player_info.level}"))
-
-        # self.command_stack.append(cmd.Incantation()
-        #     if self.players_ready_to_level_up >= LEVEL_UP_REQ[player_info.level].nb_players
-        #     else cmd.Broadcast(f"level-{player_info.level}"))
