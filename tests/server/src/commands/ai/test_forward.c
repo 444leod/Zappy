@@ -62,3 +62,83 @@ Test(forward_suite, wrap_around_bounds)
     cr_assert(player.position.y == 4);
     cr_assert_str_eq(client.packet_queue->packet->buffer, "ok");
 }
+
+Test(forward_suite, loop)
+{
+    struct client_s client = { 0 };
+    struct server_info_s server = { 0 };
+    position_t pos = { 0, 0 };
+    struct player_s player = { 0 };
+    map_t map = create_map(10, 10);
+    char *args[] = { "", NULL };
+
+    player.orientation = SOUTH;
+    server.map = map;
+    client.player = &player;
+    add_player_at_position(&player, pos, map);
+    cr_assert(player.position.x == 0);
+    cr_assert(player.position.y == 0);
+
+    forward(args, &client, &server);
+    cr_assert(player.position.x == 0);
+    cr_assert(player.position.y == 1);
+
+    player.orientation = EAST;
+    forward(args, &client, &server);
+    cr_assert(player.position.x == 1);
+    cr_assert(player.position.y == 1);
+
+    player.orientation = NORTH;
+    forward(args, &client, &server);
+    cr_assert(player.position.x == 1);
+    cr_assert(player.position.y == 0);
+
+    player.orientation = WEST;
+    forward(args, &client, &server);
+    cr_assert(player.position.x == 0);
+    cr_assert(player.position.y == 0);
+
+    cr_assert_str_eq(client.packet_queue->packet->buffer, "ok");
+}
+
+Test(forward_suite, big_wrap_loop)
+{
+    struct client_s client = { 0 };
+    struct server_info_s server = { 0 };
+    position_t pos = { 0, 0 };
+    struct player_s player = { 0 };
+    map_t map = create_map(10, 10);
+    char *args[] = { "", NULL };
+
+    player.orientation = NORTH;
+    server.map = map;
+    client.player = &player;
+    add_player_at_position(&player, pos, map);
+    cr_assert(player.position.x == 0);
+    cr_assert(player.position.y == 0);
+
+    forward(args, &client, &server);
+    forward(args, &client, &server);
+    cr_assert(player.position.x == 0);
+    cr_assert(player.position.y == 8);
+
+    player.orientation = WEST;
+    forward(args, &client, &server);
+    forward(args, &client, &server);
+    cr_assert(player.position.x == 8);
+    cr_assert(player.position.y == 8);
+
+    player.orientation = SOUTH;
+    forward(args, &client, &server);
+    forward(args, &client, &server);
+    cr_assert(player.position.x == 8);
+    cr_assert(player.position.y == 0);
+
+    player.orientation = EAST;
+    forward(args, &client, &server);
+    forward(args, &client, &server);
+    cr_assert(player.position.x == 0);
+    cr_assert(player.position.y == 0);
+
+    cr_assert_str_eq(client.packet_queue->packet->buffer, "ok");
+}
