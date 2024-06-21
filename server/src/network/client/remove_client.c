@@ -7,7 +7,7 @@
 
 #include "clients.h"
 #include "garbage_collector.h"
-
+#include "commands_utils.h"
 #include "zappy.h"
 #include "lib.h"
 #include "packet.h"

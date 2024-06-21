@@ -134,7 +134,7 @@ static void connect_graphical(const client_t client,
     char *map_size_string = get_map_size_string(server_info);
 
     client->type = GRAPHICAL;
-    printf("Client %d: Connected as GRAPHICAL\n", client->fd);
+    printf("Client %d: Connected as GRAPHIC\n", client->fd);
     queue_buffer(client, "ok");
     queue_buffer(client, map_size_string);
     my_free(map_size_string);

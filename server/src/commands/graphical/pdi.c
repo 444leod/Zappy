@@ -18,5 +18,5 @@
  */
 char *get_player_death_string(const player_t player)
 {
-    return my_snprintf("pdi %d\n", player->id);
+    return my_snprintf("pdi %d\n", player->player_number);
 }

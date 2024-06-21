@@ -12,6 +12,7 @@
 #include "commands.h"
 #include "linked_lists.h"
 #include "garbage_collector.h"
+#include "commands_utils.h"
 #include "lib.h"
 
 /**
@@ -70,11 +71,15 @@ static bool is_read_special_case(const client_t client,
         remove_client(client->fd);
         client->fd = -1;
         printf("Read failed with fd %d: %s\n", client->fd, strerror(errno));
+        if (client->player && client->player->isDead)
+            queue_to_graphical(get_player_death_string(client->player));
         return true;
     }
     if (valread == 0) {
         remove_client(client->fd);
         client->fd = -1;
+        if (client->player && client->player->isDead)
+            queue_to_graphical(get_player_death_string(client->player));
         return true;
     }
     return false;
