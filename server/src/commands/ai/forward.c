@@ -11,15 +11,21 @@
 #include "clients.h"
 #include "lib.h"
 
+/**
+ * @brief Computes a wrapped version of a position with a given map
+ * @param pos The position
+ * @param map The map
+ * @return a `position_t` wrapped around map borders
+ */
 static position_t wrap_pos(position_t pos, const map_t map)
 {
-    if (pos.x < 0)
+    while (pos.x < 0)
         pos.x += map->width;
-    if (pos.y < 0)
+    while (pos.y < 0)
         pos.y += map->height;
-    if (pos.x >= (int)map->width)
+    while (pos.x >= (int)map->width)
         pos.x -= map->width;
-    if (pos.y >= (int)map->height)
+    while (pos.y >= (int)map->height)
         pos.y -= map->height;
     return pos;
 }
