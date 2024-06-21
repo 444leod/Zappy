@@ -270,4 +270,4 @@ class IncantationFollower(ABehavior):
             case IncantationFollower.State.ABANDONED:
                 # Say that the player is not here using unique ID
                 self.command_stack.append(cmd.Broadcast("Im2old4this"))
-        self.command_stack.append(cmd.Inventory())
+        super().mandatory_inventory(5)

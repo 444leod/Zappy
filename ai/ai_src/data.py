@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List
 from enum import Enum
+import uuid
 
 """
 CONST VARIABLES representing the orientation of a player
@@ -82,8 +83,8 @@ class Collectibles():
             linemate=self.linemate + other.linemate,
             sibur=self.sibur + other.sibur,
             mendiane=self.mendiane + other.mendiane,
-              deraumere=self.deraumere + other.deraumere,
-          phiras=self.phiras + other.phiras,
+            deraumere=self.deraumere + other.deraumere,
+            phiras=self.phiras + other.phiras,
             thystame=self.thystame + other.thystame
         )
 
@@ -151,6 +152,7 @@ class PlayerInfo():
     pos: tuple[int, int] = (0, 0)
     orientation: tuple[int, int] = NORTH
     old_behavior = None # ABehavior | None 
+    uuid = uuid.uuid4() # uuid.UUID
 
 @dataclass
 class TileContent():
