@@ -187,6 +187,7 @@ class Bot():
             self.player_info.inv.add_object_by_name(object)
             self.map.tiles[pos[0]][pos[1]].collectibles.remove_object_by_name(object)
         except Exception as e:
+            self.map.tiles[pos[0]][pos[1]].collectibles.remove_all_objects_by_name(object)
             self.log(e)
             self.log("Failed to take object")
 

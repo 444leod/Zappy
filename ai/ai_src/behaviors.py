@@ -233,7 +233,6 @@ class Greg(ABehavior):
             str_to_take, position = find_nearest_resource(player_info.pos, map.tiles)
             if position:
                 self.go_to_a_point( player_info, position, map.map_size)
-                self.collect_all_on_tiles(position, map)
             else:
                 self.command_stack.append(cmd.Forward())
                 self.command_stack.append(cmd.Look())
