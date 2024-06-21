@@ -135,9 +135,14 @@ static void start_incantation(
         }
         players = players->next;
     }
+    send_pic(client->player, players);
     prepend_client_command(client, create_command("EndIncantation", &now));
 }
 
+/**
+ * @brief Makes the player go up a level
+ * @param player The player
+ */
 static void evolve(player_t player)
 {
     char *msg = NULL;
@@ -168,6 +173,7 @@ void end_incantation(
     uint8_t level = player->level;
     bool success = check_tile_ressources(level, players, tile->rocks);
 
+    send_pie(client->player, success);
     while (players) {
         if (success)
             evolve(players->player);

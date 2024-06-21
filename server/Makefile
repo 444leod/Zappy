@@ -45,6 +45,7 @@ __SRC_COMMANDS := commands.c \
 	unknown_command.c \
 	auth.c \
 	utils.c \
+	incantation_messages.c \
 
 __SRC_AI := forward.c \
 	right.c \

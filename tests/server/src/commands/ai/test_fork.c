@@ -39,7 +39,7 @@ Test(fork_suite, player_fork)
     client.player = &player;
     server.map = map;
     add_player_at_position(&player, pos, map);
-    fork_player(args, &client, &server);
+    end_fork(args, &client, &server);
 
     cr_assert_not_null(client.packet_queue);
     cr_assert_not_null(client.packet_queue->packet);
@@ -77,8 +77,8 @@ Test(fork_suite, two_player_fork)
     add_player_at_position(&playerA, pos, map);
     add_player_at_position(&playerB, pos, map);
 
-    fork_player(args, &clientA, &server);
-    fork_player(args, &clientB, &server);
+    end_fork(args, &clientA, &server);
+    end_fork(args, &clientB, &server);
 
     cr_assert_not_null(clientA.packet_queue);
     cr_assert_not_null(clientA.packet_queue->packet);
