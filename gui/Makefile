@@ -21,8 +21,7 @@ __SRC = $(addprefix ./src/Core/, $(__SRC_CORE)) \
   	$(addprefix ./src/GameData/, $(__SRC_GAME_DATA)) \
   	$(addprefix ./src/Handler/Command/CommandProtocol/, $(__SRC_CMD_HANDLE)) \
 	$(addprefix ./src/display/scenes/, $(__SRC_DISPLAY_SCENES)) \
-  	# $(addprefix ./src/Handler/Command/, $(__SRC_GAME_DATA_MANAGER)) \
-  	# $(addprefix ./src/GameDisplay/, $(__SRC_GAME_DISPLAY)) \
+	$(addprefix ./src/display/animations/, $(__SRC_DISPLAY_ANIMATION)) \
 
 __SRC_CORE := Core.cpp \
 	GraphicalLibraryLoader.cpp \
@@ -35,8 +34,9 @@ __SRC_NETWORK := Client.cpp \
 
 __SRC_GAME_DATA := GameData.cpp \
 	Tiles/Map.cpp \
-	Tiles/TileContent.cpp \
-	Entities/Character.cpp \
+	Tiles/Tile.cpp \
+	Entities/Player.cpp \
+	Entities/Egg.cpp \
 
 __SRC_CMD_HANDLE := Map/Bct.cpp \
 	Map/Msz.cpp \
@@ -68,6 +68,18 @@ __SRC_DISPLAY_SCENES := SceneManager.cpp \
 	loading/Loading.cpp \
 	game/Game.cpp \
 
+__SRC_DISPLAY_ANIMATION := Death.cpp \
+	EggEclosion.cpp \
+	EggLay.cpp \
+	EggLayed.cpp \
+	Expulse.cpp \
+	Expulsed.cpp \
+	Idle.cpp \
+	Incantation.cpp \
+	IncantationEnd.cpp \
+	IncantationStart.cpp \
+	Walk.cpp \
+
 %.o: %.cpp
 	$(__CC) -c -o $@ $< $(__CXXFLAGS)
 %.o: %.cpp
@@ -89,7 +101,9 @@ __CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Action
 __CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Server
 __CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Status
 __CXXFLAGS += -I./include/Handler/Command/ -I./include/Handler/
-__CXXFLAGS += -I./include/Graphics -I./src/display/scenes
+__CXXFLAGS += -I./include/Graphics
+__CXXFLAGS += -I./src/display -I./src/display/scenes
+__CXXFLAGS += -I./src/display/animations
 __CXXFLAGS += -I./include/GameData/Entities/
 
 all: $(__NAME)

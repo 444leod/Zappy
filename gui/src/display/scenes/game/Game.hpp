@@ -28,6 +28,8 @@ namespace gui {
 
             private:
                 gui::Vector2i _rightTopCornerOffset = {0, 0};
+                float _tickTime = 0;
+                uint32_t _passedTicks = 0;
         };
     }
 }
