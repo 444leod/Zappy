@@ -300,7 +300,8 @@ class Eric(ABehavior):
             """
             Ignore the team message
             """
-            message = message.strip()
+            message = message.replace(" ", "")
+            message = message.replace("\n", "")
             return message in self.team_message
         def sort_messages(messages: List[tuple[int, str]]) -> None:
             """
@@ -310,6 +311,9 @@ class Eric(ABehavior):
                 return
             for message in messages:
                 if message[1] not in self.messages_received and not is_team_message(message[1]):
+                    message = list(message)
+                    message[1] = message[1].replace(" ", "")
+                    message[1] = message[1].replace("\n", "")
                     self.messages_received.append(message[1])
                     return
         sort_messages(messages)
@@ -318,8 +322,13 @@ class Eric(ABehavior):
             self.messages_received.remove(self.messages_received[0])
         super().collect_food(player_info, map)
         self.command_stack.append(cmd.Forward())
-        self.command_stack.append(cmd.Forward())
         self.command_stack.append(cmd.Right())
+        self.command_stack.append(cmd.Look())
+        super().collect_food(player_info, map)
+        self.command_stack.append(cmd.Forward())
+        self.command_stack.append(cmd.Left())
+        self.command_stack.append(cmd.Look())
+
 
 class Manual(ABehavior):
     def __init__(self):
