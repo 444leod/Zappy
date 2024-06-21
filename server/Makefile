@@ -153,6 +153,7 @@ __SRC_GFX_TEST := msz.c \
 	sst.c \
 	pnw.c \
 	pdi.c \
+	smg.c \
 
 __SRC_UTILS_TEST := get_map.c \
 	parser.c \
