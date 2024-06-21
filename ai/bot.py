@@ -5,7 +5,7 @@ from typing import List
 from ai_src.connection_handler import ConnectionHandler
 from ai_src.config import Config, HelpException, ArgError
 from ai_src.data import PlayerInfo, Collectibles, Map, TileContent
-from ai_src.behaviors import LookingForward, TalkingWalker
+from ai_src.behaviors import LookingForward, TalkingWalker, Greg, Manual
 import ai_src.commands as cmd
 from ai.ai_src.utils import add_tuples, turn_left, turn_right
 
@@ -54,15 +54,16 @@ class Bot():
         self.map: Map = Map()
         self.map.map_size = tuple(map(int, self.results[-1].split()))
         self.map.tiles = [[TileContent() for _ in range(self.map.map_size[0])] for _ in range(self.map.map_size[1])]
+        self.map.tiles[0][0].nb_players = 1
 
         self.messages_received: List[tuple[int, str]] = [] # [(player_direction, message), ..]
         self.messages_sent: List[str] = []
         self.cmd_sent: List[str] = []
         self.base_funcs = {
             "dead\n" : self.die,
-            "message": self.receive_broadcast  
+            "message": self.receive_broadcast,
         }
-        self.current_behavior = LookingForward() 
+        self.current_behavior = Greg() 
     
     def run(self) -> None:
         """
@@ -70,7 +71,7 @@ class Bot():
         The only function that should be called from the outside
         """
         while True:
-            self.log(self.map)
+            # self.log(self.map)
             self.behavior_logic()
             self.receive_command()
             self.handle_commands_sent()
@@ -101,6 +102,12 @@ class Bot():
             return
         self.messages_received.append((int(tab[1][:-1]), tab[2]))
     
+    def level_up(self) -> None:
+        """
+        Handle the bot's level up via incantation
+        """
+        self.player_info.level += 1
+
     def behavior_logic(self) -> None:
         """
         Handle the bot's behavior
@@ -135,6 +142,7 @@ class Bot():
         self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players -= 1
         self.player_info.pos = add_tuples(self.player_info.pos, self.player_info.orientation)
         self.player_info.pos = (self.player_info.pos[0] % self.map.map_size[0], self.player_info.pos[1] % self.map.map_size[1])
+        self.log(self.player_info.pos)
         self.map.player_pos = self.player_info.pos
         self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players += 1
 
@@ -154,7 +162,7 @@ class Bot():
         """
         try :
             cmd.Eject().interpret_result(self.results[-1])
-            self.map[self.player_info.pos].nb_player = 1
+            self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players = 1
         except Exception:
             pass
 
@@ -164,7 +172,7 @@ class Bot():
         """
         try:
             cmd.Fork().interpret_result(self.results[-1])
-            self.general_info.nb_eggs += 1
+            self.nb_eggs += 1
         except Exception as e:
             self.log(e)
             self.log("Failed to fork")
@@ -176,9 +184,10 @@ class Bot():
         try:
             pos = self.player_info.pos
             cmd.Set().interpret_result(self.results[-1])
-            self.player_info.inv.remove_object_by_name(object)
-            self.map.tiles[pos[0]][pos[1]].collectibles.add_object_by_name(object)
+            self.player_info.inv.add_object_by_name(object)
+            self.map.tiles[pos[0]][pos[1]].collectibles.remove_object_by_name(object)
         except Exception as e:
+            self.map.tiles[pos[0]][pos[1]].collectibles.remove_all_objects_by_name(object)
             self.log(e)
             self.log("Failed to take object")
 
@@ -201,7 +210,7 @@ class Bot():
         """
         try:
             cmd.Incantation().interpret_result(self.results[-1])
-            self.receive_commands()
+            self.receive_command()
             cmd.Incantation().interpret_result(self.results[-1])
             self.player_info.level += 1
         except Exception as e:
