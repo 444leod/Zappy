@@ -129,3 +129,4 @@ bool player_pick_up(
     const char *key, player_t player, tile_t tile, int8_t delta);
 void remove_player(const player_t player, const map_t map);
 void init_eggs(map_t map, const team_list_t teams, uint32_t egg_count);
+int8_t get_ressource_id(const char *ressource);

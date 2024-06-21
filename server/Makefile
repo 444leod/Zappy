@@ -82,6 +82,7 @@ __SRC_GAME := \
 	player_death.c \
 	refill_map.c \
 	change_map_ressource.c \
+	get_ressource_id.c \
 	init_eggs.c \
 
 __SRC_ARGS := \

@@ -6,6 +6,7 @@
 */
 
 #include "commands.h"
+#include "commands_utils.h"
 #include "packet.h"
 #include "clients.h"
 #include "zappy.h"
@@ -22,6 +23,20 @@ static const char *get_content_arg(char **args)
     if (count != 2)
         return NULL;
     return args[1];
+}
+
+/**
+ * @brief Sends pgt #n i to the graphical client
+ * @param player_number The player that took something
+ * @param ressource The name of the ressource
+ */
+static void send_pgt(uint32_t player_number, const char *ressource)
+{
+    int8_t id = get_ressource_id(ressource);
+
+    if (id < 0)
+        return;
+    queue_to_graphical(my_snprintf("pgt %d %d", player_number, id));
 }
 
 /**
@@ -52,4 +67,5 @@ void take(
     }
     add_packet_to_queue(&client->packet_queue, build_packet("ok"));
     change_map_ressource(arg, server_info, -1);
+    send_pgt(player->player_number, arg);
 }
