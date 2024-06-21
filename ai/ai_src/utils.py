@@ -1,10 +1,12 @@
+from ai_src.data import NORTH, SOUTH, EAST, WEST 
+
 def add_tuples(t1: tuple, t2: tuple):
     """
     Adds two tuples element-wise
     """
     return tuple(a + b for a, b in zip(t1, t2))
 
-def turn_left(orientation: tuple):
+def turn_left(orientation: tuple[int, int]):
     """
     Returns the orientation after a left turn
     """

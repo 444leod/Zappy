@@ -1,6 +1,6 @@
 import sys
 
-USAGE = "USAGE: ./zappy_ai -p port -n name -h machine"
+USAGE = "USAGE: ./zappy_ai -p port -n name [-h machine] [-m manual(true/false)]"
 
 class ArgError(Exception):
     pass
@@ -29,5 +29,6 @@ class Config:
             self.machine = "localhost"
         except IndexError:
             ArgError(USAGE)
+        self.manual: bool = True if "-m" in argv else False
         if (self.name == "GRAPHIC"):
             ArgError("Name can't be 'GRAPHIC' as it's reserved for the GUI.\n" + USAGE)
