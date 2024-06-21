@@ -8,6 +8,7 @@
 #include "game.h"
 #include "time_utils.h"
 #include "zappy.h"
+#include "commands_utils.h"
 #include <stdio.h>
 
 /**
@@ -15,20 +16,19 @@
  * @details Kill a player by removing it from map and queueing
  *  its death message
  *
- * TODO:
-    send_player_death_to_graphical(client->player)
-    printf("Player %d died.\n", client->player->player_id)
- *
  *
  * @param client the client to kill
  * @param map the world map
  */
 static void kill_player(const client_t client, const map_t map)
 {
+    char *player_death_string = get_player_death_string(client->player);
+
     printf("killing player with fd %d\n", client->fd);
     client->player->isDead = true;
     remove_player(client->player, map);
     queue_buffer(client, "dead");
+    queue_to_graphical(player_death_string);
 }
 
 /**

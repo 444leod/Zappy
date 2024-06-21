@@ -120,6 +120,50 @@ static void send_start_informations(const client_t client,
 }
 
 /**
+ * @brief Connect a graphical client
+ * @details Connect a graphical client to the server
+ *
+ * @param client the client to connect
+ * @param server_info the server informations
+ */
+static void connect_graphical(const client_t client,
+    const server_info_t server_info)
+{
+    client_list_t players = get_clients_by_type(AI);
+    char *new_player_string;
+    char *map_size_string = get_map_size_string(server_info);
+
+    client->type = GRAPHICAL;
+    printf("Client %d: Connected as GRAPHICAL\n", client->fd);
+    queue_buffer(client, "ok");
+    queue_buffer(client, map_size_string);
+    my_free(map_size_string);
+    while (players) {
+        new_player_string = get_new_player_string(players->client->player);
+        queue_buffer(client, new_player_string);
+        my_free(new_player_string);
+        players = players->next;
+    }
+}
+
+/**
+ * @brief Connect an AI client
+ * @details Connect an AI client to the server
+ *
+ * @param args the arguments of the command
+ * @param client the client that executed the command
+ * @param server_info the server informations
+ */
+static void connect_ai(char **args, client_t client,
+    const server_info_t server_info)
+{
+    client->type = AI;
+    spawn_player(args[0], client, server_info);
+    send_start_informations(client, server_info->width, server_info->height);
+    send_new_player_to_graphical(client->player);
+}
+
+/**
  * @brief Authenticate the client
  * @details Authenticate the client as a graphical or an AI client
  *
@@ -137,17 +181,12 @@ void auth(char **args, const client_t client,
         return;
     }
     if (strcmp(args[0], "GRAPHIC") == 0) {
-        client->type = GRAPHICAL;
-        printf("Client %d: Connected as GRAPHIC\n", client->fd);
-        queue_buffer(client, "ok");
+        connect_graphical(client, server_info);
         return;
     }
     if (!is_team_name_valid(args[0], server_info, client)) {
         queue_buffer(client, "ko");
         return;
     }
-    client->type = AI;
-    spawn_player(args[0], client, server_info);
-    send_start_informations(client, server_info->width, server_info->height);
-    send_new_player_to_graphical(client->player);
+    connect_ai(args, client, server_info);
 }

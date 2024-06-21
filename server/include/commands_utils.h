@@ -75,3 +75,7 @@ void send_egg_player_connexion_to_client(const client_t client,
 void send_egg_player_connexion_to_client_list(const client_list_t clients,
     const egg_t egg);
 void send_egg_player_connexion_to_graphical(const egg_t egg);
+
+char *get_player_death_string(const player_t player);
+
+void queue_to_graphical(char *buffer);
