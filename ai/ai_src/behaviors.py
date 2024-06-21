@@ -8,10 +8,6 @@ EAST: tuple[int, int] = (0, -1)
 SOUTH: tuple[int, int] = (1, 0)
 WEST: tuple[int, int] = (0, 1)
 
-NORTH: tuple[int, int] = (-1, 0)
-EAST: tuple[int, int] = (0, -1)
-SOUTH: tuple[int, int] = (1, 0)
-WEST: tuple[int, int] = (0, 1)
 
 class ABehavior:
     def __init__(self):
