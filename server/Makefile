@@ -73,6 +73,7 @@ __SRC_GRAPHICAL := msz.c \
 	ebo.c \
 	pdi.c \
 	seg.c \
+	smg.c \
 
 __SRC_GAME := \
 	create_map.c \
