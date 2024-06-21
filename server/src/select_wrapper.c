@@ -115,6 +115,8 @@ static void try_death(const client_t client, struct timeval **timeout)
  */
 static bool try_update_timeval(struct timeval **timeout, client_t client)
 {
+    if (client->end)
+        return false;
     try_command(client, timeout);
     try_death(client, timeout);
     return false;
