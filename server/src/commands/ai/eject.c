@@ -6,6 +6,7 @@
 */
 
 #include "commands.h"
+#include "commands_utils.h"
 #include "packet.h"
 #include "macros.h"
 #include "clients.h"
@@ -18,7 +19,7 @@
  * @param orientation The orientation the eject has been done at.
  * @return an allocated packet struct pointer (`packet_t *`).
  */
-packet_t *get_eject_packet(enum ORIENTATION orientation)
+static packet_t *get_eject_packet(enum ORIENTATION orientation)
 {
     char *tmp = my_snprintf("eject: %d", (uint8_t)orientation);
     packet_t *packet = build_packet(tmp);
@@ -63,7 +64,7 @@ static bool eject_players(player_t source, player_list_t others, map_t map)
  * @brief Destroy a list of eggs
  * @param eggs A pointer to the list of eggs to destroy
  */
-void destroy_eggs(egg_list_t *eggs)
+static void destroy_eggs(egg_list_t *eggs)
 {
     egg_list_t node = *eggs;
     egg_list_t next = NULL;
@@ -76,6 +77,15 @@ void destroy_eggs(egg_list_t *eggs)
         node = next;
     }
     *eggs = NULL;
+}
+
+/**
+ * @brief Sends the pex #n message to the graphical clients
+ * @param player_number The player that did the ejection
+ */
+static void send_pex(uint16_t player_number)
+{
+    queue_to_graphical(my_snprintf("pex %d", player_number));
 }
 
 /**
@@ -102,6 +112,8 @@ void eject(
     tile = get_tile_at_position(client->player->position, server_info->map);
     ejected = eject_players(client->player, tile->players, server_info->map);
     packet = build_packet(ejected ? "ok" : "ko");
+    if (ejected)
+        send_pex(client->player->player_number);
     destroy_eggs(&tile->eggs);
     add_packet_to_queue(&client->packet_queue, packet);
 }
