@@ -82,13 +82,9 @@ __SRC_DISPLAY_ANIMATION := Death.cpp \
 
 %.o: %.cpp
 	$(__CC) -c -o $@ $< $(__CXXFLAGS)
-%.o: %.cpp
-	$(__CC) -c -o $@ $< $(__CXXFLAGS)
 
 __OBJ = $(__SRC:.cpp=.o)
-__OBJ = $(__SRC:.cpp=.o)
 
-__CC = g++
 __CC = g++
 
 __CXXFLAGS += -Wall -Wextra -Werror -Wpedantic -std=c++20
