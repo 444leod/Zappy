@@ -17,9 +17,12 @@
 /**
  * @brief 16-bit masks that determines the necessary
  * ressources for a incantation level.
+ * @note Each value reprents the requirment to start or end an incantation
+ * @note Every 2 bit starting from the end indicates an amount of rocks
+ * @note The first bit is unused and the 3 bits after stands for player count
  */
 static const uint16_t incantation_masks[7] = {
-    5120, 9536, 10312, 17796, 18032, 26308, 27305
+    0x1400, 0x2540, 0x2848, 0x4584, 18032, 0x4670, 0x6AA9
 };
 
 /**
