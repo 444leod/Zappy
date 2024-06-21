@@ -71,6 +71,7 @@ static void destroy_eggs(egg_list_t *eggs)
 
     while (node) {
         next = node->next;
+        queue_to_graphical(my_snprintf("edi %d", node->egg->number));
         node->egg->team->remaining_slots--;
         my_free(node->egg);
         my_free(node);
