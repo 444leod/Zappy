@@ -13,7 +13,7 @@
 namespace gui::animations {
     class Idle : public AAnimation {
         public:
-            Idle(const std::string& skin, gui::Player& player);
+            Idle(const std::string& skin, gui::Player& player, float duration = 10.f, uint32_t frameCount = 5);
             ~Idle();
 
             void update(float deltaTime) override;

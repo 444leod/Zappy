@@ -45,6 +45,9 @@ namespace gui {
 
     bool GameData::playerExists(std::uint32_t playerId) const
     {
+        for (auto &player : this->_players) {
+            std::cout << "player id = " << player->id() << " exists" << std::endl;
+        }
         auto it = std::find_if(this->_players.begin(), this->_players.end(),
             [playerId](const auto& player){ return player->id() == playerId; });
 
@@ -118,22 +121,22 @@ namespace gui {
                 this->_teamSkins[teamName] = {"bowler", randomColor};
                 break;
             case 1:
-                this->_teamSkins[teamName] = {"bowler", randomColor};
+                this->_teamSkins[teamName] = {"electro", randomColor};
                 break;
             case 2:
-                this->_teamSkins[teamName] = {"bowler", randomColor};
+                this->_teamSkins[teamName] = {"goblinBD", randomColor};
                 break;
             case 3:
-                this->_teamSkins[teamName] = {"bowler", randomColor};
+                this->_teamSkins[teamName] = {"goblin", randomColor};
                 break;
             case 4:
-                this->_teamSkins[teamName] = {"bowler", randomColor};
+                this->_teamSkins[teamName] = {"hog", randomColor};
                 break;
             case 5:
-                this->_teamSkins[teamName] = {"bowler", randomColor};
+                this->_teamSkins[teamName] = {"ice_wizard", randomColor};
                 break;
             case 6:
-                this->_teamSkins[teamName] = {"bowler", randomColor};
+                this->_teamSkins[teamName] = {"knight", randomColor};
         }
     }
 

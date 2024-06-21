@@ -47,7 +47,10 @@ void gui::Pnw::receive(std::string command, std::shared_ptr<GameData> gameData)
     gameData->addPlayer(newPlayer);
     auto tile = gameData->map().at(Vector2u(x, y));
     tile->addEntity(newPlayer);
-    newPlayer->setSkin(gameData->teamSkin(teamName).first);
+    auto teamSkin = gameData->teamSkin(teamName);
+
+    newPlayer->setSkin(teamSkin.first);
+    newPlayer->setTeamColor(teamSkin.second);
     std::cout << "New player created with id: " << playerId << " at position: " << x << ", " << y << " with orientation: " << orientation << " and level: " << level << " for team: " << teamName << std::endl;
 
     std::srand(std::time(nullptr));

@@ -19,7 +19,8 @@ void gui::CommandHandler::handleCommand(std::string& command)
         return;
     auto it = _responseHandlers.find(token);
     if (it != _responseHandlers.end()) {
-        // std::cout << "[DEBUG] Handling command: " << token << "(" << command << ")" << std::endl;
+        if (token != "bct")
+            std::cout << "[DEBUG] Handling command: " << token << "(" << command << ")" << std::endl;
         it->second->receive(command, _gameData);
     } else {
         if (token == "eht")

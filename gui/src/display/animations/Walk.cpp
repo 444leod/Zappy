@@ -7,8 +7,8 @@
 
 #include "Walk.hpp"
 
-gui::animations::Walk::Walk(const std::string &skin, std::shared_ptr<gui::Player> player)
-    : AAnimation(4.5f, 13, "walk"), _skin(skin), _player(player)
+gui::animations::Walk::Walk(const std::string &skin, std::shared_ptr<gui::Player> player, float duration, uint32_t frameCount)
+    : AAnimation(duration, frameCount, "walk"), _skin(skin), _player(player)
 {
     _skin += "_walk_";
     switch (_player->orientation()) {
@@ -40,10 +40,10 @@ gui::animations::Walk::~Walk()
 void gui::animations::Walk::update(float deltaTime)
 {
     _passedTime += deltaTime;
-    if (_passedTime >= 0.2) {
-        _passedTime -= 0.2;
-        _duration -= 0.2;
-        _player->setDisplayOffset(_player->displayOffset() + (_direction * 4));
+    if (_passedTime >= 0.1) {
+        _passedTime -= 0.1;
+        _duration -= 0.1;
+        _player->setDisplayOffset(_player->displayOffset() + (_direction * 8));
         _currentFrame++;
         if (_currentFrame >= _frameCount) {
             _currentFrame = 0;

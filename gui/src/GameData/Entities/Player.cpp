@@ -19,7 +19,10 @@ void gui::Player::updateEvolutionStatus(bool result)
 void gui::Player::updateAnimation(float deltaTime)
 {
     if (!_animations.size()) {
-        this->pushAnimation(std::make_shared<gui::animations::Idle>(this->_skin, *this));
+        if (_skin == "bowler")
+            this->pushAnimation(std::make_shared<gui::animations::Idle>(this->_skin, *this, 10.f, 13));
+        else
+            this->pushAnimation(std::make_shared<gui::animations::Idle>(this->_skin, *this, 10.f, 16));
     }
     auto animation = _animations.top();
     animation->update(deltaTime);

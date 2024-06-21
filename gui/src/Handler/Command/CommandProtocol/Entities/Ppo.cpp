@@ -26,7 +26,6 @@ void gui::Ppo::receive(std::string command, std::shared_ptr<GameData> gameData)
     Orientation playerOrientation;
 
     iss >> token >> playerId >> x >> y >> orientation;
-    std::cout << "Ppo command received: " << playerId << " " << x << " " << y << " " << orientation << std::endl;
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
 
@@ -40,10 +39,15 @@ void gui::Ppo::receive(std::string command, std::shared_ptr<GameData> gameData)
     if (!player.has_value())
         throw std::invalid_argument("Player does not exist in the game data.");
     if (player.value()->position() != Vector2u(x, y)) {
+        gameData->map().at(player.value()->position())->removeEntity(playerId);
+        gameData->map().at(Vector2u(x, y))->addEntity(player.value());
         std::cout << "Player position changed from: " << player.value()->position().x() << ", " << player.value()->position().y() << " to: " << x << ", " << y << std::endl;
         player.value()->setPosition(Vector2u(x, y));
         player.value()->setTileDisplayOffset(gameData->map().at(Vector2u(x, y))->offset());
-        player.value()->pushAnimation(std::make_shared<gui::animations::Walk>(player.value()->skin(), player.value()));
+        if (player.value()->skin() == "bowler")
+            player.value()->pushAnimation(std::make_shared<gui::animations::Walk>(player.value()->skin(), player.value(), 2.f, 13));
+        else
+            player.value()->pushAnimation(std::make_shared<gui::animations::Walk>(player.value()->skin(), player.value(), 2.f, 8));
 
     }
     if (_stringToOrientation.find(orientation) == _stringToOrientation.end())

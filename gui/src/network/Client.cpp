@@ -55,7 +55,6 @@ void gui::ntw::Client::sendRequests(std::optional<std::chrono::milliseconds> tim
     while (!_requests.empty()) {
         std::size_t sent;
         const std::string& request = _requests.front();
-        std::cout << "sending " << request << std::endl;
         status = _socket.send(request.c_str(), request.size(), sent);
         duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - now);
         if (status == sf::Socket::Done) {

@@ -133,6 +133,10 @@ namespace gui {
 
             std::string skin() const { return this->_skin; }
 
+            void setTeamColor(gui::Color color) { this->_teamColor = color; }
+
+            gui::Color teamColor() const { return this->_teamColor; }
+
         protected:
             Vector2u _position = {0, 0};
             Orientation _orientation = Orientation::NORTH;
@@ -144,5 +148,6 @@ namespace gui {
             std::stack<std::shared_ptr<gui::AAnimation>> _animations = {};
             std::string _currentFrame = "";
             std::string _skin = "";
+            gui::Color _teamColor = {255, 255, 255, 255};
     };
 }

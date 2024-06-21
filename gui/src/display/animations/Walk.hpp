@@ -13,7 +13,7 @@
 namespace gui::animations {
     class Walk : public AAnimation {
         public:
-            Walk(const std::string& skin, std::shared_ptr<gui::Player> player);
+            Walk(const std::string& skin, std::shared_ptr<gui::Player> player, float duration = 2.f, uint32_t frameCount = 13);
             ~Walk();
 
             void update(float deltaTime) override;

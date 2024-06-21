@@ -13,28 +13,89 @@ void gui::scenes::Game::initialize(UNUSED gui::ILibrary& lib)
 {
     gui::TextureSpecification spec;
     spec.graphical.path = "gui/assets/bowlerSpriteSheet.png";
-    spec.graphical.subrect = {0, 0, 152, 173};
+    spec.graphical.subrect = {0, 0, 122, 132};
 
-    std::vector<std::pair<std::string, std::uint8_t>> _frames = {
-        {"bowler_eject_south_", 13},
-        {"bowler_eject_west_", 13},
-        {"bowler_eject_east_", 13},
-        {"bowler_eject_north_", 13},
-        {"bowler_walk_south_", 13},
-        {"bowler_walk_west_", 13},
-        {"bowler_walk_east_", 13},
-        {"bowler_walk_north_", 13},
-        {"bowler_idle_", 12}
+    std::map<std::string, std::vector<std::pair<std::string, uint8_t>>> _frames = {
+        {"bowlerSpriteSheet.png", {
+            {"bowler_eject_south_", 13},
+            {"bowler_eject_west_", 13},
+            {"bowler_eject_east_", 13},
+            {"bowler_eject_north_", 13},
+            {"bowler_walk_south_", 13},
+            {"bowler_walk_west_", 13},
+            {"bowler_walk_east_", 13},
+            {"bowler_walk_north_", 13},
+            {"bowler_idle_", 12}
+        }},
+        {"electroSpriteSheet.png", {
+            {"electro_eject_south_", 7},
+            {"electro_eject_west_", 7},
+            {"electro_eject_east_", 7},
+            {"electro_eject_north_", 7},
+            {"electro_walk_south_", 8},
+            {"electro_walk_west_", 8},
+            {"electro_walk_east_", 8},
+            {"electro_walk_north_", 8},
+            {"electro_idle_", 16}
+        }},
+        {"goblinBDSpriteSheet.png", {
+            {"goblinBD_eject_south_", 5},
+            {"goblinBD_eject_west_", 5},
+            {"goblinBD_eject_east_", 5},
+            {"goblinBD_eject_north_", 5},
+            {"goblinBD_walk_south_", 8},
+            {"goblinBD_walk_west_", 8},
+            {"goblinBD_walk_east_", 8},
+            {"goblinBD_walk_north_", 8},
+            {"goblinBD_idle_", 16}
+        }},
+        {"goblinSpriteSheet.png", {
+            {"goblin_eject_south_", 7},
+            {"goblin_eject_west_", 7},
+            {"goblin_eject_east_", 7},
+            {"goblin_eject_north_", 7},
+            {"goblin_walk_south_", 8},
+            {"goblin_walk_west_", 8},
+            {"goblin_walk_east_", 8},
+            {"goblin_walk_north_", 8},
+            {"goblin_idle_", 16}
+        }},
+        {"hogSpriteSheet.png", {
+            {"hog_eject_south_", 10},
+            {"hog_eject_west_", 10},
+            {"hog_eject_east_", 10},
+            {"hog_eject_north_", 10},
+            {"hog_walk_south_", 8},
+            {"hog_walk_west_", 8},
+            {"hog_walk_east_", 8},
+            {"hog_walk_north_", 8},
+            {"hog_idle_", 16}
+        }},
+        {"iceWizardSpriteSheet.png", {
+            {"ice_wizard_eject_south_", 9},
+            {"ice_wizard_eject_west_", 9},
+            {"ice_wizard_eject_east_", 9},
+            {"ice_wizard_eject_north_", 9},
+            {"ice_wizard_walk_south_", 8},
+            {"ice_wizard_walk_west_", 8},
+            {"ice_wizard_walk_east_", 8},
+            {"ice_wizard_walk_north_", 8},
+            {"ice_wizard_idle_", 16}
+        }}
     };
 
-    for (uint8_t frameIndex = 0; frameIndex < _frames.size(); frameIndex++) {
-        std::string name = _frames[frameIndex].first;
-        uint8_t frameCount = _frames[frameIndex].second;
-        for (uint8_t i = 0; i < frameCount; i++) {
-            spec.graphical.subrect->x = i * 152;
-            spec.graphical.subrect->y = frameIndex * 173;
-            lib.textures().load(name + std::to_string(i), spec);
+    uint32_t frameIndex = 0;
+    for (auto& [skin, frames] : _frames) {
+        spec.graphical.path = "gui/assets/" + skin;
+        for (auto& [frame, count] : frames) {
+            for (uint8_t i = 0; i < count; i++) {
+                spec.graphical.subrect->x = i * 122;
+                spec.graphical.subrect->y = frameIndex * 132;
+                lib.textures().load(frame + std::to_string(i), spec);
+            }
+            frameIndex++;
         }
+        frameIndex = 0;
     }
 
     spec.graphical.path = "gui/assets/map_sprite_sheet.png";
@@ -89,6 +150,13 @@ void gui::scenes::Game::draw(UNUSED gui::ILibrary& lib)
         for (uint32_t x = 0; x < size.x(); x++) {
             _gameData->map().at({x, y})->draw(lib);
         }
+    }
+
+    for (auto& player : _gameData->players()) {
+        player->drawAnimation(lib);
+    }
+    for (auto& egg : _gameData->eggs()) {
+        egg->drawAnimation(lib);
     }
 }
 
