@@ -6,8 +6,7 @@
 */
 
 #include "commands.h"
-#include "packet.h"
-#include "macros.h"
+#include "commands_utils.h"
 #include "clients.h"
 #include "lib.h"
 
@@ -34,5 +33,6 @@ void fork_player(
         server_info->map
     );
     client->player->team->remaining_slots++;
+    queue_to_graphical(my_snprintf("pfk %d", client->player->player_number));
     add_packet_to_queue(&client->packet_queue, build_packet("ok"));
 }
