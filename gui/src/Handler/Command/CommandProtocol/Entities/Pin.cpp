@@ -26,10 +26,10 @@ void gui::Pin::receive(std::string command, std::shared_ptr<GameData> gameData)
     iss >> token >> playerId >> x >> y >> food >> linemate >> deraumere >> sibur >> mendiane >> phiras >> thystame;
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
-    if (x >= gameData->mapRef().mapSize().x() || y >= gameData->mapRef().mapSize().y())
+    if (x >= gameData->map().size().x() || y >= gameData->map().size().y())
         throw std::invalid_argument("Invalid tile coordinates, out of map bounds.");
     Vector2u pos(x, y);
-    Character player;
+    Player player;
     Rocks rocks;
 
     rocks.linemate.setQuantity(linemate);

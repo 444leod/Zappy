@@ -25,7 +25,7 @@ void gui::Pie::receive(std::string command, std::shared_ptr<GameData> gameData)
     iss >> token >> x >> y >> result;
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
-    if (x >= gameData->mapRef().mapSize().x() || y >= gameData->mapRef().mapSize().y())
+    if (x >= gameData->map().size().x() || y >= gameData->map().size().y())
         throw std::invalid_argument("Invalid tile coordinates, out of map bounds.");
     if (result != 1 || result != 0)
         throw std::invalid_argument("Invalid incantation result.");

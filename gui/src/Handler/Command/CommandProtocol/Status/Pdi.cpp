@@ -24,9 +24,12 @@ void gui::Pdi::receive(std::string command, std::shared_ptr<GameData> gameData)
     iss >> token >> playerId;
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
+    std::cout << "Pdi command received: " << playerId << std::endl;
     if (!gameData->playerExists(playerId))
         throw std::invalid_argument("Player does not exist");
     auto player = gameData->getPlayerById(playerId);
-    if (player.has_value())
+    if (player.has_value()) {
         player.value()->kill();
+        gameData->removePlayer(playerId);
+    }
 }

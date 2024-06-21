@@ -26,7 +26,7 @@ void gui::Pic::receive(std::string command, std::shared_ptr<GameData> gameData)
     iss >> token >> x >> y >> level;
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
-    if (x >= gameData->mapRef().mapSize().x() || y >= gameData->mapRef().mapSize().y())
+    if (x >= gameData->map().size().x() || y >= gameData->map().size().y())
         throw std::invalid_argument("Invalid tile coordinates, out of map bounds.");
     while (iss >> playerId) {
         auto players = gameData->getPlayerById(playerId);

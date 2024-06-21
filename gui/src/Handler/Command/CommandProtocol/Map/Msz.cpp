@@ -22,10 +22,9 @@ void gui::Msz::receive(std::string command, std::shared_ptr<GameData> gameData)
     iss >> token >> x >> y;
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
-    Vector2u mapSize(x, y);
+    Vector2u size(x, y);
 
-    if (gameData->mapRef().mapSize() != Vector2u(0, 0))
+    if (gameData->map().size() != Vector2u(0, 0))
         throw std::invalid_argument("Map size already set.");
-    gameData->mapRef().setMapSize(mapSize);
-    gameData->mapRef().initMapContent(mapSize);
+    gameData->map().initializeMap(size);
 }

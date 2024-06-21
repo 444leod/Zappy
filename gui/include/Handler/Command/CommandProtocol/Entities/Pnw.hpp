@@ -34,10 +34,10 @@ namespace gui {
 
         private:
             std::map<std::string, Orientation> _stringToOrientation = {
-                {"NORTH", Orientation::NORTH},
-                {"EAST", Orientation::EAST},
-                {"SOUTH", Orientation::SOUTH},
-                {"WEST", Orientation::WEST}
+                {"1", Orientation::NORTH},
+                {"2", Orientation::EAST},
+                {"3", Orientation::SOUTH},
+                {"4", Orientation::WEST}
             };
     };
 }

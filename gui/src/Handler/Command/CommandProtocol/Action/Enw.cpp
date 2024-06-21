@@ -18,23 +18,35 @@ void gui::Enw::receive(std::string command, std::shared_ptr<GameData> gameData)
 {
     std::istringstream iss(command);
     std::string token;
-    std::uint32_t eggId, playerId;
+    std::int32_t eggId, playerId;
     std::uint32_t x, y;
 
     iss >> token >> eggId >> playerId >> x >> y;
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
-    if (!gameData->eggExists(eggId))
-        throw std::invalid_argument("Egg does not exist");
+    if (x >= gameData->map().size().x() || y >= gameData->map().size().y())
+        throw std::invalid_argument("Invalid position");
+    if (playerId == -1) {
+        std::shared_ptr<gui::Egg> egg = std::make_shared<gui::Egg>(eggId, Vector2u(x, y), "");
+        auto tile = gameData->map().at(Vector2u(x, y));
+        tile->addEntity(egg);
+        gameData->addEgg(egg);
+        egg->setSkin("egg");
+        std::srand(std::time(nullptr));
+        egg->setRandomOffset(Vector2f(static_cast<float>(rand() % 30), (rand() % 30)));
+        return;
+    }
     if (!gameData->playerExists(playerId))
         throw std::invalid_argument("Player does not exist");
-    if (x >= gameData->mapRef().mapSize().x() || y >= gameData->mapRef().mapSize().y())
-        throw std::invalid_argument("Invalid position");
 
     auto player = gameData->getPlayerById(playerId);
     if (player.has_value()) {
-        std::cout << "Player " << playerId << " laid an egg with id " << eggId << std::endl;
         std::shared_ptr<gui::Egg> egg = std::make_shared<gui::Egg>(eggId, Vector2u(x, y), player.value()->teamName());
-        player.value()->layEgg(false);
+        player.value()->layEgg(true);
+        auto tile = gameData->map().at(Vector2u(x, y));
+        tile->addEntity(egg);
+        gameData->addEgg(egg);
+        std::srand(std::time(nullptr));
+        egg->setRandomOffset(Vector2f(static_cast<float>(rand() % 30), (rand() % 30)));
     }
 }
