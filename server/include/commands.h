@@ -50,6 +50,7 @@ void look(ARGS);
 void inventory(ARGS);
 void connect_nbr(ARGS);
 void fork_player(ARGS);
+void end_fork(ARGS);
 void eject(ARGS);
 void take(ARGS);
 void set(ARGS);

@@ -72,7 +72,7 @@ void move_player(const player_t player, const position_t position,
  * @param pos the position to add the egg at.
  * @param map the map
  */
-void add_egg_at_position(const team_t team, const position_t pos, map_t map)
+egg_t add_egg_at_position(const team_t team, const position_t pos, map_t map)
 {
     const tile_t tile = get_tile_at_position(pos, map);
     const egg_t egg = my_malloc(sizeof(struct egg_s));
@@ -85,6 +85,7 @@ void add_egg_at_position(const team_t team, const position_t pos, map_t map)
     add_to_list((void *)egg, (node_t *)&tile->eggs);
     DEBUG_PRINT("[DEBUG] egg %d added at pos %d %d\n",
         egg->number, pos.x, pos.y);
+    return egg;
 }
 
 static void init_player(player_t player, egg_t egg)
