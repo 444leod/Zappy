@@ -23,7 +23,7 @@ namespace gui {
      * @brief Represents the specification required to create a textual texture
      */
     struct TextureTextualSpecification {
-        char character;
+        char Player;
         Color color;
     };
 

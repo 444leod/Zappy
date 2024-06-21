@@ -11,13 +11,15 @@
 #include "Orientation.hpp"
 #include "Vector.hpp"
 #include <vector>
+#include <stack>
 #include <memory>
 #include "macros.hpp"
 #include "Message.hpp"
+#include "AAnimation.hpp"
 
 /**
  * @brief Class representing entity in the simulation
- * @note Entity are the characters and the eggs in the simulation
+ * @note Entity are the Players and the eggs in the simulation
 */
 namespace gui {
     class AEntity {
@@ -98,10 +100,49 @@ namespace gui {
             */
             virtual std::string teamName() const { return this->_teamName; };
 
+            void pushAnimation(std::shared_ptr<gui::AAnimation> animation) { this->_animations.push(animation); }
+
+            virtual void updateAnimation(float deltaTime) = 0;
+            virtual void drawAnimation(ILibrary &lib) = 0;
+
+            /**
+             * @brief Set the display offset of the player (for animations)
+             * @param offset The display offset of the player
+             * @note The display offset is used to display the player at the right position
+             *    when the player is moving for example
+             */
+            void setDisplayOffset(Vector2f offset) { this->_displayOffset = offset; }
+
+            /**
+             * @brief Get the display offset of the player
+             * @return Vector2f The display offset of the player
+             * @note The display offset is used to display the player at the right position
+             *    when the player is moving for example
+             */
+            Vector2f displayOffset() const { return this->_displayOffset; }
+
+            void setTileDisplayOffset(Vector2f offset) { this->_tileDisplayOffset = offset; }
+
+            Vector2f tileDisplayOffset() const { return this->_tileDisplayOffset; }
+
+            void setRandomOffset(Vector2f offset) { this->_randomOffset = offset; }
+
+            Vector2f randomOffset() const { return this->_randomOffset; }
+
+            void setSkin(std::string skin) { this->_skin = skin; }
+
+            std::string skin() const { return this->_skin; }
+
         protected:
             Vector2u _position = {0, 0};
             Orientation _orientation = Orientation::NORTH;
             std::uint32_t _id = 0;
             std::string _teamName = "";
+            Vector2f _displayOffset = {0, 0};
+            Vector2f _tileDisplayOffset = {0, 0};
+            Vector2f _randomOffset = {0, 0};
+            std::stack<std::shared_ptr<gui::AAnimation>> _animations = {};
+            std::string _currentFrame = "";
+            std::string _skin = "";
     };
 }

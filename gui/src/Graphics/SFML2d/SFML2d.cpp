@@ -11,6 +11,7 @@
 #include <SFML/Audio.hpp>
 #include <deque>
 #include <memory>
+#include <iostream>
 
 namespace gui {
 
@@ -93,8 +94,10 @@ namespace gui {
         }
 
         virtual std::shared_ptr<gui::ITexture> get(const std::string &name) {
-            if (this->_textures.find(name) == this->_textures.end())
+            if (this->_textures.find(name) == this->_textures.end()) {
+                std::cerr << "Texture " << name << " not found" << std::endl;
                 return nullptr;
+            }
             return this->_textures.at(name);
         }
 
@@ -565,15 +568,13 @@ namespace gui {
 
         virtual void
         draw(std::shared_ptr<gui::ITexture> texture, float x, float y,
-             float scale) {
+             [[maybe_unused]] float scale = 1.f) {
             if (texture == nullptr)
                 return;
 
-            auto sprite = sf::Sprite{};
             auto tex = std::dynamic_pointer_cast<SFML2dTexture>(texture);
 
-            sprite.setTexture(*tex->raw().get());
-            sprite.setTextureRect(tex->subrect());
+            auto sprite = sf::Sprite(*tex->raw().get(), tex->subrect());
             sprite.setPosition(x, y);
             sprite.setScale(scale, scale);
             this->_window.draw(sprite);
@@ -581,14 +582,20 @@ namespace gui {
 
         virtual void
         print(const std::string &string, std::shared_ptr<gui::IFont> font,
-              float x, float y) {
+              float x, float y, std::optional<gui::Color> fontColor = std::nullopt,
+              std::optional<std::size_t> fontSize = std::nullopt) {
             if (font == nullptr)
                 return;
 
             auto attr = std::dynamic_pointer_cast<SFML2dFont>(font);
-            auto text = sf::Text(sf::String(string), attr->font(),
-                                 attr->size());
-            text.setFillColor(attr->color());
+            auto text = sf::Text(sf::String(string), attr->font(), fontSize.value_or(attr->size()));
+            if (fontColor.has_value()) {
+                auto color = fontColor.value();
+                text.setFillColor(sf::Color(color.red, color.green, color.blue,
+                                            color.alpha));
+            } else {
+                text.setFillColor(attr->color());
+            }
             text.setPosition(x, y);
             this->_window.draw(text);
         }

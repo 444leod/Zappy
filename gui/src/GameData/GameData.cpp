@@ -9,10 +9,10 @@
 #include <algorithm>
 
 namespace gui {
-    void GameData::addPlayer(std::shared_ptr<Character> player)
+    void GameData::addPlayer(std::shared_ptr<Player> player)
     {
         this->_players.push_back(player);
-        this->_map.getTileContentByCoordinates(player->position()).addEntity(player);
+        this->_map.at(player->position())->addEntity(player);
     }
 
     void GameData::removePlayer(std::uint32_t playerId)
@@ -21,7 +21,7 @@ namespace gui {
             [playerId](const auto& player){ return player->id() == playerId; });
 
         if (it != this->_players.end()) {
-            this->_map.removeEntityAtCoordinates((*it)->position(), playerId);
+            this->_map.at((*it)->position())->removeEntity(playerId);
             this->_players.erase(it);
         }
     }
@@ -29,7 +29,7 @@ namespace gui {
     void GameData::addEgg(std::shared_ptr<Egg> egg)
     {
         this->_eggs.push_back(egg);
-        this->_map.getTileContentByCoordinates(egg->position()).addEntity(egg);
+        this->_map.at(egg->position())->addEntity(egg);
     }
 
     void GameData::removeEgg(std::uint32_t eggId)
@@ -38,7 +38,7 @@ namespace gui {
             [eggId](const auto& egg){ return egg->id() == eggId; });
 
         if (it != this->_eggs.end()) {
-            this->_map.removeEntityAtCoordinates((*it)->position(), eggId);
+            this->_map.at((*it)->position())->removeEntity(eggId);
             this->_eggs.erase(it);
         }
     }
@@ -67,7 +67,7 @@ namespace gui {
         return it != this->_eggs.end();
     }
 
-    std::optional<std::shared_ptr<Character>> GameData::getPlayerById(std::uint32_t playerId) const
+    std::optional<std::shared_ptr<Player>> GameData::getPlayerById(std::uint32_t playerId) const
     {
         for (const auto &player : this->_players) {
             if (player->id() == playerId)
@@ -95,5 +95,50 @@ namespace gui {
     {
         _isDraw = true;
         std::cout << "Draw" << std::endl;
+    }
+
+    void GameData::addTeamName(std::string teamName)
+    {
+        this->_teamNames.push_back(teamName);
+        gui::Color randomColor = gui::Color(std::rand() % 255, std::rand() % 255, std::rand() % 255, 255);
+
+        bool isColorAlreadyUsed = true;
+        while (isColorAlreadyUsed) {
+            isColorAlreadyUsed = false;
+            for (auto &color : this->_teamColors) {
+                if (color.blue == randomColor.blue && color.red == randomColor.red && color.green == randomColor.green) {
+                    randomColor = gui::Color(std::rand() % 255, std::rand() % 255, std::rand() % 255, 255);
+                    isColorAlreadyUsed = true;
+                }
+            }
+        }
+        this->_teamColors.push_back(randomColor);
+        switch (this->_teamNames.size() % 7) {
+            case 0:
+                this->_teamSkins[teamName] = {"bowler", randomColor};
+                break;
+            case 1:
+                this->_teamSkins[teamName] = {"bowler", randomColor};
+                break;
+            case 2:
+                this->_teamSkins[teamName] = {"bowler", randomColor};
+                break;
+            case 3:
+                this->_teamSkins[teamName] = {"bowler", randomColor};
+                break;
+            case 4:
+                this->_teamSkins[teamName] = {"bowler", randomColor};
+                break;
+            case 5:
+                this->_teamSkins[teamName] = {"bowler", randomColor};
+                break;
+            case 6:
+                this->_teamSkins[teamName] = {"bowler", randomColor};
+        }
+    }
+
+    std::pair<std::string, gui::Color> GameData::teamSkin(const std::string &teamName) const
+    {
+        return this->_teamSkins.at(teamName);
     }
 }

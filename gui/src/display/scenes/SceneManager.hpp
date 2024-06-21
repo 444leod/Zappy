@@ -9,6 +9,7 @@
 
 #include "IScene.hpp"
 #include "loading/Loading.hpp"
+#include "game/Game.hpp"
 
 namespace gui {
     class SceneManager {
@@ -29,9 +30,6 @@ namespace gui {
             gui::IScene::State _previousState = gui::IScene::State::LOADING;
             gui::IScene::State _currentState = gui::IScene::State::LOADING;
 
-            std::map<gui::IScene::State, std::shared_ptr<gui::IScene>> _scenes = {
-                {gui::IScene::State::LOADING, std::make_shared<gui::scenes::Loading>(_currentState, _gameData, _serverCli)},
-                // {gui::IScene::State::GAME, std::make_shared<gui::scenes::Game>()}
-            };
+            std::map<gui::IScene::State, std::shared_ptr<gui::IScene>> _scenes;
     };
 }

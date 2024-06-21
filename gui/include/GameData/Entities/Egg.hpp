@@ -8,6 +8,7 @@
 #pragma once
 
 #include "AEntity.hpp"
+#include "ILibrary.hpp"
 
 namespace gui {
     /**
@@ -35,6 +36,9 @@ namespace gui {
              * @param isDead The egg life status
             */
             void kill() { this->_isDead = true; }
+
+            void updateAnimation(float deltaTime) override;
+            void drawAnimation(ILibrary &lib) override;
 
         private:
             bool _hatched = false;

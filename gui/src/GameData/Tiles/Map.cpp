@@ -8,7 +8,7 @@
 #include "Tiles/Map.hpp"
 
 namespace gui {
-    TileContent Map::getTileContentByCoordinates(Vector2u coordinates) const
+    std::shared_ptr<Tile> Map::at(Vector2u coordinates) const
     {
         auto it = this->_mapContent.find(coordinates);
         if (it != this->_mapContent.end())
@@ -17,31 +17,19 @@ namespace gui {
             throw std::out_of_range("Coordinates out of range");
     }
 
-    void Map::setTileContentByCoordinates(Vector2u coordinates, TileContent tileContent)
+    void Map::initializeMap(Vector2u size)
     {
-        if (!isValidCoordinates(coordinates))
-            throw std::out_of_range("Coordinates out of range");
-
-        this->_mapContent[coordinates] = tileContent;
-    }
-
-    void Map::setMapContent(std::map<Vector2u, TileContent> mapContent)
-    {
-        this->_mapContent.clear();
-
-        for (auto &tile : mapContent) {
-            this->_mapContent[tile.first] = tile.second;
-        }
-    }
-
-    void Map::initMapContent(Vector2u mapSize)
-    {
-        for (std::uint32_t x = 0; x < mapSize.x(); x++) {
-            for (std::uint32_t y = 0; y < mapSize.y(); y++) {
-                Vector2u coordinates(x, y);
-                TileContent tileContent;
-                this->_mapContent[coordinates] = tileContent;
+        this->_size = size;
+        for (std::uint32_t x = 0; x < size.x(); x++) {
+            for (std::uint32_t y = 0; y < size.y(); y++) {
+                this->_mapContent[{x, y}] = std::make_shared<Tile>();
             }
         }
     }
+
+    void Map::queuePlayerConnexion(std::string fullCommand)
+    {
+        this->_playerConnexionQueue.push(fullCommand);
+    }
 }
+

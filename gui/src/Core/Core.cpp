@@ -194,16 +194,22 @@ int main(int ac, char **av)
         gui::Core().run(static_cast<uint16_t>(port));
     }
     catch (const std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
+        std::cerr << "Invalid argument: " << e.what() << std::endl;
         return 84;
     } catch (const gui::ntw::Client::ClientTimeoutException& e) {
-        std::cerr << e.what() << std::endl;
+        std::cerr << "ClientTimeoutException: " << e.what() << std::endl;
         return 84;
     } catch (const gui::ntw::Client::ClientNotConnectedException& e) {
-        std::cerr << e.what() << std::endl;
+        std::cerr << "ClientNotConnectedException: " << e.what() << std::endl;
         return 84;
     } catch (const gui::ntw::Client::ClientException& e) {
-        std::cerr << e.what() << std::endl;
+        std::cerr << "ClientException: " << e.what() << std::endl;
+        return 84;
+    } catch (const gui::CoreException& e) {
+        std::cerr << "CoreException: " << e.what() << std::endl;
+        return 84;
+    } catch (const std::exception& e) {
+        std::cerr << "Exception: " << e.what() << std::endl;
         return 84;
     }
     return 0;

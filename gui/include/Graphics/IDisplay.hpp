@@ -11,6 +11,7 @@
 #include "ITextureManager.hpp"
 #include <vector>
 #include <string>
+#include <optional>
 
 namespace gui {
     /**
@@ -162,7 +163,7 @@ namespace gui {
          * @param height the height of the texture
          * @param scale the scale of the texture
          */
-        virtual void draw(std::shared_ptr<ITexture> texture, float x, float y, float scale) = 0;
+        virtual void draw(std::shared_ptr<ITexture> texture, float x, float y, float scale = 1) = 0;
 
         /**td::shared_ptr<ITexture> g
          * @brief Draws a string to the display
@@ -172,7 +173,13 @@ namespace gui {
          * @param x the column to draw the texture at
          * @param y the row to draw the texture at
          */
-        virtual void print(const std::string& string, std::shared_ptr<IFont> font, float x, float y) = 0;
+        virtual void print(
+            const std::string& string,
+            std::shared_ptr<IFont> font,
+            float x,
+            float y,
+            std::optional<gui::Color> fontColor = std::nullopt,
+            std::optional<std::size_t> fontSize = std::nullopt) = 0;
 
         /**
          * @brief Returns the size of a string when printed

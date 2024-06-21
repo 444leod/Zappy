@@ -16,10 +16,15 @@ void gui::SceneManager::initialize(gui::ILibrary& lib)
 
     gui::FontSpecification text {
            .color = gui::Color {200, 200, 200, 255},
-           .size = 32,
+           .size = 20,
            .path = "gui/ressources/fonts/ClashRoyale.ttf"
        };
    lib.fonts().load("ClashRoyale", text);
+
+    _scenes = {
+        {gui::IScene::State::LOADING, std::make_shared<gui::scenes::Loading>(_currentState, _gameData, _serverCli)},
+        {gui::IScene::State::GAME, std::make_shared<gui::scenes::Game>(_currentState, _gameData, _serverCli)}
+    };
 
     for (auto& scene : _scenes)
         scene.second->initialize(lib);
@@ -37,12 +42,14 @@ void gui::SceneManager::onMouseButtonPressed(gui::ILibrary& lib, gui::MouseButto
 
 void gui::SceneManager::update(gui::ILibrary& lib, float deltaTime)
 {
+    _scenes[_currentState]->update(lib, deltaTime);
     if (_currentState != _previousState) {
+        if (_scenes.find(_previousState) == _scenes.end() || _scenes.find(_currentState) == _scenes.end())
+            throw std::runtime_error("Scene not found");
         _scenes[_previousState]->onExit(_currentState, lib);
         _scenes[_currentState]->onEnter(_previousState, lib);
         _previousState = _currentState;
     }
-    _scenes[_currentState]->update(lib, deltaTime);
 }
 
 void gui::SceneManager::draw(gui::ILibrary& lib)
