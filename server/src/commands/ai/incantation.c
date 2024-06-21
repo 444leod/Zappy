@@ -17,12 +17,14 @@
 /**
  * @brief 16-bit masks that determines the necessary
  * ressources for a incantation level.
+ * @note They are stored in ascending order, first is the mask for leveling up
+ * from level 1 to level 2, second is level 2 to 3, third for 3 to 4, etc...
  * @note Each value reprents the requirment to start or end an incantation
  * @note Every 2 bit starting from the end indicates an amount of rocks
  * @note The first bit is unused and the 3 bits after stands for player count
  */
 static const uint16_t incantation_masks[7] = {
-    0x1400, 0x2540, 0x2848, 0x4584, 18032, 0x4670, 0x6AA9
+    0x1400, 0x2540, 0x2848, 0x4584, 0x4670, 0x66C4, 0x6AA9
 };
 
 /**
