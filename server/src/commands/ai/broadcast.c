@@ -6,6 +6,7 @@
 */
 
 #include "commands.h"
+#include "commands_utils.h"
 #include "clients.h"
 #include "lib.h"
 #include "zappy.h"
@@ -155,6 +156,16 @@ static void send_broadcast_to_clients(
 }
 
 /**
+ * @brief Sends pbc #n M to graphical clients
+ * @param player_number The player who sent broadcast
+ * @param text The message content
+ */
+static void send_pbc(uint32_t player_number, const char *text)
+{
+    queue_to_graphical(my_snprintf("pbc %d %s", player_number, text));
+}
+
+/**
  * @brief Broadcast command
  * @details Tells a message to other players
  *
@@ -175,5 +186,6 @@ void broadcast(
     }
     send_broadcast_to_clients(
         (const player_t)client->player, message, server_info->map);
+    send_pbc(client->player->player_number, message);
     queue_buffer(client, "ok");
 }
