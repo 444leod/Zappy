@@ -231,7 +231,6 @@ class IncantationLeader(ABehavior):
         if player_info.inv.food < 4:
             self.command_stack.append(cmd.Broadcast(dumps(vars(MessageContent(
                 message_type=MessageContent.MessageType.LEADER_ABANDONED_INCANTATION,
-                team_name=player_info.team_name,
                 sender_uuid=player_info.uuid,
                 sender_level=player_info.level,
                 target_uuid=""
@@ -241,7 +240,6 @@ class IncantationLeader(ABehavior):
             self.reset = True
             self.command_stack.append(cmd.Broadcast(dumps(vars(MessageContent(
                 message_type=MessageContent.MessageType.LEADER_LAUCHING_INCANTATION,
-                team_name=player_info.team_name,
                 sender_uuid=player_info.uuid,
                 sender_level=player_info.level,
                 target_uuid=""
@@ -251,7 +249,6 @@ class IncantationLeader(ABehavior):
         else:
             self.command_stack.append(cmd.Broadcast(dumps(vars(MessageContent(
                 message_type=MessageContent.MessageType.LEADER_READY_FOR_INCANTATION,
-                team_name=player_info.team_name,
                 sender_uuid=player_info.uuid,
                 sender_level=player_info.level,
                 target_uuid=""
@@ -263,6 +260,7 @@ class IncantationFollower(ABehavior):
         WAITING = 1
         ARRIVED = 2
         ABANDONED = 3
+        FINISHED = 4
 
     def __init__(self):
         """
@@ -272,9 +270,10 @@ class IncantationFollower(ABehavior):
         self.state: IncantationFollower.State = IncantationFollower.State.MOVING
         self.destination_direction: int = 0
         self.starting_level: int = 0
+        self.leader_uuid: str = ""
 
     def new_behavior(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> ABehavior:
-        if self.state == IncantationFollower.State.ABANDONED:
+        if self.state in [IncantationFollower.State.ABANDONED, IncantationFollower.State.FINISHED]:
             return player_info.old_behavior
         return None
 
@@ -286,34 +285,60 @@ class IncantationFollower(ABehavior):
             """
             Check if the player is at the right position (on top of the IncantationLeader)
             """
-            try:
-                message: tuple[int, str] = new_messages[-1]
-                self.destination_direction, msg = message
-                message, level = msg.split("-")
-                if message != "level" or int(level) != player_info.level:
-                    return False
-                if self.destination_direction == 0:
-                    return True
-            except:
+            for i in range(1, len(new_messages) + 1):
+                mess = new_messages[-i]
+                mess_content = mess.message_content
+                if mess_content == None:
+                    continue
+                if (mess_content.sender_level == player_info.level
+                    and mess_content.message_type == MessageContent.MessageType.LEADER_READY_FOR_INCANTATION):
+                    self.leader_uuid = mess_content.sender_uuid if self.leader_uuid == "" else self.leader_uuid
+                    if mess_content.sender_uuid == self.leader_uuid:
+                        return True if mess.sender_direction == 0 else False
+                    else:
+                        continue
+            
+        def leader_abandoned() -> bool:
+            """
+            Check if the leader abandoned the incantation
+            """
+            if self.leader_uuid == "":
                 return False
+            for message in new_messages:
+                mess_content = message.message_content
+                if mess_content == None:
+                    continue
+                if (mess_content.sender_uuid == self.leader_uuid
+                    and mess_content.message_type == MessageContent.MessageType.LEADER_ABANDONED_INCANTATION):
+                    return True
+            return False
 
         self.starting_level = player_info.level if self.starting_level == 0 else self.starting_level
 
-        if check_position():
+        if self.starting_level != player_info.level or leader_abandoned() :
+            self.state = IncantationFollower.State.FINISHED
+        elif player_info.inv.food < 4:
+            self.state = IncantationFollower.State.ABANDONED
+        elif check_position():
             self.state = IncantationFollower.State.ARRIVED
-        if player_info.inv.food < 4:
-            self.state = IncantationFollower.State.ABANDONED
-        if self.starting_level != player_info.level:
-            self.state = IncantationFollower.State.ABANDONED
 
         match self.state:
             case IncantationFollower.State.MOVING: super().go_to_direction(self.destination_direction)
             case IncantationFollower.State.WAITING: self.command_stack.append(cmd.ConnectNbr())
             case IncantationFollower.State.ARRIVED:
-                # Say that the player is here using unique ID
-                self.command_stack.append(cmd.Broadcast("Imhere"))
+                self.command_stack.append(cmd.Broadcast(dumps(vars(MessageContent(
+                    message_type=MessageContent.MessageType.FOLLOWER_READY_FOR_INCANTATION,
+                    sender_uuid=player_info.uuid,
+                    sender_level=player_info.level,
+                    target_uuid=self.leader_uuid
+                )))))
                 self.state = IncantationFollower.State.WAITING
             case IncantationFollower.State.ABANDONED:
-                # Say that the player is not here using unique ID
-                self.command_stack.append(cmd.Broadcast("Im2old4this"))
+                self.command_stack.append(cmd.Broadcast(dumps(vars(MessageContent(
+                    message_type=MessageContent.MessageType.FOLLOWER_ABANDONED_INCANTATION,
+                    sender_uuid=player_info.uuid,
+                    sender_level=player_info.level,
+                    target_uuid=self.leader_uuid
+                )))))
+            case IncantationFollower.State.FINISHED: self.command_stack.append(cmd.Inventory()); return
         super().refresh_inventory(5)

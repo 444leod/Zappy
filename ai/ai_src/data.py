@@ -263,7 +263,6 @@ class MessageContent():
         FOLLOWER_READY_FOR_INCANTATION = "FOLLOWER_READY_FOR_INCANTATION" # To inform the leader that the follower is ready for the incantation
         FOLLOWER_ABANDONED_INCANTATION = "FOLLOWER_ABANDONED_INCANTATION" # To inform the leader that the follower has abandoned the incantation
     message_type: MessageType
-    team_name: str
     sender_uuid: str
     target_uuid: str
     sender_level: int
