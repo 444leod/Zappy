@@ -10,6 +10,7 @@ __GREEN=\033[0;32m
 __BLUE=\033[0;34m
 __BOLD=\033[1m
 __NC=\033[0m # No Color
+__INFO = ${__RED}[RESULT]${__NC}
 
 __NAME = zappy
 
@@ -38,11 +39,10 @@ $(__NAME): .init_done
 	@mv server/zappy_server .
 	@mv gui/zappy_gui .
 	@mv ai/zappy_ai .
-	@printf "$(__GREEN)$(__BOLD)Compilation of zappy_server$(__NC)\n"
-	@printf "$(__GREEN)completed successfully.$(__NC)\n"
+	@echo -ne "\n${__INFO} Server compiled successfully.${__NC}\n"
 
 dev: .init_done
-	@make -s -C server
+	@make dev -s -C server
 	@make -s -C gui
 	@make -s -C ai
 	@mv server/zappy_server .
@@ -58,15 +58,13 @@ clean:
 	@rm -f zappy_server
 	@rm -f zappy_gui
 	@rm -f zappy_ai
-	@printf "$(__GREEN)$(__BOLD)Clean$(__NC)\n"
-	@printf "$(__GREEN)completed successfully.$(__NC)\n"
+	@echo -ne "\n${__INFO} Server cleaned.${__NC}\n"
 
 fclean: clean
 	@make fclean -s -C server
 	@make fclean -s -C gui
 	@make fclean -s -C ai
-	@printf "$(__GREEN)$(__BOLD)Fclean$(__NC)\n"
-	@printf "$(__GREEN)completed successfully.$(__NC)\n"
+	@echo -ne "\n${__INFO} Server fully cleaned.${__NC}\n"
 
 re: fclean all
 

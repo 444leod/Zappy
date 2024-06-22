@@ -9,6 +9,7 @@
 #include "linked_lists.h"
 #include "garbage_collector.h"
 #include "commands_utils.h"
+#include "debug.h"
 #include <time.h>
 
 /**
@@ -71,7 +72,7 @@ void move_player(const player_t player, const position_t position,
  * @param pos the position to add the egg at.
  * @param map the map
  */
-void add_egg_at_position(const team_t team, const position_t pos, map_t map)
+egg_t add_egg_at_position(const team_t team, const position_t pos, map_t map)
 {
     const tile_t tile = get_tile_at_position(pos, map);
     const egg_t egg = my_malloc(sizeof(struct egg_s));
@@ -82,6 +83,24 @@ void add_egg_at_position(const team_t team, const position_t pos, map_t map)
     egg->number = egg_number;
     egg_number++;
     add_to_list((void *)egg, (node_t *)&tile->eggs);
+    DEBUG_PRINT("[DEBUG] egg %d added at pos %d %d\n",
+        egg->number, pos.x, pos.y);
+    return egg;
+}
+
+static void init_player(player_t player, egg_t egg)
+{
+    uuid_generate(player->id);
+    player->food = 10;
+    player->level = 1;
+    player->team = egg->team;
+    player->position = egg->pos;
+    player->orientation = (enum ORIENTATION)(rand() % 4) + 1;
+    player->egg_number = egg->number;
+    player->death_remaining_time = 0;
+    player->stun_time = 0;
+    clock_gettime(0, &player->last_eat_check_time);
+    clock_gettime(0, &player->last_stuck_check);
 }
 
 /**
@@ -101,18 +120,10 @@ player_t egg_to_player(const egg_t egg, const map_t map)
     if (egg == NULL || map == NULL)
         return NULL;
     player = my_malloc(sizeof(struct player_s));
-    uuid_generate(player->id);
-    player->food = 10;
-    player->level = 1;
-    player->team = egg->team;
-    player->position = egg->pos;
-    player->death_remaining_time = 0;
-    clock_gettime(0, &player->last_eat_check_time);
-    player->orientation = (enum ORIENTATION)(rand() % 4) + 1;
-    player->egg_number = egg->number;
+    init_player(player, egg);
     tile = get_tile_at_position(egg->pos, map);
-    remove_from_list((void *)egg, (node_t *)tile->eggs);
+    remove_from_list((void *)egg, (node_t *)&tile->eggs);
     add_to_list((void *)player, (node_t *)&tile->players);
-    send_egg_player_connexion_to_graphical(egg);
+    queue_to_graphical(get_egg_player_connexion_string(egg));
     return player;
 }

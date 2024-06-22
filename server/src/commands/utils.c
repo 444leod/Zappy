@@ -57,6 +57,37 @@ char get_char_by_orientation(int orientation)
 }
 
 /**
+ * @brief Adds a KO packet to queue
+ * @param client the client
+ */
+void throw_ko(client_t client)
+{
+    add_packet_to_queue(&client->packet_queue, build_packet("ko"));
+}
+
+/**
+ * @brief Prepends a command to a player
+ * @param client The client
+ * @param command The command
+ */
+void prepend_client_command(client_t client, client_command_t command)
+{
+    client_command_list_t new_cmd = NULL;
+
+    new_cmd = my_malloc(sizeof(struct client_command_list_s));
+    new_cmd->command = command;
+    if (client->commands != NULL) {
+        new_cmd->prev = client->commands;
+        new_cmd->next = client->commands->next;
+        client->commands->next = new_cmd;
+    } else {
+        new_cmd->next = NULL;
+        new_cmd->prev = NULL;
+        client->commands = new_cmd;
+    }
+}
+
+/**
  * @brief Queue the given buffer to all the graphical clients
  * @details Queue the given buffer to all the graphical clients
  *

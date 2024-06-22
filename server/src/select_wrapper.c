@@ -39,7 +39,7 @@ static void add_clients_to_set(client_list_t clients, select_data_t *sd)
             sd->max_sd = (client_node->client->fd > sd->max_sd) ?
                 client_node->client->fd : sd->max_sd;
         }
-        if (!can_interact(client_node->client)) {
+        if (client_node->client->end) {
             client_node = client_node->next;
             continue;
         }
@@ -115,7 +115,7 @@ static void try_death(const client_t client, struct timeval **timeout)
  */
 static bool try_update_timeval(struct timeval **timeout, client_t client)
 {
-    if (client->player && client->player->isDead)
+    if (client->end)
         return false;
     try_command(client, timeout);
     try_death(client, timeout);
@@ -138,6 +138,7 @@ static struct timeval *get_timeout(client_list_t clients,
 
     timeout = my_malloc(sizeof(struct timeval));
     *timeout = get_timeval_by_double(serverInfo->refill_wait);
+    DEBUG_PRINT("Refill: %ld %03ld\n", timeout->tv_sec, timeout->tv_usec);
     while (tmp) {
         if (try_update_timeval(&timeout, tmp->client))
             return timeout;
@@ -145,7 +146,12 @@ static struct timeval *get_timeout(client_list_t clients,
     }
     if (timeout->tv_sec == -1)
         return NULL;
+    if (timeout->tv_sec < 0 || timeout->tv_usec < 0) {
+        timeout->tv_sec = 0;
+        timeout->tv_usec = 0;
+    }
     return timeout;
+
 }
 
 /**
