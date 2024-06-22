@@ -58,6 +58,7 @@ class Bot():
         self.map.tiles = [[TileContent() for _ in range(self.map.map_size[0])] for _ in range(self.map.map_size[1])]
         self.map.tiles[0][0].nb_players = 1
 
+        self.messages_received_buffer: List[Message] = []
         self.messages_received: List[Message] = []
         self.messages_sent: List[Message] = []
         self.cmd_sent: List[str] = []
@@ -110,7 +111,7 @@ class Bot():
             message_content = MessageContent(message_type=MessageContent.MessageType(tmp.pop("message_type")), **tmp)
         except:
             message_content = None
-        self.messages_received.append(Message(
+        self.messages_received_buffer.append(Message(
             player_direction=int(tab[1][:-1]),
             raw_content=tab[2],
             message_content=message_content
@@ -126,13 +127,15 @@ class Bot():
         """
         Handle the bot's behavior
         """
-        new_behavior: ABehavior | None = self.current_behavior.new_behavior(self.player_info, self.map, self.messages_received)
+        new_behavior: ABehavior | None = self.current_behavior.new_behavior(self.player_info, self.map, self.messages_received_buffer)
         if new_behavior is not None and not self.conf.manual:
             self.current_behavior = new_behavior
-        cmd_to_send: cmd.ACommand = self.current_behavior.get_next_command(self.player_info, self.map, self.messages_received)
+        cmd_to_send: cmd.ACommand = self.current_behavior.get_next_command(self.player_info, self.map, self.messages_received_buffer)
         self.log(cmd_to_send.dump())
         self.cmd_sent.append(cmd_to_send.dump())
         self.com_handler.send_command(cmd_to_send.dump())
+        while self.messages_received_buffer != []:
+            self.messages_received.append(self.messages_received_buffer.pop(0))
 
     def receive_command(self) -> None:
         """
