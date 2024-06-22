@@ -57,13 +57,13 @@ class Collectibles():
         """
         if hasattr(self, str_to_take):
             setattr(self, str_to_take, getattr(self, str_to_take) - 1)
-    
-        def remove_all_objects_by_name(self, str_to_take : str):
-            """
-            Remove all objects of a certain type
-            """
-            if hasattr(self, str_to_take):
-                setattr(self, str_to_take, 0)
+
+    def remove_all_objects_by_name(self, str_to_take : str):
+        """
+        Remove all objects of a certain type
+        """
+        if hasattr(self, str_to_take):
+            setattr(self, str_to_take, 0)
 
     def get_nbr_object_by_name(self, str_to_take : str) -> int:
         """

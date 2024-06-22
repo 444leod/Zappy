@@ -69,7 +69,7 @@ class Bot():
             "Current": self.level_up,
             "ko\n": lambda: self.log("FAILED ELEVATION"),
         }
-        self.current_behavior = Manual() if self.conf.manual else LookingForward()
+        self.current_behavior = Manual() if self.conf.manual else Greg()
         self.player_info.old_behavior = self.current_behavior
 
     def run(self) -> None:
@@ -261,7 +261,7 @@ class Bot():
             case "Right": self.player_info.orientation = turn_right(self.player_info.orientation)
             case "Left": self.player_info.orientation = turn_left(self.player_info.orientation)
             case "Broadcast": self.handle_broadcast()
-            case "Connect_nbr": cmd.ConnectNbr().interpret_result(self.results[-1])
+            case "Connect_nbr": self.nb_eggs = int(self.results[-1]) if self.results[-1].isdigit() else self.nb_eggs
             case "Eject": self.handle_eject()
             case "Fork": self.handle_fork()
             case "Take": self.handle_take(cmd_sup)

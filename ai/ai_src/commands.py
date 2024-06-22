@@ -69,6 +69,7 @@ class Look(ACommand):
             return TileContent(collectibles=collectibles, nb_players=nb_players)
 
         super().interpret_result(res)
+        print(res)
         tab: List[str] = res.strip().removeprefix('[').removesuffix(']').split(',')
         vision: dict[str, TileContent] = {}
         n: int = 1
@@ -79,6 +80,7 @@ class Look(ACommand):
                 vision[key].append(str_to_tile(tab.pop(0)))
             n += 2
             key += 1
+        print(vision)
         return vision
 
 class Inventory(ACommand):
