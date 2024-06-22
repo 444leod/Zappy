@@ -8,6 +8,7 @@
 #include "commands.h"
 #include "lib.h"
 #include "zappy.h"
+#include "commands_utils.h"
 
 /**
  * @brief Get the team name string
@@ -28,13 +29,17 @@ char *get_team_name_string(const team_t team)
  */
 char *get_team_name_string_list(const team_list_t teams)
 {
-    char *team_name_list_string = "";
+    char *team_name_list_string = NULL;
     char *tmp = "";
     team_list_t tmp_teams = teams;
 
     while (tmp_teams) {
         tmp = get_team_name_string(tmp_teams->team);
-        team_name_list_string = supercat(3, team_name_list_string, "\n", tmp);
+        if (team_name_list_string == NULL)
+            team_name_list_string = my_strdup(tmp);
+        else
+            team_name_list_string =
+                supercat(3, team_name_list_string, "\n", tmp);
         my_free(tmp);
         tmp_teams = tmp_teams->next;
     }
@@ -42,46 +47,19 @@ char *get_team_name_string_list(const team_list_t teams)
 }
 
 /**
- * @brief Send the team name to a client
+ * @brief Send the team names to a client
  *
- * @param client the client that executed the command
- * @param team_name the team name
+ * @param client the client
+ * @param server_info the server infos
  */
-void send_team_name_list_to_client(const client_t client,
-    const team_list_t teams)
+static void send_team_names_to_client(const client_t client,
+    const server_info_t server_info)
 {
-    char *team_name_string;
-    team_list_t tmp = teams;
+    char *team_name_list_string =
+        get_team_name_string_list(server_info->teams);
 
-    while (tmp) {
-        team_name_string = get_team_name_string(tmp->team);
-        queue_buffer(client, team_name_string);
-        my_free(team_name_string);
-        tmp = tmp->next;
-    }
-}
-
-/**
- * @brief Send the team name to all the clients in the list
- *
- * @param clients the list of clients
- * @param team_name the team name
- */
-void send_team_name_list_to_client_list(const client_list_t clients,
-    const team_list_t teams)
-{
-    char *team_name_string;
-    team_list_t tmp_teams = teams;
-    client_list_t tmp_clients = clients;
-
-    while (tmp_teams) {
-        team_name_string = get_team_name_string(tmp_teams->team);
-        while (tmp_clients) {
-            queue_buffer(tmp_clients->client, team_name_string);
-            tmp_clients = tmp_clients->next;
-        }
-        my_free(team_name_string);
-    }
+    queue_buffer(client, team_name_list_string);
+    my_free(team_name_list_string);
 }
 
 /**
@@ -100,5 +78,5 @@ void tna(char **args, const client_t client,
         queue_buffer(client, "sbp");
         return;
     }
-    send_team_name_list_to_client(client, server_info->teams);
+    send_team_names_to_client(client, server_info);
 }

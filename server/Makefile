@@ -45,8 +45,20 @@ __SRC_COMMANDS := commands.c \
 	unknown_command.c \
 	auth.c \
 	utils.c \
+	incantation_messages.c \
 
 __SRC_AI := forward.c \
+	right.c \
+	left.c \
+	look.c \
+	inventory.c \
+	connect_nbr.c \
+	fork.c \
+	eject.c \
+	take.c \
+	set.c \
+	incantation.c \
+	broadcast.c \
 
 __SRC_GRAPHICAL := msz.c \
 	bct.c \
@@ -59,14 +71,21 @@ __SRC_GRAPHICAL := msz.c \
 	sst.c \
 	pnw.c \
 	ebo.c \
+	pdi.c \
+	seg.c \
+	smg.c \
 
 __SRC_GAME := \
 	create_map.c \
 	init_map.c \
 	manage_entities.c \
 	query_map.c \
+	player_pick_up.c \
 	player_death.c \
 	refill_map.c \
+	change_map_ressource.c \
+	get_ressource_id.c \
+	init_eggs.c \
 
 __SRC_ARGS := \
 	params.c \
@@ -86,6 +105,7 @@ __SRC_CLIENT := add_client.c \
 
 __SRC_UTILS := queue_buffer.c \
 	time.c \
+	parse_args.c \
 
 
 # =============================================================================
@@ -96,12 +116,12 @@ __TEST_PATH := ../tests/server/src/
 
 __TEST_SRC	= \
 	$(__SRC) \
-	../tests/server/test_global_utils.c \
+	$(__TEST_PATH)../test_global_utils.c \
 	$(addprefix $(__TEST_PATH)test_, $(__SRC_ROOT_TEST)) \
-	$(addprefix $(__TEST_PATH)commands/test_, $(__SRC_COMMANDS_TEST)) \
-	$(addprefix $(__TEST_PATH)commands/graphical/test_, \
-		$(__SRC_GRAPHICAL_TEST)) \
 	$(addprefix $(__TEST_PATH)utils/test_, $(__SRC_UTILS_TEST)) \
+	$(addprefix $(__TEST_PATH)commands/test_, $(__SRC_COMMANDS_TEST)) \
+	$(addprefix $(__TEST_PATH)commands/ai/test_, $(__SRC_AI_TEST)) \
+	$(addprefix $(__TEST_PATH)commands/graphical/test_, $(__SRC_GFX_TEST)) \
 
 __SRC_ROOT_TEST := utils.c \
 	client.c \
@@ -109,7 +129,20 @@ __SRC_ROOT_TEST := utils.c \
 
 __SRC_COMMANDS_TEST := auth.c \
 
-__SRC_GRAPHICAL_TEST := msz.c \
+__SRC_AI_TEST	:=	\
+	connect_nbr.c \
+	direction.c \
+	eject.c \
+	fork.c \
+	forward.c \
+	inventory.c \
+	look.c \
+	take.c \
+	set.c \
+	incantation.c \
+	broadcast.c \
+
+__SRC_GFX_TEST := msz.c \
 	bct.c \
 	mct.c \
 	tna.c \
@@ -119,8 +152,11 @@ __SRC_GRAPHICAL_TEST := msz.c \
 	sgt.c \
 	sst.c \
 	pnw.c \
+	pdi.c \
+	smg.c \
 
 __SRC_UTILS_TEST := get_map.c \
+	parser.c \
 
 # =============================================================================
 # Functionnal tests sources
