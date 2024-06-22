@@ -28,7 +28,7 @@ namespace gui {
                  * @param port The port to connect to
                  * @param teamName The team name
                 */
-                Client(uint16_t port) noexcept;
+                Client(std::string, uint16_t port) noexcept;
                 /**
                  * @brief Destroy the Client::Client object and disconnect from the server
                  * @details Destroy the Client::Client object and disconnect from the server
@@ -156,6 +156,7 @@ namespace gui {
 
             protected:
             private:
+                std::string _host;
                 uint16_t _port;
                 sf::TcpSocket _socket;
                 std::vector<std::string> _responses = {};

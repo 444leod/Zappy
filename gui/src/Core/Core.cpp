@@ -85,12 +85,12 @@ namespace gui {
                     this->_curLib->musics().load(music.first, music.second);
             }
 
-            void run(std::uint16_t port)
+            void run(std::string host, std::uint16_t port)
             {
                 auto libSwitch = false;
                 auto before = std::chrono::high_resolution_clock::now();
 
-                _serverCli = std::make_shared<ntw::Client>(port);
+                _serverCli = std::make_shared<ntw::Client>(host, port);
                 _sceneManager = std::make_shared<gui::SceneManager>(_gameData, _serverCli);
                 _sceneManager->initialize(*_curLib);
                 _serverCli->connectToServer();
@@ -160,38 +160,8 @@ namespace gui {
 int main(int ac, char **av)
 {
     try {
-        std::map<std::string, std::vector<std::string>> args = gui::ArgumentParser::parseArgs(ac, av);
-
-        for (const auto& arg : args) {
-            std::cout << arg.first << ": ";
-            for (const auto& val : arg.second)
-                std::cout << val << " ";
-            std::cout << std::endl;
-        }
-
-        if (args.find("help") != args.end()) {
-            std::cout << "USAGE: ./zappy_gui -p port -h host" << std::endl;
-            return 0;
-        }
-        if (args.find("p") == args.end())
-            throw std::invalid_argument("Port is required");
-        if (args.find("h") == args.end())
-            throw std::invalid_argument("Host is required");
-
-        if (args.size() != 2)
-            throw std::invalid_argument("Invalid arguments");
-
-        if (args["p"].size() != 1)
-            throw std::invalid_argument("Port is required");
-
-        int port = std::stoi(args["p"][0]);
-        if (port < 0 || port > 65535)
-            throw std::invalid_argument("Invalid port number");
-
-        if (args["h"].size() != 1)
-            throw std::invalid_argument("Invalid host");
-
-        gui::Core().run(static_cast<uint16_t>(port));
+        auto args = gui::ArgumentParser(ac, av);
+        gui::Core().run(args.host(), args.port());
     }
     catch (const std::invalid_argument &e) {
         std::cerr << "Invalid argument: " << e.what() << std::endl;

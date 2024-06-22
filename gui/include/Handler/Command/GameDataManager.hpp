@@ -41,13 +41,15 @@
 namespace gui {
     class GameDataManager {
         public:
-            GameDataManager(std::uint32_t port) : _port(port), _client(port) { _client.connectToServer(); }
+            GameDataManager(std::string host, std::uint32_t port)
+                : _host(host), _port(port), _client(host, port) { _client.connectToServer(); }
             ~GameDataManager() { _client.disconnect();}
 
             void handleRequests();
 
         private:
             std::vector<std::string> _requests;
+            std::string _host;
             std::uint32_t _port;
             GameData _gameData;
             ntw::Client _client;
