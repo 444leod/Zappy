@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** Zappy
 ** File description:
-** incantation_messages
+** incantation_utils
 */
 
 #include "game.h"
@@ -15,15 +15,13 @@
  * @param master The player launching the ritual
  * @param others The list of players in the ritual
  */
-void send_pic(player_t master, player_list_t others)
+void send_pic(incantation_t ritual)
 {
     char *tmp = NULL;
     char *msg = my_snprintf("pic %d %d %d",
-        master->position.x, master->position.y, master->player_number);
+        ritual->position.x, ritual->position.y, ritual->level);
 
-    for (player_list_t node = others; node; node = node->next) {
-        if (node->player == master)
-            continue;
+    for (player_list_t node = ritual->players; node; node = node->next) {
         tmp = my_strdup(msg);
         my_free(msg);
         msg = my_snprintf("%s %d", tmp, node->player->player_number);
@@ -37,10 +35,10 @@ void send_pic(player_t master, player_list_t others)
  * @param player The player
  * @param success Whether the ritual succeeded
  */
-void send_pie(player_t player, bool success)
+void send_pie(incantation_t ritual, bool success)
 {
     char *msg = my_snprintf("pie %d %d %d",
-        player->position.x, player->position.y, success);
+        ritual->position.x, ritual->position.y, success);
 
     queue_to_graphical(msg);
 }

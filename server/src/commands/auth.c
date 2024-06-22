@@ -16,6 +16,29 @@
 #include <stdio.h>
 
 /**
+ * @brief Sends start information to graphical client
+ */
+static void start_graphical_client(client_t client, server_info_t server_info)
+{
+    char *msg = NULL;
+    incantation_list_t rituals = server_info->rituals;
+    egg_list_t eggs = get_team_eggs(NULL, server_info->map);
+    egg_list_t next_egg = NULL;
+
+    queue_buffer(client, "ok");
+    for (; eggs; eggs = next_egg) {
+        next_egg = eggs->next;
+        msg = my_snprintf("enw %d -1 %d %d\n", eggs->egg->number,
+            eggs->egg->pos.x, eggs->egg->pos.y);
+        queue_buffer(client, msg);
+        my_free(msg);
+        my_free(eggs);
+    }
+    for (; rituals; rituals = rituals->next)
+        send_pic(rituals->incantation);
+}
+
+/**
  * @brief Get a team by its name
  * @details Get a team by its name in the server team list
  *
@@ -170,7 +193,7 @@ void auth(char **args, const client_t client,
     if (strcmp(args[0], "GRAPHIC") == 0) {
         client->type = GRAPHICAL;
         printf("Client %d: Connected as GRAPHIC\n", client->fd);
-        queue_buffer(client, "ok");
+        start_graphical_client(client, server_info);
         return;
     }
     if (!is_team_name_valid(args[0], server_info, client)) {
