@@ -48,7 +48,7 @@ void queue_packet_to_player(player_t player, packet_t *packet)
         return;
     node = *clients;
     while (node) {
-        if (uuid_compare(player->id, node->client->player->id) == 0)
+        if (player->player_number == node->client->player->player_number)
             add_packet_to_queue(&node->client->packet_queue, packet);
         node = node->next;
     }
