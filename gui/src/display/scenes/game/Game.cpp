@@ -106,6 +106,24 @@ void gui::scenes::Game::initialize(UNUSED gui::ILibrary& lib)
     spec.graphical.subrect = {0, 580, 630, 572};
     lib.textures().load("egg", spec);
 
+    spec.graphical.path = "gui/assets/consumable_sprite_sheet.png";
+    spec.graphical.subrect = {0, 0, 23, 24};
+
+    std::vector<std::pair<std::string, uint8_t>> consumables = {
+        {"linemate", 0},
+        {"deraumere", 1},
+        {"sibur", 2},
+        {"mendiane", 3},
+        {"phiras", 4},
+        {"thystame", 5},
+        {"food", 6}
+    };
+
+    for (auto& [consumable, index] : consumables) {
+        spec.graphical.subrect->x = 24;
+        spec.graphical.subrect->y = index * 23;
+        lib.textures().load(consumable, spec);
+    }
 }
 
 void gui::scenes::Game::onKeyPressed(UNUSED gui::ILibrary& lib, UNUSED gui::KeyCode key, UNUSED bool shift)
