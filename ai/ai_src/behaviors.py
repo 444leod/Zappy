@@ -227,7 +227,16 @@ class IncantationLeader(ABehavior):
                 if (mess_content.message_type == MessageContent.MessageType.FOLLOWER_ABANDONED_INCANTATION
                     and mess_content.sender_uuid in self.players_ready_to_level_up):
                     self.players_ready_to_level_up.remove(mess_content.sender_uuid)
-        
+
+        if player_info.inv.food < 4:
+            self.command_stack.append(cmd.Broadcast(dumps(vars(MessageContent(
+                message_type=MessageContent.MessageType.LEADER_ABANDONED_INCANTATION,
+                team_name=player_info.team_name,
+                sender_uuid=player_info.uuid,
+                sender_level=player_info.level,
+                target_uuid=""
+            )))))
+
         if len(self.players_ready_to_level_up) >= LEVEL_UP_REQ[player_info.level].nb_players:
             self.reset = True
             self.command_stack.append(cmd.Broadcast(dumps(vars(MessageContent(
