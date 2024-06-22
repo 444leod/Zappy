@@ -82,6 +82,17 @@ class ABehavior:
         enough_rocks: bool = total_rocks >= LEVEL_UP_REQ[player_info.level].collectibles
         return enough_rocks and player_info.inv.food >= 4
 
+    def set_missing_rocks(self, player_info: PlayerInfo, map: Map) -> None:
+        """
+        Set the missing rocks to incant
+        """
+        current_tile: TileContent = map.tiles[player_info.pos[0]][player_info.pos[1]]
+        rocks_to_set: Collectibles = LEVEL_UP_REQ[player_info.level].collectibles - current_tile.collectibles
+        rocks_to_set.neg_to_zero()
+        for rock, amount in rocks_to_set.__dict__.items():
+            for _ in range(amount):
+                self.command_stack.append(cmd.Set(rock))
+
     def easy_evolve(self, player_info: PlayerInfo, map: Map) -> None:
         """
         Try to evolve to the next level if the requirements are met
@@ -90,7 +101,7 @@ class ABehavior:
         current_tile: TileContent = map.tiles[player_info.pos[0]][player_info.pos[1]]
         enough_players: bool = current_tile.nb_players >= LEVEL_UP_REQ[player_info.level].nb_players
 
-        if enough_players and self.generate_command_stack():
+        if enough_players and self.enough_ressources_to_incant(player_info, map):
             rocks_to_set: Collectibles = LEVEL_UP_REQ[player_info.level].collectibles - current_tile.collectibles
             rocks_to_set.neg_to_zero()
             for rock, amount in rocks_to_set.__dict__.items():
