@@ -132,6 +132,15 @@ void gui::scenes::Game::onKeyPressed(UNUSED gui::ILibrary& lib, UNUSED gui::KeyC
 
 void gui::scenes::Game::onMouseButtonPressed(UNUSED gui::ILibrary& lib, UNUSED gui::MouseButton button, UNUSED int32_t x, UNUSED int32_t y)
 {
+
+    if (button == gui::MouseButton::LEFT && ((_gameData->map().size().x() * 120) > static_cast<uint32_t>(x) && (_gameData->map().size().y() * 120) > static_cast<uint32_t>(y))) {
+        auto tilePos = gui::Vector2u(static_cast<unsigned int>(x / 120), static_cast<unsigned int>(y / 120));
+        _tileInfo = tilePos;
+        _gameInfo = true;
+    }
+    if (button == gui::MouseButton::LEFT && ((_gameData->map().size().x() * 120) < static_cast<uint32_t>(x) || (_gameData->map().size().y() * 120) < static_cast<uint32_t>(y))) {
+        _gameInfo = false;
+    }
 }
 
 void gui::scenes::Game::update(UNUSED gui::ILibrary& lib, UNUSED float deltaTime)
@@ -169,7 +178,27 @@ void gui::scenes::Game::draw(UNUSED gui::ILibrary& lib)
             _gameData->map().at({x, y})->draw(lib);
         }
     }
+    if (!_gameInfo) {
+        auto teamNames = _gameData->teamNames();
+        uint32_t i = 0;
 
+        lib.display().print("Time: " + std::to_string(_passedTicks), lib.fonts().get("ClashRoyale"), 1200, 10, gui::Color{255, 255, 255, 255}, 20);
+        lib.display().print("Number of Players: " + std::to_string(_gameData->players().size()), lib.fonts().get("ClashRoyale"), 1200, 50, gui::Color{255, 255, 255, 255}, 20);
+        lib.display().print("Number of Teams: " + std::to_string(teamNames.size()), lib.fonts().get("ClashRoyale"), 1200, 90, gui::Color{255, 255, 255, 255}, 20);
+        for (i = 0; i < teamNames.size(); i++) {
+            auto [teamName, color] = _gameData->teamSkin(teamNames[i]);
+            lib.display().print(teamName + " team", lib.fonts().get("ClashRoyale"), 1200, 130 + i * 40, color, 20);
+        }
+    } else {
+        auto tile = _gameData->map().at(_tileInfo);
+        uint32_t i = 0;
+
+        lib.display().print("Tile " + std::to_string(_tileInfo.x()) + ", " + std::to_string(_tileInfo.y()) + ":" , lib.fonts().get("ClashRoyale"), 1300, 10, gui::Color{255, 255, 255, 255}, 20);
+        for (auto& entity : tile->entities()) {
+            lib.display().print("Player " + std::to_string(entity->id()), lib.fonts().get("ClashRoyale"), 1200, 50 + i * 30, gui::Color{255, 255, 255, 255}, 20);
+            i++;
+        }
+    }
     for (auto& player : _gameData->players()) {
         player->drawAnimation(lib);
     }

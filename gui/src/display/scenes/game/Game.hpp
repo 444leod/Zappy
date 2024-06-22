@@ -30,6 +30,8 @@ namespace gui {
                 gui::Vector2i _rightTopCornerOffset = {0, 0};
                 float _tickTime = 0;
                 uint32_t _passedTicks = 0;
+                bool _gameInfo = false;
+                gui::Vector2u _tileInfo = {0, 0};
         };
     }
 }
