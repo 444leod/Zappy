@@ -152,7 +152,7 @@ class PlayerInfo():
     pos: tuple[int, int] = (0, 0)
     orientation: tuple[int, int] = NORTH
     old_behavior = None # ABehavior | None 
-    uuid = uuid.uuid4() # uuid.UUID
+    uuid: str = uuid.uuid4().hex
 
 @dataclass
 class TileContent():
@@ -264,8 +264,8 @@ class MessageContent():
         FOLLOWER_ABANDONED_INCANTATION = "FOLLOWER_ABANDONED_INCANTATION" # To inform the leader that the follower has abandoned the incantation
     message_type: MessageType
     team_name: str
-    sender_uuid: int
-    target_uuid: int
+    sender_uuid: str
+    target_uuid: str
     sender_level: int
 
 @dataclass

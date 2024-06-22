@@ -12,21 +12,21 @@ class ABehavior:
         self.command_stack: List[cmd.ACommand] = []
         self.inv_count: int = 0
 
-    def get_next_command(self, player_info: PlayerInfo, map: Map, messages: List[Message]) -> cmd.ACommand:
+    def get_next_command(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> cmd.ACommand:
         """
         Get the next command to execute from the stack
         """
         if not self.command_stack:
-            self.generate_command_stack(player_info, map, messages)
+            self.generate_command_stack(player_info, map, new_messages)
         return self.command_stack.pop(0)
     
-    def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[Message]) -> 'ABehavior': # None | ABehavior:
+    def new_behavior(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> 'ABehavior': # None | ABehavior:
         """
         Get the name of the new behavior to switch to or None if no switch is needed
         """
-        def analyse_message(messages: List[Message]) -> bool:
-            for i in range(1, len(messages) + 1):
-                mess_content = messages[-i].message_content
+        def analyse_message(new_messages: List[Message]) -> bool:
+            for i in range(1, len(new_messages) + 1):
+                mess_content = new_messages[-i].message_content
                 if mess_content == None:
                     continue
                 if mess_content.message_type == MessageContent.MessageType.LEADER_READY_FOR_INCANTATION and mess_content.sender_level == player_info.level: 
@@ -36,18 +36,18 @@ class ABehavior:
 
         if self.enough_ressources_to_incant(player_info, map):
             return IncantationLeader()
-        if analyse_message(messages):
+        if analyse_message(new_messages):
             return IncantationFollower()
         return None
 
     # Private utility methods that can be used by any behavior
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[Message]) -> None:
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> None:
         """
         Generate the command stack, should be overriden by the child class
         """
         raise NotImplementedError("You are not supposed to override this method")
 
-    def mandatory_inventory(self, nb_calls) -> None:
+    def refresh_inventory(self, nb_calls) -> None:
         """
         Add an inventory command every x call
         """
@@ -137,7 +137,7 @@ class LookingForward(ABehavior):
         """
         super().__init__()
 
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[Message]) -> None:
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> None:
         """
         Generate the command stack for the LookingForward behavior
         """
@@ -155,7 +155,7 @@ class Manual(ABehavior):
         super().__init__()
         print("r for right, l for left, f for forward, i for inventory, t>item for take, s>item for set, I for incantation, L for look, b for broadcast")
 
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[Message]) -> None:
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> None:
         """
         Generate a command by the user
         """
@@ -188,20 +188,35 @@ class IncantationLeader(ABehavior):
         IncantationLeader behavior, the player is the leader of the incantation
         """
         super().__init__()
-        self.players_ready_to_level_up: int = 1
+        self.players_ready_to_level_up: List[str] = []
         self.reset: bool = False
 
-    def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[Message]) -> ABehavior:
+    def new_behavior(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> ABehavior:
         if player_info.inv.food < 4 or self.reset:
             return player_info.old_behavior
         return None
 
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[Message]) -> None:
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> None:
         """
         Generate the command stack for the IncantationLeader behavior
         """
-        super().mandatory_inventory(10)
-        if self.players_ready_to_level_up >= LEVEL_UP_REQ[player_info.level].nb_players:
+        super().refresh_inventory(10)
+        if player_info.uuid not in self.players_ready_to_level_up:
+            self.players_ready_to_level_up.append(player_info.uuid)
+        for message in new_messages:
+            mess_content = message.message_content
+            if mess_content == None:
+                continue
+            if (mess_content.sender_level == player_info.level
+                and mess_content.target_uuid == player_info.uuid):
+                if (mess_content.message_type == MessageContent.MessageType.FOLLOWER_READY_FOR_INCANTATION
+                    and mess_content.sender_uuid not in self.players_ready_to_level_up):
+                    self.players_ready_to_level_up.append(mess_content.sender_uuid)
+                if (mess_content.message_type == MessageContent.MessageType.FOLLOWER_ABANDONED_INCANTATION
+                    and mess_content.sender_uuid in self.players_ready_to_level_up):
+                    self.players_ready_to_level_up.remove(mess_content.sender_uuid)
+        
+        if len(self.players_ready_to_level_up) >= LEVEL_UP_REQ[player_info.level].nb_players:
             self.reset = True
             self.command_stack.append(cmd.Incantation())
         else:
@@ -223,12 +238,12 @@ class IncantationFollower(ABehavior):
         self.destination_direction: int = 0
         self.starting_level: int = 0
 
-    def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[Message]) -> ABehavior:
+    def new_behavior(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> ABehavior:
         if self.state == IncantationFollower.State.ABANDONED:
             return player_info.old_behavior
         return None
 
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[Message]) -> None:
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> None:
         """
         Generate the command stack for the IncantationFollower behavior
         """
@@ -237,7 +252,7 @@ class IncantationFollower(ABehavior):
             Check if the player is at the right position (on top of the IncantationLeader)
             """
             try:
-                message: tuple[int, str] = messages[-1]
+                message: tuple[int, str] = new_messages[-1]
                 self.destination_direction, msg = message
                 message, level = msg.split("-")
                 if message != "level" or int(level) != player_info.level:
@@ -266,4 +281,4 @@ class IncantationFollower(ABehavior):
             case IncantationFollower.State.ABANDONED:
                 # Say that the player is not here using unique ID
                 self.command_stack.append(cmd.Broadcast("Im2old4this"))
-        super().mandatory_inventory(5)
+        super().refresh_inventory(5)
