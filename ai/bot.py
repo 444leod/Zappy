@@ -2,9 +2,10 @@
 
 import sys
 from typing import List
+from json import dumps, loads
 from ai_src.connection_handler import ConnectionHandler
 from ai_src.config import Config, HelpException, ArgError
-from ai_src.data import PlayerInfo, Collectibles, Map, TileContent
+from ai_src.data import PlayerInfo, Collectibles, Map, TileContent, Message, MessageContent
 from ai_src.behaviors import LookingForward, Manual, ABehavior
 import ai_src.commands as cmd
 from ai.ai_src.utils import add_tuples, turn_left, turn_right
@@ -58,6 +59,8 @@ class Bot():
 
         self.messages_received: List[tuple[int, str]] = [] # [(player_direction, message), ..]
         self.messages_sent: List[str] = []
+        # self.messages_received: Message = []
+        # self.messages_sent: Message = []
         self.cmd_sent: List[str] = []
         self.base_funcs = {
             "dead\n" : self.die,
@@ -68,7 +71,7 @@ class Bot():
         }
         self.current_behavior = Manual() if self.conf.manual else LookingForward()
         self.player_info.old_behavior = self.current_behavior
-    
+
     def run(self) -> None:
         """
         Main loop of the bot
@@ -103,7 +106,16 @@ class Bot():
         tab: List[str] = self.results[-1].split(" ")
         if (len(tab) != 3) or not (tab[1][:-1].isdigit()):
             return
-        self.messages_received.append((int(tab[1][:-1]), tab[2]))
+        try:
+            tmp: dict = loads(tab[2])
+            message_content = MessageContent(message_type=MessageContent.MessageType(tmp.pop("message_type")), **tmp)
+        except:
+            message_content = None
+        self.messages_received.append(Message(
+            player_direction=int(tab[1][:-1]),
+            raw_content=tab[2],
+            message_content=message_content
+        ))
 
     def level_up(self) -> None:
         """
@@ -219,6 +231,15 @@ class Bot():
             self.log(e)
             self.log("Failed to incant")
 
+    def handle_broadcast(self) -> None:
+        """
+        Handle the broadcast command
+        """
+        print(self.results[-1])
+        res = cmd.Broadcast().interpret_result(self.results[-1])
+        self.messages_sent.append(res)
+        
+
     def handle_commands_sent(self) -> None:
         """
         Handle the commands sent by the bot
@@ -235,7 +256,7 @@ class Bot():
             case "Forward": self.handle_forward()
             case "Right": self.player_info.orientation = turn_right(self.player_info.orientation)
             case "Left": self.player_info.orientation = turn_left(self.player_info.orientation)
-            case "Broadcast": print(self.results[-1]); self.messages_sent.append(cmd.Broadcast().interpret_result(self.results[-1]))
+            case "Broadcast": self.handle_broadcast()
             case "Connect_nbr": cmd.ConnectNbr().interpret_result(self.results[-1])
             case "Eject": self.handle_eject()
             case "Fork": self.handle_fork()

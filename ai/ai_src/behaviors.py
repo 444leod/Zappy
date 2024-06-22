@@ -1,7 +1,7 @@
 from typing import List
 from enum import Enum
 import ai_src.commands as cmd
-from ai_src.data import PlayerInfo, Map, Collectibles, TileContent, LEVEL_UP_REQ
+from ai_src.data import PlayerInfo, Map, Collectibles, TileContent, Message, MessageContent, LEVEL_UP_REQ
 
 class ABehavior:
     # Public methods used by the bot to get the next command
@@ -12,7 +12,7 @@ class ABehavior:
         self.command_stack: List[cmd.ACommand] = []
         self.inv_count: int = 0
 
-    def get_next_command(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> cmd.ACommand:
+    def get_next_command(self, player_info: PlayerInfo, map: Map, messages: List[Message]) -> cmd.ACommand:
         """
         Get the next command to execute from the stack
         """
@@ -20,21 +20,17 @@ class ABehavior:
             self.generate_command_stack(player_info, map, messages)
         return self.command_stack.pop(0)
     
-    def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> 'ABehavior': # None | ABehavior:
+    def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[Message]) -> 'ABehavior': # None | ABehavior:
         """
         Get the name of the new behavior to switch to or None if no switch is needed
         """
-        def analyse_message(messages: List[tuple[int, str]]) -> bool:
-            try:
-                message = messages[-1]
-                _, msg = message
-                message, level = msg.split("-")
-                if message != "level":
-                    return False
-                return int(level) == player_info.level
-            except:
-                return False
-
+        def analyse_message(messages: List[Message]) -> bool:
+            for i in range(1, len(messages) + 1):
+                mess_content = messages[-i].message_content
+                if mess_content == None:
+                    continue
+                if mess_content.message_type == MessageContent.MessageType.LEADER_READY_FOR_INCANTATION and mess_content.sender_level == player_info.level: 
+                    return True
         if player_info.inv.food < 4:
             return None
 
@@ -45,7 +41,7 @@ class ABehavior:
         return None
 
     # Private utility methods that can be used by any behavior
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[Message]) -> None:
         """
         Generate the command stack, should be overriden by the child class
         """
@@ -141,7 +137,7 @@ class LookingForward(ABehavior):
         """
         super().__init__()
 
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[Message]) -> None:
         """
         Generate the command stack for the LookingForward behavior
         """
@@ -159,7 +155,7 @@ class Manual(ABehavior):
         super().__init__()
         print("r for right, l for left, f for forward, i for inventory, t>item for take, s>item for set, I for incantation, L for look, b for broadcast")
 
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[Message]) -> None:
         """
         Generate a command by the user
         """
@@ -195,12 +191,12 @@ class IncantationLeader(ABehavior):
         self.players_ready_to_level_up: int = 1
         self.reset: bool = False
 
-    def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> ABehavior:
+    def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[Message]) -> ABehavior:
         if player_info.inv.food < 4 or self.reset:
             return player_info.old_behavior
         return None
 
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[Message]) -> None:
         """
         Generate the command stack for the IncantationLeader behavior
         """
@@ -227,12 +223,12 @@ class IncantationFollower(ABehavior):
         self.destination_direction: int = 0
         self.starting_level: int = 0
 
-    def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> ABehavior:
+    def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[Message]) -> ABehavior:
         if self.state == IncantationFollower.State.ABANDONED:
             return player_info.old_behavior
         return None
 
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[Message]) -> None:
         """
         Generate the command stack for the IncantationFollower behavior
         """

@@ -254,18 +254,19 @@ class MessageContent():
     Dataclass representing a message's content
     Exists only if message is for ally
     """
-    class MessageType(Enum):
-        LEADER_READY_FOR_INCANTATION = 0 # Makes followers follow the leader
-        LEADER_LAUCHING_INCANTATION = 1 # To inform non-followers that a incantion is being launched so they do not steal the loot
-        LEADER_ABANDONED_INCANTATION = 2 # To inform followers that the incantation has been abandoned
-        LEADER_FAILED_INCANTATION = 3 # To inform followers that the incantation has failed, makes them go back to their old behavior
-        LEADER_SUCCESSFUL_INCANTATION = 4 # To inform non-followers that the incantation has been successful, they can now loot in peace
-        FOLLOWER_READY_FOR_INCANTATION = 5 # To inform the leader that the follower is ready for the incantation
-        FOLLOWER_ABANDONED_INCANTATION = 6 # To inform the leader that the follower has abandoned the incantation
+    class MessageType(str, Enum):
+        LEADER_READY_FOR_INCANTATION = "LEADER_READY_FOR_INCANTATION" # Makes followers follow the leader
+        LEADER_LAUCHING_INCANTATION = "LEADER_LAUCHING_INCANTATION" # To inform non-followers that a incantion is being launched so they do not steal the loot
+        LEADER_ABANDONED_INCANTATION = "LEADER_ABANDONED_INCANTATION" # To inform followers that the incantation has been abandoned
+        LEADER_FAILED_INCANTATION = "LEADER_FAILED_INCANTATION" # To inform followers that the incantation has failed, makes them go back to their old behavior
+        LEADER_SUCCESSFUL_INCANTATION = "LEADER_SUCCESSFUL_INCANTATION" # To inform non-followers that the incantation has been successful, they can now loot in peace
+        FOLLOWER_READY_FOR_INCANTATION = "FOLLOWER_READY_FOR_INCANTATION" # To inform the leader that the follower is ready for the incantation
+        FOLLOWER_ABANDONED_INCANTATION = "FOLLOWER_ABANDONED_INCANTATION" # To inform the leader that the follower has abandoned the incantation
     message_type: MessageType
     team_name: str
     sender_uuid: int
     target_uuid: int
+    sender_level: int
 
 @dataclass
 class Message():
