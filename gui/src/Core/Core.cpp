@@ -8,9 +8,7 @@
 #include "GraphicalLibraryLoader.hpp"
 #include "GameData.hpp"
 #include "ILibrary.hpp"
-#include "GameDataManager.hpp"
 #include "Client.hpp"
-#include "GameDataManager.hpp"
 #include "../display/scenes/SceneManager.hpp"
 #include "CommandHandler.hpp"
 #include "ArgumentParser.hpp"
@@ -101,7 +99,6 @@ namespace gui {
 
                     this->handleNetwork(commandHandler);
 
-//                    gameDataManager.handleRequests();
                     gui::Event event = {};
                     auto now = std::chrono::high_resolution_clock::now();
                     float deltaTime = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(now - before).count() / 1000.0;
