@@ -7,15 +7,19 @@
 
 #pragma once
 
-#include <map>
-#include <vector>
 #include <string>
 
 namespace gui {
     class ArgumentParser {
         public:
-            static std::map<std::string, std::vector<std::string>> parseArgs(int ac, char **av);
+            ArgumentParser(int ac, char **av);
+            ~ArgumentParser() = default;
+
+            std::uint16_t port() const { return this->_port; }
+            const std::string& host() const { return this->_host; }
         protected:
         private:
+            std::uint16_t _port = 0;
+            std::string _host = "localhost";
     };
 }
