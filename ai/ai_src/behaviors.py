@@ -30,6 +30,7 @@ class ABehavior:
                 mess_content = new_messages[-i].message_content
                 if mess_content == None:
                     continue
+                print("HERRE")
                 if mess_content.message_type == MessageContent.MessageType.LEADER_READY_FOR_INCANTATION and mess_content.sender_level == player_info.level: 
                     return True
         if player_info.inv.food < 4:
@@ -204,7 +205,10 @@ class IncantationLeader(ABehavior):
         self.reset: bool = False
 
     def new_behavior(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> ABehavior:
-        if player_info.inv.food < 4 or self.reset:
+        """
+        Check if the player should switch to another behavior
+        """
+        if (player_info.inv.food < 4 or self.reset) and self.command_stack == []:
             return player_info.old_behavior
         return None
 
@@ -256,6 +260,9 @@ class IncantationLeader(ABehavior):
 
 class IncantationFollower(ABehavior):
     class State(Enum):
+        """
+        Enum for the state of the IncantationFollower
+        """
         MOVING = 0
         WAITING = 1
         ARRIVED = 2
@@ -294,6 +301,7 @@ class IncantationFollower(ABehavior):
                     and mess_content.message_type == MessageContent.MessageType.LEADER_READY_FOR_INCANTATION):
                     self.leader_uuid = mess_content.sender_uuid if self.leader_uuid == "" else self.leader_uuid
                     if mess_content.sender_uuid == self.leader_uuid:
+                        self.destination_direction = mess.sender_direction
                         return True if mess.sender_direction == 0 else False
                     else:
                         continue
@@ -326,6 +334,9 @@ class IncantationFollower(ABehavior):
             case IncantationFollower.State.MOVING: super().go_to_direction(self.destination_direction)
             case IncantationFollower.State.WAITING: self.command_stack.append(cmd.ConnectNbr())
             case IncantationFollower.State.ARRIVED:
+                self.command_stack.append(cmd.Right())
+                self.command_stack.append(cmd.Right())
+                self.command_stack.append(cmd.Forward())
                 self.command_stack.append(cmd.Broadcast(dumps(vars(MessageContent(
                     message_type=MessageContent.MessageType.FOLLOWER_READY_FOR_INCANTATION,
                     sender_uuid=player_info.uuid,

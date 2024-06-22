@@ -97,7 +97,7 @@ class Inventory(ACommand):
 class Broadcast(ACommand):
     def __init__(self, message: str = "") -> None:
         # Remove spaces from the message as they cause a ko
-        mess = message.replace(' ', '').replace('\n', '')
+        mess = message.replace(' ', '').replace('\n', '').replace('"', "'")
         super().__init__(f"Broadcast {mess}")
 
 class ConnectNbr(ACommand):

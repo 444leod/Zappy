@@ -107,12 +107,12 @@ class Bot():
         if (len(tab) != 3) or not (tab[1][:-1].isdigit()):
             return
         try:
-            tmp: dict = loads(tab[2])
+            tmp: dict = loads(tab[2].replace("'", '"'))
             message_content = MessageContent(message_type=MessageContent.MessageType(tmp.pop("message_type")), **tmp)
         except:
             message_content = None
         self.messages_received_buffer.append(Message(
-            player_direction=int(tab[1][:-1]),
+            sender_direction=int(tab[1][:-1]),
             raw_content=tab[2],
             message_content=message_content
         ))
