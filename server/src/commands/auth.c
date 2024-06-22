@@ -26,7 +26,10 @@ static void start_graphical_client(client_t client, server_info_t server_info)
     egg_list_t next_egg = NULL;
 
     queue_buffer(client, "ok");
+    if (!eggs)
+        printf("No eggs found!\n");
     for (; eggs; eggs = next_egg) {
+        printf("Found egg!\n");
         next_egg = eggs->next;
         msg = my_snprintf("enw %d -1 %d %d\n", eggs->egg->number,
             eggs->egg->pos.x, eggs->egg->pos.y);

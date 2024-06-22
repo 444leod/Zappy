@@ -93,7 +93,7 @@ egg_list_t get_team_eggs(const team_t team, const map_t map)
     egg_list_t list = NULL;
     tile_t tile = NULL;
 
-    if (team == NULL || map == NULL)
+    if (map == NULL)
         return NULL;
     for (uint32_t y = 0; y < map->height; y++) {
         for (uint32_t x = 0; x < map->width; x++) {
