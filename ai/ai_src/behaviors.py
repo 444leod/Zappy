@@ -30,16 +30,15 @@ class ABehavior:
                 mess_content = new_messages[-i].message_content
                 if mess_content == None:
                     continue
-                print("HERRE")
                 if mess_content.message_type == MessageContent.MessageType.LEADER_READY_FOR_INCANTATION and mess_content.sender_level == player_info.level: 
                     return True
         if player_info.inv.food < 4:
             return None
 
-        if self.enough_ressources_to_incant(player_info, map):
-            return IncantationLeader()
         if analyse_message(new_messages):
             return IncantationFollower()
+        elif self.enough_ressources_to_incant(player_info, map):
+            return IncantationLeader()
         return None
 
     # Private utility methods that can be used by any behavior
@@ -126,7 +125,7 @@ class ABehavior:
             self.command_stack.append(cmd.ConnectNbr()) # Instant Command, useful for waiting
             return
         
-        if not (0 < direction < 8):
+        if not (0 < direction < 9):
             print("ALERT: somethin went really wrong with the direction")
             self.command_stack.append(cmd.ConnectNbr()) # Instant Command, useful for waiting
             return
