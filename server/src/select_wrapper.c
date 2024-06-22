@@ -151,7 +151,6 @@ static struct timeval *get_timeout(client_list_t clients,
         timeout->tv_usec = 0;
     }
     return timeout;
-
 }
 
 /**
