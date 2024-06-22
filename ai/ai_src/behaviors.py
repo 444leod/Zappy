@@ -1,5 +1,6 @@
 from typing import List
 from enum import Enum
+from json import dumps
 import ai_src.commands as cmd
 from ai_src.data import PlayerInfo, Map, Collectibles, TileContent, Message, MessageContent, LEVEL_UP_REQ
 
@@ -229,9 +230,23 @@ class IncantationLeader(ABehavior):
         
         if len(self.players_ready_to_level_up) >= LEVEL_UP_REQ[player_info.level].nb_players:
             self.reset = True
+            self.command_stack.append(cmd.Broadcast(dumps(vars(MessageContent(
+                message_type=MessageContent.MessageType.LEADER_LAUCHING_INCANTATION,
+                team_name=player_info.team_name,
+                sender_uuid=player_info.uuid,
+                sender_level=player_info.level,
+                target_uuid=""
+            )))))
+            self.set_missing_rocks(player_info, map)
             self.command_stack.append(cmd.Incantation())
         else:
-            self.command_stack.append(cmd.Broadcast(f"level-{player_info.level}"))
+            self.command_stack.append(cmd.Broadcast(dumps(vars(MessageContent(
+                message_type=MessageContent.MessageType.LEADER_READY_FOR_INCANTATION,
+                team_name=player_info.team_name,
+                sender_uuid=player_info.uuid,
+                sender_level=player_info.level,
+                target_uuid=""
+            )))))
 
 class IncantationFollower(ABehavior):
     class State(Enum):

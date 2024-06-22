@@ -51,16 +51,15 @@ class Bot():
         self.nb_eggs = int(self.results[-2])
 
         self.player_info: PlayerInfo = PlayerInfo()
+        self.player_info.team_name = self.conf.name
 
         self.map: Map = Map()
         self.map.map_size = tuple(map(int, self.results[-1].split()))
         self.map.tiles = [[TileContent() for _ in range(self.map.map_size[0])] for _ in range(self.map.map_size[1])]
         self.map.tiles[0][0].nb_players = 1
 
-        self.messages_received: List[tuple[int, str]] = [] # [(player_direction, message), ..]
-        self.messages_sent: List[str] = []
-        # self.messages_received: Message = []
-        # self.messages_sent: Message = []
+        self.messages_received: List[Message] = []
+        self.messages_sent: List[Message] = []
         self.cmd_sent: List[str] = []
         self.base_funcs = {
             "dead\n" : self.die,
