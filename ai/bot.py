@@ -6,7 +6,7 @@ from json import dumps, loads
 from ai_src.connection_handler import ConnectionHandler
 from ai_src.config import Config, HelpException, ArgError
 from ai_src.data import PlayerInfo, Collectibles, Map, TileContent, Message, MessageContent
-from ai_src.behaviors import LookingForward, Manual, ABehavior
+from ai_src.behaviors import LookingForward, Manual, ABehavior, Greg, Manual
 import ai_src.commands as cmd
 from ai.ai_src.utils import add_tuples, turn_left, turn_right
 
@@ -57,7 +57,6 @@ class Bot():
         self.map.map_size = tuple(map(int, self.results[-1].split()))
         self.map.tiles = [[TileContent() for _ in range(self.map.map_size[0])] for _ in range(self.map.map_size[1])]
         self.map.tiles[0][0].nb_players = 1
-        self.map.tiles[0][0].nb_players = 1
 
         self.messages_received_buffer: List[Message] = []
         self.messages_received: List[Message] = []
@@ -65,10 +64,6 @@ class Bot():
         self.cmd_sent: List[str] = []
         self.base_funcs = {
             "dead\n" : self.die,
-            "message": self.receive_broadcast,
-            "Elevation": lambda: self.log("HANDLE ELEVATION"),
-            "Current": self.level_up,
-            "ko\n": lambda: self.log("FAILED ELEVATION"),
             "message": self.receive_broadcast,
             "Elevation": lambda: self.log("HANDLE ELEVATION"),
             "Current": self.level_up,
@@ -169,7 +164,6 @@ class Bot():
         self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players -= 1
         self.player_info.pos = add_tuples(self.player_info.pos, self.player_info.orientation)
         self.player_info.pos = (self.player_info.pos[0] % self.map.map_size[0], self.player_info.pos[1] % self.map.map_size[1])
-        self.log(self.player_info.pos)
         self.map.player_pos = self.player_info.pos
         self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players += 1
 
@@ -190,7 +184,6 @@ class Bot():
         try :
             cmd.Eject().interpret_result(self.results[-1])
             self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players = 1
-            self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players = 1
         except Exception:
             pass
 
@@ -200,7 +193,6 @@ class Bot():
         """
         try:
             cmd.Fork().interpret_result(self.results[-1])
-            self.nb_eggs += 1
             self.nb_eggs += 1
         except Exception as e:
             self.log(e)
@@ -215,9 +207,8 @@ class Bot():
             cmd.Set().interpret_result(self.results[-1])
             self.player_info.inv.add_object_by_name(object)
             self.map.tiles[pos[0]][pos[1]].collectibles.remove_object_by_name(object)
-            self.player_info.inv.add_object_by_name(object)
-            self.map.tiles[pos[0]][pos[1]].collectibles.remove_object_by_name(object)
         except Exception as e:
+            self.map.tiles[pos[0]][pos[1]].collectibles.remove_all_objects_by_name(object)
             self.log(e)
             self.log("Failed to take object")
 

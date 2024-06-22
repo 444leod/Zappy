@@ -55,3 +55,51 @@ char get_char_by_orientation(int orientation)
     }
     return -1;
 }
+
+/**
+ * @brief Adds a KO packet to queue
+ * @param client the client
+ */
+void throw_ko(client_t client)
+{
+    add_packet_to_queue(&client->packet_queue, build_packet("ko"));
+}
+
+/**
+ * @brief Prepends a command to a player
+ * @param client The client
+ * @param command The command
+ */
+void prepend_client_command(client_t client, client_command_t command)
+{
+    client_command_list_t new_cmd = NULL;
+
+    new_cmd = my_malloc(sizeof(struct client_command_list_s));
+    new_cmd->command = command;
+    if (client->commands != NULL) {
+        new_cmd->prev = client->commands;
+        new_cmd->next = client->commands->next;
+        client->commands->next = new_cmd;
+    } else {
+        new_cmd->next = NULL;
+        new_cmd->prev = NULL;
+        client->commands = new_cmd;
+    }
+}
+
+/**
+ * @brief Queue the given buffer to all the graphical clients
+ * @details Queue the given buffer to all the graphical clients
+ *
+ * @param buffer the buffer to queue
+ */
+void queue_to_graphical(char *buffer)
+{
+    client_list_t graphical_clients = get_clients_by_type(GRAPHICAL);
+
+    while (graphical_clients) {
+        queue_buffer(graphical_clients->client, buffer);
+        graphical_clients = graphical_clients->next;
+    }
+    my_free(buffer);
+}

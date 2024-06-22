@@ -12,6 +12,7 @@
 #include "commands.h"
 #include "linked_lists.h"
 #include "garbage_collector.h"
+#include "commands_utils.h"
 #include "lib.h"
 
 /**
@@ -23,7 +24,7 @@
  *
  * @return the created command
 */
-static client_command_t create_command(const char *command,
+client_command_t create_command(const char *command,
     const struct timespec *time)
 {
     client_command_t new_command = my_malloc(sizeof(struct client_command_s));
@@ -70,11 +71,15 @@ static bool is_read_special_case(const client_t client,
         remove_client(client->fd);
         client->fd = -1;
         printf("Read failed with fd %d: %s\n", client->fd, strerror(errno));
+        if (client->type == AI)
+            queue_to_graphical(get_player_death_string(client->player));
         return true;
     }
     if (valread == 0) {
         remove_client(client->fd);
         client->fd = -1;
+        if (client->type == AI)
+            queue_to_graphical(get_player_death_string(client->player));
         return true;
     }
     return false;

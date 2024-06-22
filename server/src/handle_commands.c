@@ -26,8 +26,34 @@
 static void execute_command(const client_command_t command,
     const client_t client, const server_info_t server_info)
 {
+    if (client->type == AI) {
+        DEBUG_PRINT("[DEBUG] Player %d executing command %s\n",
+            client->fd, command->command);
+    } else {
+        DEBUG_PRINT("[DEBUG] Client %d executing command %s\n",
+            client->fd, command->command);
+    }
     command->command_handler.func(command->args, client, server_info);
     remove_from_list((void *)command, (node_t *)&client->commands);
+}
+
+/**
+ * @brief Checks if the player IS STUNNED
+ */
+static bool check_player_stun(player_t player)
+{
+    struct timespec now;
+    double elapsed_time;
+
+    if (player->stun_time <= 0)
+        return false;
+    clock_gettime(0, &now);
+    elapsed_time = (now.tv_sec - player->last_stuck_check.tv_sec);
+    elapsed_time += (now.tv_nsec - player->last_stuck_check.tv_nsec)
+        / 1000000000.0;
+    player->stun_time -= elapsed_time;
+    player->last_stuck_check = now;
+    return player->stun_time >= 0;
 }
 
 /**
@@ -48,14 +74,16 @@ static bool should_be_handled(const client_command_t command,
     struct timespec now;
     double elapsed_time;
 
-    if (client->type == GRAPHICAL)
+    if (client->type != AI)
         return true;
     clock_gettime(0, &now);
     elapsed_time = (now.tv_sec - command->handled_time.tv_sec);
     elapsed_time += (now.tv_nsec - command->handled_time.tv_nsec)
         / 1000000000.0;
-    command->wait_duration -= elapsed_time;
     command->handled_time = now;
+    if (check_player_stun(client->player))
+        return false;
+    command->wait_duration -= elapsed_time;
     return command->wait_duration <= 0;
 }
 
@@ -74,7 +102,7 @@ static void initialize_command(const client_command_t command,
     size_t i = 0;
 
     command->initialized = true;
-    command->args = str_to_word_array(command->command, " ");
+    command->args = parse_command_args(command->command);
     if (client->type == NONE) {
         command->command_handler = AUTHENTIFICATION_COMMAND;
         command->wait_duration = 0;
@@ -85,7 +113,7 @@ static void initialize_command(const client_command_t command,
             COMMANDS[i].client_type == client->type) {
             command->command_handler = COMMANDS[i];
             command->wait_duration = COMMANDS[i].execution_ticks == 0 ? 0 :
-                COMMANDS[i].execution_ticks / server_info->freq;
+                COMMANDS[i].execution_ticks / (double)server_info->freq;
             return;
         }
     }

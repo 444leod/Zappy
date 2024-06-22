@@ -15,7 +15,7 @@ Test(refill_map, empty_map)
         .map = map,
         .refill_wait = 0,
         .actual_rocks = (rocks_t){0, 0, 0, 0, 0, 0},
-        .actual_foods = 0,
+        .actual_food = 0,
         .freq = 1
     };
     server_info.last_refill_check = (struct timespec){0, 0};
@@ -44,7 +44,7 @@ Test(refill_map, empty_map)
     cr_assert_neq(server_info.actual_rocks.mendiane, 0);
     cr_assert_neq(server_info.actual_rocks.phiras, 0);
     cr_assert_neq(server_info.actual_rocks.thystame, 0);
-    cr_assert_neq(server_info.actual_foods, 0);
+    cr_assert_neq(server_info.actual_food, 0);
 
     cr_assert_eq(server_info.actual_rocks.linemate, rocks.linemate);
     cr_assert_eq(server_info.actual_rocks.deraumere, rocks.deraumere);
@@ -52,7 +52,7 @@ Test(refill_map, empty_map)
     cr_assert_eq(server_info.actual_rocks.mendiane, rocks.mendiane);
     cr_assert_eq(server_info.actual_rocks.phiras, rocks.phiras);
     cr_assert_eq(server_info.actual_rocks.thystame, rocks.thystame);
-    cr_assert_eq(server_info.actual_foods, food);
+    cr_assert_eq(server_info.actual_food, food);
 }
 
 
@@ -87,7 +87,7 @@ Test(refill_map, full_map)
     cr_assert_neq(server_info->actual_rocks.mendiane, 0);
     cr_assert_neq(server_info->actual_rocks.phiras, 0);
     cr_assert_neq(server_info->actual_rocks.thystame, 0);
-    cr_assert_neq(server_info->actual_foods, 0);
+    cr_assert_neq(server_info->actual_food, 0);
 
     cr_assert_neq(new_rocks.linemate, 0);
     cr_assert_neq(new_rocks.deraumere, 0);
@@ -103,7 +103,7 @@ Test(refill_map, full_map)
     cr_assert_eq(server_info->actual_rocks.mendiane, new_rocks.mendiane);
     cr_assert_eq(server_info->actual_rocks.phiras, new_rocks.phiras);
     cr_assert_eq(server_info->actual_rocks.thystame, new_rocks.thystame);
-    cr_assert_eq(server_info->actual_foods, new_food);
+    cr_assert_eq(server_info->actual_food, new_food);
 }
 
 Test(refill_map, partially_full_map)
@@ -127,7 +127,7 @@ Test(refill_map, partially_full_map)
     }
 
     server_info->actual_rocks = (rocks_t){0, 0, 0, 0, 0, 0};
-    server_info->actual_foods = 0;
+    server_info->actual_food = 0;
     for (uint32_t x = 0; x < server_info->width; x++) {
         for (uint32_t y = 0; y < server_info->height; y++) {
             tile_t tile = get_tile_at_position((position_t){x, y}, server_info->map);
@@ -137,12 +137,12 @@ Test(refill_map, partially_full_map)
             server_info->actual_rocks.mendiane += tile->rocks.mendiane;
             server_info->actual_rocks.phiras += tile->rocks.phiras;
             server_info->actual_rocks.thystame += tile->rocks.thystame;
-            server_info->actual_foods += tile->food;
+            server_info->actual_food += tile->food;
         }
     }
 
     rocks_t temp_rocks = server_info->actual_rocks;
-    uint32_t temp_food = server_info->actual_foods;
+    uint32_t temp_food = server_info->actual_food;
 
     refill_map(server_info);
 
@@ -168,7 +168,7 @@ Test(refill_map, partially_full_map)
     cr_assert_eq(server_info->actual_rocks.mendiane, new_rocks.mendiane);
     cr_assert_eq(server_info->actual_rocks.phiras, new_rocks.phiras);
     cr_assert_eq(server_info->actual_rocks.thystame, new_rocks.thystame);
-    cr_assert_eq(server_info->actual_foods, new_food);
+    cr_assert_eq(server_info->actual_food, new_food);
 
     cr_assert_neq(server_info->actual_rocks.linemate, temp_rocks.linemate);
     cr_assert_neq(server_info->actual_rocks.deraumere, temp_rocks.deraumere);
@@ -176,5 +176,5 @@ Test(refill_map, partially_full_map)
     cr_assert_neq(server_info->actual_rocks.mendiane, temp_rocks.mendiane);
     cr_assert_neq(server_info->actual_rocks.phiras, temp_rocks.phiras);
     cr_assert_neq(server_info->actual_rocks.thystame, temp_rocks.thystame);
-    cr_assert_neq(server_info->actual_foods, temp_food);
+    cr_assert_neq(server_info->actual_food, temp_food);
 }
