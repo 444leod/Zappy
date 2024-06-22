@@ -28,6 +28,5 @@ void gui::Pdr::receive(std::string command, GameData &gameData)
         throw std::invalid_argument("Player does not exist");
     auto player = gameData.getPlayerById(playerId);
     for (std::uint32_t i = 0; i < ressourceNbr; i++)
-        std::cout << "Player " << playerId << " dropped a ressource" << std::endl;
-        // player.value().dropRessource();
+        player.value()->dropRessource();
 }

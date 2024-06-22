@@ -30,37 +30,33 @@ static void check_port(param_t params)
 }
 
 /**
- * @brief Check the width
- * @details Check if the width is valid
+ * @brief Check the map size
+ * @details Check if the map size is valid
  *
  * @param params the arguments
 */
-static void check_width(param_t params)
+static void check_map_size(param_t params)
 {
-    param_t width = get_param("-x", params);
+    param_t size = get_param("-x", params);
+    uint32_t map_size;
 
-    if (width == NULL || !is_number(width->informations->content))
+    if (size == NULL || !is_number(size->informations->content))
         display_help("Invalid width.\n");
-    if (atoi(width->informations->content) < 2)
+    if (atoi(size->informations->content) < 2)
         display_help("Invalid width (min 2).\n");
-    width->informations->handled = true;
-}
-
-/**
- * @brief Check the height
- * @details Check if the height is valid
- *
- * @param params the arguments
-*/
-static void check_height(param_t params)
-{
-    param_t height = get_param("-y", params);
-
-    if (height == NULL || !is_number(height->informations->content))
+    size->informations->handled = true;
+    map_size = atoi(size->informations->content);
+    size = get_param("-y", params);
+    if (size == NULL || !is_number(size->informations->content))
         display_help("Invalid height.\n");
-    if (atoi(height->informations->content) < 2)
+    if (atoi(size->informations->content) < 2)
         display_help("Invalid height (min 2).\n");
-    height->informations->handled = true;
+    map_size *= atoi(size->informations->content);
+    if (map_size > 500)
+        display_help("Invalid map size (max 500).\n");
+    else if (map_size < 20)
+        display_help("Invalid map size (min 20).\n");
+    size->informations->handled = true;
 }
 
 /**
@@ -71,13 +67,13 @@ static void check_height(param_t params)
 */
 static void check_clients_nb(param_t params)
 {
-    param_t clientsNb = get_param("-c", params);
+    param_t clients_nb = get_param("-c", params);
 
-    if (clientsNb == NULL || !is_number(clientsNb->informations->content))
-        display_help("Invalid clientsNb.\n");
-    if (atoi(clientsNb->informations->content) < 1)
-        display_help("Invalid clientsNb (min 1).\n");
-    clientsNb->informations->handled = true;
+    if (clients_nb == NULL || !is_number(clients_nb->informations->content))
+        display_help("Invalid clients_nb.\n");
+    if (atoi(clients_nb->informations->content) < 1)
+        display_help("Invalid clients_nb (min 1).\n");
+    clients_nb->informations->handled = true;
 }
 
 /**
@@ -101,15 +97,15 @@ static void check_freq(param_t params)
  * @brief Check the team names
  * @details Check if the team names are valid (not duplicate)
  *
- * @param actualName the name to check
- * @param otherParams the other team names
+ * @param actual_name the name to check
+ * @param other_params the other team names
 */
-static void check_name(char *actualName, param_t otherParams)
+static void check_name(char *actual_name, param_t other_params)
 {
-    while (otherParams) {
-        if (strcmp(actualName, otherParams->informations->content) == 0)
+    while (other_params) {
+        if (strcmp(actual_name, other_params->informations->content) == 0)
             display_help("Duplicate team names.\n");
-        otherParams = otherParams->next;
+        other_params = other_params->next;
     }
 }
 
@@ -201,8 +197,7 @@ void check_args(const int argc, const char *argv[])
     }
     check_team_names(params);
     check_port(params);
-    check_width(params);
-    check_height(params);
+    check_map_size(params);
     check_clients_nb(params);
     check_freq(params);
     check_handled_parameters(params);

@@ -12,15 +12,15 @@
  * @brief Add a node to a list
  * @details Add a node to a list with the given pointer as its data
  *
- * @param newData the pointer of the node data
+ * @param new_data the pointer of the node data
  * @param list the list
 */
-void add_to_list(void *newData, node_t *list)
+void add_to_list(void *new_data, node_t *list)
 {
     node_t new_node = my_malloc(sizeof(struct node_s));
     node_t tmp = *list;
 
-    new_node->data = newData;
+    new_node->data = new_data;
     new_node->next = NULL;
     if (list == NULL || *list == NULL) {
         *list = new_node;

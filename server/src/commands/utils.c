@@ -13,22 +13,22 @@
 /**
  * @brief Get a player by its player number
  *
- * @param playerNumber The player number
+ * @param player_number The player number
  * @return player_t The player
  */
-player_t get_player_by_player_number(const uint32_t playerNumber)
+player_t get_player_by_player_number(const uint32_t player_number)
 {
     client_list_t *clients = get_clients();
-    client_list_t clientNode;
+    client_list_t client_node;
 
     if (!clients)
         return (NULL);
-    clientNode = *clients;
-    while (clientNode) {
-        if (clientNode->client->player &&
-            clientNode->client->player->playerNumber == playerNumber)
-            return (clientNode->client->player);
-        clientNode = clientNode->next;
+    client_node = *clients;
+    while (client_node) {
+        if (client_node->client->player &&
+            client_node->client->player->player_number == player_number)
+            return (client_node->client->player);
+        client_node = client_node->next;
     }
     return (NULL);
 }

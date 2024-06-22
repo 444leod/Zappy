@@ -17,10 +17,10 @@
  *
  * @param args the arguments of the command
  * @param client the client that executed the command
- * @param serverInfo the server informations
+ * @param server_info the server informations
  */
 void unknown_command(UNUSED char **args, client_t client,
-    UNUSED server_info_t serverInfo)
+    UNUSED server_info_t server_info)
 {
     char *escaped_string = get_escaped_string(args[0]);
 

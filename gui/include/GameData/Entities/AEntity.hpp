@@ -12,6 +12,8 @@
 #include "Vector.hpp"
 #include <vector>
 #include <memory>
+#include "macros.hpp"
+#include "Message.hpp"
 
 /**
  * @brief Class representing entity in the simulation
@@ -34,6 +36,13 @@ namespace gui {
             */
             AEntity(std::uint32_t id, Vector2u position, Orientation orientation, std::string teamName)
                 : _position(position), _orientation(orientation), _id(id), _teamName(teamName) {}
+
+            /**
+             * @brief Construct a new AEntity object
+             * @param id Id of the entity
+             * @param position Position of the entity
+            */
+            AEntity(std::uint32_t id, Vector2u position, std::string teamName) : _position(position), _id(id), _teamName(teamName) {}
 
             /**
              * @brief Destroy the AEntity object

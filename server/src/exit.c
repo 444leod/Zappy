@@ -22,14 +22,14 @@
 */
 static void my_clean_exit(const int status, const int fd)
 {
-    static int actualFd = -1;
+    static int actual_fd = -1;
 
     if (status == -1) {
-        actualFd = fd;
+        actual_fd = fd;
         return;
     }
-    if (actualFd != -1)
-        close(actualFd);
+    if (actual_fd != -1)
+        close(actual_fd);
     clear_clients();
     my_free_all();
     exit(status);
@@ -48,9 +48,9 @@ void my_exit(const int status)
 
 /**
  * @brief Prepare the exit
- * @details Prepare the exit by sending the socketFd to a store function.
+ * @details Prepare the exit by sending the socket_fd to a store function.
 */
-void prepare_exit(const int socketFd)
+void prepare_exit(const int socket_fd)
 {
-    my_clean_exit(-1, socketFd);
+    my_clean_exit(-1, socket_fd);
 }

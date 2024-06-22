@@ -89,6 +89,12 @@ namespace gui {
             */
             void removeEntityAtCoordinates(Vector2u coordinates, std::uint32_t id) { this->_mapContent[coordinates].removeEntity(id); }
 
+            /**
+             * @brief Init the map content
+             * @param mapSize The map size
+            */
+            void initMapContent(Vector2u mapSize);
+
         private:
             Vector2u _mapSize = {0, 0};
             std::map<Vector2u, TileContent> _mapContent = {};

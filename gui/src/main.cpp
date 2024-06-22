@@ -8,6 +8,7 @@
 #include "GameDataManager.hpp"
 #include "ArgumentChecking.hpp"
 #include <cstring>
+// #include <sys/select.h>
 
 int main(int ac, char **av)
 {
@@ -16,18 +17,20 @@ int main(int ac, char **av)
         argCheck->checkArgs(ac, av);
         std::uint32_t port = std::atoi(av[2]);
         gui::GameDataManager gameDataManager(port);
-        while (1)
+
+        while (1) {
             gameDataManager.handleRequests();
+        }
     } catch (const std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        return 84;
-    } catch (const gui::ntw::Client::ClientTimeoutException& e) {
         std::cerr << e.what() << std::endl;
         return 84;
     } catch (const gui::ntw::Client::ClientNotConnectedException& e) {
         std::cerr << e.what() << std::endl;
         return 84;
     } catch (const gui::ntw::Client::ClientException& e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
+    } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl;
         return 84;
     }

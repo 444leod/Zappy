@@ -11,8 +11,8 @@
 
 typedef struct team_s {
     const char *name;
-    uint32_t actualNumber;
-    uint32_t remainingSlots;
+    uint32_t actual_number;
+    uint32_t remaining_slots;
 } *team_t;
 
 typedef struct team_list_s {

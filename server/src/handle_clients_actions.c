@@ -22,7 +22,7 @@
 */
 static void send_buffer(client_t client)
 {
-    if (client->packetQueue)
+    if (client->packet_queue)
         send_packets(client);
     if (client->player && client->player->isDead) {
         printf("Removing player fd %d\n", client->fd);
@@ -57,7 +57,7 @@ bool can_interact(client_t client)
  * @param client the client to trigger the action of
  * @param readfds the readfds to check
  * @param writefds the writefds to check
- * @param serverInfo the serverInfo
+ * @param server_info the server_info
 */
 static void trigger_action(const client_t client, const fd_set *readfds,
     const fd_set *writefds, const server_info_t server_info)
@@ -83,23 +83,23 @@ static void trigger_action(const client_t client, const fd_set *readfds,
  * @param clients the clients to loop through
  * @param readfds the readfds to check
  * @param writefds the writefds to check
- * @param serverInfo the serverInfo
+ * @param server_info the server_info
 */
 void loop_clients(const client_list_t clients, const fd_set *readfds,
-    const fd_set *writefds, const server_info_t serverInfo)
+    const fd_set *writefds, const server_info_t server_info)
 {
-    client_list_t clientNode = clients;
+    client_list_t client_node = clients;
     int tempFd = 0;
 
-    while (clientNode) {
-        tempFd = clientNode->client->fd;
-        if (clientNode->client->fd == -1) {
-            clientNode = clientNode->next;
+    while (client_node) {
+        tempFd = client_node->client->fd;
+        if (client_node->client->fd == -1) {
+            client_node = client_node->next;
             continue;
         }
-        trigger_action(clientNode->client, readfds, writefds, serverInfo);
-        if (clientNode && clientNode->client &&
-            clientNode->client->fd == tempFd)
-            clientNode = clientNode->next;
+        trigger_action(client_node->client, readfds, writefds, server_info);
+        if (client_node && client_node->client &&
+            client_node->client->fd == tempFd)
+            client_node = client_node->next;
     }
 }

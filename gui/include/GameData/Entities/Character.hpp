@@ -75,9 +75,78 @@ namespace gui {
             */
             void increasePlayerLevel() { this->_level += 1; }
 
+            /**
+             * @brief Set the player level
+             * @param level The player level
+            */
+            void setLevel(std::uint32_t level) { this->_level = level; }
+
+            /**
+             * @brief Get the is laying an egg
+             * @return bool The is laying an egg
+            */
+            bool layingAnEgg() const { return this->_isLayingAnEgg; }
+
+            /**
+             * @brief Set the is laying an egg
+             * @param layEgg The is laying an egg
+            */
+            void layEgg(bool layEgg) { this->_isLayingAnEgg = layEgg; }
+
+            /**
+             * @brief Broadcast a message
+             * @param message The message to broadcast
+            */
+            void broadcast(UNUSED message_t message) const { /* TO DO */};
+
+            /**
+             * @brief drop the ressource on the tile
+            */
+            void dropRessource() { this->_dropRessource = true; };
+
+            /**
+             * @brief set the player expulsed
+             * @param isExpulsed The player expulsed
+            */
+            void expulse(bool isExpulsed) { this->_isExpulsed = isExpulsed; }
+
+            /**
+             * @brief set the player picking ressource
+             * @param pickRessource The player picking ressource
+            */
+            void pickRessource() { this->_pickingRessource = true; }
+
+            /**
+             * @brief set the player incantation
+             * @param isincantation The player incantation
+            */
+            void incantation(bool isincantation) { this->_isincantation = isincantation; }
+
+            /**
+             * @brief set the player incantation result
+             * @param position The position of the incantation
+             * @param level The level of the incantation
+             * @param result The result of the incantation
+             * @note The result can be true or false
+            */
+            void updateEvolutionStatus(bool result);
+
+            /**
+             * @brief set the player dead
+             * @param isDead The player dead
+            */
+            void kill() { this->_isDead = true; }
+
         private:
             std::uint32_t _food = 0;
             std::uint32_t _level = 0;
             Rocks _rocks;
+            bool _isLayingAnEgg = false;
+            bool _dropRessource = false;
+            bool _pickingRessource = false;
+            bool _isExpulsed = false;
+            bool _isincantation = false;
+            bool _incantationResult = false;
+            bool _isDead = false;
     };
 }

@@ -2,11 +2,17 @@ from dataclasses import dataclass, field
 from typing import List
 from enum import Enum
 import uuid
+from enum import Enum
 
 """
 CONST VARIABLES representing the orientation of a player
 They are represented as tuples to facilitate the computation of the new position
+They are represented as tuples to facilitate the computation of the new position
 """
+NORTH: tuple[int, int] = (-1, 0)
+EAST: tuple[int, int] = (0, -1)
+SOUTH: tuple[int, int] = (1, 0)
+WEST: tuple[int, int] = (0, 1)
 NORTH: tuple[int, int] = (-1, 0)
 EAST: tuple[int, int] = (0, -1)
 SOUTH: tuple[int, int] = (1, 0)
@@ -41,6 +47,7 @@ class Collectibles():
         Returns a string representation of the collectibles
         """
         return f"f{self.food}l{self.linemate}d{self.deraumere}s{self.sibur}m{self.mendiane}p{self.phiras}t{self.thystame}"
+
 
     def add_object_by_name(self, str_to_take : str):
         """
@@ -167,6 +174,29 @@ class TileContent():
         Returns a string representation of the tile content
         """
         return f"({self.collectibles}P{self.nb_players})"
+
+"""
+CONST TileContent variables representing the evolution requirements for each level
+"""
+LEVEL_2: TileContent = TileContent(collectibles=Collectibles(linemate=1), nb_players=1)
+LEVEL_3: TileContent = TileContent(collectibles=Collectibles(linemate=1, deraumere=1, sibur=1), nb_players=2)
+LEVEL_4: TileContent = TileContent(collectibles=Collectibles(linemate=2, sibur=1, phiras=2), nb_players=2)
+LEVEL_5: TileContent = TileContent(collectibles=Collectibles(linemate=1, deraumere=1, sibur=2, phiras=1), nb_players=4)
+LEVEL_6: TileContent = TileContent(collectibles=Collectibles(linemate=1, deraumere=2, sibur=1, mendiane=3), nb_players=4)
+LEVEL_7: TileContent = TileContent(collectibles=Collectibles(linemate=1, deraumere=2, sibur=3, phiras=1), nb_players=6)
+LEVEL_8: TileContent = TileContent(collectibles=Collectibles(linemate=2, deraumere=2, sibur=2, mendiane=2, phiras=2, thystame=1), nb_players=6)
+"""
+CONST Level up requirement variable mapping a level to the required TileContent to level up
+"""
+LEVEL_UP_REQ: dict[int, TileContent] = {
+    1: LEVEL_2,
+    2: LEVEL_3,
+    3: LEVEL_4,
+    4: LEVEL_5,
+    5: LEVEL_6,
+    6: LEVEL_7,
+    7: LEVEL_8
+}
 
 """
 CONST TileContent variables representing the evolution requirements for each level
