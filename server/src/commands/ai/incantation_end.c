@@ -73,28 +73,6 @@ static void consume_rocks(uint8_t level, tile_t tile)
 }
 
 /**
- * @brief Gets the players that are doing a certain ritual by ID.
- *
- * @param level The ritual ID
- * @param tile The tile the ritual happened on
- * @return a `player_list_t`.
- */
-static player_list_t get_ritual_players(incantation_t ritual, tile_t tile)
-{
-    player_list_t players = NULL;
-    player_list_t node = tile->players;
-    player_t tmp = NULL;
-
-    while (node) {
-        tmp = node->player;
-        if (tmp->ritual == ritual)
-            add_to_list((void *)tmp, (node_t *)&players);
-        node = node->next;
-    }
-    return players;
-}
-
-/**
  * @brief Makes the player go up a level
  * @param player The player
  */
@@ -136,20 +114,20 @@ void end_incantation(
     const server_info_t server_info)
 {
     player_t player = client->player;
+    incantation_t ritual = player->ritual;
+    player_list_t players = player->ritual->players;
     tile_t tile = get_tile_at_position(player->position, server_info->map);
-    player_list_t players = get_ritual_players(player->ritual, tile);
     uint8_t level = player->level;
     bool success = check_tile_ressources(level, players, tile->rocks);
 
-    send_pie(client->player->ritual, success);
-    destroy_incantation(client->player->ritual, server_info);
-    while (players) {
+    send_pie(player->ritual, success);
+    for (; players; players = players->next) {
         if (success)
             evolve(players->player);
         else
             queue_packet_to_player(players->player, build_packet("ko"));
-        players = players->next;
     }
+    destroy_incantation(ritual, server_info);
     if (!success)
         return;
     consume_rocks(level, tile);
