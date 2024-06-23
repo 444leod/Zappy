@@ -41,6 +41,10 @@ static void trigger_action(const client_t client, const fd_set *readfds,
     check_player_death(client, server_info->map, server_info->freq);
     if (client->fd == -1)
         return;
+    if (client->end && !client->packet_queue) {
+        remove_client(client->fd);
+        client->fd = -1;
+    }
     if (FD_ISSET(client->fd, readfds)) {
         read_buffer(client);
     }
@@ -49,10 +53,6 @@ static void trigger_action(const client_t client, const fd_set *readfds,
     }
     if (FD_ISSET(client->fd, writefds) && client->packet_queue) {
         send_buffer(client);
-    }
-    if (client->end && !client->packet_queue) {
-        remove_client(client->fd);
-        client->fd = -1;
     }
 }
 

@@ -25,11 +25,6 @@ void gui::Seg::receive(std::string command, std::shared_ptr<GameData> gameData)
         gameData->teamDraw();
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
-    for (std::size_t i = 0; i < gameData->teamNames().size(); i++) {
-        if (gameData->teamNames()[i] == teamName) {
-            gameData->teamWin(teamName);
-            break;
-        } else
-            throw std::invalid_argument("Team not found");
-    }
+    std::cout << "Team " << teamName << " has won the game" << std::endl;
+    std::exit(0);
 }
