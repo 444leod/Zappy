@@ -122,7 +122,7 @@ class ABehavior:
         if player_info.pos[0] > point[0]:
             sup = True
         if sup != None:
-            crossed = cross_the_map(pos_copy[0], point[0], map_size[0], sup)
+            crossed = cross_the_map(pos_copy[0], point[0], map_size[1], sup)
             if bool(crossed) != bool(sup):
                 self.turn(player_info.orientation, NORTH)
                 orientiation_copy = NORTH
@@ -130,7 +130,7 @@ class ABehavior:
                 self.turn(player_info.orientation, SOUTH)
                 orientiation_copy = SOUTH
             
-            find_path(pos_copy[0], point[0], map_size[0], crossed, sup)
+            find_path(pos_copy[0], point[0], map_size[1], crossed, sup)
             
         sup: bool | None = None
         if player_info.pos[1] < point[1]:
@@ -138,13 +138,13 @@ class ABehavior:
         if player_info.pos[1] > point[1]:
             sup = True
         if sup != None:
-            crossed = cross_the_map(pos_copy[1], point[1], map_size[1], sup)
+            crossed = cross_the_map(pos_copy[1], point[1], map_size[0], sup)
             if bool(crossed) != bool(sup):
                 self.turn(orientiation_copy, EAST)
             else:
                 self.turn(orientiation_copy, WEST)
                 orientiation_copy = WEST
-            find_path(pos_copy[1], point[1], map_size[1], crossed, sup)
+            find_path(pos_copy[1], point[1], map_size[0], crossed, sup)
 
     def refresh_inventory(self, nb_calls) -> None:
         """
@@ -275,58 +275,6 @@ class ABehavior:
                 for _ in range(amount):
                     self.command_stack.append(cmd.Set(rock))
             self.command_stack.append(cmd.Incantation())
-
-class LookingForward(ABehavior):
-    def __init__(self):
-        """
-        LookingForward behavior, dummy behavior that looks and moves forwards
-        """
-        super().__init__()
-
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> None:
-        """
-        Generate the command stack for the LookingForward behavior
-        """
-        super().collect_food(player_info, map)
-        super().collect_all_rocks(player_info, map)
-        self.command_stack.append(cmd.Look())
-        self.command_stack.append(cmd.Forward())
-        self.command_stack.append(cmd.Inventory())
-
-class Manual(ABehavior):
-    def __init__(self):
-        """
-        Manual behavior, the player is controlled by the user
-        """
-        super().__init__()
-        print("r for right, l for left, f for forward, i for inventory, t>item for take, s>item for set, I for incantation, L for look, b for broadcast")
-
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> None:
-        """
-        Generate a command by the user
-        """
-        while True:
-            tab = input("Enter a command: ").split(">")
-            if len(tab) == 1:
-                user_input = tab[0]
-                rest = ""
-            elif len(tab) == 2:
-                user_input, rest = tab
-            else:
-                continue
-            cmd_to_send: cmd.ACommand = None
-            match user_input:
-                case "r": cmd_to_send = cmd.Right(); break
-                case "l": cmd_to_send = cmd.Left(); break
-                case "f": cmd_to_send = cmd.Forward(); break
-                case "i": cmd_to_send = cmd.Inventory(); break
-                case "t": cmd_to_send = cmd.Take(rest); break
-                case "s": cmd_to_send = cmd.Set(rest); break
-                case "I": cmd_to_send = cmd.Incantation(); break
-                case "L": cmd_to_send = cmd.Look(); break
-                case "b": cmd_to_send = cmd.Broadcast(rest); break
-        
-        self.command_stack.append(cmd_to_send)
 
 class IncantationLeader(ABehavior):
     def __init__(self):
@@ -669,5 +617,6 @@ class Manual(ABehavior):
                 case "I": cmd_to_send = cmd.Incantation(); break
                 case "L": cmd_to_send = cmd.Look(); break
                 case "b": cmd_to_send = cmd.Broadcast(rest); break
+                case "e": cmd_to_send = cmd.Eject(); break
         
         self.command_stack.append(cmd_to_send)

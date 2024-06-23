@@ -76,6 +76,7 @@ tests_run:	.init_done
 	@make tests_run -s -C server/lib
 
 tests_clean:
+	@make tests_clean -s -C ai
 	@make tests_clean -s -C server
 	@make tests_clean -s -C server/lib
 
