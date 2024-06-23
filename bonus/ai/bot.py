@@ -26,6 +26,17 @@ class Bot():
                 port=self.conf.port,
                 hostname=self.conf.machine
             )
+            print ("Welcome to the game")
+            print ("You are a goblin")
+            print ("You have to collect ressources to level up")
+            print ("You can move, take item, drop item, look, incantate, broadcast")
+            print ("press the arrow key to move")
+            print ("press t to take item (it will open a menu)")
+            print ("press d to drop item (it will open a menu)")
+            print ("press l to look")
+            print ("press e to incantate")
+            print ("press b to broadcast")
+            print ("press i to refresh your inventory")
             self.background = pygame.image.load(os.path.join(os.getcwd(), "background.png"))
             self.player = pygame.image.load(os.path.join(os.getcwd(), "goblin.png"))
             self.ressources = pygame.image.load(os.path.join(os.getcwd(), "ressources.png"))
@@ -113,7 +124,7 @@ class Bot():
                     self.ressources_square = self.ressources.subsurface((0, 16 * 6, 16, 16))
                     pos = ((x + 25) % 35 , (y + 36) % 40)
                     self.screen.blit(self.ressources_square, ((print_x * 64) +  pos[0], print_y * 64 + pos[1]))
-                if tile.nb_players > 1 or tile.nb_players > 0 and self.player_info.pos != (x, y):
+                if tile.nb_players > 1 or (tile.nb_players > 0 and self.player_info.pos != (x, y)):
                     self.screen.blit(self.ennemies, (print_x * 64, print_y * 64))
                 print_y += 1
             print_x += 1    
