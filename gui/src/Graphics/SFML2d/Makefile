@@ -5,8 +5,8 @@
 ## Makefile
 ##
 
-
-NAME = $(LIB_DIR)/zappy_sfml2d.so
+DISPLAY_NAME = zappy_sfml2d.so
+NAME = $(LIB_DIR)/$(DISPLAY_NAME)
 
 CPPFLAGS = -fPIC -iquote -std=c++20 -Wall -Wextra -Werror
 CPPFLAGS += -I../../../include/Graphics
@@ -29,4 +29,4 @@ $(LIB_DIR):
 
 $(NAME): $(SRC) | $(LIB_DIR)
 	@$(CC) $(SHARED_FLAGS) $(SRC) -o $(NAME) $(CPPFLAGS) $(SFML_FLAGS)
-	@echo "$(NAME) created"
+	@echo "[GUI] $(DISPLAY_NAME) generated"

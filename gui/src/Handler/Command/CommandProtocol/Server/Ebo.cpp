@@ -27,6 +27,7 @@ void gui::Ebo::receive(std::string command, std::shared_ptr<GameData> gameData)
     if (!gameData->eggExists(eggId))
         throw std::invalid_argument("Egg does not exist");
     auto egg = gameData->getEggById(eggId);
-    if (egg.has_value())
-        egg.value()->hatch();
+    if (egg.has_value()) {
+        gameData->removeEgg(eggId);
+    }
 }

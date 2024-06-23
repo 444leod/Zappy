@@ -29,6 +29,7 @@ namespace gui {
     */
     class GameData {
         public:
+            static uint32_t frequency;
             /**
              * @brief Construct a new GameData object
             */
@@ -173,7 +174,7 @@ namespace gui {
              * @brief Set the time unit
              * @param timeUnit The time unit
             */
-            void setTimeUnit(std::uint32_t timeUnit) { this->_timeUnit = timeUnit; }
+            void setTimeUnit(std::uint32_t timeUnit) { this->_timeUnit = timeUnit; gui::GameData::frequency = timeUnit; }
 
             /**
              * @brief Set the game draw status
@@ -194,4 +195,6 @@ namespace gui {
             std::map<std::string, std::pair<std::string, gui::Color>> _teamSkins = {};
             std::vector<gui::Color> _teamColors = {};
     };
+
+    inline uint32_t GameData::frequency = 0;
 }

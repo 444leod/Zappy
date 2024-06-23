@@ -40,6 +40,8 @@
 namespace gui {
     class CommandHandler {
         public:
+            static bool isLoaded;
+
             CommandHandler(std::shared_ptr<ntw::Client> client, std::shared_ptr<GameData> gameData) : _client(client), _gameData(gameData) {}
             ~CommandHandler() = default;
 
@@ -49,7 +51,13 @@ namespace gui {
              */
             void handleCommand(std::string& command);
 
+            /**
+             * @brief The handleCommandsQueue function is used to handle the commands queue
+             */
+            void handleCommandsQueue();
+
         private:
+            std::vector<std::string> _commandsQueue = {};
             std::shared_ptr<ntw::Client> _client;
             std::shared_ptr<GameData> _gameData;
             std::unordered_map<std::string, std::shared_ptr<ICommand>> _responseHandlers = {
@@ -80,4 +88,6 @@ namespace gui {
                 {"sbp", std::make_shared<Sbp>()}
             };
     };
+
+    inline bool CommandHandler::isLoaded = false;
 }

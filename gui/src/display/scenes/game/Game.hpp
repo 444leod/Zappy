@@ -27,6 +27,10 @@ namespace gui {
                 void onExit(IScene::State nextState, gui::ILibrary& lib) override;
 
             private:
+                void _updateTilePos(gui::ILibrary& lib, gui::KeyCode key);
+
+            public:
+            private:
                 gui::Vector2i _rightTopCornerOffset = {0, 0};
                 float _tickTime = 0;
                 uint32_t _passedTicks = 0;

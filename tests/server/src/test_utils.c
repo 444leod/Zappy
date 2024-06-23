@@ -36,7 +36,8 @@ server_info_t get_server_info()
     servInfo->map = create_map(10, 10);
     rocks_t rocks = {0, 0, 0, 0, 0, 0};
     uint32_t foods = 0;
-    fill_map(servInfo->map, &rocks, &foods, servInfo->teams);
+    fill_map(servInfo->map, &rocks, &foods);
+    init_eggs(servInfo->map, servInfo->teams, servInfo->clients_nb);
 
     return servInfo;
 }

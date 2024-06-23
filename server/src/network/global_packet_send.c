@@ -31,3 +31,25 @@ void queue_packet_to_client_type(const enum CLIENT_TYPE type,
         tmp = tmp->next;
     }
 }
+
+/**
+ * @brief Queue a packet to a client by using its refered player.
+ * @details It actually compares player ids
+ *
+ * @param player The player's client to send to
+ * @param packet The packet to send
+ */
+void queue_packet_to_player(player_t player, packet_t *packet)
+{
+    client_list_t *clients = get_clients();
+    client_list_t node = NULL;
+
+    if (clients == NULL || *clients == NULL)
+        return;
+    node = *clients;
+    while (node) {
+        if (uuid_compare(player->id, node->client->player->id) == 0)
+            add_packet_to_queue(&node->client->packet_queue, packet);
+        node = node->next;
+    }
+}

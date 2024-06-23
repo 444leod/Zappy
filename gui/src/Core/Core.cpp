@@ -101,6 +101,11 @@ namespace gui {
 
                     this->handleNetwork(commandHandler);
 
+                    if (gui::CommandHandler::isLoaded) {
+                        commandHandler.handleCommandsQueue();
+                        gui::CommandHandler::isLoaded = false;
+                    }
+
 //                    gameDataManager.handleRequests();
                     gui::Event event = {};
                     auto now = std::chrono::high_resolution_clock::now();

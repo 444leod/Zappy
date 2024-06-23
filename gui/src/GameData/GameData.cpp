@@ -9,11 +9,7 @@
 #include <algorithm>
 
 namespace gui {
-    void GameData::addPlayer(std::shared_ptr<Player> player)
-    {
-        this->_players.push_back(player);
-        this->_map.at(player->position())->addEntity(player);
-    }
+    void GameData::addPlayer(std::shared_ptr<Player> player) { this->_players.push_back(player); }
 
     void GameData::removePlayer(std::uint32_t playerId)
     {
@@ -21,7 +17,7 @@ namespace gui {
             [playerId](const auto& player){ return player->id() == playerId; });
 
         if (it != this->_players.end()) {
-            this->_map.at((*it)->position())->removeEntity(playerId);
+            this->_map.at((*it)->position())->removeEntity(it->get()->entityId());
             this->_players.erase(it);
         }
     }
@@ -45,9 +41,6 @@ namespace gui {
 
     bool GameData::playerExists(std::uint32_t playerId) const
     {
-        for (auto &player : this->_players) {
-            std::cout << "player id = " << player->id() << " exists" << std::endl;
-        }
         auto it = std::find_if(this->_players.begin(), this->_players.end(),
             [playerId](const auto& player){ return player->id() == playerId; });
 
@@ -91,7 +84,7 @@ namespace gui {
     void GameData::teamWin(std::string teamName)
     {
         _teamLose = true;
-        std::cout << "Team " << teamName << " win" << std::endl;
+        std::cout << "Team " << teamName << " won" << std::endl;
     }
 
     void GameData::teamDraw()
