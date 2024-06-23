@@ -17,6 +17,10 @@ void gui::scenes::Loading::initialize(UNUSED gui::ILibrary& lib)
 {
 }
 
+void gui::scenes::Loading::onKeyDown(UNUSED gui::ILibrary& lib, UNUSED gui::KeyCode key)
+{
+}
+
 void gui::scenes::Loading::onKeyPressed(UNUSED gui::ILibrary& lib, UNUSED gui::KeyCode key, UNUSED bool shift)
 {
 }
@@ -126,5 +130,7 @@ void gui::scenes::Loading::onEnter(UNUSED IScene::State lastState, UNUSED gui::I
 void gui::scenes::Loading::onExit(UNUSED IScene::State nextState, UNUSED gui::ILibrary& lib)
 {
     gui::CommandHandler::isLoaded = true;
+    if (nextState == IScene::State::GAME)
+        Mct().stage(_serverCli);
 }
 

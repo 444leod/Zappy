@@ -75,6 +75,34 @@ void gui::scenes::Game::_updateTilePos(UNUSED gui::ILibrary& lib, UNUSED gui::Ke
         tile->setOffset(tile->offset() + offset * 5);
 }
 
+void gui::scenes::Game::onKeyDown(UNUSED gui::ILibrary& lib, gui::KeyCode key)
+{
+    switch (key) {
+        case gui::KeyCode::LEFT:
+            if (_gameData->map().at(Vector2u{0, 0})->offset().x() >= 0)
+                break;
+            this->_updateTilePos(lib, key);
+            break;
+        case gui::KeyCode::RIGHT:
+            if (_gameData->map().at(Vector2u{_gameData->map().size().x() - 1, 0})->offset().x() <= 1100)
+                break;
+            this->_updateTilePos(lib, key);
+            break;
+        case gui::KeyCode::UP:
+            if (_gameData->map().at(Vector2u{0, 0})->offset().y() >= 0)
+                break;
+            this->_updateTilePos(lib, key);
+            break;
+        case gui::KeyCode::DOWN:
+            if (_gameData->map().at(Vector2u{0, _gameData->map().size().y() - 1})->offset().y() <= 770)
+                break;
+            this->_updateTilePos(lib, key);
+            break;
+        default:
+            break;
+    }
+}
+
 void gui::scenes::Game::onKeyPressed(gui::ILibrary& lib, gui::KeyCode key, UNUSED bool shift)
 {
     switch (key) {
@@ -105,14 +133,19 @@ void gui::scenes::Game::onKeyPressed(gui::ILibrary& lib, gui::KeyCode key, UNUSE
             }
             break;
         }
+        case gui::KeyCode::ESCAPE:
+            _gameInfo = false;
+            break;
+        case gui::KeyCode::M:
+            this-> _areMessagesDisplayed = !this->_areMessagesDisplayed;
+            break;
         default:
             break;
     }
 }
 
-void gui::scenes::Game::onMouseButtonPressed(UNUSED gui::ILibrary& lib, UNUSED gui::MouseButton button, UNUSED int32_t x, UNUSED int32_t y)
+void gui::scenes::Game::onMouseButtonPressed(UNUSED gui::ILibrary& lib, gui::MouseButton button, int32_t x, int32_t y)
 {
-
     if (button == gui::MouseButton::LEFT && ((_gameData->map().size().x() * 120) > static_cast<uint32_t>(x) && (_gameData->map().size().y() * 120) > static_cast<uint32_t>(y))) {
         auto tilePos = gui::Vector2u(static_cast<unsigned int>(x / 120), static_cast<unsigned int>(y / 120));
         _tileInfo = tilePos;
@@ -123,7 +156,7 @@ void gui::scenes::Game::onMouseButtonPressed(UNUSED gui::ILibrary& lib, UNUSED g
     }
 }
 
-void gui::scenes::Game::update(UNUSED gui::ILibrary& lib, UNUSED float deltaTime)
+void gui::scenes::Game::update(UNUSED gui::ILibrary& lib, float deltaTime)
 {
     static float passedTime = 0;
     passedTime += deltaTime;
@@ -148,31 +181,77 @@ void gui::scenes::Game::update(UNUSED gui::ILibrary& lib, UNUSED float deltaTime
     }
 }
 
-void gui::scenes::Game::draw(UNUSED gui::ILibrary& lib)
+void gui::scenes::Game::_displayMessages(gui::ILibrary& lib)
+{
+    if (!this->_areMessagesDisplayed)
+        return;
+    lib.display().print("Broadcasts: ", lib.fonts().get("ClashRoyale"), 1200, 750, gui::Color{255, 255, 255, 255}, 12);
+
+    size_t messagesCount = _gameData->messages().size();
+    size_t startIdx = messagesCount > 10 ? messagesCount - 10 : 0;
+
+    for (size_t i = startIdx; i < messagesCount; ++i) {
+        const auto message = _gameData->messages()[i];
+        std::string displayedMessage = message.message.substr(0, 50);
+
+        std::string msg;
+        msg.reserve(50);
+        msg += "Player ";
+        msg += std::to_string(message.senderId);
+        msg += ": ";
+        msg += displayedMessage;
+
+        lib.display().print(msg, lib.fonts().get("ClashRoyale"), 1210, 765 + static_cast<int>(i - startIdx) * 10, gui::Color{255, 255, 255, 255}, 8);
+    }
+}
+
+void gui::scenes::Game::_displayGlobalInformations(gui::ILibrary& lib)
+{
+    auto teamNames = _gameData->teamNames();
+    uint32_t i = 0;
+
+    lib.display().print("Time: " + std::to_string(_passedTicks), lib.fonts().get("ClashRoyale"), 1200, 10, gui::Color{255, 255, 255, 255}, 12);
+    lib.display().print("Number of Players: " + std::to_string(_gameData->players().size()), lib.fonts().get("ClashRoyale"), 1200, 30, gui::Color{255, 255, 255, 255}, 12);
+    lib.display().print("Number of Teams: " + std::to_string(teamNames.size()), lib.fonts().get("ClashRoyale"), 1200, 50, gui::Color{255, 255, 255, 255}, 12);
+
+    for (auto& teamName : teamNames) {
+        auto [skinName, color] = _gameData->teamSkin(teamName);
+        lib.display().print(" - \"" + teamName + "\" (" + skinName + ")",  lib.fonts().get("ClashRoyale"), 1200, 70 + i * 20, color, 12);
+        i++;
+    }
+}
+
+void gui::scenes::Game::_displayTileInformations(gui::ILibrary& lib)
+{
+    auto tile = _gameData->map().at(_tileInfo);
+    uint32_t i = 0;
+    bool hasPrinted = false;
+
+    lib.display().print("Tile " + std::to_string(_tileInfo.x()) + ", " + std::to_string(_tileInfo.y()) + ":" , lib.fonts().get("ClashRoyale"), 1300, 10, gui::Color{255, 255, 255, 255}, 20);
+    for (auto& entity : tile->entities()) {
+        lib.display().print("Player " + std::to_string(entity->id()), lib.fonts().get("ClashRoyale"), 1200, 50 + i * 30, gui::Color{255, 255, 255, 255}, 20);
+        i++;
+    }
+     if (hasPrinted)
+        i++;
+    auto printItem = [&](const std::string& itemName, auto& item, gui::Color color) {
+        if (item.quantity()) {
+            lib.display().print(itemName + ": " + std::to_string(item.quantity()), lib.fonts().get("ClashRoyale"), 1200, 70 + i * 30, color, 20);
+            i++;
+        }
+    };
+    printItem("linemate", tile->rocks().linemate, gui::Color{0, 100, 255, 255});
+    printItem("deraumere", tile->rocks().deraumere, gui::Color{255, 105, 180, 255});
+    printItem("sibur", tile->rocks().sibur, gui::Color{0, 100, 0, 255});
+    printItem("mendiane", tile->rocks().mendiane, gui::Color{255, 0, 0, 255});
+    printItem("phiras", tile->rocks().phiras, gui::Color{255, 255, 0, 255});
+    printItem("thystame", tile->rocks().thystame, gui::Color{144, 238, 144, 255});
+}
+
+void gui::scenes::Game::_displayMap(gui::ILibrary& lib)
 {
     for (auto& [coords, tile] : _gameData->map().tiles())
         tile->draw(lib);
-    if (!_gameInfo) {
-        auto teamNames = _gameData->teamNames();
-        uint32_t i = 0;
-
-        lib.display().print("Time: " + std::to_string(_passedTicks), lib.fonts().get("ClashRoyale"), 1200, 10, gui::Color{255, 255, 255, 255}, 20);
-        lib.display().print("Number of Players: " + std::to_string(_gameData->players().size()), lib.fonts().get("ClashRoyale"), 1200, 50, gui::Color{255, 255, 255, 255}, 20);
-        lib.display().print("Number of Teams: " + std::to_string(teamNames.size()), lib.fonts().get("ClashRoyale"), 1200, 90, gui::Color{255, 255, 255, 255}, 20);
-        for (i = 0; i < teamNames.size(); i++) {
-            auto [teamName, color] = _gameData->teamSkin(teamNames[i]);
-            lib.display().print(teamName + " team", lib.fonts().get("ClashRoyale"), 1200, 130 + i * 40, color, 20);
-        }
-    } else {
-        auto tile = _gameData->map().at(_tileInfo);
-        uint32_t i = 0;
-
-        lib.display().print("Tile " + std::to_string(_tileInfo.x()) + ", " + std::to_string(_tileInfo.y()) + ":" , lib.fonts().get("ClashRoyale"), 1300, 10, gui::Color{255, 255, 255, 255}, 20);
-        for (auto& entity : tile->entities()) {
-            lib.display().print("Player " + std::to_string(entity->id()), lib.fonts().get("ClashRoyale"), 1200, 50 + i * 30, gui::Color{255, 255, 255, 255}, 20);
-            i++;
-        }
-    }
     for (auto& player : _gameData->players()) {
         player->drawAnimation(lib);
     }
@@ -181,7 +260,24 @@ void gui::scenes::Game::draw(UNUSED gui::ILibrary& lib)
     }
 }
 
-void gui::scenes::Game::onEnter(UNUSED IScene::State lastState, UNUSED gui::ILibrary& lib)
+void gui::scenes::Game::_displayOverlay(gui::ILibrary& lib)
+{
+    if (!_gameInfo) {
+        _displayGlobalInformations(lib);
+    } else {
+        _displayTileInformations(lib);
+    }
+
+    _displayMessages(lib);
+}
+
+void gui::scenes::Game::draw(gui::ILibrary& lib)
+{
+    _displayMap(lib);
+    _displayOverlay(lib);
+}
+
+void gui::scenes::Game::onEnter(IScene::State lastState, UNUSED gui::ILibrary& lib)
 {
     if (lastState == IScene::State::LOADING) {
         _tickTime = 1 / static_cast<float>(_gameData->timeUnit());
