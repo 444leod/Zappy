@@ -43,6 +43,11 @@ fclean: clean
 re: fclean all
 
 tests_run: all
+	@mkdir -p ../tests/ai/ai_src
+	@cp $(__SRC) ../tests/ai/ai_src
+
+test_clean:
+	@rm -rf ../tests/ai/ai_src
 
 run: all
 

@@ -72,12 +72,16 @@ re: fclean all
 
 
 tests_run:	.init_done
+	@printf "\n$(__BOLD)$(__GREEN)IA ARGS TESTS$(__NC)\n"
+	@make tests_run -s -C ai
+	@./tests/ai/argument_parsing.py
 	@printf "\n$(__BOLD)$(__GREEN)SERVER TESTS$(__NC)\n"
 	@make tests_run -s -C server
 	@printf "\n$(__BOLD)$(__GREEN)SERVER LIBS TESTS$(__NC)\n"
 	@make tests_run -s -C server/lib
 
 tests_clean:
+	@make tests_clean -s -C ai
 	@make tests_clean -s -C server
 	@make tests_clean -s -C server/lib
 
