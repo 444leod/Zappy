@@ -65,8 +65,10 @@ class Bot():
             "Elevation": lambda: self.log("HANDLE ELEVATION"),
             "Current": self.level_up,
             "ko\n": lambda: self.log("FAILED ELEVATION"),
+            "Eject": lambda: self.log("EJECT"),
         }
-        self.current_behavior = Eric()
+        self.current_behavior = Eric() if not self.conf.manual else Manual()
+        self.eject_dir: int = 0
     
     def run(self) -> None:
         """
@@ -88,6 +90,21 @@ class Bot():
         if (self.traced):
             with open(".trace", "a") as f:
                 print(*args, file=f)
+
+    def eject(self) -> None:
+        """
+        Handle the bot's ejection
+        """
+        print(self.eject_dir)
+        real_dir = (1 if self.eject_dir == 5 else
+                    5 if self.eject_dir == 1 else
+                    3 if self.eject_dir == 7 else
+                    7 if self.eject_dir == 3 else 0)
+        self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players -= 1
+        self.player_info.pos = add_tuples(self.player_info.pos, real_dir)
+        self.player_info.pos = (self.player_info.pos[0] % self.map.map_size[1], self.player_info.pos[0] % self.map.map_size[1])
+        self.map.player_pos = self.player_info.pos
+        self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players += 1
 
     def die(self) -> None:
         """
@@ -115,7 +132,10 @@ class Bot():
         """
         Handle the bot's behavior
         """
-        cmd_to_send: cmd.ACommand = self.current_behavior.get_next_command(self.player_info, self.map, self.messages_received)
+        if self.nb_eggs == 0:
+            cmd_to_send = cmd.Fork()
+        else:
+            cmd_to_send: cmd.ACommand = self.current_behavior.get_next_command(self.player_info, self.map, self.messages_received)
         self.log(cmd_to_send.dump())
         self.cmd_sent.append(cmd_to_send.dump())
         self.com_handler.send_command(cmd_to_send.dump())
@@ -131,7 +151,9 @@ class Bot():
             self.log(self.results[-1], end="")
 
             # Handle death or receiving a message by Broadcast
-            key: str = self.results[-1].split(" ")[0]
+            res: str = self.results[-1].split(" ")
+            key: str = res[0]
+            self.eject_dir = int(res[1]) if key == "Eject" else self.eject_dir
             if (key in self.base_funcs):
                 self.base_funcs[key]()
                 if key in ["ko\n", "Current"]: return
@@ -145,8 +167,7 @@ class Bot():
         """
         self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players -= 1
         self.player_info.pos = add_tuples(self.player_info.pos, self.player_info.orientation)
-        self.player_info.pos = (self.player_info.pos[0] % self.map.map_size[0], self.player_info.pos[1] % self.map.map_size[1])
-        self.log(self.player_info.pos)
+        self.player_info.pos = (self.player_info.pos[0] % self.map.map_size[1], self.player_info.pos[0] % self.map.map_size[1])
         self.map.player_pos = self.player_info.pos
         self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players += 1
 

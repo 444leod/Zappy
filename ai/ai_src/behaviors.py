@@ -382,8 +382,6 @@ class Eric(ABehavior):
             self.messages_received.remove(self.messages_received[0])
         self.go_to_ressources(player_info, map)
 
-
-
 class Manual(ABehavior):
     def __init__(self):
         """
@@ -416,5 +414,6 @@ class Manual(ABehavior):
                 case "I": cmd_to_send = cmd.Incantation(); break
                 case "L": cmd_to_send = cmd.Look(); break
                 case "b": cmd_to_send = cmd.Broadcast(rest); break
+                case "e": cmd_to_send = cmd.Eject(); break
         
         self.command_stack.append(cmd_to_send)
