@@ -53,3 +53,4 @@ ai_src/**
 lib_suite
 
 gui/assets/frame_sprite/
+tests/ai/ai_src/**

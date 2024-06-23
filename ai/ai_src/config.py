@@ -28,7 +28,7 @@ class Config:
         except ValueError:
             self.machine = "localhost"
         except IndexError:
-            ArgError(USAGE)
+            raise ArgError(USAGE)
         self.manual: bool = True if "-m" in argv else False
-        if (self.name == "GRAPHIC"):
-            ArgError("Name can't be 'GRAPHIC' as it's reserved for the GUI.\n" + USAGE)
+        if self.name == "GRAPHIC":
+            raise ArgError("Name can't be 'GRAPHIC' as it's reserved for the GUI.\n" + USAGE)
