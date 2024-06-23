@@ -8,6 +8,8 @@
 #pragma once
 
 #include "AEntity.hpp"
+#include "ILibrary.hpp"
+#include "SkinsConfig.hpp"
 
 namespace gui {
     /**
@@ -17,10 +19,10 @@ namespace gui {
     */
     class Egg : public AEntity {
         public:
-            Egg() = default;
+            Egg() = delete;
 
             Egg(std::uint32_t id, Vector2u position, std::string teamName)
-                : AEntity(id, position, teamName) {}
+                : AEntity(id, position, teamName) { _skin = "egg"; }
 
             ~Egg() = default;
 
@@ -36,8 +38,17 @@ namespace gui {
             */
             void kill() { this->_isDead = true; }
 
+            void updateAnimation(float deltaTime) override;
+            void drawAnimation(ILibrary &lib) override;
+
+            gui::AEntity::EntityType type() const { return gui::AEntity::EntityType::EGG; }
+
         private:
             bool _hatched = false;
             bool _isDead = false;
+            gui::AEntity::EntityType _type = gui::AEntity::EntityType::EGG;
+            float _passedTime = 0;
+            uint16_t _currentFrame = 0;
+            uint16_t _frameCount = gui::skins::ANIMATIONS_FRAMES[gui::skins::SKINS::EGG][0].second;
     };
 }

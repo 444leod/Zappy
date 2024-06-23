@@ -2,78 +2,72 @@
 ** EPITECH PROJECT, 2024
 ** zappy
 ** File description:
-** Character
+** Player
 */
 
 #pragma once
 
 #include "Tiles/Rocks/Rocks.hpp"
 #include "AEntity.hpp"
+#include "AAnimation.hpp"
+#include "Incantation.hpp"
 
 namespace gui {
+
+    class GameData;
+
     /**
-     * @brief Class representing the character in the simulation
-     * @note The character is the player that can move on the map thanks to the IA
-     * @note The character can move in 4 directions: NORTH, EAST, SOUTH, WEST
-     * @note The character can have a food, a level, a position, an orientation and rocks
+     * @brief Class representing the Player in the simulation
+     * @note The Player is the player that can move on the map thanks to the IA
+     * @note The Player can move in 4 directions: NORTH, EAST, SOUTH, WEST
+     * @note The Player can have a food, a level, a position, an orientation and rocks
     */
-    class Character : public AEntity {
+    class Player : public AEntity {
         public:
             /**
-             * @brief default constructor of Character
+             * @brief Construct a new Player object for new player
+             * @param id The id of the Player
+             * @param position The position of the Player
+             * @param orientation The orientation of the Player
+             * @param level The level of the Player
+             * @param teamName The team name of the Player
             */
-            Character() = default;
-
-            /**
-             * @brief Construct a new Character object for new player
-             * @param id The id of the character
-             * @param position The position of the character
-             * @param orientation The orientation of the character
-             * @param level The level of the character
-             * @param teamName The team name of the character
-            */
-            Character(std::uint32_t id, Vector2u position, Orientation orientation, std::uint32_t level, std::string teamName)
+            Player(std::uint32_t id, Vector2u position, Orientation orientation, std::uint32_t level, std::string teamName)
                 : AEntity(id, position, orientation, teamName), _level(level) {}
 
             /**
-             * @brief Destroy the Character object
+             * @brief Destroy the Player object
             */
-            ~Character() = default;
+            ~Player() = default;
 
             /**
-             * @brief Get the food of the character
-             * @return std::uint32_t The food of the character
+             * @brief Get the food of the Player
+             * @return std::uint32_t The food of the Player
             */
             std::uint32_t food() const { return this->_food; }
 
             /**
-             * @brief Set the food of the character
-             * @param food The food of the character
+             * @brief Set the food of the Player
+             * @param food The food of the Player
             */
             void setFood(std::uint32_t food) { this->_food = food; }
 
             /**
-             * @brief Get the rocks of the character
-             * @return Rocks The rocks of the character
+             * @brief Get the rocks of the Player
+             * @return Rocks The rocks of the Player
             */
             Rocks rocks() const { return this->_rocks; }
 
             /**
-             * @brief Set the rocks of the character
-             * @param rocks The rocks of the character
+             * @brief Set the rocks of the Player
+             * @param rocks The rocks of the Player
             */
             void setRocks(Rocks rocks) { this->_rocks = rocks; }
 
             /**
-             * @brief Get the player level
-             * @return Vector2u The player level
-            */
-            std::uint32_t playerLevel() const { return this->_level; }
-
-            /**
              * @brief Add 1 to the player level
             */
-            void increasePlayerLevel() { this->_level += 1; }
+            void increaseLevel() { this->_level += 1; }
 
             /**
              * @brief Set the player level
@@ -117,10 +111,9 @@ namespace gui {
             void pickRessource() { this->_pickingRessource = true; }
 
             /**
-             * @brief set the player incantation
-             * @param isincantation The player incantation
+             * @brief Make the player incantate
             */
-            void incantation(bool isincantation) { this->_isincantation = isincantation; }
+            void incantate();
 
             /**
              * @brief set the player incantation result
@@ -133,9 +126,17 @@ namespace gui {
 
             /**
              * @brief set the player dead
-             * @param isDead The player dead
             */
-            void kill() { this->_isDead = true; }
+            void kill(std::shared_ptr<gui::GameData> gameData);
+
+            void updateAnimation(float deltaTime) override;
+            void drawAnimation(ILibrary &lib) override;
+
+            gui::AEntity::EntityType type() const { return gui::AEntity::EntityType::PLAYER; }
+
+            std::uint32_t level() const { return this->_level; }
+
+            bool alive() const { return this->_alive; }
 
         private:
             std::uint32_t _food = 0;
@@ -147,6 +148,7 @@ namespace gui {
             bool _isExpulsed = false;
             bool _isincantation = false;
             bool _incantationResult = false;
-            bool _isDead = false;
+            bool _alive = true;
+            gui::AEntity::EntityType _type = gui::AEntity::EntityType::PLAYER;
     };
 }

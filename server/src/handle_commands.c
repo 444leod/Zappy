@@ -108,7 +108,7 @@ static void initialize_command(const client_command_t command,
         command->wait_duration = 0;
         return;
     }
-    for (; COMMANDS[i].command; i++) {
+    for (; command->args && command->args[0] && COMMANDS[i].command; i++) {
         if (strcmp(COMMANDS[i].command, command->args[0]) == 0 &&
             COMMANDS[i].client_type == client->type) {
             command->command_handler = COMMANDS[i];
@@ -117,7 +117,7 @@ static void initialize_command(const client_command_t command,
             return;
         }
     }
-    command->command_handler = COMMANDS[i];
+    command->command_handler = UNKNOWN_COMMAND;
     command->wait_duration = 0;
 }
 

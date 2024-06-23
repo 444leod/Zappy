@@ -12,12 +12,14 @@
 #include <map>
 #include <memory>
 #include <optional>
-#include "Tiles/TileContent.hpp"
-#include "Entities/Character.hpp"
+#include "Tiles/Tile.hpp"
+#include "Entities/Player.hpp"
 #include "Entities/Egg.hpp"
 #include "Vector.hpp"
 #include "Message.hpp"
 #include "Tiles/Map.hpp"
+
+#define UNUSED [[maybe_unused]]
 
 namespace gui {
     /**
@@ -27,6 +29,7 @@ namespace gui {
     */
     class GameData {
         public:
+            static uint32_t frequency;
             /**
              * @brief Construct a new GameData object
             */
@@ -47,19 +50,19 @@ namespace gui {
              * @brief Add a team name
              * @param teamName The team name
             */
-            void addTeamName(std::string teamName) { this->_teamNames.push_back(teamName); }
+            void addTeamName(std::string teamName);
 
             /**
              * @brief Get the players vector
-             * @return Character The player
+             * @return Player The player
             */
-            std::vector<std::shared_ptr<Character>> players() const { return this->_players; }
+            std::vector<std::shared_ptr<Player>> players() const { return this->_players; }
 
             /**
              * @brief Add a player
              * @param player The player
             */
-            void addPlayer(std::shared_ptr<Character> player);
+            void addPlayer(std::shared_ptr<Player> player);
 
             /**
              * @brief Remove a player
@@ -81,9 +84,9 @@ namespace gui {
 
             /**
              * @brief Remove an egg
-             * @param eggId The egg id
+             * @param egg The egg
             */
-            void removeEgg(std::uint32_t eggId);
+            void removeEgg(std::shared_ptr<Egg> egg);
 
             /**
              * @brief Get the messages
@@ -101,7 +104,7 @@ namespace gui {
              * @brief Get the REFERENCE of the map
              * @return Map& The reference of the map
             */
-            Map& mapRef() { return this->_map; }
+            gui::Map& map() { return this->_map; }
 
             /**
              * @brief check if the given id corresponds to a player
@@ -127,9 +130,9 @@ namespace gui {
             /**
              * @brief get the player by his id
              * @param playerId The player id
-             * @return std::shared_ptr<Character> The player
+             * @return std::shared_ptr<Player> The player
             */
-            std::optional<std::shared_ptr<Character>> getPlayerById(std::uint32_t playerId) const;
+            std::optional<std::shared_ptr<Player>> getPlayerById(std::uint32_t playerId) const;
 
             /**
              * @brief get the egg by his id
@@ -171,21 +174,27 @@ namespace gui {
              * @brief Set the time unit
              * @param timeUnit The time unit
             */
-            void setTimeUnit(std::uint32_t timeUnit) { this->_timeUnit = timeUnit; }
+            void setTimeUnit(std::uint32_t timeUnit) { this->_timeUnit = timeUnit; gui::GameData::frequency = timeUnit; }
 
             /**
              * @brief Set the game draw status
             */
             void teamDraw();
 
+            std::pair<std::string, gui::Color> teamSkin(const std::string &teamName) const;
+
         private:
             std::vector<std::string> _teamNames = {};
-            Map _map;
-            std::vector<std::shared_ptr<Character>> _players = {};
+            gui::Map _map;
+            std::vector<std::shared_ptr<Player>> _players = {};
             std::vector<std::shared_ptr<Egg>> _eggs = {};
             std::vector<message_t> _messages = {};
             bool _teamLose = false;
             std::uint32_t _timeUnit = 0;
             bool _isDraw = false;
+            std::map<std::string, std::pair<std::string, gui::Color>> _teamSkins = {};
+            std::vector<gui::Color> _teamColors = {};
     };
+
+    inline uint32_t GameData::frequency = 0;
 }

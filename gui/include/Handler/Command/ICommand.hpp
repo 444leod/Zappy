@@ -20,13 +20,13 @@ namespace gui {
              * @param client The client
              * @param parameters The parameters
              */
-            virtual void stage(ntw::Client &client, std::string parameters = "") = 0;
+            virtual void stage(std::shared_ptr<ntw::Client> client, std::string parameters = "") = 0;
 
             /**
              * @brief The receive function is used to receive a command from the server
              * @param command The command given by the server
              * @param gameData The game data
              */
-            virtual void receive(std::string command, GameData &gameData) = 0;
+            virtual void receive(std::string command, std::shared_ptr<GameData> gameData) = 0;
     };
 }

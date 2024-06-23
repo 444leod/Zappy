@@ -7,16 +7,13 @@
 
 #include "Sbp.hpp"
 
-void gui::Sbp::stage(ntw::Client &client, std::string parameters)
+void gui::Sbp::stage(std::shared_ptr<ntw::Client> client, std::string parameters)
 {
     (void)client;
     (void)parameters;
     std::cerr << "Command sbp: can't be staged." << std::endl;
 }
 
-void gui::Sbp::receive(std::string command, GameData &gameData)
+void gui::Sbp::receive(UNUSED std::string command, UNUSED std::shared_ptr<GameData> gameData)
 {
-    (void)command;
-    (void)gameData;
-    gameData.displayCommandParameter();
 }
