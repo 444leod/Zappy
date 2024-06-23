@@ -1,12 +1,11 @@
 from dataclasses import dataclass, field
 from typing import List
-from enum import Enum
 import uuid
 from enum import Enum
 
 """
 CONST VARIABLES representing the orientation of a player
-They are represented as tuples to facilitate the computation of the new position
+They are represented as tuples (x, y) to facilitate the computation of the new position
 """
 NORTH: tuple[int, int] = (-1, 0)
 EAST: tuple[int, int] = (0, -1)

@@ -2,7 +2,7 @@ from typing import List
 from enum import Enum
 from json import dumps
 import ai_src.commands as cmd
-from ai_src.data import PlayerInfo, Map, Collectibles, TileContent, Message, MessageContent, LEVEL_UP_REQ, TileContent, NORTH, EAST, SOUTH, WEST
+from ai_src.data import PlayerInfo, Map, Collectibles, TileContent, Message, MessageContent, LEVEL_UP_REQ, NORTH, EAST, SOUTH, WEST
 import time
 
 class ABehavior:
@@ -240,6 +240,42 @@ class ABehavior:
                     self.command_stack.append(cmd.Set(rock))
             self.command_stack.append(cmd.Incantation())
 
+    def collect_food(self, player_info: PlayerInfo, map: Map) -> None:
+        """
+        Collect food from the tile
+        """
+        for _ in range(map.tiles[player_info.pos[0]][player_info.pos[1]].collectibles.food):
+            self.command_stack.append(cmd.Take("food"))
+    
+    def collect_all_rocks(self, player_info: PlayerInfo, map: Map) -> None:
+        """
+        Collect all rocks from the tile
+        """
+        to_collect: dict[str, int] = map.tiles[player_info.pos[0]][player_info.pos[1]].collectibles.__dict__
+        to_collect.pop("food")
+        for rock, amount in to_collect.items():
+            for _ in range(amount):
+                self.command_stack.append(cmd.Take(rock))
+    
+    
+    def easy_evolve(self, player_info: PlayerInfo, map: Map) -> None:
+        """
+        Try to evolve to the next level if the requirements are met
+        !!! ASSUMES THAT THE PLAYERS ARE THE SAME LEVEL !!!
+        """
+        current_tile: TileContent = map.tiles[player_info.pos[0]][player_info.pos[1]]
+        enough_players: bool = current_tile.nb_players >= LEVEL_UP_REQ[player_info.level].nb_players
+        total_rocks: Collectibles = current_tile.collectibles + player_info.inv
+        enough_rocks: bool = total_rocks >= LEVEL_UP_REQ[player_info.level].collectibles
+
+        if enough_players and enough_rocks and player_info.inv.food >= 4:
+            rocks_to_set: Collectibles = LEVEL_UP_REQ[player_info.level].collectibles - current_tile.collectibles
+            rocks_to_set.neg_to_zero()
+            for rock, amount in rocks_to_set.__dict__.items():
+                for _ in range(amount):
+                    self.command_stack.append(cmd.Set(rock))
+            self.command_stack.append(cmd.Incantation())
+
 class LookingForward(ABehavior):
     def __init__(self):
         """
@@ -452,10 +488,10 @@ class IncantationFollower(ABehavior):
             case IncantationFollower.State.FINISHED: self.command_stack.append(cmd.Inventory()); return
         super().refresh_inventory(5)
 
-class Greg(ABehavior):
+class Harvester(ABehavior):
     def __init__(self):
         """
-        Greg behavior, take all ressouces he find on map
+        Harvester behavior, take all ressouces he find on map
         """
         super().__init__()
 
@@ -519,6 +555,119 @@ class Greg(ABehavior):
 
     def generate_command_stack(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> None:
         """
-        Generate the command stack for the Greg behavior
+        Generate the command stack for the Harvester behavior
         """
         self.go_to_ressources(player_info, map)
+
+class Distractor(ABehavior):
+    def __init__(self):
+        """
+        Distractor behavior, Distractor villagers that want to disturb other team
+        """
+        super().__init__()
+        self.enemies_messages: List[str] = ["HOGRIDAAAA"]
+    
+    def go_to_ressources(self, player_info: PlayerInfo, map: Map):
+        """
+        Go to the nearest ressources
+        """
+        def find_nearest_resource(player_pos: tuple[int, int], tiles: List[List[TileContent]]) -> tuple[str, tuple[int, int]]:
+            """
+            Finds the nearest resource from the player's position.
+            Returns the type of the resource and its position.
+            """
+            max_row = len(tiles)
+            max_col = len(tiles[0]) if max_row > 0 else 0
+
+            def distance(pos1: tuple[int, int], pos2: tuple[int, int], max_row: int, max_col: int) -> int:
+                dx = abs(pos1[0] - pos2[0])
+                dy = abs(pos1[1] - pos2[1])
+
+                dx = min(dx, max_row - dx)  # Take into account wrapping on the x-axis
+                dy = min(dy, max_col - dy)  # Take into account wrapping on the y-axis
+
+                return dx + dy
+
+            nearest_resource = ""
+            nearest_position = None
+            min_distance = float('inf')
+            nearest_resource = ""
+            nearest_position = None
+            for x in range(max_row):
+                for y in range(max_col):
+                    tile = tiles[x][y]
+                    for attr, value in tile.collectibles.__dict__.items():
+                        if value > 0 and attr == "food":
+                            dist = distance(player_pos, (x, y), max_row, max_col)
+                            if dist < min_distance:
+                                min_distance = dist
+                                nearest_resource = attr
+                                nearest_position = (x, y)
+                    y = (y + 1) % max_col
+                x = (x + 1) % max_row
+            
+            return nearest_resource, nearest_position
+
+        str_to_take = ""
+        collectibles = map.tiles[player_info.pos[0]][player_info.pos[1]].collectibles
+        for attr, value in collectibles.__dict__.items():
+            if value > 0 and attr == "food":
+                str_to_take = attr
+                break
+
+        if str_to_take != "":
+            self.command_stack.append(cmd.Take(str_to_take))
+        else:
+            str_to_take, position = find_nearest_resource(player_info.pos, map.tiles)
+            if position:
+                self.go_to_a_point( player_info, position, map.map_size)
+            else:
+                self.command_stack.append(cmd.Forward())
+                self.command_stack.append(cmd.Look())
+
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> None:
+        """
+        Generate the command stack for the Distractor behavior
+        """
+
+        self.enemies_messages.extend([message.raw_content for message in new_messages if message.message_content is None and message not in self.enemies_messages])
+
+        if len(self.enemies_messages) != 0:
+            self.command_stack.append(cmd.Broadcast(self.enemies_messages[0]))
+            self.enemies_messages.remove(self.enemies_messages[0])
+        self.go_to_ressources(player_info, map)
+
+class Manual(ABehavior):
+    def __init__(self):
+        """
+        Manual behavior, the player is controlled by the user
+        """
+        super().__init__()
+        print("r for right, l for left, f for forward, i for inventory, t>item for take, s>item for set, I for incantation, L for look, b for broadcast")
+
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> None:
+        """
+        Generate a command by the user
+        """
+        while True:
+            tab = input("Enter a command: ").split(">")
+            if len(tab) == 1:
+                user_input = tab[0]
+                rest = ""
+            elif len(tab) == 2:
+                user_input, rest = tab
+            else:
+                continue
+            cmd_to_send: cmd.ACommand = None
+            match user_input:
+                case "r": cmd_to_send = cmd.Right(); break
+                case "l": cmd_to_send = cmd.Left(); break
+                case "f": cmd_to_send = cmd.Forward(); break
+                case "i": cmd_to_send = cmd.Inventory(); break
+                case "t": cmd_to_send = cmd.Take(rest); break
+                case "s": cmd_to_send = cmd.Set(rest); break
+                case "I": cmd_to_send = cmd.Incantation(); break
+                case "L": cmd_to_send = cmd.Look(); break
+                case "b": cmd_to_send = cmd.Broadcast(rest); break
+        
+        self.command_stack.append(cmd_to_send)

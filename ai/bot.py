@@ -6,9 +6,10 @@ from json import dumps, loads
 from ai_src.connection_handler import ConnectionHandler
 from ai_src.config import Config, HelpException, ArgError
 from ai_src.data import PlayerInfo, Collectibles, Map, TileContent, Message, MessageContent
-from ai_src.behaviors import LookingForward, Manual, ABehavior, Greg, Manual
+from ai_src.behaviors import Manual, ABehavior, Harvester, Distractor
 import ai_src.commands as cmd
 from ai.ai_src.utils import add_tuples, turn_left, turn_right
+import random as rd
 
 class Bot():
     def __init__(self, verbose: bool=False, traced: bool=False) -> None:
@@ -68,8 +69,11 @@ class Bot():
             "Elevation": lambda: self.log("HANDLE ELEVATION"),
             "Current": self.level_up,
             "ko\n": lambda: self.log("FAILED ELEVATION"),
+            "Elevation": lambda: self.log("HANDLE ELEVATION"),
+            "Current": self.level_up,
+            "ko\n": lambda: self.log("FAILED ELEVATION"),
         }
-        self.current_behavior = Manual() if self.conf.manual else Greg()
+        self.current_behavior = (Manual() if self.conf.manual else Distractor() if rd.randint(0, 5) == 0 else Harvester())
         self.player_info.old_behavior = self.current_behavior
 
     def run(self) -> None:
@@ -151,7 +155,6 @@ class Bot():
             key: str = self.results[-1].split(" ")[0]
             if (key in self.base_funcs):
                 self.base_funcs[key]()
-                if key in ["ko\n", "Current"]: return
                 if key in ["ko\n", "Current"]: return
                 continue
             # Returning to the main loop if the response is not a message or a death
