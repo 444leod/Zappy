@@ -43,16 +43,8 @@ player_t get_player_by_player_number(const uint32_t player_number)
  */
 char get_char_by_orientation(int orientation)
 {
-    switch (orientation) {
-        case 1:
-            return ('1');
-        case 2:
-            return ('2');
-        case 3:
-            return ('3');
-        case 4:
-            return ('4');
-    }
+    if (orientation >= 1 && orientation <= 4)
+        return '0' + orientation;
     return -1;
 }
 

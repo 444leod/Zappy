@@ -93,9 +93,10 @@ void gui::scenes::Loading::update(UNUSED gui::ILibrary& lib, UNUSED float deltaT
 
 void gui::scenes::Loading::draw(UNUSED gui::ILibrary& lib)
 {
-    auto textSize = lib.display().measure(_loadingText, lib.fonts().get("ClashRoyale"), lib.display().width(), lib.display().height()).width;
+    auto font = lib.fonts().get("ClashRoyale");
+    auto textSize = lib.display().measure(_loadingText, font, lib.display().width(), lib.display().height()).width;
     float center = lib.display().width() / 2 - textSize / 2;
-    lib.display().print(_loadingText, lib.fonts().get("ClashRoyale"), center, lib.display().height() / 2);
+    lib.display().print(_loadingText, font, center, lib.display().height() / 2);
 
     auto teamNames = _gameData->teamNames();
 
@@ -103,17 +104,17 @@ void gui::scenes::Loading::draw(UNUSED gui::ILibrary& lib)
     auto size = _gameData->map().size();
 
     if (size != Vector2u(0, 0)) {
-        lib.display().print("Map size: " + std::to_string(size.x()) + "x" + std::to_string(size.y()), lib.fonts().get("ClashRoyale"), 0, y);
+        lib.display().print("Map size: " + std::to_string(size.x()) + "x" + std::to_string(size.y()), font, 0, y);
         y += 50;
     }
     if (teamNames.size() != 0) {
         for (auto &teamName : _gameData->teamNames()) {
-            lib.display().print(teamName, lib.fonts().get("ClashRoyale"), 0, y);
+            lib.display().print(teamName, font, 0, y);
             y += 50;
         }
     }
     if (_gameData->timeUnit() != 0) {
-        lib.display().print("Time unit: " + std::to_string(_gameData->timeUnit()), lib.fonts().get("ClashRoyale"), 0, y);
+        lib.display().print("Time unit: " + std::to_string(_gameData->timeUnit()), font, 0, y);
         y += 50;
     }
 }
