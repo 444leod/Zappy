@@ -8,7 +8,7 @@
 #pragma once
 
 /**
- * @brief Enum for the orientation of the character
+ * @brief Enum for the orientation of the Player
  * @note NORTH = 1
  * @note EAST = 2
  * @note SOUTH = 3

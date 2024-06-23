@@ -7,13 +7,13 @@
 
 #include "Mct.hpp"
 
-void gui::Mct::stage(ntw::Client &client, std::string parameters)
+void gui::Mct::stage(std::shared_ptr<ntw::Client> client, std::string parameters)
 {
     (void)parameters;
-    client.queueRequest("mct");
+    client->queueRequest("mct");
 }
 
-void gui::Mct::receive(std::string command, GameData &gameData)
+void gui::Mct::receive(std::string command, std::shared_ptr<GameData> gameData)
 {
     (void)gameData;
     (void)command;

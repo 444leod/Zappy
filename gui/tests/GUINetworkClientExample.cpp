@@ -17,7 +17,7 @@ int main(UNUSED int argc, UNUSED char const *argv[])
 
         Client.connectToServer(); // blockant, max 5s
 
-        Client.queueRequest("msz");
+        client->queueRequest("msz");
         Client.sendRequests(std::chrono::milliseconds(1000)); // blockant, max 1s or will throw exception
 
         while (!Client.receive()); //wait for response

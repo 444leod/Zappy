@@ -1,17 +1,14 @@
 /*
 ** EPITECH PROJECT, 2024
-** zappy
+** Zappy
 ** File description:
-** GameDataManager
+** CommandHandler
 */
 
 #pragma once
 
-#include "GameData.hpp"
 #include "Client.hpp"
-#include <sstream>
-#include <functional>
-#include <unordered_map>
+#include "GameData.hpp"
 #include "Msz.hpp"
 #include "Bct.hpp"
 #include "Tna.hpp"
@@ -37,20 +34,32 @@
 #include "Smg.hpp"
 #include "Suc.hpp"
 #include "Sbp.hpp"
+#include <functional>
+#include <unordered_map>
 
 namespace gui {
-    class GameDataManager {
+    class CommandHandler {
         public:
-            GameDataManager(std::uint32_t port) : _port(port), _client(port) { _client.connectToServer(); }
-            ~GameDataManager() { _client.disconnect();}
+            static bool isLoaded;
 
-            void handleRequests();
+            CommandHandler(std::shared_ptr<ntw::Client> client, std::shared_ptr<GameData> gameData) : _client(client), _gameData(gameData) {}
+            ~CommandHandler() = default;
+
+            /**
+             * @brief The handleCommand function is used to handle the command given by the server
+             * @param command The command given by the server
+             */
+            void handleCommand(std::string& command);
+
+            /**
+             * @brief The handleCommandsQueue function is used to handle the commands queue
+             */
+            void handleCommandsQueue();
 
         private:
-            std::vector<std::string> _requests;
-            std::uint32_t _port;
-            GameData _gameData;
-            ntw::Client _client;
+            std::vector<std::string> _commandsQueue = {};
+            std::shared_ptr<ntw::Client> _client;
+            std::shared_ptr<GameData> _gameData;
             std::unordered_map<std::string, std::shared_ptr<ICommand>> _responseHandlers = {
                 {"msz", std::make_shared<Msz>()},
                 {"bct", std::make_shared<Bct>()},
@@ -79,4 +88,6 @@ namespace gui {
                 {"sbp", std::make_shared<Sbp>()}
             };
     };
+
+    inline bool CommandHandler::isLoaded = false;
 }
