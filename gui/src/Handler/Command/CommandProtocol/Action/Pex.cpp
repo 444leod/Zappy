@@ -51,7 +51,8 @@ void gui::Pex::receive(std::string command, std::shared_ptr<GameData> gameData)
             if (entity->type() == gui::AEntity::EntityType::PLAYER) {
                 entity->pushAnimation(std::make_shared<gui::animations::Expulsed>(entity->skin(), std::dynamic_pointer_cast<gui::Player>(entity)));
             } else {
-                gameData->removeEgg(entity->id());
+                auto egg = std::dynamic_pointer_cast<gui::Egg>(entity);
+                gameData->removeEgg(egg);
             }
         }
     }

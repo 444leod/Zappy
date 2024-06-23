@@ -28,6 +28,6 @@ void gui::Ebo::receive(std::string command, std::shared_ptr<GameData> gameData)
         throw std::invalid_argument("Egg does not exist");
     auto egg = gameData->getEggById(eggId);
     if (egg.has_value()) {
-        gameData->removeEgg(eggId);
+        gameData->removeEgg(egg.value());
     }
 }
