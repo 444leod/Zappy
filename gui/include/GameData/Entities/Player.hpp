@@ -67,7 +67,14 @@ namespace gui {
             /**
              * @brief Add 1 to the player level
             */
-            void increaseLevel() { this->_level += 1; }
+            void increaseLevel() {
+                this->_level += 1;
+                if (this->_animations.empty())
+                    return;
+                if (this->_animations.top()->name() == "Incantation") {
+                    this->_animations.pop();
+                }
+            }
 
             /**
              * @brief Set the player level

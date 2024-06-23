@@ -115,6 +115,13 @@ static select_data_t init_select_data(void)
     return select_data;
 }
 
+static void check_possible_deconnexion(server_info_t server_info,
+    client_list_t clients)
+{
+    if (server_info->end && clients == NULL)
+        my_exit(0);
+}
+
 /**
  * @brief Main Zappy loop
  * @details the main loop of the Zappy server, it accepts new clients and
@@ -144,6 +151,7 @@ void zappy_loop(int socket_fd, server_info_t server_info)
         DEBUG_PRINT("Executed all actions.\n");
         if (!server_info->end)
             check_game_end(server_info);
+        check_possible_deconnexion(server_info, clients);
     }
 }
 

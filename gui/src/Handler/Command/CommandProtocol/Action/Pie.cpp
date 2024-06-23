@@ -29,12 +29,14 @@ void gui::Pie::receive(std::string command, std::shared_ptr<GameData> gameData)
         throw std::invalid_argument("Invalid tile coordinates, out of map bounds.");
     if (result != 1 && result != 0)
         throw std::invalid_argument("Invalid incantation result.");
-    auto players = gameData->getPlayerById(result);
-    if (players.has_value()) {
-        if (result == 1) {
-            players.value()->increaseLevel();
-            players.value()->updateEvolutionStatus(true);
-        } else
-            players.value()->updateEvolutionStatus(false);
+    if (result == 0)
+        return;
+    auto entities = gameData->map().at(Vector2u{x, y})->entities();
+    for (auto &entity : entities) {
+        if (entity->type() == gui::AEntity::EntityType::PLAYER) {
+            auto player = std::dynamic_pointer_cast<Player>(entity);
+            player->increaseLevel();
+        }
     }
+
 }

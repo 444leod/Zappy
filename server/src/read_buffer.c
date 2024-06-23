@@ -55,6 +55,17 @@ static void clear_ai_buffer_overflow(client_t client)
     }
 }
 
+static UNUSED void kill_player(client_t client)
+{
+    if (client->type == AI) {
+        printf("Player %d died\n", client->player->player_number);
+        queue_to_graphical(get_player_death_string(client->player));
+        remove_from_list((void *)client,
+            (node_t *)&client->player->team->players);
+        client->fd = -1;
+    }
+}
+
 /**
  * @brief Verify if the last message sent is a special case (EOF, error)
  * @details Verify if the last message sent is a special case (EOF, error)
@@ -73,6 +84,7 @@ static bool is_read_special_case(const client_t client,
                 client->fd, strerror(errno));
         remove_client(client->fd);
         if (client->type == AI) {
+            printf("Player %d died\n", client->player->player_number);
             queue_to_graphical(get_player_death_string(client->player));
             remove_from_list((void *)client,
                 (node_t *)&client->player->team->players);

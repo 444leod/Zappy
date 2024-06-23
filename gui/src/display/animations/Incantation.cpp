@@ -14,6 +14,7 @@ gui::animations::Incantation::Incantation(gui::Player& player) : AAnimation(300 
 {
     auto skin = gui::skins::STRING_TO_SKIN[player.skin()];
     auto animations = gui::skins::ANIMATIONS_FRAMES[skin];
+    player.setDisplayOffset(Vector2f{0, 0});
     for (auto &animation : animations) {
         if (animation.first == gui::skins::ANIMATIONS::INCANTATION) {
             _frameCount = animation.second;

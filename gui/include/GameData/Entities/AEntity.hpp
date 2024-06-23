@@ -57,7 +57,6 @@ namespace gui {
             AEntity(std::uint32_t id, Vector2u position, std::string teamName) : _position(position), _id(id), _teamName(teamName), _entityId(nextId++) {
             }
 
-
             /**
              * @brief Destroy the AEntity object
             */

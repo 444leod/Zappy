@@ -21,10 +21,11 @@ namespace gui {
             void setDuration(float duration) { _duration = duration; }
             void setLoop(bool loop) { _loop = loop; }
             virtual float remainingTime() { return _duration; }
+            virtual std::string name() { return _name; }
 
         protected:
             float _duration = 0;
-            const std::string _name;
+            const std::string _name = "";
             uint32_t _frameCount;
             float _passedTime = 0;
             bool _loop = false;
