@@ -22,10 +22,12 @@ static void add_thystame(const map_t map, uint32_t *current_quantity)
     position_t pos = { 0, 0 };
     tile_t tile = NULL;
     const uint32_t map_size = map->width * map->height;
-    const uint32_t amount = map_size * D_THYSTAME - *current_quantity;
+    const int32_t amount = map_size * D_THYSTAME - *current_quantity;
 
+    if (amount < 0)
+        return;
     DEBUG_PRINT("\tPutting in: %d thystame...", amount);
-    for (uint32_t i = 0; i < amount; i++) {
+    for (int32_t i = 0; i < amount; i++) {
         pos.x = rand() % map->width;
         pos.y = rand() % map->height;
         tile = get_tile_at_position(pos, map);
@@ -45,10 +47,12 @@ static void add_phiras(const map_t map, uint32_t *current_quantity)
     position_t pos = { 0, 0 };
     tile_t tile = NULL;
     const uint32_t map_size = map->width * map->height;
-    const uint32_t amount = map_size * D_PHIRAS - *current_quantity;
+    const int32_t amount = map_size * D_PHIRAS - *current_quantity;
 
+    if (amount < 0)
+        return;
     DEBUG_PRINT("\tPutting in: %d phiras...", amount);
-    for (uint32_t i = 0; i < amount; i++) {
+    for (int32_t i = 0; i < amount; i++) {
         pos.x = rand() % map->width;
         pos.y = rand() % map->height;
         tile = get_tile_at_position(pos, map);
@@ -68,10 +72,12 @@ static void add_mendiane(const map_t map, uint32_t *current_quantity)
     position_t pos = { 0, 0 };
     tile_t tile = NULL;
     const uint32_t map_size = map->width * map->height;
-    const uint32_t amount = map_size * D_MENDIANE - *current_quantity;
+    const int32_t amount = map_size * D_MENDIANE - *current_quantity;
 
+    if (amount < 0)
+        return;
     DEBUG_PRINT("\tPutting in: %d mendiane...", amount);
-    for (uint32_t i = 0; i < amount; i++) {
+    for (int32_t i = 0; i < amount; i++) {
         pos.x = rand() % map->width;
         pos.y = rand() % map->height;
         tile = get_tile_at_position(pos, map);
@@ -91,10 +97,12 @@ static void add_sibur(const map_t map, uint32_t *current_quantity)
     position_t pos = { 0, 0 };
     tile_t tile = NULL;
     const uint32_t map_size = map->width * map->height;
-    const uint32_t amount = map_size * D_SIBUR - *current_quantity;
+    const int32_t amount = map_size * D_SIBUR - *current_quantity;
 
+    if (amount < 0)
+        return;
     DEBUG_PRINT("\tPutting in: %d sibur...", amount);
-    for (uint32_t i = 0; i < amount; i++) {
+    for (int32_t i = 0; i < amount; i++) {
         pos.x = rand() % map->width;
         pos.y = rand() % map->height;
         tile = get_tile_at_position(pos, map);
@@ -114,10 +122,12 @@ static void add_deraumere(const map_t map, uint32_t *current_quantity)
     position_t pos = { 0, 0 };
     tile_t tile = NULL;
     const uint32_t map_size = map->width * map->height;
-    const uint32_t amount = map_size * D_DERAUMERE - *current_quantity;
+    const int32_t amount = map_size * D_DERAUMERE - *current_quantity;
 
+    if (amount < 0)
+        return;
     DEBUG_PRINT("\tPutting in: %d deraumere...", amount);
-    for (uint32_t i = 0; i < amount; i++) {
+    for (int32_t i = 0; i < amount; i++) {
         pos.x = rand() % map->width;
         pos.y = rand() % map->height;
         tile = get_tile_at_position(pos, map);
@@ -137,10 +147,12 @@ static void add_linemate(const map_t map, uint32_t *current_quantity)
     position_t pos = { 0, 0 };
     tile_t tile = NULL;
     const uint32_t map_size = map->width * map->height;
-    const uint32_t amount = map_size * D_LINEMATE - *current_quantity;
+    const int32_t amount = map_size * D_LINEMATE - *current_quantity;
 
+    if (amount < 0)
+        return;
     DEBUG_PRINT("\tPutting in: %d linemate...", amount);
-    for (uint32_t i = 0; i < amount; i++) {
+    for (int32_t i = 0; i < amount; i++) {
         pos.x = rand() % map->width;
         pos.y = rand() % map->height;
         tile = get_tile_at_position(pos, map);
@@ -160,10 +172,12 @@ static void add_food(const map_t map, uint32_t *current_quantity)
     position_t pos = { 0, 0 };
     tile_t tile = NULL;
     const uint32_t map_size = map->width * map->height;
-    const uint32_t amount = map_size * D_FOOD - *current_quantity;
+    const int32_t amount = map_size * D_FOOD - *current_quantity;
 
+    if (amount < 0)
+        return;
     DEBUG_PRINT("\tPutting in: %d food...", amount);
-    for (uint32_t i = 0; i < amount; i++) {
+    for (int32_t i = 0; i < amount; i++) {
         pos.x = rand() % map->width;
         pos.y = rand() % map->height;
         tile = get_tile_at_position(pos, map);

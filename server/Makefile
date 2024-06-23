@@ -45,7 +45,7 @@ __SRC_COMMANDS := commands.c \
 	unknown_command.c \
 	auth.c \
 	utils.c \
-	incantation_messages.c \
+	incantation_utils.c \
 
 __SRC_AI := forward.c \
 	right.c \
@@ -57,7 +57,8 @@ __SRC_AI := forward.c \
 	eject.c \
 	take.c \
 	set.c \
-	incantation.c \
+	incantation_start.c \
+	incantation_end.c \
 	broadcast.c \
 
 __SRC_GRAPHICAL := msz.c \
