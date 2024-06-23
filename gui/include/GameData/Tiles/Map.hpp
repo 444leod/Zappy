@@ -36,11 +36,21 @@ namespace gui {
             */
             std::uint32_t tileNbr() const { return (this->_size.x() * this->_size.y()); }
 
+            std::map<Vector2u, std::shared_ptr<Tile>> tiles() const { return this->_tiles; }
+
             /**
              * @brief Get the map size
              * @return Vector2u The map size
             */
             Vector2u size() const { return this->_size; }
+
+            /**
+             * @brief Get the tile at specific coordinates
+             * @param coordinates The coordinates of the tile
+             * @return Tile The tile
+             * @throw std::out_of_range If the coordinates are out of range
+            */
+            std::shared_ptr<Tile> at(Vector2i coordinates) const;
 
             /**
              * @brief Get the tile at specific coordinates
@@ -78,7 +88,7 @@ namespace gui {
 
         private:
             Vector2u _size = {0, 0};
-            std::map<Vector2u, std::shared_ptr<Tile>> _mapContent = {};
+            std::map<Vector2u, std::shared_ptr<Tile>> _tiles = {};
             std::queue<std::string> _playerConnexionQueue = {};
     };
 }

@@ -11,6 +11,7 @@
 #include "Mct.hpp"
 #include "Sgt.hpp"
 #include "Pnw.hpp"
+#include "CommandHandler.hpp"
 
 void gui::scenes::Loading::initialize(UNUSED gui::ILibrary& lib)
 {
@@ -123,8 +124,6 @@ void gui::scenes::Loading::onEnter(UNUSED IScene::State lastState, UNUSED gui::I
 
 void gui::scenes::Loading::onExit(UNUSED IScene::State nextState, UNUSED gui::ILibrary& lib)
 {
-    if (nextState == IScene::State::GAME) {
-        Mct().stage(_serverCli);
-    }
+    gui::CommandHandler::isLoaded = true;
 }
 

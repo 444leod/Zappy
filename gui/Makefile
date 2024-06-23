@@ -98,6 +98,7 @@ __CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Server
 __CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Status
 __CXXFLAGS += -I./include/Handler/Command/ -I./include/Handler/
 __CXXFLAGS += -I./include/Graphics
+__CXXFLAGS += -I./src/Core
 __CXXFLAGS += -I./src/display -I./src/display/scenes
 __CXXFLAGS += -I./src/display/animations
 __CXXFLAGS += -I./include/GameData/Entities/

@@ -8,10 +8,22 @@
 #include "Tiles/Tile.hpp"
 
 namespace gui {
-    void Tile::removeEntity(std::uint32_t id)
+    void Tile::removeEntity(std::uint32_t entityId)
     {
         for (auto it = this->_entities.begin(); it != this->_entities.end(); it++) {
-            if ((*it)->id() == id) {
+            if ((*it)->entityId() == entityId) {
+                this->_entities.erase(it);
+                return;
+            }
+        }
+        throw std::out_of_range("Entity not found");
+    }
+
+    void Tile::removeEntity(std::shared_ptr<AEntity> entity)
+    {
+
+        for (auto it = this->_entities.begin(); it != this->_entities.end(); it++) {
+            if ((*it)->entityId() == entity->entityId()) {
                 this->_entities.erase(it);
                 return;
             }
@@ -21,6 +33,8 @@ namespace gui {
 
     void Tile::draw(gui::ILibrary& lib)
     {
+        if (_offset.x() < -200 || _offset.y() < -200 || _offset.x() > 1100 || _offset.y() > 1100)
+            return;
         lib.display().draw(lib.textures().get("grass"), this->_offset.x(), this->_offset.y(), 0.5f);
         uint32_t y = 0;
         if (_rocks.linemate.quantity()) {
@@ -50,6 +64,14 @@ namespace gui {
         if (_food) {
             lib.display().print("food: " + std::to_string(_food), lib.fonts().get("ClashRoyale"), this->_offset.x(), this->_offset.y() + y, gui::Color(200, 200, 200, 255), 10);
             y += 15;
+        }
+    }
+
+    void Tile::setOffset(Vector2f offset)
+    {
+        _offset = offset;
+        for (auto& entity : _entities) {
+            entity->setTileDisplayOffset(_offset);
         }
     }
 }

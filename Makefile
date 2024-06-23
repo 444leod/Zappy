@@ -10,7 +10,7 @@ __GREEN=\033[0;32m
 __BLUE=\033[0;34m
 __BOLD=\033[1m
 __NC=\033[0m # No Color
-__INFO = ${__RED}[RESULT]${__NC}
+__INFO = ${__BLUE}[RESULT]${__NC}
 
 __NAME = zappy
 
