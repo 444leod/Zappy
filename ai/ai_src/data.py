@@ -1,10 +1,11 @@
 from dataclasses import dataclass, field
 from typing import List
+import uuid
 from enum import Enum
 
 """
 CONST VARIABLES representing the orientation of a player
-They are represented as tuples to facilitate the computation of the new position
+They are represented as tuples (x, y) to facilitate the computation of the new position
 """
 NORTH: tuple[int, int] = (-1, 0)
 EAST: tuple[int, int] = (0, -1)
@@ -89,8 +90,8 @@ class Collectibles():
             linemate=self.linemate + other.linemate,
             sibur=self.sibur + other.sibur,
             mendiane=self.mendiane + other.mendiane,
-              deraumere=self.deraumere + other.deraumere,
-          phiras=self.phiras + other.phiras,
+            deraumere=self.deraumere + other.deraumere,
+            phiras=self.phiras + other.phiras,
             thystame=self.thystame + other.thystame
         )
 
@@ -157,6 +158,8 @@ class PlayerInfo():
     inv: Collectibles = field(default_factory=lambda: Collectibles(food=10))
     pos: tuple[int, int] = (0, 0)
     orientation: tuple[int, int] = NORTH
+    old_behavior = None # ABehavior | None 
+    uuid: str = uuid.uuid4().hex
 
 @dataclass
 class TileContent():
@@ -251,3 +254,31 @@ class Map():
                 res += f"{bcolors.OKGREEN}{tile}{bcolors.ENDC}" if (x, y) == self.player_pos else f"{tile}"
             res += "\n"
         return res
+
+@dataclass
+class MessageContent():
+    """
+    Dataclass representing a message's content
+    Exists only if message is for ally
+    """
+    class MessageType(str, Enum):
+        LEADER_READY_FOR_INCANTATION = "LEADER_READY_FOR_INCANTATION" # Makes followers follow the leader
+        LEADER_LAUCHING_INCANTATION = "LEADER_LAUCHING_INCANTATION" # To inform non-followers that a incantion is being launched so they do not steal the loot
+        LEADER_ABANDONED_INCANTATION = "LEADER_ABANDONED_INCANTATION" # To inform followers that the incantation has been abandoned
+        LEADER_FAILED_INCANTATION = "LEADER_FAILED_INCANTATION" # To inform followers that the incantation has failed, makes them go back to their old behavior
+        LEADER_SUCCESSFUL_INCANTATION = "LEADER_SUCCESSFUL_INCANTATION" # To inform non-followers that the incantation has been successful, they can now loot in peace
+        FOLLOWER_READY_FOR_INCANTATION = "FOLLOWER_READY_FOR_INCANTATION" # To inform the leader that the follower is ready for the incantation
+        FOLLOWER_ABANDONED_INCANTATION = "FOLLOWER_ABANDONED_INCANTATION" # To inform the leader that the follower has abandoned the incantation
+    message_type: MessageType
+    sender_uuid: str
+    target_uuid: str
+    sender_level: int
+
+@dataclass
+class Message():
+    """
+    Dataclass representing a message
+    """
+    sender_direction: int
+    raw_content: str
+    message_content: MessageContent | None

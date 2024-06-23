@@ -2,12 +2,14 @@
 
 import sys
 from typing import List
+from json import dumps, loads
 from ai_src.connection_handler import ConnectionHandler
 from ai_src.config import Config, HelpException, ArgError
-from ai_src.data import PlayerInfo, Collectibles, Map, TileContent
-from ai_src.behaviors import LookingForward, TalkingWalker, Greg, Manual, Eric
+from ai_src.data import PlayerInfo, Collectibles, Map, TileContent, Message, MessageContent
+from ai_src.behaviors import Manual, ABehavior, Harvester, Distractor
 import ai_src.commands as cmd
 from ai.ai_src.utils import add_tuples, turn_left, turn_right
+import random as rd
 
 class Bot():
     def __init__(self, verbose: bool=False, traced: bool=False) -> None:
@@ -56,8 +58,9 @@ class Bot():
         self.map.tiles = [[TileContent() for _ in range(self.map.map_size[0])] for _ in range(self.map.map_size[1])]
         self.map.tiles[0][0].nb_players = 1
 
-        self.messages_received: List[tuple[int, str]] = [] # [(player_direction, message), ..]
-        self.messages_sent: List[str] = []
+        self.messages_received_buffer: List[Message] = []
+        self.messages_received: List[Message] = []
+        self.messages_sent: List[Message] = []
         self.cmd_sent: List[str] = []
         self.base_funcs = {
             "dead\n" : self.die,
@@ -65,16 +68,19 @@ class Bot():
             "Elevation": lambda: self.log("HANDLE ELEVATION"),
             "Current": self.level_up,
             "ko\n": lambda: self.log("FAILED ELEVATION"),
+            "Elevation": lambda: self.log("HANDLE ELEVATION"),
+            "Current": self.level_up,
+            "ko\n": lambda: self.log("FAILED ELEVATION"),
         }
-        self.current_behavior = Eric()
-    
+        self.current_behavior = (Manual() if self.conf.manual else Distractor() if rd.randint(0, 5) == 0 else Harvester())
+        self.player_info.old_behavior = self.current_behavior
+
     def run(self) -> None:
         """
         Main loop of the bot
         The only function that should be called from the outside
         """
         while True:
-            # self.log(self.map)
             self.behavior_logic()
             self.receive_command()
             self.handle_commands_sent()
@@ -103,7 +109,16 @@ class Bot():
         tab: List[str] = self.results[-1].split(" ")
         if (len(tab) != 3) or not (tab[1][:-1].isdigit()):
             return
-        self.messages_received.append((int(tab[1][:-1]), tab[2]))
+        try:
+            tmp: dict = loads(tab[2].replace("'", '"'))
+            message_content = MessageContent(message_type=MessageContent.MessageType(tmp.pop("message_type")), **tmp)
+        except:
+            message_content = None
+        self.messages_received_buffer.append(Message(
+            sender_direction=int(tab[1][:-1]),
+            raw_content=tab[2],
+            message_content=message_content
+        ))
 
     def level_up(self) -> None:
         """
@@ -115,10 +130,15 @@ class Bot():
         """
         Handle the bot's behavior
         """
-        cmd_to_send: cmd.ACommand = self.current_behavior.get_next_command(self.player_info, self.map, self.messages_received)
+        new_behavior: ABehavior | None = self.current_behavior.new_behavior(self.player_info, self.map, self.messages_received_buffer)
+        if new_behavior is not None and not self.conf.manual:
+            self.current_behavior = new_behavior
+        cmd_to_send: cmd.ACommand = self.current_behavior.get_next_command(self.player_info, self.map, self.messages_received_buffer)
         self.log(cmd_to_send.dump())
         self.cmd_sent.append(cmd_to_send.dump())
         self.com_handler.send_command(cmd_to_send.dump())
+        while self.messages_received_buffer != []:
+            self.messages_received.append(self.messages_received_buffer.pop(0))
 
     def receive_command(self) -> None:
         """
@@ -146,7 +166,6 @@ class Bot():
         self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players -= 1
         self.player_info.pos = add_tuples(self.player_info.pos, self.player_info.orientation)
         self.player_info.pos = (self.player_info.pos[0] % self.map.map_size[0], self.player_info.pos[1] % self.map.map_size[1])
-        self.log(self.player_info.pos)
         self.map.player_pos = self.player_info.pos
         self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players += 1
 
@@ -218,6 +237,15 @@ class Bot():
             self.log(e)
             self.log("Failed to incant")
 
+    def handle_broadcast(self) -> None:
+        """
+        Handle the broadcast command
+        """
+        print(self.results[-1])
+        res = cmd.Broadcast().interpret_result(self.results[-1])
+        self.messages_sent.append(res)
+        
+
     def handle_commands_sent(self) -> None:
         """
         Handle the commands sent by the bot
@@ -232,10 +260,10 @@ class Bot():
             case "Inventory": self.player_info.inv = Collectibles(**(cmd.Inventory().interpret_result(self.results[-1])))
             case "Look": self.handle_look()
             case "Forward": self.handle_forward()
-            case "Right": self.player_info.orientation= turn_right(self.player_info.orientation)
+            case "Right": self.player_info.orientation = turn_right(self.player_info.orientation)
             case "Left": self.player_info.orientation = turn_left(self.player_info.orientation)
-            case "Broadcast": self.messages_sent.append(cmd.Broadcast().interpret_result(self.results[-1]))
-            case "Connect_nbr": cmd.ConnectNbr().interpret_result(self.results[-1])
+            case "Broadcast": self.handle_broadcast()
+            case "Connect_nbr": self.nb_eggs = int(self.results[-1]) if self.results[-1].isdigit() else self.nb_eggs
             case "Eject": self.handle_eject()
             case "Fork": self.handle_fork()
             case "Take": self.handle_take(cmd_sup)

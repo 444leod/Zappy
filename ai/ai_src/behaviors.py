@@ -1,41 +1,53 @@
-import ai_src.commands as cmd
 from typing import List
-from ai_src.data import PlayerInfo, Map, Collectibles, TileContent, LEVEL_UP_REQ, TileContent
+from enum import Enum
+from json import dumps
+import ai_src.commands as cmd
+from ai_src.data import PlayerInfo, Map, Collectibles, TileContent, Message, MessageContent, LEVEL_UP_REQ, NORTH, EAST, SOUTH, WEST
 import time
 
-NORTH: tuple[int, int] = (-1, 0)
-EAST: tuple[int, int] = (0, -1)
-SOUTH: tuple[int, int] = (1, 0)
-WEST: tuple[int, int] = (0, 1)
-
-
 class ABehavior:
+    # Public methods used by the bot to get the next command
     def __init__(self):
         """
         Abstract class for behaviors
         """
         self.command_stack: List[cmd.ACommand] = []
+        self.inv_count: int = 0
 
-    def get_next_command(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> cmd.ACommand:
+    def get_next_command(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> cmd.ACommand:
         """
         Get the next command to execute from the stack
         """
         if not self.command_stack:
-            self.generate_command_stack(player_info, map, messages)
+            self.generate_command_stack(player_info, map, new_messages)
         return self.command_stack.pop(0)
     
-    def new_behavior(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> str | None:
+    def new_behavior(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> 'ABehavior': # None | ABehavior:
         """
         Get the name of the new behavior to switch to or None if no switch is needed
         """
+        def analyse_message(new_messages: List[Message]) -> bool:
+            for i in range(1, len(new_messages) + 1):
+                mess_content = new_messages[-i].message_content
+                if mess_content == None:
+                    continue
+                if mess_content.message_type == MessageContent.MessageType.LEADER_READY_FOR_INCANTATION and mess_content.sender_level == player_info.level: 
+                    return True
+        if player_info.inv.food < 4:
+            return None
+
+        if analyse_message(new_messages):
+            return IncantationFollower()
+        elif self.enough_ressources_to_incant(player_info, map):
+            return IncantationLeader()
         return None
 
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
+    # Private utility methods that can be used by any behavior
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> None:
         """
         Generate the command stack, should be overriden by the child class
         """
         raise NotImplementedError("You are not supposed to override this method")
-    
     
     def collect_all_on_tiles(self, pos :tuple[int,int], map: Map) -> None:
         """
@@ -99,9 +111,6 @@ class ABehavior:
                         pos = (pos - 1) % max
                     else:
                         pos = (pos + 1) % max
-
-
-
             
         pos_copy = player_info.pos
         orientiation_copy = player_info.orientation
@@ -136,9 +145,100 @@ class ABehavior:
                 self.turn(orientiation_copy, WEST)
                 orientiation_copy = WEST
             find_path(pos_copy[1], point[1], map_size[1], crossed, sup)
-        
 
+    def refresh_inventory(self, nb_calls) -> None:
+        """
+        Add an inventory command every x call
+        """
+        self.inv_count += 1
+        if self.inv_count == nb_calls:
+            self.command_stack.append(cmd.Inventory())
+            self.inv_count = 0
+
+    def collect_food(self, player_info: PlayerInfo, map: Map) -> None:
+        """
+        Collect food from the tile
+        """
+        for _ in range(map.tiles[player_info.pos[0]][player_info.pos[1]].collectibles.food):
+            self.command_stack.append(cmd.Take("food"))
     
+    def collect_all_rocks(self, player_info: PlayerInfo, map: Map) -> None:
+        """
+        Collect all rocks from the tile
+        """
+        to_collect: dict[str, int] = map.tiles[player_info.pos[0]][player_info.pos[1]].collectibles.__dict__
+        to_collect.pop("food")
+        for rock, amount in to_collect.items():
+            for _ in range(amount):
+                self.command_stack.append(cmd.Take(rock))
+
+    def set_missing_rocks(self, player_info: PlayerInfo, map: Map) -> None:
+        """
+        Set the missing rocks to incant
+        """
+        current_tile: TileContent = map.tiles[player_info.pos[0]][player_info.pos[1]]
+        rocks_to_set: Collectibles = LEVEL_UP_REQ[player_info.level].collectibles - current_tile.collectibles
+        rocks_to_set.neg_to_zero()
+        for rock, amount in rocks_to_set.__dict__.items():
+            for _ in range(amount):
+                self.command_stack.append(cmd.Set(rock))
+
+    def go_to_direction(self, direction: int) -> None:
+        """
+        Go to a certain direction
+        Note: the direction is 0 to 8
+        Exemple when the player's orientation is East:
+            x x x       4 3 2
+            x > x ----> 5 0 1
+            x x x       6 7 8
+        """
+        print(f"Going to direction {direction}")
+        if direction == 0:
+            print("ALERT: The player is already at the right position")
+            self.command_stack.append(cmd.ConnectNbr()) # Instant Command, useful for waiting
+            return
+        
+        if not (0 < direction < 9):
+            print("ALERT: somethin went really wrong with the direction")
+            self.command_stack.append(cmd.ConnectNbr()) # Instant Command, useful for waiting
+            return
+                    
+        if direction in [3, 4]:
+            self.command_stack.append(cmd.Left())
+        
+        if direction in [7, 8]:
+            self.command_stack.append(cmd.Right())
+        
+        if direction in [5, 6]:
+            self.command_stack.append(cmd.Right())
+            self.command_stack.append(cmd.Right())
+
+        self.command_stack.append(cmd.Forward())
+
+    def enough_ressources_to_incant(self, player_info: PlayerInfo, map: Map) -> bool:
+        """
+        Check if the player is ready to incant in terms of ressources in his inv and on the tile
+        """
+        current_tile: TileContent = map.tiles[player_info.pos[0]][player_info.pos[1]]
+        total_rocks: Collectibles = current_tile.collectibles + player_info.inv
+        enough_rocks: bool = total_rocks >= LEVEL_UP_REQ[player_info.level].collectibles
+        return enough_rocks and player_info.inv.food >= 6
+
+    def easy_evolve(self, player_info: PlayerInfo, map: Map) -> None:
+        """
+        Try to evolve to the next level if the requirements are met
+        !!! ASSUMES THAT THE PLAYERS ARE THE SAME LEVEL !!!
+        """
+        current_tile: TileContent = map.tiles[player_info.pos[0]][player_info.pos[1]]
+        enough_players: bool = current_tile.nb_players >= LEVEL_UP_REQ[player_info.level].nb_players
+
+        if enough_players and self.enough_ressources_to_incant(player_info, map):
+            rocks_to_set: Collectibles = LEVEL_UP_REQ[player_info.level].collectibles - current_tile.collectibles
+            rocks_to_set.neg_to_zero()
+            for rock, amount in rocks_to_set.__dict__.items():
+                for _ in range(amount):
+                    self.command_stack.append(cmd.Set(rock))
+            self.command_stack.append(cmd.Incantation())
 
     def collect_food(self, player_info: PlayerInfo, map: Map) -> None:
         """
@@ -183,41 +283,217 @@ class LookingForward(ABehavior):
         """
         super().__init__()
 
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> None:
         """
         Generate the command stack for the LookingForward behavior
         """
         super().collect_food(player_info, map)
-        super().easy_evolve(player_info, map)
         super().collect_all_rocks(player_info, map)
         self.command_stack.append(cmd.Look())
         self.command_stack.append(cmd.Forward())
+        self.command_stack.append(cmd.Inventory())
 
-class TalkingWalker(ABehavior):
+class Manual(ABehavior):
     def __init__(self):
         """
-        TalkingWalker behavior, dummy behavior that talks and moves
+        Manual behavior, the player is controlled by the user
         """
         super().__init__()
+        print("r for right, l for left, f for forward, i for inventory, t>item for take, s>item for set, I for incantation, L for look, b for broadcast")
 
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> None:
         """
-        Generate the command stack for the TalkingWalker behavior
+        Generate a command by the user
         """
-        self.command_stack.append(cmd.Broadcast("Hello"))
-        self.command_stack.append(cmd.Forward())
-        self.command_stack.append(cmd.Forward())
-        self.command_stack.append(cmd.Right())
+        while True:
+            tab = input("Enter a command: ").split(">")
+            if len(tab) == 1:
+                user_input = tab[0]
+                rest = ""
+            elif len(tab) == 2:
+                user_input, rest = tab
+            else:
+                continue
+            cmd_to_send: cmd.ACommand = None
+            match user_input:
+                case "r": cmd_to_send = cmd.Right(); break
+                case "l": cmd_to_send = cmd.Left(); break
+                case "f": cmd_to_send = cmd.Forward(); break
+                case "i": cmd_to_send = cmd.Inventory(); break
+                case "t": cmd_to_send = cmd.Take(rest); break
+                case "s": cmd_to_send = cmd.Set(rest); break
+                case "I": cmd_to_send = cmd.Incantation(); break
+                case "L": cmd_to_send = cmd.Look(); break
+                case "b": cmd_to_send = cmd.Broadcast(rest); break
+        
+        self.command_stack.append(cmd_to_send)
 
-
-
-class Greg(ABehavior):
+class IncantationLeader(ABehavior):
     def __init__(self):
         """
-        Greg behavior, take all ressouces he find on map
+        IncantationLeader behavior, the player is the leader of the incantation
         """
         super().__init__()
+        self.players_ready_to_level_up: List[str] = []
+        self.reset: bool = False
+        self.rocks_set = False
 
+    def new_behavior(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> ABehavior:
+        """
+        Check if the player should switch to another behavior
+        """
+        if (player_info.inv.food < 3 or self.reset) and self.command_stack == []:
+            return player_info.old_behavior
+        return None
+
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> None:
+        """
+        Generate the command stack for the IncantationLeader behavior
+        """
+        super().refresh_inventory(10)
+        if not self.rocks_set:
+            self.set_missing_rocks(player_info, map)
+            self.rocks_set = True
+        if player_info.uuid not in self.players_ready_to_level_up:
+            self.players_ready_to_level_up.append(player_info.uuid)
+        for message in new_messages:
+            mess_content = message.message_content
+            if mess_content == None:
+                continue
+            if (mess_content.sender_level == player_info.level
+                and mess_content.target_uuid == player_info.uuid):
+                if (mess_content.message_type == MessageContent.MessageType.FOLLOWER_READY_FOR_INCANTATION
+                    and mess_content.sender_uuid not in self.players_ready_to_level_up):
+                    self.players_ready_to_level_up.append(mess_content.sender_uuid)
+                if (mess_content.message_type == MessageContent.MessageType.FOLLOWER_ABANDONED_INCANTATION
+                    and mess_content.sender_uuid in self.players_ready_to_level_up):
+                    self.players_ready_to_level_up.remove(mess_content.sender_uuid)
+
+        if player_info.inv.food < 4:
+            self.command_stack.append(cmd.Broadcast(dumps(vars(MessageContent(
+                message_type=MessageContent.MessageType.LEADER_ABANDONED_INCANTATION,
+                sender_uuid=player_info.uuid,
+                sender_level=player_info.level,
+                target_uuid=""
+            )))))
+
+        if len(self.players_ready_to_level_up) >= LEVEL_UP_REQ[player_info.level].nb_players:
+            self.reset = True
+            self.command_stack.append(cmd.Broadcast(dumps(vars(MessageContent(
+                message_type=MessageContent.MessageType.LEADER_LAUCHING_INCANTATION,
+                sender_uuid=player_info.uuid,
+                sender_level=player_info.level,
+                target_uuid=""
+            )))))
+        self.command_stack.append(cmd.Incantation())
+        self.command_stack.append(cmd.Broadcast(dumps(vars(MessageContent(
+            message_type=MessageContent.MessageType.LEADER_READY_FOR_INCANTATION,
+            sender_uuid=player_info.uuid,
+            sender_level=player_info.level,
+            target_uuid=""
+        )))))
+
+class IncantationFollower(ABehavior):
+    class State(Enum):
+        """
+        Enum for the state of the IncantationFollower
+        """
+        MOVING = 0
+        WAITING = 1
+        ARRIVED = 2
+        ABANDONED = 3
+        FINISHED = 4
+
+    def __init__(self):
+        """
+        IncantationFollower behavior, the player is a follower of the incantation
+        """
+        super().__init__()
+        self.state: IncantationFollower.State = IncantationFollower.State.MOVING
+        self.destination_direction: int = 0
+        self.starting_level: int = 0
+        self.leader_uuid: str = ""
+
+    def new_behavior(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> ABehavior:
+        if self.state in [IncantationFollower.State.ABANDONED, IncantationFollower.State.FINISHED]:
+            return player_info.old_behavior
+        return None
+
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> None:
+        """
+        Generate the command stack for the IncantationFollower behavior
+        """
+        def check_position() -> bool:
+            """
+            Check if the player is at the right position (on top of the IncantationLeader)
+            """
+            for i in range(1, len(new_messages) + 1):
+                mess = new_messages[-i]
+                mess_content = mess.message_content
+                if mess_content == None:
+                    continue
+                if (mess_content.sender_level == player_info.level
+                    and mess_content.message_type == MessageContent.MessageType.LEADER_READY_FOR_INCANTATION):
+                    self.leader_uuid = mess_content.sender_uuid if self.leader_uuid == "" else self.leader_uuid
+                    if mess_content.sender_uuid == self.leader_uuid:
+                        self.destination_direction = mess.sender_direction
+                        return True if mess.sender_direction == 0 else False
+                    else:
+                        continue
+            
+        def leader_abandoned() -> bool:
+            """
+            Check if the leader abandoned the incantation
+            """
+            if self.leader_uuid == "":
+                return False
+            for message in new_messages:
+                mess_content = message.message_content
+                if mess_content == None:
+                    continue
+                if (mess_content.sender_uuid == self.leader_uuid
+                    and mess_content.message_type == MessageContent.MessageType.LEADER_ABANDONED_INCANTATION):
+                    return True
+            return False
+
+        self.starting_level = player_info.level if self.starting_level == 0 else self.starting_level
+
+        if self.starting_level != player_info.level or leader_abandoned() :
+            self.state = IncantationFollower.State.FINISHED
+        elif player_info.inv.food < 4:
+            self.state = IncantationFollower.State.ABANDONED
+        elif check_position():
+            self.state = IncantationFollower.State.ARRIVED
+
+        match self.state:
+            case IncantationFollower.State.MOVING: super().go_to_direction(self.destination_direction)
+            case IncantationFollower.State.WAITING:
+                if not check_position(): super().go_to_direction(self.destination_direction)
+                self.command_stack.append(cmd.ConnectNbr())
+            case IncantationFollower.State.ARRIVED:
+                self.command_stack.append(cmd.Broadcast(dumps(vars(MessageContent(
+                    message_type=MessageContent.MessageType.FOLLOWER_READY_FOR_INCANTATION,
+                    sender_uuid=player_info.uuid,
+                    sender_level=player_info.level,
+                    target_uuid=self.leader_uuid
+                )))))
+                self.state = IncantationFollower.State.WAITING
+            case IncantationFollower.State.ABANDONED:
+                self.command_stack.append(cmd.Broadcast(dumps(vars(MessageContent(
+                    message_type=MessageContent.MessageType.FOLLOWER_ABANDONED_INCANTATION,
+                    sender_uuid=player_info.uuid,
+                    sender_level=player_info.level,
+                    target_uuid=self.leader_uuid
+                )))))
+            case IncantationFollower.State.FINISHED: self.command_stack.append(cmd.Inventory()); return
+        super().refresh_inventory(5)
+
+class Harvester(ABehavior):
+    def __init__(self):
+        """
+        Harvester behavior, take all ressouces he find on map
+        """
+        super().__init__()
 
     def go_to_ressources(self, player_info: PlayerInfo, map: Map):
         """
@@ -276,23 +552,20 @@ class Greg(ABehavior):
             else:
                 self.command_stack.append(cmd.Forward())
                 self.command_stack.append(cmd.Look())
-            
-            
-        
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map) -> None:
+
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> None:
         """
-        Generate the command stack for the Greg behavior
+        Generate the command stack for the Harvester behavior
         """
         self.go_to_ressources(player_info, map)
 
-class Eric(ABehavior):
+class Distractor(ABehavior):
     def __init__(self):
         """
-        Eric behavior, Crazy villagers that want to disturb other team
+        Distractor behavior, Distractor villagers that want to disturb other team
         """
         super().__init__()
-        self.messages_received: List[str] = []
-        self.team_message: List[str] = ["HOGRIDAAAA", "HELLO"]
+        self.enemies_messages: List[str] = ["HOGRIDAAAA"]
     
     def go_to_ressources(self, player_info: PlayerInfo, map: Map):
         """
@@ -300,8 +573,8 @@ class Eric(ABehavior):
         """
         def find_nearest_resource(player_pos: tuple[int, int], tiles: List[List[TileContent]]) -> tuple[str, tuple[int, int]]:
             """
-            Trouve la ressource la plus proche à partir de la position du joueur.
-            Retourne le type de la ressource et sa position.
+            Finds the nearest resource from the player's position.
+            Returns the type of the resource and its position.
             """
             max_row = len(tiles)
             max_col = len(tiles[0]) if max_row > 0 else 0
@@ -352,37 +625,17 @@ class Eric(ABehavior):
                 self.command_stack.append(cmd.Forward())
                 self.command_stack.append(cmd.Look())
 
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> None:
         """
-        Generate the command stack for the Eric behavior
+        Generate the command stack for the Distractor behavior
         """
-        def is_team_message(message: str) -> bool:
-            """
-            Ignore the team message
-            """
-            message = message.replace(" ", "")
-            message = message.replace("\n", "")
-            return message in self.team_message
-        def sort_messages(messages: List[tuple[int, str]]) -> None:
-            """
-            Sort the messages so eric don't always say the same
-            """
-            if len(messages) == 0:
-                return
-            for message in messages:
-                if message[1] not in self.messages_received and not is_team_message(message[1]):
-                    message = list(message)
-                    message[1] = message[1].replace(" ", "")
-                    message[1] = message[1].replace("\n", "")
-                    self.messages_received.append(message[1])
-                    return
-        sort_messages(messages)
-        if len(self.messages_received) != 0:
-            self.command_stack.append(cmd.Broadcast(self.messages_received[0]))
-            self.messages_received.remove(self.messages_received[0])
+
+        self.enemies_messages.extend([message.raw_content for message in new_messages if message.message_content is None and message not in self.enemies_messages])
+
+        if len(self.enemies_messages) != 0:
+            self.command_stack.append(cmd.Broadcast(self.enemies_messages[0]))
+            self.enemies_messages.remove(self.enemies_messages[0])
         self.go_to_ressources(player_info, map)
-
-
 
 class Manual(ABehavior):
     def __init__(self):
@@ -392,7 +645,7 @@ class Manual(ABehavior):
         super().__init__()
         print("r for right, l for left, f for forward, i for inventory, t>item for take, s>item for set, I for incantation, L for look, b for broadcast")
 
-    def generate_command_stack(self, player_info: PlayerInfo, map: Map, messages: List[tuple[int, str]]) -> None:
+    def generate_command_stack(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> None:
         """
         Generate a command by the user
         """
