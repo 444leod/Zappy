@@ -69,31 +69,6 @@ The Game scene handles the main gameplay, rendering the game state and managing 
 - **onExit()**: Executes actions when exiting the Game scene.
 
 ### Game Data
-The game data component stores and manages all the information related to the current game session. This includes player information, game state, and other relevant data.
-
-### Graphics
-The graphics component is responsible for rendering images and playing sounds. It interacts with the graphical libraries loaded by the `GraphicalLibraryLoader`.
-
-#### Key Classes and Interfaces:
-- **ILibrary**: Interface for the graphical library, providing access to textures, sounds, music, fonts, and display functions.
-- **ITextureManager**: Manages textures used in the application.
-- **ISoundManager**: Manages sound effects.
-- **IMusicManager**: Manages background music.
-- **IFontManager**: Manages fonts used for rendering text.
-- **IDisplay**: Interface for the display, providing functions to draw textures, print text, and manage the display window.
-
-#### SFML2d
-The `SFML2d` class is an implementation of the `ILibrary` interface using the SFML library for 2D graphics rendering. It handles the window creation, drawing operations, and resource management.
-
-##### Key Functions:
-- **initialize()**: Initializes the SFML window and resources.
-- **clear()**: Clears the display with a specified color.
-- **draw()**: Draws textures to the display.
-- **print()**: Prints text to the display using specified fonts and colors.
-- **measure()**: Measures the size of a string when printed.
-- **flush()**: Flushes the drawn content to the display.
-- **_resize# GameData Manager
-
 The GameData class is a crucial part of the zappy architecture. It is designed to hold and manage all the essential data related to the game state. This class is part of the gui namespace.
 
 ### Features
@@ -121,6 +96,29 @@ Here are the main features and responsibilities of the GameData class:
     The class provides methods to display command errors (displayCommandParameter), server messages (displayServerMessage), and unknown commands (displayUnknownCommand).
 
 The GameData class is a central hub for managing game data, making it easier to maintain and update the game state.
+
+### Graphics
+The graphics component is responsible for rendering images and playing sounds. It interacts with the graphical libraries loaded by the `GraphicalLibraryLoader`.
+
+#### Key Classes and Interfaces:
+- **ILibrary**: Interface for the graphical library, providing access to textures, sounds, music, fonts, and display functions.
+- **ITextureManager**: Manages textures used in the application.
+- **ISoundManager**: Manages sound effects.
+- **IMusicManager**: Manages background music.
+- **IFontManager**: Manages fonts used for rendering text.
+- **IDisplay**: Interface for the display, providing functions to draw textures, print text, and manage the display window.
+
+#### SFML2d
+The `SFML2d` class is an implementation of the `ILibrary` interface using the SFML library for 2D graphics rendering. It handles the window creation, drawing operations, and resource management.
+
+##### Key Functions:
+- **initialize()**: Initializes the SFML window and resources.
+- **clear()**: Clears the display with a specified color.
+- **draw()**: Draws textures to the display.
+- **print()**: Prints text to the display using specified fonts and colors.
+- **measure()**: Measures the size of a string when printed.
+- **flush()**: Flushes the drawn content to the display.
+- **_resize# GameData Manager
 
 # User Input Guide
 
