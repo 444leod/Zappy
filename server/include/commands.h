@@ -26,6 +26,7 @@ typedef struct command_s {
 
 extern const command_t COMMANDS[];
 extern const command_t AUTHENTIFICATION_COMMAND;
+extern const command_t UNKNOWN_COMMAND;
 
 ///////////////////////////////////////////////////////////////////////////////
 // GRAPHICAL COMMANDS

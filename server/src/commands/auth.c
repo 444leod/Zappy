@@ -150,6 +150,18 @@ static void try_spawn_player(char **args, const client_t client,
     queue_to_graphical(get_new_player_string(client->player));
 }
 
+static void send_players(const client_t client, client_list_t players)
+{
+    char *new_player_string;
+
+    while (players) {
+        new_player_string = get_new_player_string(players->client->player);
+        queue_buffer(client, new_player_string);
+        my_free(new_player_string);
+        players = players->next;
+    }
+}
+
 /**
  * @brief Connect a graphical client
  * @details Connect a graphical client to the server
@@ -160,8 +172,6 @@ static void try_spawn_player(char **args, const client_t client,
 static void connect_graphical(const client_t client,
     const server_info_t server_info)
 {
-    client_list_t players = get_clients_by_type(AI);
-    char *new_player_string;
     char *map_size_string = get_map_size_string(server_info);
 
     client->type = GRAPHICAL;
@@ -169,12 +179,7 @@ static void connect_graphical(const client_t client,
     queue_buffer(client, "ok");
     queue_buffer(client, map_size_string);
     my_free(map_size_string);
-    while (players) {
-        new_player_string = get_new_player_string(players->client->player);
-        queue_buffer(client, new_player_string);
-        my_free(new_player_string);
-        players = players->next;
-    }
+    send_players(client, get_clients_by_type(AI));
 }
 
 /**

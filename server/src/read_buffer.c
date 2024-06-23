@@ -69,7 +69,6 @@ static bool is_read_special_case(const client_t client,
 {
     if (valread <= 0) {
         remove_client(client->fd);
-        client->fd = -1;
         if (valread < 0)
             printf("Read failed with fd %d: %s\n",
                 client->fd, strerror(errno));
@@ -77,6 +76,7 @@ static bool is_read_special_case(const client_t client,
             queue_to_graphical(get_player_death_string(client->player));
             remove_from_list((void *)client,
                 (node_t *)&client->player->team->players);
+        client->fd = -1;
         }
         return true;
     }

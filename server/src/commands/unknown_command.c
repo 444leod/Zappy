@@ -22,8 +22,12 @@
 void unknown_command(UNUSED char **args, client_t client,
     UNUSED server_info_t server_info)
 {
-    char *escaped_string = get_escaped_string(args[0]);
+    char *escaped_string;
 
+    if (tablen((const void **)args) == 0)
+        escaped_string = my_strdup("(null)");
+    else
+        escaped_string = get_escaped_string(args[0]);
     printf("Client %d: Unknown command (%s)\n", client->fd,
         escaped_string);
     my_free(escaped_string);
