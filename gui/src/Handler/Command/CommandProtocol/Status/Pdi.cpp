@@ -25,8 +25,6 @@ void gui::Pdi::receive(std::string command, std::shared_ptr<GameData> gameData)
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
 
-    std::cout << "Pdi command received: " << playerId << std::endl;
-
     if (!gameData->playerExists(playerId))
         throw std::invalid_argument("Player does not exist");
 

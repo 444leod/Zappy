@@ -78,6 +78,9 @@ void gui::scenes::Game::initialize(UNUSED gui::ILibrary& lib)
         lib.textures().load(consumable, spec);
     }
 
+    spec.graphical.subrect = std::nullopt;
+    spec.graphical.path = "gui/assets/info.png";
+    lib.textures().load("info", spec);
 }
 
 void gui::scenes::Game::_updateTilePos(UNUSED gui::ILibrary& lib, UNUSED gui::KeyCode key)
@@ -146,10 +149,16 @@ void gui::scenes::Game::onKeyPressed(gui::ILibrary& lib, gui::KeyCode key, UNUSE
             break;
         }
         case gui::KeyCode::ESCAPE:
-            _gameInfo = false;
+            if (_gameInfo)
+                _gameInfo = false;
+            else if (_usage)
+                _usage = false;
             break;
         case gui::KeyCode::M:
             this-> _areMessagesDisplayed = !this->_areMessagesDisplayed;
+            break;
+        case gui::KeyCode::I:
+            _usage = !_usage;
             break;
         default:
             break;
@@ -329,6 +338,10 @@ void gui::scenes::Game::_displayOverlay(gui::ILibrary& lib)
 
 void gui::scenes::Game::draw(gui::ILibrary& lib)
 {
+    if (_usage) {
+        lib.display().draw(lib.textures().get("info"), 0, 0, 1);
+        return;
+    }
     _displayMap(lib);
     _displayOverlay(lib);
 }

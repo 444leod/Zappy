@@ -31,7 +31,6 @@ void gui::Pie::receive(std::string command, std::shared_ptr<GameData> gameData)
         throw std::invalid_argument("Invalid incantation result.");
     auto players = gameData->getPlayerById(result);
     if (players.has_value()) {
-        std::cout << "Incantation result: " << result << std::endl;
         if (result == 1) {
             players.value()->increaseLevel();
             players.value()->updateEvolutionStatus(true);

@@ -43,6 +43,7 @@ namespace gui {
                 bool _gameInfo = true;
                 gui::Vector2u _tileInfo = {0, 0};
                 bool _areMessagesDisplayed = false;
+                bool _usage = false;
         };
     }
 }

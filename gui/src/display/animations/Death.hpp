@@ -27,7 +27,6 @@ namespace gui::animations {
             float _scale = 0.5f;
             std::string _skin;
             Vector2f _pos;
-            
     };
 }
 

@@ -54,8 +54,6 @@ void gui::Pnw::receive(std::string command, std::shared_ptr<GameData> gameData)
     newPlayer->setSkin(teamSkin.first);
     newPlayer->setTeamColor(teamSkin.second);
 
-    std::cout << "New player created with id: " << playerId << " at position: " << x << ", " << y << " with orientation: " << orientation << " and level: " << level << " for team: " << teamName << std::endl;
-
     std::srand(std::time(nullptr));
     newPlayer->setRandomOffset(Vector2f(static_cast<float>(rand() % 30), (rand() % 30)));
 }

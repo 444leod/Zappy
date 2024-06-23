@@ -55,6 +55,5 @@ void gui::Enw::receive(std::string command, std::shared_ptr<GameData> gameData)
 
         std::srand(std::time(nullptr));
         egg->setRandomOffset(Vector2f(static_cast<float>(rand() % 30), (rand() % 30)));
-        std::cout << "Egg " << eggId << " laid by player " << playerId << " at position: " << x << ", " << y << std::endl;
     }
 }
