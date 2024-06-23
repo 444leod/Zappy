@@ -69,6 +69,7 @@ class Look(ACommand):
             return TileContent(collectibles=collectibles, nb_players=nb_players)
 
         super().interpret_result(res)
+        print(res)
         tab: List[str] = res.strip().removeprefix('[').removesuffix(']').split(',')
         vision: dict[str, TileContent] = {}
         n: int = 1
@@ -76,9 +77,13 @@ class Look(ACommand):
         while tab:
             vision[key] = []
             for _ in range(n):
-                vision[key].append(str_to_tile(tab.pop(0)))
+                try:
+                    vision[key].append(str_to_tile(tab.pop(0)))
+                except:
+                    break
             n += 2
             key += 1
+        print(vision)
         return vision
 
 class Inventory(ACommand):
@@ -96,7 +101,9 @@ class Inventory(ACommand):
 
 class Broadcast(ACommand):
     def __init__(self, message: str = "") -> None:
-        super().__init__(f"Broadcast {message}")
+        # Remove spaces from the message as they cause a ko
+        mess = message.replace(' ', '').replace('\n', '').replace('"', "'")
+        super().__init__(f"Broadcast {mess}")
 
 class ConnectNbr(ACommand):
     def __init__(self) -> None:
