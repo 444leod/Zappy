@@ -7,8 +7,10 @@
 
 #include "Client.hpp"
 #include <SFML/System/Time.hpp>
+#include <iostream>
 
-gui::ntw::Client::Client(uint16_t port) noexcept : _port(port)
+gui::ntw::Client::Client(std::string host, uint16_t port) noexcept
+    : _host(host), _port(port)
 {
 }
 
@@ -20,11 +22,12 @@ gui::ntw::Client::~Client()
 
 void gui::ntw::Client::connectToServer()
 {
-    sf::Socket::Status status = _socket.connect("localhost", _port, sf::seconds(5));
+    std::cout << "Connecting to: " << _host << ":" << _port << std::endl;
+    sf::Socket::Status status = _socket.connect(_host, _port, sf::seconds(5));
     auto now = std::chrono::system_clock::now();
 
     if (status != sf::Socket::Done)
-        throw ClientException("Failed to connect to server (ip: localhost, port: " + std::to_string(_port) + ")");
+        throw ClientException("Failed to connect to server (ip: " + _host + ", port: " + std::to_string(_port) + ")");
 
     _socket.setBlocking(false);
     _connected = true;
@@ -47,12 +50,6 @@ void gui::ntw::Client::sendRequests(std::optional<std::chrono::milliseconds> tim
         throw ClientNotConnectedException();
     if (_requests.empty())
         throw ClientException("No message to send");
-    std::string fullRequest;
-
-    for (const std::string& request : _requests)
-        fullRequest += request;
-
-    std::size_t messageLength = fullRequest.size();
     sf::Socket::Status status;
     auto now = std::chrono::system_clock::now();
     std::chrono::milliseconds duration;
@@ -60,7 +57,7 @@ void gui::ntw::Client::sendRequests(std::optional<std::chrono::milliseconds> tim
     while (!_requests.empty()) {
         std::size_t sent;
         const std::string& request = _requests.front();
-        status = _socket.send(request.c_str(), messageLength, sent);
+        status = _socket.send(request.c_str(), request.size(), sent);
         duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - now);
         if (status == sf::Socket::Done) {
             _requests.erase(_requests.begin());
@@ -99,8 +96,9 @@ bool gui::ntw::Client::receive()
     char buffer[1024];
     std::size_t received;
     bool hasReceived = false;
+    sf::Socket::Status receiveResult = _socket.receive(buffer, sizeof(buffer), received);
 
-    while (_socket.receive(buffer, sizeof(buffer), received) == sf::Socket::Done) {
+    while (receiveResult == sf::Socket::Done) {
         _buffer.append(buffer, received);
         std::size_t pos = _buffer.find('\n');
         while (pos != std::string::npos) {
@@ -109,7 +107,10 @@ bool gui::ntw::Client::receive()
             pos = _buffer.find('\n');
         }
         hasReceived = true;
+        receiveResult = _socket.receive(buffer, sizeof(buffer), received);
     }
+    if (receiveResult == sf::Socket::Disconnected)
+        throw ClientNotConnectedException();
     return hasReceived;
 }
 
@@ -122,11 +123,11 @@ void gui::ntw::Client::disconnect()
     _connected = false;
 }
 
-const std::string& gui::ntw::Client::popResponse()
+const std::string gui::ntw::Client::popResponse()
 {
     if (_responses.empty())
         throw ClientException("No message to pop");
-    std::string& message = _responses.front();
+    std::string message = _responses.front();
 
     _responses.erase(_responses.begin());
     return message;

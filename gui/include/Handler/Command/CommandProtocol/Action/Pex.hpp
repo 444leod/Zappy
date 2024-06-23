@@ -17,7 +17,7 @@ namespace gui {
              * @param client The client
              * @param parameters The parameters
             */
-            void stage(ntw::Client &client, std::string parameters = "") override;
+            void stage(std::shared_ptr<ntw::Client> client, std::string parameters = "") override;
 
             /**
              * @brief The command Pex receives when a player is expulsed from a tile
@@ -26,6 +26,6 @@ namespace gui {
              * @param command The command given by the server
              * @param gameData The game data
             */
-            void receive(std::string command, GameData &gameData) override;
+            void receive(std::string command, std::shared_ptr<GameData> gameData) override;
     };
 }

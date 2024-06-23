@@ -13,11 +13,10 @@
 #include "debug.h"
 #include "select_wrapper.h"
 #include "commands_utils.h"
-#include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <sys/select.h>
-#include <sys/wait.h>
+#include <time.h>
+#include <stdlib.h>
 
 /**
  * @brief callback for SIGINT
@@ -195,6 +194,7 @@ int server(const int argc, const char *argv[])
     server_info_t server_info;
 
     errno = 0;
+    srand(time(NULL));
     DEBUG_PRINT("Zappy server started\n");
     signal(2, handle_sigint);
     check_args(argc, argv);

@@ -146,6 +146,10 @@ static struct timeval *get_timeout(client_list_t clients,
     }
     if (timeout->tv_sec == -1)
         return NULL;
+    if (timeout->tv_sec < 0 || timeout->tv_usec < 0) {
+        timeout->tv_sec = 0;
+        timeout->tv_usec = 0;
+    }
     return timeout;
 }
 

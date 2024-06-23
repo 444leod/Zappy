@@ -52,16 +52,16 @@ Test(ppo, valid_command_multiple_players)
     char orientationChar = '0';
     switch (ori) {
         case NORTH:
-            orientationChar = 'N';
+            orientationChar = '1';
             break;
         case SOUTH:
-            orientationChar = 'S';
+            orientationChar = '3';
             break;
         case EAST:
-            orientationChar = 'E';
+            orientationChar = '2';
             break;
         case WEST:
-            orientationChar = 'W';
+            orientationChar = '4';
             break;
     }
     assert_packet_queue(client1->packet_queue, 1, my_snprintf("ppo 1 %d %d %c", pos.x, pos.y, orientationChar));

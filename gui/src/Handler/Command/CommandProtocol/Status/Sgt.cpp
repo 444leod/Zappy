@@ -7,13 +7,13 @@
 
 #include "Sgt.hpp"
 
-void gui::Sgt::stage(ntw::Client &client, std::string parameters)
+void gui::Sgt::stage(std::shared_ptr<ntw::Client> client, std::string parameters)
 {
     (void)parameters;
-    client.queueRequest("sgt");
+    client->queueRequest("sgt");
 }
 
-void gui::Sgt::receive(std::string command, GameData &gameData)
+void gui::Sgt::receive(std::string command, std::shared_ptr<GameData> gameData)
 {
     (void)gameData;
     std::istringstream iss(command);
@@ -23,5 +23,5 @@ void gui::Sgt::receive(std::string command, GameData &gameData)
     iss >> token >> timeUnit;
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
-    gameData.setTimeUnit(timeUnit);
+    gameData->setTimeUnit(timeUnit);
 }

@@ -7,14 +7,14 @@
 
 #include "Pic.hpp"
 
-void gui::Pic::stage(ntw::Client &client, std::string parameters)
+void gui::Pic::stage(std::shared_ptr<ntw::Client> client, std::string parameters)
 {
     (void)parameters;
     (void)client;
     std::cerr << "Command pic: can't be staged." << std::endl;
 }
 
-void gui::Pic::receive(std::string command, GameData &gameData)
+void gui::Pic::receive(std::string command, std::shared_ptr<GameData> gameData)
 {
     (void)gameData;
     std::istringstream iss(command);
@@ -26,19 +26,18 @@ void gui::Pic::receive(std::string command, GameData &gameData)
     iss >> token >> x >> y >> level;
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
-    if (x >= gameData.mapRef().mapSize().x() || y >= gameData.mapRef().mapSize().y())
+    if (x >= gameData->map().size().x() || y >= gameData->map().size().y())
         throw std::invalid_argument("Invalid tile coordinates, out of map bounds.");
     while (iss >> playerId) {
-        auto players = gameData.getPlayerById(playerId);
+        auto players = gameData->getPlayerById(playerId);
         if (players.has_value()) {
-            if (!gameData.playerExists(playerId))
+            if (!gameData->playerExists(playerId))
                 throw std::invalid_argument("Player does not exist");
             if (players.value()->position().x() != x || players.value()->position().y() != y)
                 throw std::invalid_argument("Player position does not match the position in the game data.");
-            if (players.value()->playerLevel() != level)
+            if (players.value()->level() != level)
                 throw std::invalid_argument("Player level does not match the level in the game data.");
-            std::cout << "Player " << playerId << " is incantation" << std::endl;
-            players.value()->incantation(true);
+            players.value()->incantate();
         }
     }
 }

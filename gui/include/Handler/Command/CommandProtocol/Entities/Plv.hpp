@@ -17,7 +17,7 @@ namespace gui {
              * @param client The client
              * @param parameters The parameters
             */
-            void stage(ntw::Client &client, std::string parameters = "") override;
+            void stage(std::shared_ptr<ntw::Client> client, std::string parameters = "") override;
 
             /**
              * @brief The command Plv receives the level of a player
@@ -27,6 +27,6 @@ namespace gui {
              * @param command The command given by the server
              * @param gameData The game data
             */
-            void receive(std::string command, GameData &gameData) override;
+            void receive(std::string command, std::shared_ptr<GameData> gameData) override;
     };
 }

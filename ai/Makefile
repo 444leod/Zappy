@@ -5,10 +5,9 @@
 ## Makefile
 ##
 
-__RED=\033[0;31m
 __GREEN=\033[0;32m
-__BOLD=\033[1m
-__NC=\033[0m # No Color
+__NC=\033[0m
+__INFO = ${__GREEN}[INFO]${__NC}
 
 __NAME = zappy_ai
 
@@ -27,18 +26,14 @@ $(__NAME):
 	@mkdir -p ../ai_src
 	@cp $(__SRC) ../ai_src
 	@chmod +x zappy_ai
-	@echo -ne "${__GREEN}$(__BOLD)Compilation of $(__NAME)$(__NC)"
-	@echo -e "${__GREEN}completed successfully.${__NC}"
+	@echo -ne "\n${__INFO} AI compiled successfully.${__NC}\n"
 clean:
-	@echo -e "${__GREEN}Nothing to clean in Python project${__NC}"
-	@echo -ne "${__GREEN}$(__BOLD)Clean of $(__NAME)$(__NC)"
-	@echo -e "${__GREEN}completed successfully.${__NC}"
+	@echo -ne "\n${__INFO} AI cleaned.${__NC}\n"
 
 fclean: clean
 	@rm -f $(__NAME)
 	@rm -rf ../ai_src
-	@echo -ne "${__GREEN}$(__BOLD)Fclean of $(__NAME)$(__NC)"
-	@echo -e "${__GREEN}completed successfully.${__NC}"
+	@echo -ne "\n${__INFO} AI fully cleaned.${__NC}\n"
 
 re: fclean all
 
