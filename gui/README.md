@@ -24,20 +24,20 @@ The Zappy GUI features a Core system and utilizes shared libraries for graphical
 - The overlay displays global information.
 - Pressing the 'M' key shows messages from AI.
 
-# Architecture
+## Architecture
 The architecture of the project is modular and follows a component-based design. Here are the key components:
 
 ## Core
 The `Core` class is the main entry point of the application. It initializes and runs the main program loop, handling the overall flow of the application.
 
-### Key Responsibilities:
+#### Key Responsibilities:
 
 - **Initialize and Load Libraries**: The Core is responsible for initializing the application and loading the necessary graphical libraries dynamically. This is managed through the **GraphicalLibraryLoader**.
 - **Switch Graphical Libraries**: It allows for switching between different graphical libraries during runtime, ensuring flexibility and extensibility in how graphics are handled.
 - **Manage Main Loop**: The Core runs the main loop of the application, coordinating updates and rendering for the different components.
 - **Handle Errors**: The Core class includes robust error handling, throwing `CoreException` when critical issues occur during initialization or runtime.
 
-### Key Functions:
+#### Key Functions:
 
 - `initialize()`: Loads and initializes the graphical library, sets up initial configurations.
 - `run()`: Starts the main loop of the application, handling updates and rendering.
@@ -48,7 +48,7 @@ The `Core` class is the main entry point of the application. It initializes and 
 ## Client
 The client component handles network communication with the server. It sends requests and receives responses, which are then used to update the graphical display and game state.
 
-### Key Functions:
+#### Key Functions:
 - `connectToServer()`: Connects the client to the server, handles initial communication, and exchanges welcome messages.
 - `queueRequest()`: Queues a request to be sent to the server.
 - `queueRequests()`: Queues multiple requests to be sent to the server.
@@ -61,7 +61,7 @@ The client component handles network communication with the server. It sends req
 ## Scene Manager
 The Scene Manager component is responsible for managing different scenes in the application, ensuring smooth transitions and proper rendering. The main scenes include the Loading scene and the Game scene.
 
-### Key Classes:
+#### Key Classes:
 - `IScene`: An interface that defines the structure for different scenes.
 - `Loading`: Manages the loading screen, showing loading progress and preparing the game environment.
 - `Game`: Manages the main game screen, handling game logic and rendering the game state.
@@ -93,25 +93,25 @@ The GameData class is a crucial part of the zappy architecture. It is designed t
 ### Features
 Here are the main features and responsibilities of the GameData class:
 
-#### Team Management:
+#### 1. Team Management
 The class maintains a list of team names. It provides methods to add a team name `addTeamName()` and check if a team exists `teamExists()`.
 
-#### Player Management:
+#### 2. Player Management
 The class manages a list of players. It provides methods to add a player `addPlayer()`, remove a player `removePlayer()`, check if a player exists `playerExists()`, and get a player by their ID `getPlayerById()`.
 
-#### Egg Management:
+#### 3. Egg Management
 The class manages a list of eggs. It provides methods to add an egg `addEgg()`, remove an egg `removeEgg()`, check if an egg exists `eggExists()`, and get an egg by its ID `getEggById()`.
 
-#### Message Management:
+#### 4. Message Management
 The class manages a list of messages. It provides methods to add a message `addMessage()`.
 
-#### Map Management:
+#### 5. Map Management
 The class holds a map object. It provides a method to get a reference to the map `mapRef()`, to have acces of its size.
 
-#### Game Status:
+#### 6. Game Status
 The class maintains the game status, such as whether a team has lost, the time unit, and whether the game is a draw. It provides methods to set the time unit `setTimeUnit()`, set the game to a draw `teamDraw()`, and set a team to win `teamWin()`.
 
-#### Error and Message Display:
+#### 7. Error and Message Display
 The class provides methods to display command errors `displayCommandParameter()`, server messages `displayServerMessage()`, and unknown commands `displayUnknownCommand()`.
 
 The GameData class is a central hub for managing game data, making it easier to maintain and update the game state.
@@ -120,7 +120,7 @@ The GameData class is a central hub for managing game data, making it easier to 
 ## Graphics
 The graphics component is responsible for rendering images and playing sounds. It interacts with the graphical libraries loaded by the `GraphicalLibraryLoader`.
 
-### Key Classes and Interfaces:
+#### Key Classes and Interfaces:
 - `ILibrary`: Interface for the graphical library, providing access to textures, sounds, music, fonts, and display functions.
 - `ITextureManager`: Manages textures used in the application.
 - `ISoundManager`: Manages sound effects.
