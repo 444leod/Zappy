@@ -32,10 +32,10 @@ The `Core` class is the main entry point of the application. It initializes and 
 
 ### Key Responsibilities:
 
-- `Initialize and Load Libraries`: The Core is responsible for initializing the application and loading the necessary graphical libraries dynamically. This is managed through the `GraphicalLibraryLoader`.
-- `Switch Graphical Libraries`: It allows for switching between different graphical libraries during runtime, ensuring flexibility and extensibility in how graphics are handled.
-- `Manage Main Loop`: The Core runs the main loop of the application, coordinating updates and rendering for the different components.
-- `Handle Errors`: The Core class includes robust error handling, throwing `CoreException` when critical issues occur during initialization or runtime.
+- **Initialize and Load Libraries**: The Core is responsible for initializing the application and loading the necessary graphical libraries dynamically. This is managed through the **GraphicalLibraryLoader**.
+- **Switch Graphical Libraries**: It allows for switching between different graphical libraries during runtime, ensuring flexibility and extensibility in how graphics are handled.
+- **Manage Main Loop**: The Core runs the main loop of the application, coordinating updates and rendering for the different components.
+- **Handle Errors**: The Core class includes robust error handling, throwing `CoreException` when critical issues occur during initialization or runtime.
 
 ### Key Functions:
 
@@ -138,7 +138,7 @@ The `SFML2d` class is an implementation of the `ILibrary` interface using the SF
 - `print()`: Prints text to the display using specified fonts and colors.
 - `measure()`: Measures the size of a string when printed.
 - `flush()`: Flushes the drawn content to the display.
-- `_resize# GameData Manager
+- `_resizeWindow()`: Resizes the SFML window based on specified dimensions.
 
 
 ## User Input Guide
