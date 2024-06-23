@@ -19,14 +19,13 @@ void gui::Pdr::receive(std::string command, std::shared_ptr<GameData> gameData)
     std::istringstream iss(command);
     std::string token;
     std::uint32_t playerId;
-    std::uint32_t ressourceNbr;
+    std::uint32_t ressourceId;
 
-    iss >> token >> playerId >> ressourceNbr;
+    iss >> token >> playerId >> ressourceId;
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
     if (!gameData->playerExists(playerId))
         throw std::invalid_argument("Player does not exist");
     auto player = gameData->getPlayerById(playerId);
-    for (std::uint32_t i = 0; i < ressourceNbr; i++)
-        player.value()->dropRessource();
+    player.value()->dropRessource();
 }
