@@ -140,4 +140,4 @@ This guide provides an overview of the user inputs and their corresponding actio
 
 Please note that the game must be in focus for these inputs to be recognized. If the game is not responding to inputs, click on the game window to bring it into focus.
 
-Remember, the game
+Remember, the game is designed to be intuitive and user-friendly. If you have any issues or questions, please refer to this guide or the in-game help.
