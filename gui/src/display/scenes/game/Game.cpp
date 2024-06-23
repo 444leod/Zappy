@@ -222,6 +222,14 @@ void gui::scenes::Game::draw(UNUSED gui::ILibrary& lib)
         printItem("phiras", tile->rocks().phiras, gui::Color{255, 255, 0, 255});
         printItem("thystame", tile->rocks().thystame, gui::Color{144, 238, 144, 255});
     }
+    lib.display().print("Messages: ", lib.fonts().get("ClashRoyale"), 1200, 670, gui::Color{255, 255, 255, 255}, 20);
+    size_t startIdx = _gameData->messages().size() > 5 ? _gameData->messages().size() - 5 : 0;
+    for (size_t i = startIdx; i < _gameData->messages().size(); ++i) {
+        const auto& message = _gameData->messages()[i];
+        auto time = std::chrono::system_clock::to_time_t(message.time);
+        std::string displayedMessage = message.message.substr(0, 10);
+        lib.display().print("[" + std::to_string(time) + "][" + message.teamName + "][" + std::to_string(message.senderId) + "]: " + displayedMessage, lib.fonts().get("ClashRoyale"), 1200, 700 + static_cast<int>(i - startIdx) * 35, gui::Color{255, 255, 255, 255}, 15);
+    }
     for (auto& player : _gameData->players()) {
         player->drawAnimation(lib);
     }
