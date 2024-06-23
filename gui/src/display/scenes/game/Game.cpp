@@ -19,6 +19,17 @@ const std::map<gui::KeyCode, gui::Vector2f> KEY_TO_OFFSET = {
 
 void gui::scenes::Game::initialize(UNUSED gui::ILibrary& lib)
 {
+    gui::MusicSpecification musicSpec;
+    musicSpec.path = "gui/assets/audio/coc_music.wav";
+    musicSpec.loop = true;
+    lib.musics().load("game_music", musicSpec);
+
+    gui::SoundSpecification soundSpec;
+    soundSpec.path = "gui/assets/audio/win.wav";
+    lib.sounds().load("win", soundSpec);
+    soundSpec.path = "gui/assets/audio/draw.wav";
+    lib.sounds().load("draw", soundSpec);
+
     gui::TextureSpecification spec;
     spec.graphical.subrect = {0, 0, 122, 132};
 
@@ -129,7 +140,7 @@ void gui::scenes::Game::onKeyPressed(gui::ILibrary& lib, gui::KeyCode key, UNUSE
         case gui::KeyCode::SPACE:
         {
             for (auto& [coords, tile] : _gameData->map().tiles()) {
-                tile->setOffset({static_cast<float>(coords.x() * 120), static_cast<float>(coords.y() * 120)});
+                tile->setOffset({static_cast<float>(coords.x() * 114), static_cast<float>(coords.y() * 114)});
             }
             break;
         }
@@ -146,12 +157,15 @@ void gui::scenes::Game::onKeyPressed(gui::ILibrary& lib, gui::KeyCode key, UNUSE
 
 void gui::scenes::Game::onMouseButtonPressed(UNUSED gui::ILibrary& lib, gui::MouseButton button, int32_t x, int32_t y)
 {
-    if (button == gui::MouseButton::LEFT && ((_gameData->map().size().x() * 120) > static_cast<uint32_t>(x) && (_gameData->map().size().y() * 120) > static_cast<uint32_t>(y))) {
-        auto tilePos = gui::Vector2u(static_cast<unsigned int>(x / 120), static_cast<unsigned int>(y / 120));
+    if (button == gui::MouseButton::LEFT && ((_gameData->map().size().x() * 114) > static_cast<uint32_t>(x) && (_gameData->map().size().y() * 114) > static_cast<uint32_t>(y))) {
+        auto firstTile = _gameData->map().at(Vector2u{0, 0});
+        x -= firstTile->offset().x();
+        y -= firstTile->offset().y();
+        auto tilePos = gui::Vector2u(static_cast<unsigned int>(x / 114), static_cast<unsigned int>(y / 114));
         _tileInfo = tilePos;
         _gameInfo = true;
     }
-    if (button == gui::MouseButton::LEFT && ((_gameData->map().size().x() * 120) < static_cast<uint32_t>(x) || (_gameData->map().size().y() * 120) < static_cast<uint32_t>(y))) {
+    if (button == gui::MouseButton::LEFT && ((_gameData->map().size().x() * 114) < static_cast<uint32_t>(x) || (_gameData->map().size().y() * 114) < static_cast<uint32_t>(y))) {
         _gameInfo = false;
     }
 }
@@ -178,6 +192,12 @@ void gui::scenes::Game::update(UNUSED gui::ILibrary& lib, float deltaTime)
     }
     for (auto& egg : _gameData->eggs()) {
         egg->updateAnimation(deltaTime);
+    }
+
+    static uint32_t messageLength = 0;
+    if (messageLength != _gameData->messages().size()) {
+        messageLength = _gameData->messages().size();
+        lib.sounds().play("HIHIHIHA", 20.f);
     }
 }
 
@@ -228,18 +248,48 @@ void gui::scenes::Game::_displayTileInformations(gui::ILibrary& lib)
     bool hasPrinted = false;
 
     lib.display().print("Tile " + std::to_string(_tileInfo.x()) + ", " + std::to_string(_tileInfo.y()) + ":" , lib.fonts().get("ClashRoyale"), 1300, 10, gui::Color{255, 255, 255, 255}, 20);
+    std::uint32_t index = 0;
     for (auto& entity : tile->entities()) {
-        lib.display().print("Player " + std::to_string(entity->id()), lib.fonts().get("ClashRoyale"), 1200, 50 + i * 30, gui::Color{255, 255, 255, 255}, 20);
+        index++;
+        if (index >= 10)
+            break;
+        if (entity->type() == gui::AEntity::EntityType::PLAYER) {
+            auto player = std::dynamic_pointer_cast<gui::Player>(entity);
+            std::string displayedText = "Player ";
+            displayedText += std::to_string(entity->id());
+            displayedText += " lvl: ";
+            displayedText += std::to_string(player->level());
+            displayedText += " ";
+            displayedText += std::to_string(player->food());
+            displayedText += " ";
+            displayedText += std::to_string(player->rocks().linemate.quantity());
+            displayedText += " ";
+            displayedText += std::to_string(player->rocks().deraumere.quantity());
+            displayedText += " ";
+            displayedText += std::to_string(player->rocks().sibur.quantity());
+            displayedText += " ";
+            displayedText += std::to_string(player->rocks().mendiane.quantity());
+            displayedText += " ";
+            displayedText += std::to_string(player->rocks().phiras.quantity());
+            displayedText += " ";
+            displayedText += std::to_string(player->rocks().thystame.quantity());
+
+            lib.display().print(displayedText, lib.fonts().get("ClashRoyale"), 1200, 50 + i * 20, _gameData->teamSkin(entity->teamName()).second, 15);
+        } else {
+            lib.display().print("Egg " + std::to_string(entity->id()), lib.fonts().get("ClashRoyale"), 1200, 50 + i * 20, gui::Color{255, 255, 255, 255}, 15);
+        }
         i++;
     }
      if (hasPrinted)
         i++;
     auto printItem = [&](const std::string& itemName, auto& item, gui::Color color) {
         if (item.quantity()) {
-            lib.display().print(itemName + ": " + std::to_string(item.quantity()), lib.fonts().get("ClashRoyale"), 1200, 70 + i * 30, color, 20);
+            lib.display().print(itemName + ": " + std::to_string(item.quantity()), lib.fonts().get("ClashRoyale"), 1200, 70 + i * 20, color, 15);
             i++;
         }
     };
+    lib.display().print("food: " + std::to_string(tile->food()), lib.fonts().get("ClashRoyale"), 1200, 70 + i * 20, gui::Color{255, 215, 0, 255}, 15);
+    i++;
     printItem("linemate", tile->rocks().linemate, gui::Color{0, 100, 255, 255});
     printItem("deraumere", tile->rocks().deraumere, gui::Color{255, 105, 180, 255});
     printItem("sibur", tile->rocks().sibur, gui::Color{0, 100, 0, 255});
@@ -252,11 +302,11 @@ void gui::scenes::Game::_displayMap(gui::ILibrary& lib)
 {
     for (auto& [coords, tile] : _gameData->map().tiles())
         tile->draw(lib);
-    for (auto& player : _gameData->players()) {
-        player->drawAnimation(lib);
-    }
     for (auto& egg : _gameData->eggs()) {
         egg->drawAnimation(lib);
+    }
+    for (auto& player : _gameData->players()) {
+        player->drawAnimation(lib);
     }
 }
 
@@ -280,12 +330,13 @@ void gui::scenes::Game::draw(gui::ILibrary& lib)
 void gui::scenes::Game::onEnter(IScene::State lastState, UNUSED gui::ILibrary& lib)
 {
     if (lastState == IScene::State::LOADING) {
+        lib.musics().play("game_music", 50.f);
         _tickTime = 1 / static_cast<float>(_gameData->timeUnit());
 
         auto mapSize = _gameData->map().size();
         std::shared_ptr<gui::Tile> tile;
         for (auto& [coords, tile] : _gameData->map().tiles())
-            tile->setOffset({static_cast<float>(coords.x() * 120), static_cast<float>(coords.y() * 120)});
+            tile->setOffset({static_cast<float>(coords.x() * 114), static_cast<float>(coords.y() * 114)});
     }
 }
 

@@ -25,18 +25,19 @@ namespace gui {
     void GameData::addEgg(std::shared_ptr<Egg> egg)
     {
         this->_eggs.push_back(egg);
-        this->_map.at(egg->position())->addEntity(egg);
     }
 
-    void GameData::removeEgg(std::uint32_t eggId)
+    void GameData::removeEgg(std::shared_ptr<Egg> egg)
     {
         auto it = std::find_if(this->_eggs.begin(), this->_eggs.end(),
-            [eggId](const auto& egg){ return egg->id() == eggId; });
+            [egg](const auto& other_egg){ return egg->id() == other_egg->id(); });
 
         if (it != this->_eggs.end()) {
-            this->_map.at((*it)->position())->removeEntity(eggId);
+            this->_map.at((*it)->position())->removeEntity(egg);
             this->_eggs.erase(it);
+            return;
         }
+        throw std::invalid_argument("Egg does not exist");
     }
 
     bool GameData::playerExists(std::uint32_t playerId) const

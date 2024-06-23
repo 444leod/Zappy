@@ -29,7 +29,7 @@ gui::animations::Walk::Walk(const std::string &skin, std::shared_ptr<gui::Player
             _direction = {-1, 0};
             break;
     }
-    _player->setDisplayOffset(_player->displayOffset() - (_direction * 120));
+    _player->setDisplayOffset(_player->displayOffset() - (_direction * 114));
 }
 
 gui::animations::Walk::~Walk()

@@ -84,9 +84,9 @@ namespace gui {
 
             /**
              * @brief Remove an egg
-             * @param eggId The egg id
+             * @param egg The egg
             */
-            void removeEgg(std::uint32_t eggId);
+            void removeEgg(std::shared_ptr<Egg> egg);
 
             /**
              * @brief Get the messages

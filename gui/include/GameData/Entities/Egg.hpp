@@ -41,6 +41,8 @@ namespace gui {
             void updateAnimation(float deltaTime) override;
             void drawAnimation(ILibrary &lib) override;
 
+            gui::AEntity::EntityType type() const { return gui::AEntity::EntityType::EGG; }
+
         private:
             bool _hatched = false;
             bool _isDead = false;
