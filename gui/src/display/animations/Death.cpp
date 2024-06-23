@@ -7,42 +7,30 @@
 
 #include "Death.hpp"
 
-gui::animations::Death::Death(const std::string &skin, std::shared_ptr<gui::Player> player)
-    : AAnimation(0, 0, "Death"), _skin(skin), _player(player)
+gui::animations::Death::Death(gui::Player& player, std::shared_ptr<gui::GameData> gameData)
+    : AAnimation(0.5f, 0, "death"),_player(player), _gameData(gameData)
 {
-    switch (_player->orientation()) {
-        case gui::Orientation::SOUTH:
-            break;
-        case gui::Orientation::NORTH:
-            break;
-        case gui::Orientation::EAST:
-            break;
-        case gui::Orientation::WEST:
-            break;
-    }
-    _player->setDisplayOffset({0, 0});
 }
 
 gui::animations::Death::~Death()
 {
-    _player->setDisplayOffset({0, 0});
+    _player.setDisplayOffset({0, 0});
+    _gameData->removePlayer(_player.id());
 }
 
 void gui::animations::Death::update(float deltaTime)
 {
     _passedTime += deltaTime;
-    if (_passedTime >= 0.2) {
-        _passedTime -= 0.2;
-        _currentFrame++;
-        if (_currentFrame >= _frameCount) {
-            _currentFrame = 0;
-        }
+    if (_passedTime >= 0.1) {
+        _passedTime -= 0.1;
+        _duration -= 0.1;
+        _scale *= 0.9;
     }
 }
 
 void gui::animations::Death::draw(gui::ILibrary &lib)
 {
-    //To change (_skin got for the animation)
-    auto displayCoordinates = _player->tileDisplayOffset() + _player->displayOffset();
-    lib.display().draw(lib.textures().get(_skin), displayCoordinates.x(), displayCoordinates.y());
+    auto displayCoordinates = _player.tileDisplayOffset() + _player.displayOffset();
+
+    lib.display().draw(lib.textures().get(_player.skin()), displayCoordinates.x(), displayCoordinates.y());
 }
