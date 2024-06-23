@@ -24,10 +24,19 @@
 namespace gui {
     class AEntity {
         public:
+
+            static std::uint32_t nextId;
+
+            enum class EntityType {
+                PLAYER,
+                EGG,
+                NONE
+            };
+
             /**
              * @brief Construct a new AEntity object
             */
-            AEntity() = default;
+            AEntity() = delete;
 
             /**
              * @brief Construct a new AEntity object
@@ -37,19 +46,24 @@ namespace gui {
              * @param teamName Team name of the entity
             */
             AEntity(std::uint32_t id, Vector2u position, Orientation orientation, std::string teamName)
-                : _position(position), _orientation(orientation), _id(id), _teamName(teamName) {}
+                : _position(position), _orientation(orientation), _id(id), _teamName(teamName), _entityId(nextId++) {
+                }
 
             /**
              * @brief Construct a new AEntity object
              * @param id Id of the entity
              * @param position Position of the entity
             */
-            AEntity(std::uint32_t id, Vector2u position, std::string teamName) : _position(position), _id(id), _teamName(teamName) {}
+            AEntity(std::uint32_t id, Vector2u position, std::string teamName) : _position(position), _id(id), _teamName(teamName), _entityId(nextId++) {
+            }
+
 
             /**
              * @brief Destroy the AEntity object
             */
             ~AEntity() = default;
+
+            uint32_t entityId() const { return this->_entityId; }
 
             /**
              * @brief Set the entity Id
@@ -137,6 +151,10 @@ namespace gui {
 
             gui::Color teamColor() const { return this->_teamColor; }
 
+            virtual gui::AEntity::EntityType type() const { return this->_type; }
+
+
+
         protected:
             Vector2u _position = {0, 0};
             Orientation _orientation = Orientation::NORTH;
@@ -149,5 +167,9 @@ namespace gui {
             std::string _currentFrame = "";
             std::string _skin = "";
             gui::Color _teamColor = {255, 255, 255, 255};
+            gui::AEntity::EntityType _type = gui::AEntity::EntityType::NONE;
+            std::uint32_t _entityId = 0;
     };
+
+    inline std::uint32_t AEntity::nextId = 0;
 }

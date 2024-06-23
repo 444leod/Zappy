@@ -101,6 +101,11 @@ namespace gui {
 
                     this->handleNetwork(commandHandler);
 
+                    if (gui::CommandHandler::isLoaded) {
+                        commandHandler.handleCommandsQueue();
+                        gui::CommandHandler::isLoaded = false;
+                    }
+
 //                    gameDataManager.handleRequests();
                     gui::Event event = {};
                     auto now = std::chrono::high_resolution_clock::now();
@@ -114,13 +119,17 @@ namespace gui {
                         continue;
                     }
                     while (_curLib->display().pollEvent(event)) {
-                        if (event.type == gui::EventType::MOUSE_BUTTON_PRESSED) {
-                            _sceneManager->onMouseButtonPressed(*_curLib, event.mouse.button, event.mouse.x, event.mouse.y);
-                            continue;
+                        switch (event.type) {
+                            case gui::EventType::MOUSE_BUTTON_PRESSED:
+                                _sceneManager->onMouseButtonPressed(*_curLib, event.mouse.button, event.mouse.x, event.mouse.y);
+                                break;
+                            case gui::EventType::KEY_PRESSED:
+                                _sceneManager->onKeyPressed(*_curLib, event.key.code, event.key.shift);
+                                break;
+                            case gui::EventType::KEY_DOWN:
+                                _sceneManager->onKeyDown(*_curLib, event.key.code);
+                                break;
                         }
-                        _sceneManager->onKeyPressed(*_curLib, event.key.code, event.key.shift);
-                        if (event.key.code == gui::KeyCode::J || event.key.code == gui::KeyCode::L)
-                            libSwitch = true;
                     }
 
                     _sceneManager->update(*_curLib, deltaTime);

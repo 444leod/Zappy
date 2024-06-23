@@ -29,7 +29,7 @@ gui::animations::Walk::Walk(const std::string &skin, std::shared_ptr<gui::Player
             _direction = {-1, 0};
             break;
     }
-    _player->setDisplayOffset(_player->displayOffset() - (_direction * 120));
+    _player->setDisplayOffset(_player->displayOffset() - (_direction * 114));
 }
 
 gui::animations::Walk::~Walk()
@@ -54,7 +54,7 @@ void gui::animations::Walk::update(float deltaTime)
 
 void gui::animations::Walk::draw(gui::ILibrary &lib)
 {
-    const std::string& skin = _skin + std::to_string(_currentFrame);
+    const std::string& skin = _skin + std::to_string(_frameCount - _currentFrame - 1);
     auto displayCoordinates = _player->tileDisplayOffset() + _player->displayOffset();
     lib.display().draw(lib.textures().get(skin), displayCoordinates.x(), displayCoordinates.y(), 0.5f);
 }

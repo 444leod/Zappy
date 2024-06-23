@@ -11,8 +11,19 @@
 #include "Mct.hpp"
 #include "Sgt.hpp"
 #include "Pnw.hpp"
+#include "CommandHandler.hpp"
 
 void gui::scenes::Loading::initialize(UNUSED gui::ILibrary& lib)
+{
+    SoundSpecification spec;
+    spec.path = "gui/assets/audio/HEHEHEHA.wav";
+    lib.sounds().load("HIHIHIHA", spec);
+
+    spec.path = "gui/assets/audio/start.wav";
+    lib.sounds().load("start", spec);
+}
+
+void gui::scenes::Loading::onKeyDown(UNUSED gui::ILibrary& lib, UNUSED gui::KeyCode key)
 {
 }
 
@@ -68,7 +79,7 @@ void gui::scenes::Loading::update(UNUSED gui::ILibrary& lib, UNUSED float deltaT
     if (_gameData->map().size() != Vector2u(0, 0) && _gameData->teamNames().size() != 0 && _gameData->timeUnit() != 0) {
         static float fullLoadingPassedTime = 0;
         fullLoadingPassedTime += deltaTime;
-        if (fullLoadingPassedTime > 2) {
+        if (fullLoadingPassedTime > 3) {
             auto playerConnexionQueue = _gameData->map().playerConnexionQueue();
             while (!playerConnexionQueue.empty()) {
                 Pnw().receive(playerConnexionQueue.front(), _gameData);
@@ -92,6 +103,12 @@ void gui::scenes::Loading::update(UNUSED gui::ILibrary& lib, UNUSED float deltaT
 
 void gui::scenes::Loading::draw(UNUSED gui::ILibrary& lib)
 {
+    static bool first = true;
+
+    if (first) {
+        lib.sounds().play("start", 50.f);
+        first = false;
+    }
     auto font = lib.fonts().get("ClashRoyale");
     auto textSize = lib.display().measure(_loadingText, font, lib.display().width(), lib.display().height()).width;
     float center = lib.display().width() / 2 - textSize / 2;
@@ -124,8 +141,8 @@ void gui::scenes::Loading::onEnter(UNUSED IScene::State lastState, UNUSED gui::I
 
 void gui::scenes::Loading::onExit(UNUSED IScene::State nextState, UNUSED gui::ILibrary& lib)
 {
-    if (nextState == IScene::State::GAME) {
+    gui::CommandHandler::isLoaded = true;
+    if (nextState == IScene::State::GAME)
         Mct().stage(_serverCli);
-    }
 }
 

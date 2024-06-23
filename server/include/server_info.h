@@ -10,6 +10,7 @@
 #include "teams.h"
 #include "game.h"
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef struct server_info_s {
     uint16_t port;
@@ -21,6 +22,8 @@ typedef struct server_info_s {
     map_t map;
     struct timespec last_refill_check;
     double refill_wait;
+    incantation_list_t rituals;
     rocks_t actual_rocks;
-    uint32_t actual_foods;
+    uint32_t actual_food;
+    bool end;
 } *server_info_t;

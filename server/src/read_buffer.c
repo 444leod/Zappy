@@ -24,7 +24,7 @@
  *
  * @return the created command
 */
-static client_command_t create_command(const char *command,
+client_command_t create_command(const char *command,
     const struct timespec *time)
 {
     client_command_t new_command = my_malloc(sizeof(struct client_command_s));
@@ -67,19 +67,17 @@ static void clear_ai_buffer_overflow(client_t client)
 static bool is_read_special_case(const client_t client,
     const int valread)
 {
-    if (valread == -1) {
+    if (valread <= 0) {
+        if (valread < 0)
+            printf("Read failed with fd %d: %s\n",
+                client->fd, strerror(errno));
         remove_client(client->fd);
-        client->fd = -1;
-        printf("Read failed with fd %d: %s\n", client->fd, strerror(errno));
-        if (client->player && client->player->isDead)
+        if (client->type == AI) {
             queue_to_graphical(get_player_death_string(client->player));
-        return true;
-    }
-    if (valread == 0) {
-        remove_client(client->fd);
+            remove_from_list((void *)client,
+                (node_t *)&client->player->team->players);
         client->fd = -1;
-        if (client->player && client->player->isDead)
-            queue_to_graphical(get_player_death_string(client->player));
+        }
         return true;
     }
     return false;

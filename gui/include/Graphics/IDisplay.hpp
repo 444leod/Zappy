@@ -34,6 +34,7 @@ namespace gui {
      */
     enum class EventType {
         KEY_PRESSED = 0,
+        KEY_DOWN,
         MOUSE_BUTTON_PRESSED
     };
 

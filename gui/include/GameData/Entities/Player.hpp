@@ -10,8 +10,12 @@
 #include "Tiles/Rocks/Rocks.hpp"
 #include "AEntity.hpp"
 #include "AAnimation.hpp"
+#include "Incantation.hpp"
 
 namespace gui {
+
+    class GameData;
+
     /**
      * @brief Class representing the Player in the simulation
      * @note The Player is the player that can move on the map thanks to the IA
@@ -20,11 +24,6 @@ namespace gui {
     */
     class Player : public AEntity {
         public:
-            /**
-             * @brief default constructor of Player
-            */
-            Player() = default;
-
             /**
              * @brief Construct a new Player object for new player
              * @param id The id of the Player
@@ -66,15 +65,9 @@ namespace gui {
             void setRocks(Rocks rocks) { this->_rocks = rocks; }
 
             /**
-             * @brief Get the player level
-             * @return Vector2u The player level
-            */
-            std::uint32_t playerLevel() const { return this->_level; }
-
-            /**
              * @brief Add 1 to the player level
             */
-            void increasePlayerLevel() { this->_level += 1; }
+            void increaseLevel() { this->_level += 1; }
 
             /**
              * @brief Set the player level
@@ -118,10 +111,9 @@ namespace gui {
             void pickRessource() { this->_pickingRessource = true; }
 
             /**
-             * @brief set the player incantation
-             * @param isincantation The player incantation
+             * @brief Make the player incantate
             */
-            void incantation(bool isincantation) { this->_isincantation = isincantation; }
+            void incantate();
 
             /**
              * @brief set the player incantation result
@@ -136,10 +128,14 @@ namespace gui {
              * @brief set the player dead
              * @param isDead The player dead
             */
-            void kill() { this->_isDead = true; }
+            void kill(std::shared_ptr<gui::GameData> gameData);
 
             void updateAnimation(float deltaTime) override;
             void drawAnimation(ILibrary &lib) override;
+
+            gui::AEntity::EntityType type() const { return gui::AEntity::EntityType::PLAYER; }
+
+            std::uint32_t level() const { return this->_level; }
 
         private:
             std::uint32_t _food = 0;
@@ -152,5 +148,6 @@ namespace gui {
             bool _isincantation = false;
             bool _incantationResult = false;
             bool _isDead = false;
+            gui::AEntity::EntityType _type = gui::AEntity::EntityType::PLAYER;
     };
 }

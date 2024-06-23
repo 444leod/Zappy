@@ -19,6 +19,7 @@ namespace gui {
 
             void initialize(gui::ILibrary& lib);
             void onKeyPressed(gui::ILibrary& lib, gui::KeyCode key, bool shift);
+            void onKeyDown(gui::ILibrary& lib, gui::KeyCode key);
             void onMouseButtonPressed(gui::ILibrary& lib, gui::MouseButton button, int32_t x, int32_t y);
             void update(gui::ILibrary& lib, float deltaTime);
             void draw(gui::ILibrary& lib);

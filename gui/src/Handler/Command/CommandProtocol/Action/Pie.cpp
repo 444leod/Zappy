@@ -27,13 +27,13 @@ void gui::Pie::receive(std::string command, std::shared_ptr<GameData> gameData)
         throw std::invalid_argument("Invalid arguments");
     if (x >= gameData->map().size().x() || y >= gameData->map().size().y())
         throw std::invalid_argument("Invalid tile coordinates, out of map bounds.");
-    if (result != 1 || result != 0)
+    if (result != 1 && result != 0)
         throw std::invalid_argument("Invalid incantation result.");
     auto players = gameData->getPlayerById(result);
     if (players.has_value()) {
         std::cout << "Incantation result: " << result << std::endl;
         if (result == 1) {
-            players.value()->increasePlayerLevel();
+            players.value()->increaseLevel();
             players.value()->updateEvolutionStatus(true);
         } else
             players.value()->updateEvolutionStatus(false);

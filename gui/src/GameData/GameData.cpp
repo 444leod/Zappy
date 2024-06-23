@@ -9,11 +9,7 @@
 #include <algorithm>
 
 namespace gui {
-    void GameData::addPlayer(std::shared_ptr<Player> player)
-    {
-        this->_players.push_back(player);
-        this->_map.at(player->position())->addEntity(player);
-    }
+    void GameData::addPlayer(std::shared_ptr<Player> player) { this->_players.push_back(player); }
 
     void GameData::removePlayer(std::uint32_t playerId)
     {
@@ -21,7 +17,7 @@ namespace gui {
             [playerId](const auto& player){ return player->id() == playerId; });
 
         if (it != this->_players.end()) {
-            this->_map.at((*it)->position())->removeEntity(playerId);
+            this->_map.at((*it)->position())->removeEntity(it->get()->entityId());
             this->_players.erase(it);
         }
     }
@@ -29,25 +25,23 @@ namespace gui {
     void GameData::addEgg(std::shared_ptr<Egg> egg)
     {
         this->_eggs.push_back(egg);
-        this->_map.at(egg->position())->addEntity(egg);
     }
 
-    void GameData::removeEgg(std::uint32_t eggId)
+    void GameData::removeEgg(std::shared_ptr<Egg> egg)
     {
         auto it = std::find_if(this->_eggs.begin(), this->_eggs.end(),
-            [eggId](const auto& egg){ return egg->id() == eggId; });
+            [egg](const auto& other_egg){ return egg->id() == other_egg->id(); });
 
         if (it != this->_eggs.end()) {
-            this->_map.at((*it)->position())->removeEntity(eggId);
+            this->_map.at((*it)->position())->removeEntity(egg);
             this->_eggs.erase(it);
+            return;
         }
+        throw std::invalid_argument("Egg does not exist");
     }
 
     bool GameData::playerExists(std::uint32_t playerId) const
     {
-        for (auto &player : this->_players) {
-            std::cout << "player id = " << player->id() << " exists" << std::endl;
-        }
         auto it = std::find_if(this->_players.begin(), this->_players.end(),
             [playerId](const auto& player){ return player->id() == playerId; });
 
@@ -91,7 +85,7 @@ namespace gui {
     void GameData::teamWin(std::string teamName)
     {
         _teamLose = true;
-        std::cout << "Team " << teamName << " win" << std::endl;
+        std::cout << "Team " << teamName << " won" << std::endl;
     }
 
     void GameData::teamDraw()

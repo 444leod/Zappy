@@ -26,31 +26,12 @@ char *get_time_unit_string(const server_info_t server_info)
  * @param client the client that executed the command
  * @param server_info the server info
  */
-void send_time_unit_to_client(const client_t client,
+static void send_time_unit_to_client(const client_t client,
     const server_info_t server_info)
 {
     char *time_unit_string = get_time_unit_string(server_info);
 
     queue_buffer(client, time_unit_string);
-    my_free(time_unit_string);
-}
-
-/**
- * @brief Send the time unit to all the clients in the list
- *
- * @param clients the list of clients
- * @param server_info the server info
- */
-void send_time_unit_to_client_list(const client_list_t clients,
-    const server_info_t server_info)
-{
-    char *time_unit_string = get_time_unit_string(server_info);
-    client_list_t tmp = clients;
-
-    while (tmp) {
-        queue_buffer(tmp->client, time_unit_string);
-        tmp = tmp->next;
-    }
     my_free(time_unit_string);
 }
 
