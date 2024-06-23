@@ -136,10 +136,10 @@ void gui::scenes::Game::onMouseButtonPressed(UNUSED gui::ILibrary& lib, UNUSED g
     if (button == gui::MouseButton::LEFT && ((_gameData->map().size().x() * 120) > static_cast<uint32_t>(x) && (_gameData->map().size().y() * 120) > static_cast<uint32_t>(y))) {
         auto tilePos = gui::Vector2u(static_cast<unsigned int>(x / 120), static_cast<unsigned int>(y / 120));
         _tileInfo = tilePos;
-        _gameInfo = true;
+        _gameInfo = false;
     }
     if (button == gui::MouseButton::LEFT && ((_gameData->map().size().x() * 120) < static_cast<uint32_t>(x) || (_gameData->map().size().y() * 120) < static_cast<uint32_t>(y))) {
-        _gameInfo = false;
+        _gameInfo = true;
     }
 }
 
@@ -178,7 +178,7 @@ void gui::scenes::Game::draw(UNUSED gui::ILibrary& lib)
             _gameData->map().at({x, y})->draw(lib);
         }
     }
-    if (!_gameInfo) {
+    if (_gameInfo) {
         auto teamNames = _gameData->teamNames();
         uint32_t i = 0;
 
@@ -192,12 +192,35 @@ void gui::scenes::Game::draw(UNUSED gui::ILibrary& lib)
     } else {
         auto tile = _gameData->map().at(_tileInfo);
         uint32_t i = 0;
+        bool hasPrinted = false;
 
-        lib.display().print("Tile " + std::to_string(_tileInfo.x()) + ", " + std::to_string(_tileInfo.y()) + ":" , lib.fonts().get("ClashRoyale"), 1300, 10, gui::Color{255, 255, 255, 255}, 20);
+        lib.display().print("Tile " + std::to_string(_tileInfo.x()) + ", " + std::to_string(_tileInfo.y()) + ":" , lib.fonts().get("ClashRoyale"), 1200, 10, gui::Color{255, 255, 255, 255}, 20);
         for (auto& entity : tile->entities()) {
-            lib.display().print("Player " + std::to_string(entity->id()), lib.fonts().get("ClashRoyale"), 1200, 50 + i * 30, gui::Color{255, 255, 255, 255}, 20);
+            lib.display().print("Player " + std::to_string(entity->id()), lib.fonts().get("ClashRoyale"), 1200, 70 + i * 30, gui::Color{255, 255, 255, 255}, 20);
             i++;
+            hasPrinted = true;
         }
+        if (tile->food()) {
+            if (hasPrinted)
+                i++;
+            lib.display().print("Eggs: " + std::to_string(tile->food()), lib.fonts().get("ClashRoyale"), 1200, 70 + i * 30, gui::Color{244, 227, 187, 255}, 20);
+            i++;
+            hasPrinted = true;
+        }
+        if (hasPrinted)
+            i++;
+        auto printItem = [&](const std::string& itemName, auto& item, gui::Color color) {
+            if (item.quantity()) {
+                lib.display().print(itemName + ": " + std::to_string(item.quantity()), lib.fonts().get("ClashRoyale"), 1200, 70 + i * 30, color, 20);
+                i++;
+            }
+        };
+        printItem("linemate", tile->rocks().linemate, gui::Color{0, 100, 255, 255});
+        printItem("deraumere", tile->rocks().deraumere, gui::Color{255, 105, 180, 255});
+        printItem("sibur", tile->rocks().sibur, gui::Color{0, 100, 0, 255});
+        printItem("mendiane", tile->rocks().mendiane, gui::Color{255, 0, 0, 255});
+        printItem("phiras", tile->rocks().phiras, gui::Color{255, 255, 0, 255});
+        printItem("thystame", tile->rocks().thystame, gui::Color{144, 238, 144, 255});
     }
     for (auto& player : _gameData->players()) {
         player->drawAnimation(lib);
