@@ -77,7 +77,10 @@ class Look(ACommand):
         while tab:
             vision[key] = []
             for _ in range(n):
-                vision[key].append(str_to_tile(tab.pop(0)))
+                try:
+                    vision[key].append(str_to_tile(tab.pop(0)))
+                except:
+                    break
             n += 2
             key += 1
         print(vision)
