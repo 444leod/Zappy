@@ -92,4 +92,54 @@ The `SFML2d` class is an implementation of the `ILibrary` interface using the SF
 - **print()**: Prints text to the display using specified fonts and colors.
 - **measure()**: Measures the size of a string when printed.
 - **flush()**: Flushes the drawn content to the display.
-- **_resizeWindow()**: Resizes the SFML window based on specified dimensions.
+- **_resize# GameData Manager
+
+The GameData class is a crucial part of the zappy architecture. It is designed to hold and manage all the essential data related to the game state. This class is part of the gui namespace.
+
+### Features
+Here are the main features and responsibilities of the GameData class:
+
+#### Team Management:
+    The class maintains a list of team names. It provides methods to add a team name (addTeamName) and check if a team exists (teamExists).
+
+#### Player Management:
+    The class manages a list of players. It provides methods to add a player (addPlayer), remove a player (removePlayer), check if a player exists (playerExists), and get a player by their ID (getPlayerById).
+
+#### Egg Management:
+    The class manages a list of eggs. It provides methods to add an egg (addEgg), remove an egg (removeEgg), check if an egg exists (eggExists), and get an egg by its ID (getEggById).
+
+#### Message Management:
+    The class manages a list of messages. It provides methods to add a message (addMessage).
+
+#### Map Management:
+    The class holds a map object. It provides a method to get a reference to the map (mapRef), to have acces of its size.
+
+#### Game Status:
+    The class maintains the game status, such as whether a team has lost, the time unit, and whether the game is a draw. It provides methods to set the time unit (setTimeUnit), set the game to a draw (teamDraw), and set a team to win (teamWin).
+
+#### Error and Message Display:
+    The class provides methods to display command errors (displayCommandParameter), server messages (displayServerMessage), and unknown commands (displayUnknownCommand).
+
+The GameData class is a central hub for managing game data, making it easier to maintain and update the game state.
+
+# User Input Guide
+
+This guide provides an overview of the user inputs and their corresponding actions in the game.
+
+### Keyboard Inputs
+| keyboard key      | actions   |
+| ----------------- | --------- |
+| M                 | This key is used to show or hide messages from players. Pressing it will toggle the visibility of the player messages.  |
+| I                 | This key will open a window that displays information about the game. This includes rocks representation, characters available and keyboard key available.|
+| esc               | this key is used to close any open windows in the game. If a window displaying game information is open, pressing 'Esc' will close it.  |
+
+
+### Mouse Inputs
+
+| Event     | actions   |
+| --------- | --------- |
+| Left click on tile  | Clicking on a tile in the game will show information about that tile. This can include what resources are present on the tile, any players or items on the tile, and other relevant information.  |
+
+Please note that the game must be in focus for these inputs to be recognized. If the game is not responding to inputs, click on the game window to bring it into focus.
+
+Remember, the game
