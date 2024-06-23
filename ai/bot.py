@@ -71,7 +71,9 @@ class Bot():
             "Eject": self.eject,
         }
         self.current_behavior = (Manual() if self.conf.manual else Distractor() if rd.randint(0, 5) == 0 else Harvester())
+        print(self.current_behavior)
         self.player_info.old_behavior = self.current_behavior
+        self.eject_dir = 0
 
     def run(self) -> None:
         """
@@ -143,13 +145,14 @@ class Bot():
         """
         Handle the bot's behavior
         """
-        if self.nb_eggs == 0:
-            cmd_to_send = cmd.Fork()
-        else:
-            new_behavior: ABehavior | None = self.current_behavior.new_behavior(self.player_info, self.map, self.messages_received_buffer)
-            if new_behavior is not None and not self.conf.manual:
-                self.current_behavior = new_behavior
-            cmd_to_send: cmd.ACommand = self.current_behavior.get_next_command(self.player_info, self.map, self.messages_received_buffer)
+        # if self.nb_eggs == 0:
+        #     cmd_to_send = cmd.Fork()
+        # else:
+        new_behavior: ABehavior | None = self.current_behavior.new_behavior(self.player_info, self.map, self.messages_received_buffer)
+        if new_behavior is not None and not self.conf.manual:
+            print("Changing behavior")
+            self.current_behavior = new_behavior
+        cmd_to_send: cmd.ACommand = self.current_behavior.get_next_command(self.player_info, self.map, self.messages_received_buffer)
         self.log(cmd_to_send.dump())
         self.cmd_sent.append(cmd_to_send.dump())
         self.com_handler.send_command(cmd_to_send.dump())
@@ -183,7 +186,7 @@ class Bot():
         """
         self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players -= 1
         self.player_info.pos = add_tuples(self.player_info.pos, self.player_info.orientation)
-        self.player_info.pos = (self.player_info.pos[0] % self.map.map_size[1], self.player_info.pos[0] % self.map.map_size[1])
+        self.player_info.pos = (self.player_info.pos[0] % self.map.map_size[1], self.player_info.pos[1] % self.map.map_size[0])
         self.map.player_pos = self.player_info.pos
         self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players += 1
 
