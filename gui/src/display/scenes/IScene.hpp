@@ -24,6 +24,7 @@ namespace gui {
 
             virtual void initialize(gui::ILibrary& lib) = 0;
             virtual void onKeyPressed(gui::ILibrary& lib, gui::KeyCode key, bool shift) = 0;
+            virtual void onKeyDown(gui::ILibrary& lib, gui::KeyCode key) = 0;
             virtual void onMouseButtonPressed(gui::ILibrary& lib, gui::MouseButton button, int32_t x, int32_t y) = 0;
             virtual void update(gui::ILibrary& lib, float deltaTime) = 0;
             virtual void draw(gui::ILibrary& lib) = 0;
