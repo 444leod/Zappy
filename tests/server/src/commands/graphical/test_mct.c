@@ -34,7 +34,7 @@ Test(mct, valid_command_random_map)
     srand(time(NULL));
     rocks_t rocks = {0, 0, 0, 0, 0, 0};
     uint32_t foods = 0;
-    fill_map(server_info->map, &rocks, &foods, server_info->teams);
+    fill_map(server_info->map, &rocks, &foods);
 
     mct((char *[]){"mct", NULL}, client, server_info);
     if (!client->packet_queue || !client->packet_queue->packet || !client->packet_queue->packet->buffer)

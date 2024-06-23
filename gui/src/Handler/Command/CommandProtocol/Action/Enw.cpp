@@ -29,7 +29,6 @@ void gui::Enw::receive(std::string command, std::shared_ptr<GameData> gameData)
     if (playerId == -1) {
         std::shared_ptr<gui::Egg> egg = std::make_shared<gui::Egg>(eggId, Vector2u(x, y), "");
         auto tile = gameData->map().at(Vector2u(x, y));
-        tile->addEntity(egg);
         gameData->addEgg(egg);
         egg->setSkin("egg");
         std::srand(std::time(nullptr));
@@ -44,7 +43,6 @@ void gui::Enw::receive(std::string command, std::shared_ptr<GameData> gameData)
         std::shared_ptr<gui::Egg> egg = std::make_shared<gui::Egg>(eggId, Vector2u(x, y), player.value()->teamName());
         player.value()->layEgg(true);
         auto tile = gameData->map().at(Vector2u(x, y));
-        tile->addEntity(egg);
         gameData->addEgg(egg);
         std::srand(std::time(nullptr));
         egg->setRandomOffset(Vector2f(static_cast<float>(rand() % 30), (rand() % 30)));

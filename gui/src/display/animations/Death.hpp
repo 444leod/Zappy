@@ -9,11 +9,12 @@
 
 #include "AAnimation.hpp"
 #include "Player.hpp"
+#include "GameData.hpp"
 
 namespace gui::animations {
     class Death : public AAnimation {
         public:
-            Death(const std::string& skin, std::shared_ptr<gui::Player> player);
+            Death(gui::Player& player, std::shared_ptr<gui::GameData> gameData);
             ~Death();
 
             void update(float deltaTime) override;
@@ -21,8 +22,9 @@ namespace gui::animations {
 
         protected:
         private:
-            std::string _skin;
-            std::shared_ptr<gui::Player> _player;
+            gui::Player& _player;
+            std::shared_ptr<gui::GameData> _gameData;
+            float _scale = 0.5f;
     };
 }
 

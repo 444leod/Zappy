@@ -5,11 +5,9 @@
 ## Makefile
 ##
 
-__RED=\033[0;31m
 __GREEN=\033[0;32m
-__BOLD=\033[1m
 __NC=\033[0m
-__NC=\033[0m
+__INFO = ${__GREEN}[INFO]${__NC}
 
 DIR = $(shell pwd)
 LIB_DIR = $(DIR)/lib
@@ -81,7 +79,9 @@ __SRC_DISPLAY_ANIMATION := Death.cpp \
 	Walk.cpp \
 
 %.o: %.cpp
+	@echo -ne "\033[2K\rCompiling $<..."
 	$(__CC) -c -o $@ $< $(__CXXFLAGS)
+	@echo -ne "\033[2K\r"
 
 __OBJ = $(__SRC:.cpp=.o)
 
@@ -98,6 +98,7 @@ __CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Server
 __CXXFLAGS += -I./include/Handler/Command/CommandProtocol/Status
 __CXXFLAGS += -I./include/Handler/Command/ -I./include/Handler/
 __CXXFLAGS += -I./include/Graphics
+__CXXFLAGS += -I./src/Core
 __CXXFLAGS += -I./src/display -I./src/display/scenes
 __CXXFLAGS += -I./src/display/animations
 __CXXFLAGS += -I./include/GameData/Entities/
@@ -105,24 +106,19 @@ __CXXFLAGS += -I./include/GameData/Entities/
 all: $(__NAME)
 
 $(__NAME): $(__OBJ)
+	@echo -ne "\nCompiling shared librairies for GUI...\n"
 	make -s -C src/Graphics/SFML2d 		 LIB_DIR=$(LIB_DIR)
 	@$(__CC) -o $(__NAME) $(__OBJ) $(__CXXFLAGS)
 	@$(__CC) -o $(__NAME) $(__OBJ) $(__CXXFLAGS)
-	@echo -ne "${__GREEN}$(__BOLD)Compilation of $(__NAME)$(__NC)"
-	@echo -e " ${__GREEN}completed successfully.${__NC}"
-	@echo -e " ${__GREEN}completed successfully.${__NC}"
+	@echo -ne "\n${__INFO} GUI compiled successfully.${__NC}\n"
 clean:
 	make -s -C src/Graphics/SFML2d clean LIB_DIR=$(LIB_DIR)
 	@rm -f $(__OBJ)
-	@echo -ne "${__GREEN}$(__BOLD)Clean of $(__NAME)$(__NC)"
-	@echo -e " ${__GREEN}completed successfully.${__NC}"
-	@echo -e " ${__GREEN}completed successfully.${__NC}"
+	@echo -ne "\n${__INFO} GUI cleaned.${__NC}\n"
 
 fclean: clean
 	make -s -C src/Graphics/SFML2d fclean LIB_DIR=$(LIB_DIR)
 	@rm -f $(__NAME)
-	@echo -ne "${__GREEN}$(__BOLD)Fclean of $(__NAME)$(__NC)"
-	@echo -e " ${__GREEN}completed successfully.${__NC}"
-	@echo -e " ${__GREEN}completed successfully.${__NC}"
+	@echo -ne "\n${__INFO} GUI fully cleaned.${__NC}\n"
 
 re: fclean all

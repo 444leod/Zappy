@@ -11,6 +11,7 @@
 #include "Entities/Egg.hpp"
 #include "Entities/Player.hpp"
 #include "ILibrary.hpp"
+#include <list>
 
 namespace gui {
     /**
@@ -43,24 +44,34 @@ namespace gui {
 
             /**
              * @brief Get the entities of the tile
-             * @return std::vector<std::shared_ptr<AEntity>> The entities of the tile
+             * @return std::list<std::shared_ptr<AEntity>> The entities of the tile
             */
-            std::vector<std::shared_ptr<AEntity>> entities() const { return this->_entities; }
+            std::list<std::shared_ptr<AEntity>> entities() const { return this->_entities; }
 
             /**
              * @brief Add an entity to the tile
              * @param entity The entity to add
             */
             void addEntity(std::shared_ptr<AEntity> entity) {
+                for (auto &ent : this->_entities) {
+                    if (ent->entityId() == entity->entityId())
+                        return;
+                }
                 entity->setTileDisplayOffset(this->_offset);
                 this->_entities.push_back(entity);
             }
 
             /**
              * @brief Remove an entity from the tile
-             * @param id The id of the entity to remove
+             * @param entityId The entityId of the entity to remove
             */
-            void removeEntity(std::uint32_t id);
+            void removeEntity(std::uint32_t entityId);
+
+            /**
+             * @brief Remove an entity from the tile
+             * @param entity The entity to remove
+            */
+            void removeEntity(std::shared_ptr<AEntity> entity);
 
             /**
              * @brief Get the access to the rocks of the tile
@@ -72,11 +83,11 @@ namespace gui {
 
             Vector2f offset() { return this->_offset; }
 
-            void setOffset(Vector2f offset) { this->_offset = offset; }
+            void setOffset(Vector2f offset);
 
         private:
             std::uint32_t _food = 0;
-            std::vector<std::shared_ptr<AEntity>> _entities;
+            std::list<std::shared_ptr<AEntity>> _entities;
             Rocks _rocks;
             Vector2f _offset = {0, 0};
     };

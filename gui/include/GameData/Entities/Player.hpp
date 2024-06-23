@@ -10,8 +10,12 @@
 #include "Tiles/Rocks/Rocks.hpp"
 #include "AEntity.hpp"
 #include "AAnimation.hpp"
+#include "Incantation.hpp"
 
 namespace gui {
+
+    class GameData;
+
     /**
      * @brief Class representing the Player in the simulation
      * @note The Player is the player that can move on the map thanks to the IA
@@ -118,10 +122,9 @@ namespace gui {
             void pickRessource() { this->_pickingRessource = true; }
 
             /**
-             * @brief set the player incantation
-             * @param isincantation The player incantation
+             * @brief Make the player incantate
             */
-            void incantation(bool isincantation) { this->_isincantation = isincantation; }
+            void incantate();
 
             /**
              * @brief set the player incantation result
@@ -136,7 +139,7 @@ namespace gui {
              * @brief set the player dead
              * @param isDead The player dead
             */
-            void kill() { this->_isDead = true; }
+            void kill(std::shared_ptr<gui::GameData> gameData);
 
             void updateAnimation(float deltaTime) override;
             void drawAnimation(ILibrary &lib) override;
@@ -152,5 +155,6 @@ namespace gui {
             bool _isincantation = false;
             bool _incantationResult = false;
             bool _isDead = false;
+            gui::AEntity::EntityType _type = gui::AEntity::EntityType::PLAYER;
     };
 }

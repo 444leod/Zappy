@@ -529,6 +529,7 @@ namespace gui {
                             event.key.code);
                         e.key.shift = event.key.shift;
                         this->_events.push_back(std::move(e));
+                        this->_pressedKeys.push_back(event.key.code);
                         break;
                     case sf::Event::MouseButtonPressed:
                         e.type = gui::EventType::MOUSE_BUTTON_PRESSED;
@@ -538,9 +539,21 @@ namespace gui {
                         e.mouse.y = event.mouseButton.y;
                         this->_events.push_back(std::move(e));
                         break;
+                    case sf::Event::KeyReleased:
+                        this->_pressedKeys.erase(
+                            std::remove(this->_pressedKeys.begin(),
+                                        this->_pressedKeys.end(),
+                                        event.key.code),
+                            this->_pressedKeys.end());
                     default:
                         break;
                 }
+            }
+            for (auto key : _pressedKeys) {
+                e.type = gui::EventType::KEY_PRESSED;
+                e.key.code = SFML2dDisplay::MapSFML2dKey(key);
+                e.key.shift = false;
+                this->_events.push_back(std::move(e));
             }
         }
 
@@ -638,6 +651,7 @@ namespace gui {
         std::size_t _width;
         std::size_t _height;
         std::deque<gui::Event> _events;
+        std::vector<sf::Keyboard::Key> _pressedKeys = {};
     };
 
     class SFML2dLibrary : public gui::ILibrary {

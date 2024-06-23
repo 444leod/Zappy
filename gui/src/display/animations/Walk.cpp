@@ -54,7 +54,7 @@ void gui::animations::Walk::update(float deltaTime)
 
 void gui::animations::Walk::draw(gui::ILibrary &lib)
 {
-    const std::string& skin = _skin + std::to_string(_currentFrame);
+    const std::string& skin = _skin + std::to_string(_frameCount - _currentFrame - 1);
     auto displayCoordinates = _player->tileDisplayOffset() + _player->displayOffset();
     lib.display().draw(lib.textures().get(skin), displayCoordinates.x(), displayCoordinates.y(), 0.5f);
 }

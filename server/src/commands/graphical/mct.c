@@ -44,10 +44,17 @@ char *get_map_content_string(const server_info_t server_info)
 void send_map_content_to_client(const client_t client,
     const server_info_t server_info)
 {
+    tile_t tile;
+    position_t position = {0, 0};
+    char *tile_content;
+
     for (uint32_t y = 0; y < server_info->height; y++) {
         for (uint32_t x = 0; x < server_info->width; x++) {
-            send_tile_content_to_client(client, server_info,
-                (position_t){x, y});
+            position = (position_t){x, y};
+            tile = get_tile_at_position(position, server_info->map);
+            tile_content = get_tile_content_string(tile, position);
+            queue_buffer(client, tile_content);
+            my_free(tile_content);
         }
     }
 }

@@ -17,9 +17,14 @@ void gui::CommandHandler::handleCommand(std::string& command)
 
     if (token == "ok" || token == "ko")
         return;
+    if (token != "msz" && token != "tna" && (_gameData->map().size() == Vector2u(0, 0) || _gameData->teamNames().empty())) {
+        std::cout << "queued command: " << command << std::endl;
+        _commandsQueue.push_back(command);
+        return;
+    }
     auto it = _responseHandlers.find(token);
     if (it != _responseHandlers.end()) {
-        if (token != "bct")
+        if (token != "bct" && token != "ppo")
             std::cout << "[DEBUG] Handling command: " << token << "(" << command << ")" << std::endl;
         it->second->receive(command, _gameData);
     } else {
@@ -31,4 +36,15 @@ void gui::CommandHandler::handleCommand(std::string& command)
             throw ntw::Client::ClientException("Too many wrong commands received. Exiting...");
         }
     }
+}
+
+void gui::CommandHandler::handleCommandsQueue()
+{
+    if (_commandsQueue.empty())
+        return;
+    for (auto& command : _commandsQueue) {
+        handleCommand(command);
+    }
+    _commandsQueue.clear();
+    gui::CommandHandler::isLoaded = false;
 }

@@ -99,6 +99,11 @@ namespace gui {
 
                     this->handleNetwork(commandHandler);
 
+                    if (gui::CommandHandler::isLoaded) {
+                        commandHandler.handleCommandsQueue();
+                        gui::CommandHandler::isLoaded = false;
+                    }
+
                     gui::Event event = {};
                     auto now = std::chrono::high_resolution_clock::now();
                     float deltaTime = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(now - before).count() / 1000.0;

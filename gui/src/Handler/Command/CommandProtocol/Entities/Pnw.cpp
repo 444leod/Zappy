@@ -28,29 +28,32 @@ void gui::Pnw::receive(std::string command, std::shared_ptr<GameData> gameData)
     if (iss.fail())
         throw std::invalid_argument("Invalid arguments");
 
-    if (gameData->map().size() == Vector2u(0, 0) || gameData->teamNames().size() < 2) {
-        gameData->map().queuePlayerConnexion(command);
-        return;
-    }
     if (_stringToOrientation.find(orientation) == _stringToOrientation.end())
         throw std::invalid_argument("Invalid orientation: " + orientation);
+
     playerOrientation = _stringToOrientation[orientation];
+
     if (gameData->playerExists(playerId))
         throw std::invalid_argument("Player alreasy exist in the game data with this id.");
-    if (level != 1)
-        throw std::invalid_argument("Player must spawn as level 1.");
+
     if (x >= gameData->map().size().x() || y >= gameData->map().size().y())
         throw std::invalid_argument("Player position is out of bounds.");
+
     if (!gameData->teamExists(teamName))
         throw std::invalid_argument("Team does not exist in the game data.");
+
     std::shared_ptr<gui::Player> newPlayer = std::make_shared<gui::Player>(playerId, Vector2u(x, y), playerOrientation, level, teamName);
+
+
     gameData->addPlayer(newPlayer);
+
     auto tile = gameData->map().at(Vector2u(x, y));
     tile->addEntity(newPlayer);
-    auto teamSkin = gameData->teamSkin(teamName);
 
+    auto teamSkin = gameData->teamSkin(teamName);
     newPlayer->setSkin(teamSkin.first);
     newPlayer->setTeamColor(teamSkin.second);
+
     std::cout << "New player created with id: " << playerId << " at position: " << x << ", " << y << " with orientation: " << orientation << " and level: " << level << " for team: " << teamName << std::endl;
 
     std::srand(std::time(nullptr));
