@@ -43,7 +43,10 @@ Test(auth, valid_graphical_team_name)
     cr_assert(client->type == GRAPHICAL);
     cr_assert(client->team_client_number == 0);
     cr_assert_null(client->player);
-    assert_packet_queue(client->packet_queue, 1, "ok");
+
+    cr_assert_not_null(client->packet_queue);
+    cr_assert_not_null(client->packet_queue->packet);
+    cr_assert_str_eq(client->packet_queue->packet->buffer, "ok");
     assert_stdout_eq_str("Client 0: Connected as GRAPHIC\n");
 }
 

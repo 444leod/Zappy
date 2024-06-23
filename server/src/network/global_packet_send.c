@@ -42,13 +42,12 @@ void queue_packet_to_client_type(const enum CLIENT_TYPE type,
 void queue_packet_to_player(player_t player, packet_t *packet)
 {
     client_list_t *clients = get_clients();
-    client_list_t node = NULL;
+    client_list_t node = *clients;
+    player_t other = NULL;
 
-    if (clients == NULL || *clients == NULL)
-        return;
-    node = *clients;
     while (node) {
-        if (player->player_number == node->client->player->player_number)
+        other = node->client->player;
+        if (other && player->player_number == other->player_number)
             add_packet_to_queue(&node->client->packet_queue, packet);
         node = node->next;
     }
