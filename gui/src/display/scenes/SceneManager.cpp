@@ -35,6 +35,11 @@ void gui::SceneManager::onKeyPressed(gui::ILibrary& lib, gui::KeyCode key, bool 
     _scenes[_currentState]->onKeyPressed(lib, key, shift);
 }
 
+void gui::SceneManager::onKeyDown(gui::ILibrary& lib, gui::KeyCode key)
+{
+    _scenes[_currentState]->onKeyDown(lib, key);
+}
+
 void gui::SceneManager::onMouseButtonPressed(gui::ILibrary& lib, gui::MouseButton button, int32_t x, int32_t y)
 {
     _scenes[_currentState]->onMouseButtonPressed(lib, button, x, y);

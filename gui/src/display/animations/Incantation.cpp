@@ -45,5 +45,5 @@ void gui::animations::Incantation::draw(UNUSED gui::ILibrary &lib)
 {
     auto skin = _skin + "_" + std::to_string(_frameCount - _currentFrame - 1);
     auto displayCoordinates = _player.tileDisplayOffset() + _player.displayOffset();
-    lib.display().draw(lib.textures().get(skin), displayCoordinates.x(), displayCoordinates.y());
+    lib.display().draw(lib.textures().get(skin), displayCoordinates.x(), displayCoordinates.y(), 0.5f);
 }

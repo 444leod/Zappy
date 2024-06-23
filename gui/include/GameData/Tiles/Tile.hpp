@@ -53,10 +53,6 @@ namespace gui {
              * @param entity The entity to add
             */
             void addEntity(std::shared_ptr<AEntity> entity) {
-                for (auto &ent : this->_entities) {
-                    if (ent->entityId() == entity->entityId())
-                        return;
-                }
                 entity->setTileDisplayOffset(this->_offset);
                 this->_entities.push_back(entity);
             }

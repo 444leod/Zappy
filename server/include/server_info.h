@@ -22,7 +22,7 @@ typedef struct server_info_s {
     map_t map;
     struct timespec last_refill_check;
     double refill_wait;
-    uint32_t ritual_id;
+    incantation_list_t rituals;
     rocks_t actual_rocks;
     uint32_t actual_food;
     bool end;

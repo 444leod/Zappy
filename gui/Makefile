@@ -67,15 +67,9 @@ __SRC_DISPLAY_SCENES := SceneManager.cpp \
 	game/Game.cpp \
 
 __SRC_DISPLAY_ANIMATION := Death.cpp \
-	EggEclosion.cpp \
-	EggLay.cpp \
-	EggLayed.cpp \
 	Expulse.cpp \
-	Expulsed.cpp \
 	Idle.cpp \
 	Incantation.cpp \
-	IncantationEnd.cpp \
-	IncantationStart.cpp \
 	Walk.cpp \
 
 %.o: %.cpp

@@ -36,7 +36,7 @@ namespace gui {
             /**
              * @brief Construct a new AEntity object
             */
-            AEntity() = default;
+            AEntity() = delete;
 
             /**
              * @brief Construct a new AEntity object
@@ -47,7 +47,6 @@ namespace gui {
             */
             AEntity(std::uint32_t id, Vector2u position, Orientation orientation, std::string teamName)
                 : _position(position), _orientation(orientation), _id(id), _teamName(teamName), _entityId(nextId++) {
-
                 }
 
             /**
@@ -55,7 +54,9 @@ namespace gui {
              * @param id Id of the entity
              * @param position Position of the entity
             */
-            AEntity(std::uint32_t id, Vector2u position, std::string teamName) : _position(position), _id(id), _teamName(teamName) {}
+            AEntity(std::uint32_t id, Vector2u position, std::string teamName) : _position(position), _id(id), _teamName(teamName), _entityId(nextId++) {
+            }
+
 
             /**
              * @brief Destroy the AEntity object
@@ -150,7 +151,7 @@ namespace gui {
 
             gui::Color teamColor() const { return this->_teamColor; }
 
-            gui::AEntity::EntityType type() const { return this->_type; }
+            virtual gui::AEntity::EntityType type() const { return this->_type; }
 
 
 

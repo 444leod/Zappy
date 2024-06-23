@@ -45,6 +45,8 @@ typedef struct rocks_s {
     uint32_t thystame;
 } rocks_t;
 
+typedef struct incantation_s * incantation_t;
+
 typedef struct player_s {
     uuid_t id;
     uint32_t player_number;
@@ -59,7 +61,7 @@ typedef struct player_s {
     double death_remaining_time;
     struct timespec last_stuck_check;
     double stun_time;
-    uint32_t ritual_id;
+    incantation_t ritual;
 } * player_t;
 
 typedef struct player_list_s {
@@ -108,6 +110,18 @@ typedef struct map_s {
     uint32_t width;
     uint32_t height;
 } * map_t;
+
+typedef struct incantation_s {
+    uint8_t level;
+    position_t position;
+    player_list_t players;
+} * incantation_t;
+
+typedef struct incantation_list_s {
+    struct incantation_list_s *next;
+    struct incantation_list_s *prev;
+    incantation_t incantation;
+} * incantation_list_t;
 
 typedef struct pickup_command_s {
     const char *key;

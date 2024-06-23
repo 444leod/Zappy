@@ -20,6 +20,7 @@ namespace gui {
 
                 void initialize(gui::ILibrary& lib) override;
                 void onKeyPressed(gui::ILibrary& lib, gui::KeyCode key, bool shift) override;
+                void onKeyDown(gui::ILibrary& lib, gui::KeyCode key) override;
                 void onMouseButtonPressed(gui::ILibrary& lib, gui::MouseButton button, int32_t x, int32_t y) override;
                 void update(gui::ILibrary& lib, float deltaTime) override;
                 void draw(gui::ILibrary& lib) override;

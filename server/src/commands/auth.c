@@ -15,6 +15,50 @@
 #include "debug.h"
 #include <stdio.h>
 
+static void send_egg_informations(egg_list_t eggs, client_t client)
+{
+    char *msg = NULL;
+    egg_list_t next_egg = NULL;
+
+    for (; eggs; eggs = next_egg) {
+        next_egg = eggs->next;
+        msg = my_snprintf("enw %d -1 %d %d\n", eggs->egg->number,
+            eggs->egg->pos.x, eggs->egg->pos.y);
+        queue_buffer(client, msg);
+        my_free(msg);
+        my_free(eggs);
+    }
+}
+
+static void send_team_players(team_t team, client_t client)
+{
+    char *msg = NULL;
+    client_list_t players = team->players;
+
+    for (; players; players = players->next) {
+        msg = get_new_player_string((const player_t)players->client->player);
+        queue_buffer(client, msg);
+        my_free(msg);
+    }
+}
+
+/**
+ * @brief Sends start information to graphical client
+ */
+static void start_graphical_client(client_t client, server_info_t server_info)
+{
+    incantation_list_t rituals = server_info->rituals;
+    team_list_t teams = server_info->teams;
+    egg_list_t eggs = get_team_eggs(NULL, server_info->map);
+
+    queue_buffer(client, "ok");
+    send_egg_informations(eggs, client);
+    for (; rituals; rituals = rituals->next)
+        send_pic(rituals->incantation);
+    for (; teams; teams = teams->next)
+        send_team_players(teams->team, client);
+}
+
 /**
  * @brief Get a team by its name
  * @details Get a team by its name in the server team list
@@ -150,38 +194,6 @@ static void try_spawn_player(char **args, const client_t client,
     queue_to_graphical(get_new_player_string(client->player));
 }
 
-static void send_players(const client_t client, client_list_t players)
-{
-    char *new_player_string;
-
-    while (players) {
-        new_player_string = get_new_player_string(players->client->player);
-        queue_buffer(client, new_player_string);
-        my_free(new_player_string);
-        players = players->next;
-    }
-}
-
-/**
- * @brief Connect a graphical client
- * @details Connect a graphical client to the server
- *
- * @param client the client to connect
- * @param server_info the server informations
- */
-static void connect_graphical(const client_t client,
-    const server_info_t server_info)
-{
-    char *map_size_string = get_map_size_string(server_info);
-
-    client->type = GRAPHICAL;
-    printf("Client %d: Connected as GRAPHIC\n", client->fd);
-    queue_buffer(client, "ok");
-    queue_buffer(client, map_size_string);
-    my_free(map_size_string);
-    send_players(client, get_clients_by_type(AI));
-}
-
 /**
  * @brief Authenticate the client
  * @details Authenticate the client as a graphical or an AI client
@@ -200,7 +212,9 @@ void auth(char **args, const client_t client,
         return;
     }
     if (strcmp(args[0], "GRAPHIC") == 0) {
-        connect_graphical(client, server_info);
+        client->type = GRAPHICAL;
+        printf("Client %d: Connected as GRAPHIC\n", client->fd);
+        start_graphical_client(client, server_info);
         return;
     }
     if (!is_team_name_valid(args[0], server_info, client)) {

@@ -68,10 +68,10 @@ static bool is_read_special_case(const client_t client,
     const int valread)
 {
     if (valread <= 0) {
-        remove_client(client->fd);
         if (valread < 0)
             printf("Read failed with fd %d: %s\n",
                 client->fd, strerror(errno));
+        remove_client(client->fd);
         if (client->type == AI) {
             queue_to_graphical(get_player_death_string(client->player));
             remove_from_list((void *)client,

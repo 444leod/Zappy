@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** Zappy
 ** File description:
-** incantation
+** incantation_start
 */
 
 #include "commands.h"
@@ -56,23 +56,6 @@ static bool check_tile_ressources(
 }
 
 /**
- * @brief Remove the rocks of a certain ritual level from the tile
- * @param level The ritual level
- * @param tile The tile
- */
-static void consume_rocks(uint8_t level, tile_t tile)
-{
-    uint16_t mask = incantation_masks[level - 1];
-
-    tile->rocks.linemate -= (mask >> 10 & 3);
-    tile->rocks.deraumere -= (mask >> 8 & 3);
-    tile->rocks.sibur -= (mask >> 6 & 3);
-    tile->rocks.mendiane -= (mask >> 4 & 3);
-    tile->rocks.phiras -= (mask >> 2 & 3);
-    tile->rocks.thystame -= (mask >> 0 & 3);
-}
-
-/**
  * @brief Gets the players on a given tiles that are ready for incantation
  *
  * @param level The ritual level
@@ -87,7 +70,7 @@ static player_list_t get_ready_players(uint8_t level, tile_t tile)
 
     while (node) {
         tmp = node->player;
-        if (tmp->level == level && !tmp->ritual_id)
+        if (tmp->level == level && !tmp->ritual)
             add_to_list((void *)tmp, (node_t *)&players);
         node = node->next;
     }
@@ -95,25 +78,25 @@ static player_list_t get_ready_players(uint8_t level, tile_t tile)
 }
 
 /**
- * @brief Gets the players that are doing a certain ritual by ID.
- *
- * @param level The ritual ID
- * @param tile The tile the ritual happened on
- * @return a `player_list_t`.
+ * @brief Creates a new incantation and add it to server list
+ * @param players The list of players that do the incantation
+ * @param server_info The server
+ * @return incantation_t
  */
-static player_list_t get_ritual_players(uint32_t ritual, tile_t tile)
+static incantation_t create_incantation(
+    player_list_t players, server_info_t server_info)
 {
-    player_list_t players = NULL;
-    player_list_t node = tile->players;
-    player_t tmp = NULL;
+    incantation_t ritual = NULL;
 
-    while (node) {
-        tmp = node->player;
-        if (tmp->ritual_id == ritual)
-            add_to_list((void *)tmp, (node_t *)&players);
-        node = node->next;
-    }
-    return players;
+    if (!players)
+        return NULL;
+    ritual = my_malloc(sizeof(struct incantation_s));
+    ritual->level = players->player->level;
+    ritual->position = players->player->position;
+    ritual->players = players;
+    add_to_list((void *)ritual, (node_t *)&server_info->rituals);
+    send_pic(ritual);
+    return ritual;
 }
 
 /**
@@ -123,69 +106,22 @@ static void start_incantation(
     client_t client, player_list_t players, server_info_t server_info)
 {
     packet_t *packet = NULL;
-    uint32_t ritual = server_info->ritual_id + 1;
+    incantation_t ritual = create_incantation(players, server_info);
     struct timespec now = get_actual_time();
 
-    server_info->ritual_id++;
+    if (!ritual)
+        return;
     while (players) {
         packet = build_packet("Elevation underway");
         queue_packet_to_player(players->player, packet);
-        players->player->ritual_id = ritual;
+        players->player->ritual = ritual;
         if (players->player != client->player) {
             players->player->stun_time = 300.0 / (double)server_info->freq;
             players->player->last_stuck_check = now;
         }
         players = players->next;
     }
-    send_pic(client->player, players);
     prepend_client_command(client, create_command("EndIncantation", &now));
-}
-
-/**
- * @brief Makes the player go up a level
- * @param player The player
- */
-static void evolve(player_t player)
-{
-    char *msg = NULL;
-
-    player->ritual_id = 0;
-    player->level++;
-    msg = my_snprintf("Current level: %d", player->level);
-    queue_packet_to_player(player, build_packet(msg));
-    my_free(msg);
-}
-
-/**
- * @brief Lets the player end an incantation ritual
- * @details starts an incantation.
- *
- * @param args the arguments of the command
- * @param client the client that executed the command
- * @param server_info the server info
- */
-void end_incantation(
-    UNUSED char **args,
-    const client_t client,
-    const server_info_t server_info)
-{
-    player_t player = client->player;
-    tile_t tile = get_tile_at_position(player->position, server_info->map);
-    player_list_t players = get_ritual_players(player->ritual_id, tile);
-    uint8_t level = player->level;
-    bool success = check_tile_ressources(level, players, tile->rocks);
-
-    send_pie(client->player, success);
-    while (players) {
-        if (success)
-            evolve(players->player);
-        else
-            queue_packet_to_player(players->player, build_packet("ko"));
-        players = players->next;
-    }
-    if (!success)
-        return;
-    consume_rocks(level, tile);
 }
 
 /**

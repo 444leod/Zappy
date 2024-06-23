@@ -159,7 +159,7 @@ static void print_server_info(server_info_t server_info)
 
     DEBUG_PRINT("\n[ --------------- DEBUG --------------- ]\nServer info:\n");
     DEBUG_PRINT("\tRunning on port %d\n", server_info->port);
-    DEBUG_PRINT("\t%d ", server_info->clientsNb);
+    DEBUG_PRINT("\t%d ", server_info->clients_nb);
     if (server_info->clients_nb == 1)
         DEBUG_PRINT("client per team\n");
     else {

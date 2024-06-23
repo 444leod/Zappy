@@ -35,9 +35,8 @@ void gui::Pic::receive(std::string command, std::shared_ptr<GameData> gameData)
                 throw std::invalid_argument("Player does not exist");
             if (players.value()->position().x() != x || players.value()->position().y() != y)
                 throw std::invalid_argument("Player position does not match the position in the game data.");
-            if (players.value()->playerLevel() != level)
+            if (players.value()->level() != level)
                 throw std::invalid_argument("Player level does not match the level in the game data.");
-            std::cout << "Player " << playerId << " is incantation" << std::endl;
             players.value()->incantate();
         }
     }
