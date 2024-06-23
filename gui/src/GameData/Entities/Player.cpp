@@ -54,7 +54,8 @@ void gui::Player::drawAnimation(gui::ILibrary &lib)
 
 void gui::Player::kill(std::shared_ptr<gui::GameData> gameData)
 {
-    gameData->removePlayer(_id);
+    _animations.push(std::make_shared<gui::animations::Death>(*this, gameData));
+    _alive = false;
 }
 
 void gui::Player::incantate()

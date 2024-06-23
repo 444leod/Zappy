@@ -25,6 +25,9 @@ namespace gui::animations {
             gui::Player& _player;
             std::shared_ptr<gui::GameData> _gameData;
             float _scale = 0.5f;
+            std::string _skin;
+            Vector2f _pos;
+            
     };
 }
 

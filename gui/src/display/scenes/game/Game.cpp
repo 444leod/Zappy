@@ -7,6 +7,7 @@
 
 #include "Game.hpp"
 #include "Ppo.hpp"
+#include "Pin.hpp"
 #include "Mct.hpp"
 #include "SkinsConfig.hpp"
 
@@ -179,7 +180,10 @@ void gui::scenes::Game::update(UNUSED gui::ILibrary& lib, float deltaTime)
         _passedTicks++;
         passedTime -= _tickTime;
         for (auto& player : _gameData->players()) {
+            if (!player->alive())
+                continue;
             Ppo().stage(_serverCli, std::to_string(player->id()));
+            Pin().stage(_serverCli, std::to_string(player->id()));
         }
 
         if (_passedTicks != 0 && _passedTicks % 10 == 0) {
@@ -257,9 +261,9 @@ void gui::scenes::Game::_displayTileInformations(gui::ILibrary& lib)
             auto player = std::dynamic_pointer_cast<gui::Player>(entity);
             std::string displayedText = "Player ";
             displayedText += std::to_string(entity->id());
-            displayedText += " lvl: ";
+            displayedText += " {";
             displayedText += std::to_string(player->level());
-            displayedText += " ";
+            displayedText += "} ";
             displayedText += std::to_string(player->food());
             displayedText += " ";
             displayedText += std::to_string(player->rocks().linemate.quantity());
@@ -288,8 +292,10 @@ void gui::scenes::Game::_displayTileInformations(gui::ILibrary& lib)
             i++;
         }
     };
-    lib.display().print("food: " + std::to_string(tile->food()), lib.fonts().get("ClashRoyale"), 1200, 70 + i * 20, gui::Color{255, 215, 0, 255}, 15);
-    i++;
+    if (tile->food()) {
+        lib.display().print("food: " + std::to_string(tile->food()), lib.fonts().get("ClashRoyale"), 1200, 70 + i * 20, gui::Color{255, 215, 0, 255}, 15);
+        i++;
+    }
     printItem("linemate", tile->rocks().linemate, gui::Color{0, 100, 255, 255});
     printItem("deraumere", tile->rocks().deraumere, gui::Color{255, 105, 180, 255});
     printItem("sibur", tile->rocks().sibur, gui::Color{0, 100, 0, 255});

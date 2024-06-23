@@ -126,7 +126,6 @@ namespace gui {
 
             /**
              * @brief set the player dead
-             * @param isDead The player dead
             */
             void kill(std::shared_ptr<gui::GameData> gameData);
 
@@ -136,6 +135,8 @@ namespace gui {
             gui::AEntity::EntityType type() const { return gui::AEntity::EntityType::PLAYER; }
 
             std::uint32_t level() const { return this->_level; }
+
+            bool alive() const { return this->_alive; }
 
         private:
             std::uint32_t _food = 0;
@@ -147,7 +148,7 @@ namespace gui {
             bool _isExpulsed = false;
             bool _isincantation = false;
             bool _incantationResult = false;
-            bool _isDead = false;
+            bool _alive = true;
             gui::AEntity::EntityType _type = gui::AEntity::EntityType::PLAYER;
     };
 }
