@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field
-from enum import Enum
 from typing import List
+from enum import Enum
 
 """
 CONST VARIABLES representing the orientation of a player
-They are represented as tuples (x, y) to facilitate the computation of the new position
+They are represented as tuples to facilitate the computation of the new position
 """
 NORTH: tuple[int, int] = (-1, 0)
 EAST: tuple[int, int] = (0, -1)
@@ -70,6 +70,84 @@ class Collectibles():
             return getattr(self, str_to_take)
         return 0
 
+    def neg_to_zero(self):
+        """
+        Set all negative values to zero
+        """
+        for key in self.__dict__:
+            if getattr(self, key) < 0:
+                setattr(self, key, 0)
+
+    def __add__(self, other: 'Collectibles') -> 'Collectibles':
+        """
+        Adds two Collectibles together
+        """
+        if not isinstance(other, Collectibles):
+            return NotImplemented
+        return Collectibles(
+            food=self.food + other.food,
+            linemate=self.linemate + other.linemate,
+            sibur=self.sibur + other.sibur,
+            mendiane=self.mendiane + other.mendiane,
+              deraumere=self.deraumere + other.deraumere,
+          phiras=self.phiras + other.phiras,
+            thystame=self.thystame + other.thystame
+        )
+
+    def __sub__(self, other: 'Collectibles') -> 'Collectibles':
+        """
+        Subtracts two Collectibles
+        """
+        if not isinstance(other, Collectibles):
+            return NotImplemented
+        return Collectibles(
+            food=self.food - other.food,
+            linemate=self.linemate - other.linemate,
+            deraumere=self.deraumere - other.deraumere,
+            sibur=self.sibur - other.sibur,
+            mendiane=self.mendiane - other.mendiane,
+            phiras=self.phiras - other.phiras,
+            thystame=self.thystame - other.thystame
+        )
+
+    def __radd__(self, other: 'Collectibles') -> 'Collectibles':
+        """
+        Adds two Collectibles together
+        """
+        return self.__add__(other)
+
+    def __gt__(self, other: 'Collectibles') -> bool:
+        """
+        Compares two Collectibles and return True if self is greater than other
+        """
+        if not isinstance(other, Collectibles):
+            return NotImplemented
+        return all(getattr(self, attr) > getattr(other, attr) for attr in self.__annotations__)
+    
+    def __ge__(self, other: 'Collectibles') -> bool:
+        """
+        Compares two Collectibles and return True if self is greater or equal to other
+        """
+        if not isinstance(other, Collectibles):
+            return NotImplemented
+        return all(getattr(self, attr) >= getattr(other, attr) for attr in self.__annotations__)
+    
+    def __lt__(self, other: 'Collectibles') -> bool:
+        """
+        Compares two Collectibles and return True if self is less than other
+        """
+        if not isinstance(other, Collectibles):
+            return NotImplemented
+        return all(getattr(self, attr) < getattr(other, attr) for attr in self.__annotations__)
+    
+    def __le__(self, other: 'Collectibles') -> bool:
+        """
+        Compares two Collectibles and return True if self is less or equal to other
+        """
+        if not isinstance(other, Collectibles):
+            return NotImplemented
+        return all(getattr(self, attr) <= getattr(other, attr) for attr in self.__annotations__)
+
 @dataclass
 class PlayerInfo():
     """
@@ -95,7 +173,7 @@ class TileContent():
         return f"({self.collectibles}P{self.nb_players})"
 
 """
-CONST VARIABLES representing the evolution requirements for each level
+CONST TileContent variables representing the evolution requirements for each level
 """
 LEVEL_2: TileContent = TileContent(collectibles=Collectibles(linemate=1), nb_players=1)
 LEVEL_3: TileContent = TileContent(collectibles=Collectibles(linemate=1, deraumere=1, sibur=1), nb_players=2)
@@ -104,6 +182,18 @@ LEVEL_5: TileContent = TileContent(collectibles=Collectibles(linemate=1, deraume
 LEVEL_6: TileContent = TileContent(collectibles=Collectibles(linemate=1, deraumere=2, sibur=1, mendiane=3), nb_players=4)
 LEVEL_7: TileContent = TileContent(collectibles=Collectibles(linemate=1, deraumere=2, sibur=3, phiras=1), nb_players=6)
 LEVEL_8: TileContent = TileContent(collectibles=Collectibles(linemate=2, deraumere=2, sibur=2, mendiane=2, phiras=2, thystame=1), nb_players=6)
+"""
+CONST Level up requirement variable mapping a level to the required TileContent to level up
+"""
+LEVEL_UP_REQ: dict[int, TileContent] = {
+    1: LEVEL_2,
+    2: LEVEL_3,
+    3: LEVEL_4,
+    4: LEVEL_5,
+    5: LEVEL_6,
+    6: LEVEL_7,
+    7: LEVEL_8
+}
 
 @dataclass
 class Map():

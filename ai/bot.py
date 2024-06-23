@@ -5,7 +5,7 @@ from typing import List
 from ai_src.connection_handler import ConnectionHandler
 from ai_src.config import Config, HelpException, ArgError
 from ai_src.data import PlayerInfo, Collectibles, Map, TileContent
-from ai_src.behaviors import LookingForward, TalkingWalker, Greg, Manual
+from ai_src.behaviors import LookingForward, TalkingWalker, Greg, Manual, Eric
 import ai_src.commands as cmd
 from ai.ai_src.utils import add_tuples, turn_left, turn_right
 
@@ -62,8 +62,11 @@ class Bot():
         self.base_funcs = {
             "dead\n" : self.die,
             "message": self.receive_broadcast,
+            "Elevation": lambda: self.log("HANDLE ELEVATION"),
+            "Current": self.level_up,
+            "ko\n": lambda: self.log("FAILED ELEVATION"),
         }
-        self.current_behavior = Greg() 
+        self.current_behavior = Eric()
     
     def run(self) -> None:
         """
@@ -101,7 +104,7 @@ class Bot():
         if (len(tab) != 3) or not (tab[1][:-1].isdigit()):
             return
         self.messages_received.append((int(tab[1][:-1]), tab[2]))
-    
+
     def level_up(self) -> None:
         """
         Handle the bot's level up via incantation
@@ -112,7 +115,7 @@ class Bot():
         """
         Handle the bot's behavior
         """
-        cmd_to_send: cmd.ACommand = self.current_behavior.get_next_command(self.player_info, self.map)
+        cmd_to_send: cmd.ACommand = self.current_behavior.get_next_command(self.player_info, self.map, self.messages_received)
         self.log(cmd_to_send.dump())
         self.cmd_sent.append(cmd_to_send.dump())
         self.com_handler.send_command(cmd_to_send.dump())
@@ -131,6 +134,7 @@ class Bot():
             key: str = self.results[-1].split(" ")[0]
             if (key in self.base_funcs):
                 self.base_funcs[key]()
+                if key in ["ko\n", "Current"]: return
                 continue
             # Returning to the main loop if the response is not a message or a death
             return
@@ -210,9 +214,6 @@ class Bot():
         """
         try:
             cmd.Incantation().interpret_result(self.results[-1])
-            self.receive_command()
-            cmd.Incantation().interpret_result(self.results[-1])
-            self.player_info.level += 1
         except Exception as e:
             self.log(e)
             self.log("Failed to incant")
