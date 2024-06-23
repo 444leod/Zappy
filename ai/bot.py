@@ -52,7 +52,6 @@ class Bot():
         self.nb_eggs = int(self.results[-2])
 
         self.player_info: PlayerInfo = PlayerInfo()
-        self.player_info.team_name = self.conf.name
 
         self.map: Map = Map()
         self.map.map_size = tuple(map(int, self.results[-1].split()))
