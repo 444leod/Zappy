@@ -337,6 +337,83 @@ class Gaming(ABehavior):
                     color = (255, 255, 255)
             pygame.display.flip()
 
+
+    def put_object(self, player_info: PlayerInfo, map: Map) -> None:
+        """
+        Put the object on the tile
+        """
+        run = True
+        square_size = 200
+        square_x = (800 - square_size) / 2
+        square_y = (600 - square_size) / 2
+        pygame.draw.rect(self.screen, (0, 0, 0), (square_x, square_y, square_size, square_size))
+        tiles = map.tiles
+        tile = tiles[player_info.pos[0]][player_info.pos[1]]
+        tab = []
+        cursor = 0
+        for attr, value in player_info.inv.__dict__.items():
+            if value > 0:
+                tab.append(attr)
+        if len(tab) == 0:
+            return
+        cursor = 0
+        while run:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        run = False
+                    if event.key == pygame.K_DOWN:
+                        cursor = (cursor + 1) % len(tab)
+                    if event.key == pygame.K_UP:
+                        cursor = (cursor - 1) % len(tab)
+                    if event.key == pygame.K_RETURN:
+                        self.command_stack.append(cmd.Set(tab[cursor]))
+                        run = False
+            i = 0
+            color = (255, 255, 255)
+            for attr, value in player_info.inv.__dict__.items():
+                if value > 0:
+                    if cursor == i:
+                        color = (255, 0, 0)
+                    text = self.font.render(f"{attr}: {value}", True, color)
+                    self.screen.blit(text, (square_x, square_y + i * 25))
+                    i += 1
+                    color = (255, 255, 255)
+            pygame.display.flip()
+
+    def broadcast(self, player_info: PlayerInfo) -> None:
+        """
+        Broadcast a message
+        """
+        run = True
+        square_size = 200
+        square_x = (800 - square_size) / 2
+        square_y = (600 - square_size) / 2
+        pygame.draw.rect(self.screen, (0, 0, 0), (square_x, square_y, square_size, square_size))
+        text = self.litlle_font.render("Enter your message", True, (255, 255, 255))
+        self.screen.blit(text, (square_x, square_y))
+        message = ""
+        while run:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        run = False
+                    if event.key == pygame.K_RETURN:
+                        self.command_stack.append(cmd.Broadcast(message))
+                        run = False
+                    if event.key == pygame.K_BACKSPACE:
+                        message = message[:-1]
+                    else:
+                        message += event.unicode
+            text = self.font.render(message, True, (255, 255, 255))
+            self.screen.blit(text, (square_x, square_y + 50))
+            pygame.display.flip()
+
+
     def show_inventory(self, player_info: PlayerInfo) -> None:
         """
         Show the player's inventory
@@ -386,12 +463,19 @@ class Gaming(ABehavior):
                     if event.key == pygame.K_ESCAPE:
                         sys.exit(0)
                     if event.key == pygame.K_i:
-                        self.command_stack.append(cmd.Inventory())
                         self.show_inventory(player_info)
+                        self.command_stack.append(cmd.Inventory())
                     if event.key == pygame.K_t:
                         self.take_object(player_info, map)
+                    if event.key == pygame.K_d:
+                        self.put_object(player_info, map)
                     if event.key == pygame.K_e:
                         self.command_stack.append(cmd.Incantation())
-                        
+                    if event.key == pygame.K_b:
+                        self.broadcast(player_info)
+        
         if not self.command_stack:
+            print("No command")
             self.command_stack.append(cmd.Look())
+            self.show_inventory(player_info)
+            self.command_stack.append(cmd.Inventory())
