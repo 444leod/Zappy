@@ -9,7 +9,8 @@
 #include <SFML/System/Time.hpp>
 #include <iostream>
 
-gui::ntw::Client::Client(uint16_t port) noexcept : _port(port)
+gui::ntw::Client::Client(std::string host, uint16_t port) noexcept
+    : _host(host), _port(port)
 {
 }
 
@@ -21,11 +22,12 @@ gui::ntw::Client::~Client()
 
 void gui::ntw::Client::connectToServer()
 {
-    sf::Socket::Status status = _socket.connect("localhost", _port, sf::seconds(5));
+    std::cout << "Connecting to: " << _host << ":" << _port << std::endl;
+    sf::Socket::Status status = _socket.connect(_host, _port, sf::seconds(5));
     auto now = std::chrono::system_clock::now();
 
     if (status != sf::Socket::Done)
-        throw ClientException("Failed to connect to server (ip: localhost, port: " + std::to_string(_port) + ")");
+        throw ClientException("Failed to connect to server (ip: " + _host + ", port: " + std::to_string(_port) + ")");
 
     _socket.setBlocking(false);
     _connected = true;
