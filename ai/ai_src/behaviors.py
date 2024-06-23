@@ -122,7 +122,7 @@ class ABehavior:
         if player_info.pos[0] > point[0]:
             sup = True
         if sup != None:
-            crossed = cross_the_map(pos_copy[0], point[0], map_size[0], sup)
+            crossed = cross_the_map(pos_copy[0], point[0], map_size[1], sup)
             if bool(crossed) != bool(sup):
                 self.turn(player_info.orientation, NORTH)
                 orientiation_copy = NORTH
@@ -130,7 +130,7 @@ class ABehavior:
                 self.turn(player_info.orientation, SOUTH)
                 orientiation_copy = SOUTH
             
-            find_path(pos_copy[0], point[0], map_size[0], crossed, sup)
+            find_path(pos_copy[0], point[0], map_size[1], crossed, sup)
             
         sup: bool | None = None
         if player_info.pos[1] < point[1]:
@@ -138,13 +138,13 @@ class ABehavior:
         if player_info.pos[1] > point[1]:
             sup = True
         if sup != None:
-            crossed = cross_the_map(pos_copy[1], point[1], map_size[1], sup)
+            crossed = cross_the_map(pos_copy[1], point[1], map_size[0], sup)
             if bool(crossed) != bool(sup):
                 self.turn(orientiation_copy, EAST)
             else:
                 self.turn(orientiation_copy, WEST)
                 orientiation_copy = WEST
-            find_path(pos_copy[1], point[1], map_size[1], crossed, sup)
+            find_path(pos_copy[1], point[1], map_size[0], crossed, sup)
 
     def refresh_inventory(self, nb_calls) -> None:
         """

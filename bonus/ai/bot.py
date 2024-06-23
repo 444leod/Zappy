@@ -145,9 +145,9 @@ class Bot():
         for x in range(10):
             for y in range(9):
                 self.screen.blit(self.background, (x * 64, y * 64))
-                if y + 1 >= self.map.map_size[1]:
+                if y + 1 >= self.map.map_size[0]:
                     y = 10
-            if x + 1 >= self.map.map_size[0]:
+            if x + 1 >= self.map.map_size[1]:
                 x = 10
         self.draw_ressources(x_start, y_start)
         self.square = self.player.subsurface((0, square_y, 64, 64))
@@ -245,7 +245,7 @@ class Bot():
         """
         self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players -= 1
         self.player_info.pos = add_tuples(self.player_info.pos, self.player_info.orientation)
-        self.player_info.pos = (self.player_info.pos[0] % self.map.map_size[0], self.player_info.pos[1] % self.map.map_size[1])
+        self.player_info.pos = (self.player_info.pos[0] % self.map.map_size[1], self.player_info.pos[1] % self.map.map_size[0])
         self.log(self.player_info.pos)
         self.map.player_pos = self.player_info.pos
         self.map.tiles[self.player_info.pos[0]][self.player_info.pos[1]].nb_players += 1
