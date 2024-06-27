@@ -70,6 +70,21 @@ static void end_game(const team_t last_team)
     }
 }
 
+static void check_level_8(client_list_t clients, server_info_t server_info)
+{
+    player_t player = NULL;
+
+    while (clients) {
+        player = clients->client->player;
+        if (player && player->level == 8) {
+            end_game(player->team);
+            server_info->end = true;
+            return;
+        }
+        clients = clients->next;
+    }
+}
+
 /**
  * @brief Check if the game is ended (if there is only 1 team left)
  * @details Check if the game is ended, if so, end it.
@@ -81,6 +96,7 @@ static void check_game_end(const server_info_t server_info)
     team_list_t teams = server_info->teams;
     team_t remaining_team = NULL;
 
+    check_level_8(get_clients_by_type(AI), server_info);
     while (teams) {
         if (get_list_size((node_t)teams->team->players) == 0 &&
             teams->team->remaining_slots == 0) {
@@ -93,7 +109,6 @@ static void check_game_end(const server_info_t server_info)
         teams = teams->next;
     }
     end_game(remaining_team);
-    server_info->end = true;
 }
 
 /**
