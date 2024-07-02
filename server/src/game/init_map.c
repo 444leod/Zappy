@@ -24,7 +24,7 @@ static void add_thystame(const map_t map, uint32_t *current_quantity)
     const uint32_t map_size = map->width * map->height;
     const int32_t amount = map_size * D_THYSTAME - *current_quantity;
 
-    if (amount < 0)
+    if (amount <= 0)
         return;
     DEBUG_PRINT("\tPutting in: %d thystame...", amount);
     for (int32_t i = 0; i < amount; i++) {
@@ -49,7 +49,7 @@ static void add_phiras(const map_t map, uint32_t *current_quantity)
     const uint32_t map_size = map->width * map->height;
     const int32_t amount = map_size * D_PHIRAS - *current_quantity;
 
-    if (amount < 0)
+    if (amount <= 0)
         return;
     DEBUG_PRINT("\tPutting in: %d phiras...", amount);
     for (int32_t i = 0; i < amount; i++) {
@@ -74,7 +74,7 @@ static void add_mendiane(const map_t map, uint32_t *current_quantity)
     const uint32_t map_size = map->width * map->height;
     const int32_t amount = map_size * D_MENDIANE - *current_quantity;
 
-    if (amount < 0)
+    if (amount <= 0)
         return;
     DEBUG_PRINT("\tPutting in: %d mendiane...", amount);
     for (int32_t i = 0; i < amount; i++) {
@@ -99,7 +99,7 @@ static void add_sibur(const map_t map, uint32_t *current_quantity)
     const uint32_t map_size = map->width * map->height;
     const int32_t amount = map_size * D_SIBUR - *current_quantity;
 
-    if (amount < 0)
+    if (amount <= 0)
         return;
     DEBUG_PRINT("\tPutting in: %d sibur...", amount);
     for (int32_t i = 0; i < amount; i++) {
@@ -124,7 +124,7 @@ static void add_deraumere(const map_t map, uint32_t *current_quantity)
     const uint32_t map_size = map->width * map->height;
     const int32_t amount = map_size * D_DERAUMERE - *current_quantity;
 
-    if (amount < 0)
+    if (amount <= 0)
         return;
     DEBUG_PRINT("\tPutting in: %d deraumere...", amount);
     for (int32_t i = 0; i < amount; i++) {
@@ -149,7 +149,7 @@ static void add_linemate(const map_t map, uint32_t *current_quantity)
     const uint32_t map_size = map->width * map->height;
     const int32_t amount = map_size * D_LINEMATE - *current_quantity;
 
-    if (amount < 0)
+    if (amount <= 0)
         return;
     DEBUG_PRINT("\tPutting in: %d linemate...", amount);
     for (int32_t i = 0; i < amount; i++) {
@@ -174,7 +174,7 @@ static void add_food(const map_t map, uint32_t *current_quantity)
     const uint32_t map_size = map->width * map->height;
     const int32_t amount = map_size * D_FOOD - *current_quantity;
 
-    if (amount < 0)
+    if (amount <= 0)
         return;
     DEBUG_PRINT("\tPutting in: %d food...", amount);
     for (int32_t i = 0; i < amount; i++) {

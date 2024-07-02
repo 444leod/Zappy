@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <time.h>
+#include "time_utils.h"
 
 /**
  * @brief Execute the given command
@@ -87,6 +88,24 @@ static bool should_be_handled(const client_command_t command,
     return command->wait_duration <= 0;
 }
 
+static void start_command(const client_command_t command,
+    const client_t client, const server_info_t server_info)
+{
+    size_t i = 0;
+
+    for (; command->args && command->args[0] && COMMANDS[i].command; i++) {
+        if (strcmp(COMMANDS[i].command, command->args[0]) == 0 &&
+            COMMANDS[i].client_type == client->type) {
+            command->command_handler = COMMANDS[i];
+            command->wait_duration = COMMANDS[i].execution_ticks == 0 ? 0 :
+                COMMANDS[i].execution_ticks / (double)server_info->freq;
+            return;
+        }
+    }
+    command->command_handler = UNKNOWN_COMMAND;
+    command->wait_duration = 0;
+}
+
 /**
  * @brief Initialize the command
  * @details Initialize the command by parsing it and setting the
@@ -99,26 +118,15 @@ static bool should_be_handled(const client_command_t command,
 static void initialize_command(const client_command_t command,
     const client_t client, const server_info_t server_info)
 {
-    size_t i = 0;
-
     command->initialized = true;
+    command->handled_time = get_actual_time();
     command->args = parse_command_args(command->command);
     if (client->type == NONE) {
         command->command_handler = AUTHENTIFICATION_COMMAND;
         command->wait_duration = 0;
         return;
     }
-    for (; command->args && command->args[0] && COMMANDS[i].command; i++) {
-        if (strcmp(COMMANDS[i].command, command->args[0]) == 0 &&
-            COMMANDS[i].client_type == client->type) {
-            command->command_handler = COMMANDS[i];
-            command->wait_duration = COMMANDS[i].execution_ticks == 0 ? 0 :
-                COMMANDS[i].execution_ticks / (double)server_info->freq;
-            return;
-        }
-    }
-    command->command_handler = UNKNOWN_COMMAND;
-    command->wait_duration = 0;
+    start_command(command, client, server_info);
 }
 
 /**

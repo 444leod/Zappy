@@ -39,7 +39,8 @@ static void add_clients_to_set(client_list_t clients, select_data_t *sd)
             sd->max_sd = (client_node->client->fd > sd->max_sd) ?
                 client_node->client->fd : sd->max_sd;
         }
-        if (client_node->client->end) {
+        if (client_node->client->end || (client_node->client->type == AI &&
+            get_list_size((node_t)client_node->client->commands) > 10)) {
             client_node = client_node->next;
             continue;
         }

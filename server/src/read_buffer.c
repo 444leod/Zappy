@@ -49,7 +49,7 @@ static void clear_ai_buffer_overflow(client_t client)
     if (commands_size < 10)
         return;
     while (commands_size > 10) {
-        remove_from_list(get_node_by_index(11, (node_t)client->commands)->data,
+        remove_from_list(get_node_by_index(10, (node_t)client->commands)->data,
             (node_t *)&client->commands);
         commands_size--;
     }
@@ -113,6 +113,8 @@ static void queue_command(const client_t client)
     clock_gettime(0, &now);
     while (client->buffer && strlen(client->buffer) > 0) {
         after_line_break = strstr(client->buffer, "\n");
+        if (!after_line_break && strlen(client->buffer) > 2048)
+            my_free(client->buffer);
         if (!after_line_break)
             break;
         i = after_line_break - client->buffer;
@@ -135,6 +137,8 @@ void read_buffer(const client_t client)
     char buffer[1025] = {0};
     int valread = 0;
 
+    if (client->type == AI && get_list_size((node_t)client->commands) >= 10)
+        return;
     valread = read(client->fd, buffer, 1024);
     if (is_read_special_case(client, valread))
         return;
