@@ -85,6 +85,64 @@ class ABehavior:
             self.command_stack.append(cmd.Right())
             self.command_stack.append(cmd.Right())
 
+    def go_to_food(self, player_info: PlayerInfo, map: Map):
+        """
+        Go to the nearest ressources
+        """
+        def find_nearest_food(player_pos: tuple[int, int], tiles: List[List[TileContent]]) -> tuple[str, tuple[int, int]]:
+            """
+            Finds the nearest resource from the player's position.
+            Returns the type of the resource and its position.
+            """
+            max_row = len(tiles)
+            max_col = len(tiles[0]) if max_row > 0 else 0
+
+            def distance(pos1: tuple[int, int], pos2: tuple[int, int], max_row: int, max_col: int) -> int:
+                dx = abs(pos1[0] - pos2[0])
+                dy = abs(pos1[1] - pos2[1])
+
+                dx = min(dx, max_row - dx)  # Take into account wrapping on the x-axis
+                dy = min(dy, max_col - dy)  # Take into account wrapping on the y-axis
+
+                return dx + dy
+
+            nearest_resource = ""
+            nearest_position = None
+            min_distance = float('inf')
+            nearest_resource = ""
+            nearest_position = None
+            for x in range(max_row):
+                for y in range(max_col):
+                    tile = tiles[x][y]
+                    for attr, value in tile.collectibles.__dict__.items():
+                        if value > 0 and attr == "food":
+                            dist = distance(player_pos, (x, y), max_row, max_col)
+                            if dist < min_distance:
+                                min_distance = dist
+                                nearest_resource = attr
+                                nearest_position = (x, y)
+                    y = (y + 1) % max_col
+                x = (x + 1) % max_row
+            
+            return nearest_resource, nearest_position
+
+        str_to_take = ""
+        collectibles = map.tiles[player_info.pos[0]][player_info.pos[1]].collectibles
+        for attr, value in collectibles.__dict__.items():
+            if value > 0 and attr == "food":
+                str_to_take = attr
+                break
+
+        if str_to_take != "":
+            self.command_stack.append(cmd.Take(str_to_take))
+        else:
+            str_to_take, position = find_nearest_food(player_info.pos, map.tiles)
+            if position:
+                self.go_to_a_point( player_info, position, map.map_size)
+            else:
+                self.command_stack.append(cmd.Forward())
+                self.command_stack.append(cmd.Look())
+
     def go_to_a_point(self, player_info: PlayerInfo, point: tuple[int, int], map_size: tuple[int, int]) -> None:
         """
         Go to a specific point
@@ -222,7 +280,7 @@ class ABehavior:
         current_tile: TileContent = map.tiles[player_info.pos[0]][player_info.pos[1]]
         total_rocks: Collectibles = current_tile.collectibles + player_info.inv
         enough_rocks: bool = total_rocks >= LEVEL_UP_REQ[player_info.level].collectibles
-        return enough_rocks and player_info.inv.food >= 6
+        return enough_rocks and player_info.inv.food >= 8
 
     def easy_evolve(self, player_info: PlayerInfo, map: Map) -> None:
         """
@@ -505,7 +563,10 @@ class Harvester(ABehavior):
         """
         Generate the command stack for the Harvester behavior
         """
-        self.go_to_ressources(player_info, map)
+        if (player_info.inv.food <= 4):
+            self.go_to_food(player_info, map)
+        else:
+            self.go_to_ressources(player_info, map)
 
 class Distractor(ABehavior):
     def __init__(self):
@@ -515,64 +576,6 @@ class Distractor(ABehavior):
         super().__init__()
         self.enemies_messages: List[str] = ["HOGRIDAAAA"]
     
-    def go_to_ressources(self, player_info: PlayerInfo, map: Map):
-        """
-        Go to the nearest ressources
-        """
-        def find_nearest_resource(player_pos: tuple[int, int], tiles: List[List[TileContent]]) -> tuple[str, tuple[int, int]]:
-            """
-            Finds the nearest resource from the player's position.
-            Returns the type of the resource and its position.
-            """
-            max_row = len(tiles)
-            max_col = len(tiles[0]) if max_row > 0 else 0
-
-            def distance(pos1: tuple[int, int], pos2: tuple[int, int], max_row: int, max_col: int) -> int:
-                dx = abs(pos1[0] - pos2[0])
-                dy = abs(pos1[1] - pos2[1])
-
-                dx = min(dx, max_row - dx)  # Take into account wrapping on the x-axis
-                dy = min(dy, max_col - dy)  # Take into account wrapping on the y-axis
-
-                return dx + dy
-
-            nearest_resource = ""
-            nearest_position = None
-            min_distance = float('inf')
-            nearest_resource = ""
-            nearest_position = None
-            for x in range(max_row):
-                for y in range(max_col):
-                    tile = tiles[x][y]
-                    for attr, value in tile.collectibles.__dict__.items():
-                        if value > 0 and attr == "food":
-                            dist = distance(player_pos, (x, y), max_row, max_col)
-                            if dist < min_distance:
-                                min_distance = dist
-                                nearest_resource = attr
-                                nearest_position = (x, y)
-                    y = (y + 1) % max_col
-                x = (x + 1) % max_row
-            
-            return nearest_resource, nearest_position
-
-        str_to_take = ""
-        collectibles = map.tiles[player_info.pos[0]][player_info.pos[1]].collectibles
-        for attr, value in collectibles.__dict__.items():
-            if value > 0 and attr == "food":
-                str_to_take = attr
-                break
-
-        if str_to_take != "":
-            self.command_stack.append(cmd.Take(str_to_take))
-        else:
-            str_to_take, position = find_nearest_resource(player_info.pos, map.tiles)
-            if position:
-                self.go_to_a_point( player_info, position, map.map_size)
-            else:
-                self.command_stack.append(cmd.Forward())
-                self.command_stack.append(cmd.Look())
-
     def generate_command_stack(self, player_info: PlayerInfo, map: Map, new_messages: List[Message]) -> None:
         """
         Generate the command stack for the Distractor behavior
@@ -583,7 +586,7 @@ class Distractor(ABehavior):
         if len(self.enemies_messages) != 0:
             self.command_stack.append(cmd.Broadcast(self.enemies_messages[0]))
             self.enemies_messages.remove(self.enemies_messages[0])
-        self.go_to_ressources(player_info, map)
+        self.go_to_food(player_info, map)
 
 class Manual(ABehavior):
     def __init__(self):
